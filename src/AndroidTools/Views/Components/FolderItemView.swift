@@ -9,13 +9,14 @@ import SwiftUI
 
 struct FolderItemView: View {
     
-    @State private var isExpanded = false
+    
     let name : String
+    let expended : Bool
     
     var body: some View {
         HStack {
-            Image(systemName: "chevron.right")
-                .frame(width: 30)
+            Image(systemName: expended ? "chevron.down" : "chevron.right")
+                .frame(width: 20)
             Image(systemName: "folder.fill")
             Text(name)
             Spacer()
@@ -26,9 +27,9 @@ struct FolderItemView: View {
 struct FolderView_Previews: PreviewProvider {
     static var previews: some View {
         VStack {
-            FolderItemView(name: "var")
-            FolderItemView(name: "bin")
-            FolderItemView(name: "home")
+            FolderItemView(name: "var", expended: true)
+            FolderItemView(name: "bin", expended: false)
+            FolderItemView(name: "home", expended: true)
         }
         
     }

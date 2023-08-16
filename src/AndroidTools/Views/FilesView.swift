@@ -19,7 +19,7 @@ struct FilesView: View {
             if let files = files {
                 ScrollView {
                     LazyVStack {
-                        ForEach(files, id: \.name) { file in
+                        ForEach(files, id: \.path) { file in
                             if file.isFile {
                                 FileItemView(name: file.name)
                             }

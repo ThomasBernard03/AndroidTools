@@ -10,7 +10,7 @@ import SwiftUI
 struct FolderChildItemView: View {
     
     private let adbHelper = AdbHelper()
-    @State private var isExpanded = false
+    @State private var expanded = false
     
     @State private var childs : [File]? = nil
     
@@ -18,31 +18,30 @@ struct FolderChildItemView: View {
 
     
     var body: some View {
-        VStack {
+        VStack(spacing:5) {
             
-            FolderItemView(name: file.name)
+            FolderItemView(name: file.name, expended: expanded)
                 .onTapGesture(count:2) {
-                    isExpanded.toggle()
+                    expanded.toggle()
                     adbHelper.getFiles(directory: file.path){ result in
                         childs = result
                     }
                 }
 
             
-            if isExpanded {
+            if expanded {
                 VStack {
                     if let child = childs {
-                        ScrollView {
-                            LazyVStack {
-                                ForEach(child, id: \.name) { file in
-                                    if file.isFile {
-                                        FileItemView(name: file.name)
-                                    }
-                                    else {
-                                        FolderChildItemView(file: file)
-                                    }
+                        LazyVStack {
+                            ForEach(child, id: \.name) { file in
+                                if file.isFile {
+                                    FileItemView(name: file.name)
+                                }
+                                else {
+                                    FolderChildItemView(file: file)
                                 }
                             }
+                            
                         }
                     } else {
                         Text("Loading...")
@@ -59,7 +58,7 @@ struct FolderChildItemView: View {
 
 struct FolderChildItemView_Previews: PreviewProvider {
     static var previews: some View {
-        let file = File(name: "test", modificationDate: Date(), isFile: false, size: 12, path: "")
+        let file = File(name: "data", modificationDate: Date(), isFile: false, size: 12, path: "/data")
         FolderChildItemView(file: file)
     }
 }

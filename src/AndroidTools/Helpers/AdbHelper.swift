@@ -36,31 +36,57 @@ class AdbHelper {
     
     func getFiles(directory : String = "/", completion : @escaping ([File]) -> Void) {
         DispatchQueue.global(qos: .background).async {
-            let command = "shell ls \(directory)"
+            let command = "shell ls \(directory) -l"
             let output = self.runAdbCommand(command)
-            let names = output.components(separatedBy: .newlines).filter { !$0.isEmpty }
+            var lines = output.components(separatedBy: .newlines).filter { !$0.isEmpty }
+            
+            lines.remove(at: 0) // Remove first line containing number of results : "total 92"
+            lines = lines.filter { $0.hasPrefix("-") || $0.hasPrefix("d") } // Keep only files or directory
 
             var files: [File] = []
+            
+            for line in lines {
+                let components = line.split(separator: " ", maxSplits: Int.max, omittingEmptySubsequences: true)
 
-            for name in names {
-                let fullPath = directory.hasSuffix("/") ? directory + name : directory + "/" + name
+                // Simplification en supposant une sortie similaire à celle de ls -l standard
+                let typeIndicator = components[0].first!
+                let isFile = (typeIndicator != "d")
                 
-                let detailsCommand = "shell ls -ld \(name)"
-                let details = self.runAdbCommand(detailsCommand)
+                let name = String(components.last!)
                 
-                let isFile = !details.hasPrefix("d")
+                // Récupération de la taille (ici, une simplification est faite en supposant que la taille est toujours en bytes)
+                let size = Int(components[4]) ?? 0
+
+                // La date de modification est généralement composée des colonnes 5, 6 et 7 (ex : Mar 11 12:00)
+                // Cette approximation ne convertira pas correctement la date, mais donne une idée de la façon de l'extraire.
+                let dateStr = "\(components[5]) \(components[6]) \(components[7])"
+                let dateFormatter = DateFormatter()
+                dateFormatter.dateFormat = "MMM d H:mm"
+                let date = dateFormatter.date(from: dateStr) ?? Date()
                 
-                let sizeCommand = isFile ? "shell stat -c %s \(name)" : "echo 0"
-                let sizeStr = self.runAdbCommand(sizeCommand)
-                let size = Int(sizeStr) ?? 0
+                files.append(File(name: name, modificationDate: date, isFile: isFile, size: size, path: "\(directory)\(name)/"))
                 
-                let dateCommand = "shell stat -c %Y \(name)"
-                let dateTimestampStr = self.runAdbCommand(dateCommand)
-                let timestamp = TimeInterval(dateTimestampStr) ?? 0
-                let date = Date(timeIntervalSince1970: timestamp)
-                
-                files.append(File(name: name, modificationDate: date, isFile: isFile, size: size, path: fullPath))
             }
+
+            //for name in names {
+            //    let fullPath = directory.hasSuffix("/") ? directory + name : directory + "/" + name
+            //
+            //    let detailsCommand = "shell ls -ld \(name)"
+            //    let details = self.runAdbCommand(detailsCommand)
+            //    //
+            //    let isFile = !details.hasPrefix("d")
+            //    //
+            //    //let sizeCommand = isFile ? "shell stat -c %s \(name)" : "echo 0"
+            //    //let sizeStr = self.runAdbCommand(sizeCommand)
+            //    //let size = Int(sizeStr) ?? 0
+            //    //
+            //    //let dateCommand = "shell stat -c %Y \(name)"
+            //    //let dateTimestampStr = self.runAdbCommand(dateCommand)
+            //    //let timestamp = TimeInterval(dateTimestampStr) ?? 0
+            //    //let date = Date(timeIntervalSince1970: timestamp)
+            //
+            //    files.append(File(name: name, modificationDate: Date(), isFile: isFile, size: 0, path: fullPath))
+            //}
             
             DispatchQueue.main.async {
                 completion(files)
