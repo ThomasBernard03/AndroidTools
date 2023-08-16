@@ -20,13 +20,13 @@ struct FolderChildItemView: View {
     var body: some View {
         VStack(spacing:5) {
             
-            FolderItemView(name: file.name, expended: expanded)
-                .onTapGesture(count:2) {
-                    expanded.toggle()
-                    adbHelper.getFiles(directory: file.path){ result in
-                        childs = result
-                    }
+            FolderItemView(name: file.name, expanded: expanded){
+                expanded.toggle()
+                adbHelper.getFiles(directory: file.path){ result in
+                    childs = result
                 }
+            }
+
 
             
             if expanded {

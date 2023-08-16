@@ -11,17 +11,21 @@ struct FolderItemView: View {
     
     
     let name : String
-    let expended : Bool
+    let expanded : Bool
+    let onExpand : () -> Void
     
-    @State var hovered : Bool = false
+    @State private var hovered : Bool = false
     
     var body: some View {
 
             
         HStack {
-            Image(systemName: expended ? "chevron.down" : "chevron.right")
+            Image(systemName: expanded ? "chevron.down" : "chevron.right")
                 .frame(width: 20)
                 .foregroundColor(Color("Dark"))
+                .onTapGesture {
+                    onExpand()
+                }
                 
             
             Image(systemName: "folder.fill")
@@ -32,6 +36,9 @@ struct FolderItemView: View {
         .background(hovered ? Color.accentColor.opacity(0.2) : Color("Background"))
         .cornerRadius(5)
         .padding(.all, 0)
+        .onTapGesture(count:2) {
+            onExpand()
+        }
         .onHover { inside in
             hovered = inside
         }
@@ -67,9 +74,9 @@ struct FolderItemView: View {
 struct FolderView_Previews: PreviewProvider {
     static var previews: some View {
         VStack {
-            FolderItemView(name: "var", expended: true)
-            FolderItemView(name: "bin", expended: false)
-            FolderItemView(name: "home", expended: true)
+            FolderItemView(name: "var", expanded: true){}
+            FolderItemView(name: "bin", expanded: false){}
+            FolderItemView(name: "home", expanded: true){}
         }
         
     }
