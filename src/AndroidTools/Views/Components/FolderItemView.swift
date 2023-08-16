@@ -13,14 +13,29 @@ struct FolderItemView: View {
     let name : String
     let expended : Bool
     
+    @State var hovered : Bool = false
+    
     var body: some View {
+
+            
         HStack {
             Image(systemName: expended ? "chevron.down" : "chevron.right")
                 .frame(width: 20)
+                .foregroundColor(Color("Dark"))
+                
+            
             Image(systemName: "folder.fill")
+                .foregroundColor(Color("Dark"))
             Text(name)
             Spacer()
         }
+        .background(hovered ? Color.accentColor.opacity(0.2) : Color("Background"))
+        .cornerRadius(5)
+        .padding(.all, 0)
+        .onHover { inside in
+            hovered = inside
+        }
+
     }
 }
 
