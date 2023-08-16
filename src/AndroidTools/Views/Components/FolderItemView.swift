@@ -35,6 +35,31 @@ struct FolderItemView: View {
         .onHover { inside in
             hovered = inside
         }
+        .contextMenu{
+            Menu {
+                Button("File") {  }
+                Button("Directory") {  }
+           }
+            label: {
+               Label("New", systemImage: "ellipsis.circle")
+           }
+            
+            Divider()
+            
+            Button("Download") {  }
+            Button("Upload") {  }
+            
+            Divider()
+            
+            Button("Copy Path"){
+                
+            }
+            
+            Divider()
+            
+            Button("Delete"){
+            }
+        }
 
     }
 }
