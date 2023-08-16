@@ -45,12 +45,7 @@ struct ContentView: View {
                 .padding(.bottom, 40)
                 
                 
-                VStack {
-                    TabItemView(name : "Logcat", icon: "text.redaction")
-                    TabItemView(name : "Files", icon: "doc.on.doc")
-                    TabItemView(name : "Informations", icon: "info.circle")
-                    TabItemView(name : "Miror", icon: "iphone.gen2.badge.play")
-                }
+                SideBarView()
                 
                 
                 Spacer()
@@ -60,7 +55,6 @@ struct ContentView: View {
             }
             .frame(width: 250)
             
-            Divider()
             
             
             // Content

@@ -13,9 +13,10 @@
 		814E443C2A8CAE1500A3BB2C /* Preview Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 814E443B2A8CAE1500A3BB2C /* Preview Assets.xcassets */; };
 		814E44452A8CAF8A00A3BB2C /* AdbHelper.swift in Sources */ = {isa = PBXBuildFile; fileRef = 814E44442A8CAF8A00A3BB2C /* AdbHelper.swift */; };
 		814E44482A8CAFC700A3BB2C /* Device.swift in Sources */ = {isa = PBXBuildFile; fileRef = 814E44472A8CAFC700A3BB2C /* Device.swift */; };
-		814E44532A8CD15300A3BB2C /* adb in Resources */ = {isa = PBXBuildFile; fileRef = 814E44522A8CD15300A3BB2C /* adb */; };
-		814E44562A8CE27300A3BB2C /* TabItemView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 814E44552A8CE27300A3BB2C /* TabItemView.swift */; };
+		814E44562A8CE27300A3BB2C /* SideBarItemView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 814E44552A8CE27300A3BB2C /* SideBarItemView.swift */; };
 		81EAD0852A8D3DD8001C1F32 /* FolderChildItemView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 81EAD0842A8D3DD8001C1F32 /* FolderChildItemView.swift */; };
+		81EAD0872A8D6739001C1F32 /* adb in Resources */ = {isa = PBXBuildFile; fileRef = 81EAD0862A8D6739001C1F32 /* adb */; };
+		81EAD0892A8D6783001C1F32 /* SideBarView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 81EAD0882A8D6783001C1F32 /* SideBarView.swift */; };
 		81EDEFAE2A8D3040003D4006 /* FolderItemView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 81EDEFAD2A8D3040003D4006 /* FolderItemView.swift */; };
 		81EDEFB02A8D30B7003D4006 /* FilesView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 81EDEFAF2A8D30B7003D4006 /* FilesView.swift */; };
 		81EDEFB22A8D349A003D4006 /* File.swift in Sources */ = {isa = PBXBuildFile; fileRef = 81EDEFB12A8D349A003D4006 /* File.swift */; };
@@ -31,9 +32,10 @@
 		814E443D2A8CAE1500A3BB2C /* AndroidTools.entitlements */ = {isa = PBXFileReference; lastKnownFileType = text.plist.entitlements; path = AndroidTools.entitlements; sourceTree = "<group>"; };
 		814E44442A8CAF8A00A3BB2C /* AdbHelper.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AdbHelper.swift; sourceTree = "<group>"; };
 		814E44472A8CAFC700A3BB2C /* Device.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Device.swift; sourceTree = "<group>"; };
-		814E44522A8CD15300A3BB2C /* adb */ = {isa = PBXFileReference; lastKnownFileType = "compiled.mach-o.executable"; name = adb; path = "../../../../../Downloads/platform-tools/adb"; sourceTree = "<group>"; };
-		814E44552A8CE27300A3BB2C /* TabItemView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TabItemView.swift; sourceTree = "<group>"; };
+		814E44552A8CE27300A3BB2C /* SideBarItemView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SideBarItemView.swift; sourceTree = "<group>"; };
 		81EAD0842A8D3DD8001C1F32 /* FolderChildItemView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FolderChildItemView.swift; sourceTree = "<group>"; };
+		81EAD0862A8D6739001C1F32 /* adb */ = {isa = PBXFileReference; lastKnownFileType = "compiled.mach-o.executable"; path = adb; sourceTree = "<group>"; };
+		81EAD0882A8D6783001C1F32 /* SideBarView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SideBarView.swift; sourceTree = "<group>"; };
 		81EDEFAD2A8D3040003D4006 /* FolderItemView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FolderItemView.swift; sourceTree = "<group>"; };
 		81EDEFAF2A8D30B7003D4006 /* FilesView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FilesView.swift; sourceTree = "<group>"; };
 		81EDEFB12A8D349A003D4006 /* File.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = File.swift; sourceTree = "<group>"; };
@@ -110,7 +112,7 @@
 		814E44492A8CBF9C00A3BB2C /* Data */ = {
 			isa = PBXGroup;
 			children = (
-				814E44522A8CD15300A3BB2C /* adb */,
+				81EAD0862A8D6739001C1F32 /* adb */,
 			);
 			path = Data;
 			sourceTree = "<group>";
@@ -121,6 +123,7 @@
 				814E44542A8CD54B00A3BB2C /* Components */,
 				814E44362A8CAE1400A3BB2C /* ContentView.swift */,
 				81EDEFAF2A8D30B7003D4006 /* FilesView.swift */,
+				81EAD0882A8D6783001C1F32 /* SideBarView.swift */,
 			);
 			path = Views;
 			sourceTree = "<group>";
@@ -128,7 +131,7 @@
 		814E44542A8CD54B00A3BB2C /* Components */ = {
 			isa = PBXGroup;
 			children = (
-				814E44552A8CE27300A3BB2C /* TabItemView.swift */,
+				814E44552A8CE27300A3BB2C /* SideBarItemView.swift */,
 				81EDEFAD2A8D3040003D4006 /* FolderItemView.swift */,
 				81EDEFB32A8D3632003D4006 /* FileItemView.swift */,
 				81EAD0842A8D3DD8001C1F32 /* FolderChildItemView.swift */,
@@ -194,7 +197,7 @@
 			isa = PBXResourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				814E44532A8CD15300A3BB2C /* adb in Resources */,
+				81EAD0872A8D6739001C1F32 /* adb in Resources */,
 				814E443C2A8CAE1500A3BB2C /* Preview Assets.xcassets in Resources */,
 				814E44392A8CAE1500A3BB2C /* Assets.xcassets in Resources */,
 			);
@@ -212,7 +215,8 @@
 				81EDEFAE2A8D3040003D4006 /* FolderItemView.swift in Sources */,
 				81EDEFB42A8D3632003D4006 /* FileItemView.swift in Sources */,
 				814E44352A8CAE1400A3BB2C /* AndroidToolsApp.swift in Sources */,
-				814E44562A8CE27300A3BB2C /* TabItemView.swift in Sources */,
+				81EAD0892A8D6783001C1F32 /* SideBarView.swift in Sources */,
+				814E44562A8CE27300A3BB2C /* SideBarItemView.swift in Sources */,
 				81EDEFB22A8D349A003D4006 /* File.swift in Sources */,
 				814E44482A8CAFC700A3BB2C /* Device.swift in Sources */,
 				81EAD0852A8D3DD8001C1F32 /* FolderChildItemView.swift in Sources */,
