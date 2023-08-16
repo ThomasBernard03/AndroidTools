@@ -11,6 +11,10 @@ class AdbHelper {
     
     let adb = Bundle.main.url(forResource: "adb", withExtension: nil)
     
+    init() {
+        _ = runAdbCommand("root")
+    }
+    
     func getDevices() -> [Device] {
         let command = "devices -l | awk 'NR>1 {print $1}'"
         let devicesResult = runAdbCommand(command)
@@ -30,72 +34,44 @@ class AdbHelper {
         return deviceName
     }
     
-    func takeScreenshot(deviceId: String) {
-        let time = formattedTime()
-        _ = runAdbCommand("-s " + deviceId + " shell screencap -p /sdcard/screencap_adbtool.png")
-        _ = self.runAdbCommand("-s " + deviceId + " pull /sdcard/screencap_adbtool.png ~/Desktop/screen" + time + ".png")
-    }
-    
-    func recordScreen(deviceId: String) {
-        let command = "-s " + deviceId + " shell screenrecord /sdcard/screenrecord_adbtool.mp4"
-        
-        // run record screen in background
+    func getFiles(directory : String = "/", completion : @escaping ([File]) -> Void) {
         DispatchQueue.global(qos: .background).async {
-            _ = self.runAdbCommand(command)
+            let command = "shell ls \(directory)"
+            let output = self.runAdbCommand(command)
+            let names = output.components(separatedBy: .newlines).filter { !$0.isEmpty }
+
+            var files: [File] = []
+
+            for name in names {
+                let fullPath = directory.hasSuffix("/") ? directory + name : directory + "/" + name
+                
+                let detailsCommand = "shell ls -ld \(name)"
+                let details = self.runAdbCommand(detailsCommand)
+                
+                let isFile = !details.hasPrefix("d")
+                
+                let sizeCommand = isFile ? "shell stat -c %s \(name)" : "echo 0"
+                let sizeStr = self.runAdbCommand(sizeCommand)
+                let size = Int(sizeStr) ?? 0
+                
+                let dateCommand = "shell stat -c %Y \(name)"
+                let dateTimestampStr = self.runAdbCommand(dateCommand)
+                let timestamp = TimeInterval(dateTimestampStr) ?? 0
+                let date = Date(timeIntervalSince1970: timestamp)
+                
+                files.append(File(name: name, modificationDate: date, isFile: isFile, size: size, path: fullPath))
+            }
+            
+            DispatchQueue.main.async {
+                completion(files)
+            }
         }
     }
 
-    func stopScreenRecording(deviceId: String) {
-        let time = formattedTime()
-        
-        // kill already running screenrecord process to stop recording
-        _ = runAdbCommand("-s " + deviceId + " shell pkill -INT screenrecord")
-        
-        // after killing the screenrecord process,we have to for some time before pulling the file else file stays corrupted
-        DispatchQueue.main.asyncAfter(deadline: .now() + 2.0) {
-            _ = self.runAdbCommand("-s " + deviceId + " pull /sdcard/screenrecord_adbtool.mp4 ~/Desktop/record" + time + ".mp4")
-        }
-    }
-    
-    func makeTCPConnection(deviceId: String) {
-        DispatchQueue.global(qos: .background).async {
-            let deviceIp = self.getDeviceIp(deviceId: deviceId);
-            let tcpCommand = "-s " + deviceId + " tcpip 5555"
-            _ = self.runAdbCommand(tcpCommand)
-            let connectCommand = "-s " + deviceId + " connect " + deviceIp + ":5555"
-            _ = self.runAdbCommand(connectCommand)
-        }
-    }
-    
-    func disconnectTCPConnection(deviceId: String) {
-        DispatchQueue.global(qos: .background).async {
-            _ = self.runAdbCommand("-s " + deviceId + " disconnect")
-        }
-    }
 
-    func getDeviceIp(deviceId: String) -> String {
-        let command = "-s " + deviceId + " shell ip route | awk '{print $9}'"
-        return runAdbCommand(command)
-    }
-    
-    func openDeeplink(deviceId: String, deeplink: String) {
-        let command = "-s " + deviceId + " shell am start -a android.intent.action.VIEW -d '" + deeplink + "'"
-        _ = runAdbCommand(command)
-    }
-    
-    func captureBugReport(deviceId: String) {
-        let time = formattedTime()
-        DispatchQueue.global(qos: .background).async {
-            _ = self.runAdbCommand("-s " + deviceId + " logcat -d > ~/Desktop/logcat" + time + ".txt")
-        }
-    }
-    
-    private func formattedTime() -> String {
-        let formatter = DateFormatter()
-        formatter.dateFormat = "yyyy-MM-dd-HH-mm"
-        let time = formatter.string(from: Date())
-        return time
-    }
+
+
+
     
     private func runAdbCommand(_ command: String) -> String {
         let task = Process()

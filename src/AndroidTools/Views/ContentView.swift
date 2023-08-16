@@ -9,29 +9,83 @@ import SwiftUI
 
 struct ContentView: View {
     
-    let adb: AdbHelper = AdbHelper()
+    private let adb: AdbHelper = AdbHelper()
     
-    @State private var selectedDevice: Device? = nil
-    @State private var selectedDeviceName : String = ""
+    @State private var availableDevices : [Device] = []
+    @State private var selectedDevice : Device? = nil
+    
+    let version = (Bundle.main.object(forInfoDictionaryKey: "CFBundleShortVersionString") as? String) ?? "0.0.0"
+    
     
     var body: some View {
-        DispatchQueue.global(qos: .background).async {
-            selectedDevice = adb.getDevices().first
-            
-            if let device = selectedDevice {
-                selectedDeviceName = adb.getDeviceName(deviceId: device.id)
+        
+        HStack {
+            // Left pannel
+            VStack {
+                HStack {
+                    Picker("", selection: $selectedDevice) {
+                        ForEach(availableDevices) { device in
+                            Text(device.name)
+                        }
+                    }
+                    .pickerStyle(.automatic)
+                    
+                    Spacer()
+                    
+                    Button {
+                        DispatchQueue.global(qos: .background).async {
+                            availableDevices = adb.getDevices()
+                            //selectedDevice = availableDevices.first
+                        }
+                    } label: {
+                        Image(systemName: "arrow.counterclockwise")
+                    }
+
+                }
+                .padding(.bottom, 40)
+                
+                
+                VStack {
+                    TabItemView(name : "Logcat", icon: "text.redaction")
+                    TabItemView(name : "Files", icon: "doc.on.doc")
+                    TabItemView(name : "Informations", icon: "info.circle")
+                    TabItemView(name : "Miror", icon: "iphone.gen2.badge.play")
+                }
+                
+                
+                Spacer()
+                
+                Text(version)
+
             }
+            .frame(width: 250)
+            
+            Divider()
             
             
+            // Content
+            VStack {
+                FilesView()
+                
+                HStack {
+                    Spacer()
+                }
+            }
+            .frame(minWidth: 300)
         }
         
-        return VStack {
-            Image(systemName: "globe")
-                .imageScale(.large)
-                .foregroundColor(.accentColor)
-            Text("Hello, world!")
-        }
+        
+        
         .padding()
+        .background(Color("Background"))
+        
+        .onAppear {
+            DispatchQueue.global(qos: .background).async {
+                availableDevices = adb.getDevices()
+                selectedDevice = availableDevices.first
+            }
+        }
+        
     }
 }
 

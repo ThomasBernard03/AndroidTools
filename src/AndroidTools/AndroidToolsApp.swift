@@ -13,5 +13,6 @@ struct AndroidToolsApp: App {
         WindowGroup {
             ContentView()
         }
+        .windowStyle(.hiddenTitleBar)
     }
 }
