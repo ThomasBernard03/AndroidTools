@@ -32,7 +32,7 @@ struct FolderChildItemView: View {
             if expanded {
                 VStack {
                     if let child = childs {
-                        LazyVStack {
+                        VStack {
                             ForEach(child, id: \.name) { file in
                                 if file.isFile {
                                     FileItemView(name: file.name)
