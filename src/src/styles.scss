@@ -5,3 +5,7 @@ body { margin: 0; font-family: Roboto, "Helvetica Neue", sans-serif; }
 *:focus {
     outline-width: 0;
 }
+
+* {
+    user-select: none;
+}

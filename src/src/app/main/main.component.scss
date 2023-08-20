@@ -8,5 +8,15 @@ main {
         width: 300px;
         background-color: rebeccapurple;
         height: 100%;
+
+        div {
+            // Spacing 10 px between each element
+            margin: 10px;
+        }
+
+        div:last-child {
+            // Push the last element to the bottom
+            margin-top: auto;
+        }
     }
 }

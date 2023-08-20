@@ -1,4 +1,5 @@
 import { Component } from '@angular/core';
+import packageJson from '../../../package.json';
 
 @Component({
   selector: 'app-main',
@@ -7,4 +8,6 @@ import { Component } from '@angular/core';
 })
 export class MainComponent {
 
+  public version: string = packageJson.version;
+  
 }
