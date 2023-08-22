@@ -1,1 +1,6 @@
-<p>logcat works!</p>
+<main>
+  <h1>Logcat</h1>
+  <section *ngIf="logs.length > 0">
+    <app-logcat-item *ngFor="let log of logs" [logcat]="log"></app-logcat-item>
+  </section>
+</main>

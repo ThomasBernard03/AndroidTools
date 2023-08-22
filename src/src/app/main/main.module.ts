@@ -9,7 +9,8 @@ const routes: Routes = [
     path: '',
     component: MainComponent,
     children : [
-      { path: 'logcat', loadChildren:() => import('./logcat/logcat.module').then(x => x.LogcatModule)}
+      { path: 'logcat', loadChildren:() => import('./logcat/logcat.module').then(x => x.LogcatModule)},
+      { path: 'file-explorer', loadChildren:() => import('./file-explorer/file-explorer.module').then(x => x.FileExplorerModule)}
   ]},
 ]
 

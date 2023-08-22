@@ -1,7 +1,7 @@
 main {
     display: flex;
-    height: 100vh;
-    width: 100vw;
+    height: 100%;
+    width: 100%;
 
 
     section {
@@ -12,11 +12,17 @@ main {
         div {
             // Spacing 10 px between each element
             margin: 10px;
+            cursor: pointer;
         }
 
         div:last-child {
             // Push the last element to the bottom
             margin-top: auto;
         }
+    }
+    
+    span {
+        height: 100%;
+        width: calc(100% - 300px);
     }
 }

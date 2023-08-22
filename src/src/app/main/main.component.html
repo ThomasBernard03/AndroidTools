@@ -1,10 +1,13 @@
 <main>
     <section>
-        <div><i class="fa-solid fa-folder-closed"></i> File explorer</div>
-        <div><i class="fa-solid fa-align-left"></i>Logcat</div>
-        <div><i class="fa-solid fa-mobile-screen-button"></i>Mirroring</div>
+        <div routerLink="file-explorer"><i routerLinkActive="active" class="fa-solid fa-folder-closed"></i> File explorer</div>
+        <div routerLink="logcat"><i class="fa-solid fa-align-left"></i>Logcat</div>
+        <div routerLink="miroing"><i class="fa-solid fa-mobile-screen-button"></i>Mirroring</div>
 
         <div>{{version}}</div>
     </section>
-    <router-outlet></router-outlet>
+    
+    <span>
+        <router-outlet></router-outlet>
+    </span>
 </main>
