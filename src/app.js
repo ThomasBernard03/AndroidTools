@@ -1,15 +1,20 @@
 const { app, BrowserWindow, ipcMain } = require('electron')
-
-const url = require("url");
-const path = require("path");
+const windowStateKeeper = require('electron-window-state') 
 
 let mainWindow
 
 function createWindow() {
 
+  let winState = windowStateKeeper({
+    defaultWidth : 1000,
+    defaultHeight : 800
+  })
+
   mainWindow = new BrowserWindow({
-    minWidth: 950,
-    minHeight: 650,
+    width: winState.width,
+    height: winState.height,
+    x:winState.x,
+    y:winState.y,
     //titleBarStyle: 'hiddenInset',
     backgroundColor: '#1B1C21',
     webPreferences: {
