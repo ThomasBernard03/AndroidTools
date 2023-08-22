@@ -16,7 +16,6 @@ export class FileExplorerComponent implements OnInit {
   ngOnInit(): void {
     this.adbService.getFiles().subscribe(files => {
       this.files = files
-      console.log(files);
       this.changeDetector.detectChanges()
     })
   }

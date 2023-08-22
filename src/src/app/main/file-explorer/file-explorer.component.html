@@ -1,6 +1,9 @@
 <main>
-    <section>
-        <app-file-explorer-item *ngFor="let file of files" [file]="file"></app-file-explorer-item>
+    <section *ngIf="files != undefined">
+        <div *ngFor="let file of files">
+            <app-file-explorer-file-item *ngIf="!file.isDirectory" [file]="file"/>
+            <app-file-explorer-folder-item *ngIf="file.isDirectory" [file]="file"/>
+        </div>
     </section>
 </main>
 

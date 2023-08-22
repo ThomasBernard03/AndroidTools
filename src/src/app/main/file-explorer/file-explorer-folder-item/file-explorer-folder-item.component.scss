@@ -1,0 +1,15 @@
+main {
+    div {
+        display: flex;
+        flex-direction: row;
+        gap: 10px;
+
+        i.chevron {
+            cursor: pointer;
+        }
+    }
+
+    section {
+        margin-left: 15px;
+    }
+}

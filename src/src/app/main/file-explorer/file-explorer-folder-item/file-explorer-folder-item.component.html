@@ -1,0 +1,15 @@
+<main>
+    <div>
+        <i *ngIf="!isExpanded" (click)="openFolder()" class="fa-solid fa-chevron-right chevron"></i>
+        <i *ngIf="isExpanded" (click)="openFolder()" class="fa-solid fa-chevron-down chevron"></i>
+        <i class="fa-solid fa-folder"></i>
+        <p>{{file.name}}</p>
+    </div>
+    
+    <section *ngIf="childs != undefined">
+        <div *ngFor="let child of childs">
+            <app-file-explorer-file-item *ngIf="!child.isDirectory" [file]="child"/>
+            <app-file-explorer-folder-item *ngIf="child.isDirectory" [file]="child"/>
+        </div>
+    </section>
+</main>

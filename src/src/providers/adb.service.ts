@@ -42,7 +42,7 @@ export class AdbService {
 
                     files.push({
                         name : fileName,
-                        path : path + fileName,
+                        path : path + fileName + "/",
                         isDirectory : line.split(" ")[0].charAt(0) == "d"
                     })
                     

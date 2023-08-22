@@ -2,7 +2,8 @@ import { NgModule } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { FileExplorerComponent } from './file-explorer.component';
 import { RouterModule, Routes } from '@angular/router';
-import { FileExplorerItemComponent } from './file-explorer-item/file-explorer-item.component';
+import { FileExplorerFolderItemComponent } from './file-explorer-folder-item/file-explorer-folder-item.component';
+import { FileExplorerFileItemComponent } from './file-explorer-file-item/file-explorer-file-item.component';
 
 const routes: Routes = [
   {
@@ -14,7 +15,8 @@ const routes: Routes = [
 @NgModule({
   declarations: [
     FileExplorerComponent,
-    FileExplorerItemComponent
+    FileExplorerFolderItemComponent,
+    FileExplorerFileItemComponent
   ],
   imports: [
     CommonModule,
