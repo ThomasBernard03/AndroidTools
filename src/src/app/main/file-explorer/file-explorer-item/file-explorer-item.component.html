@@ -1,0 +1,5 @@
+<main>
+    <i class="fa-solid fa-folder" *ngIf="file.isDirectory"></i>
+    <i class="fa-solid fa-file" *ngIf="!file.isDirectory"></i>
+    <p>{{file.name}}</p>
+</main>
