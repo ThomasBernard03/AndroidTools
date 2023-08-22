@@ -27,7 +27,8 @@ export class AdbService {
                     console.error(`stderr: ${stderr}`);
                     return;
                 }
-
+                console.log("adb shell ls ${path} -l : " + stdout)
+                
 
 
                 let files : File[] = [];
@@ -40,12 +41,13 @@ export class AdbService {
 
                     let fileName = line.split(" ")[line.split(" ").length - 1]
 
-                    files.push({
-                        name : fileName,
-                        path : path + fileName + "/",
-                        isDirectory : line.split(" ")[0].charAt(0) == "d"
-                    })
-                    
+                    if (fileName != ""){ // remove empty lines
+                        files.push({
+                            name : fileName,
+                            path : path + fileName + "/",
+                            isDirectory : line.split(" ")[0].charAt(0) == "d"
+                        })
+                    }
                 });
 
                 subject.next(files)

@@ -3,4 +3,12 @@ div {
     flex-direction: row;
     gap: 10px;
     margin-left: 15px;
+
+    i {
+        width: 20px;
+        height: 20px;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+    }
 }

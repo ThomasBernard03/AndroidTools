@@ -2,14 +2,22 @@ main {
     div {
         display: flex;
         flex-direction: row;
-        gap: 10px;
 
         i.chevron {
             cursor: pointer;
+            width: 20px;
+            height: 20px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        i.folder {
+            margin-right: 5px;
         }
     }
 
     section {
-        margin-left: 15px;
+        margin-left: 20px;
     }
 }
