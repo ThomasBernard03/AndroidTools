@@ -8,5 +8,19 @@
 import Foundation
 
 final class ViewModel: ObservableObject {
-  @Published var selectedPage : String?
+    @Published var selectedDeviceId: String = ""
+    @Published var devices: [Device] = []
+
+    func getAndroidDevices() {
+        DispatchQueue.global(qos: .background).async {
+            let devices = AdbHelper().getDevices()
+            
+            DispatchQueue.main.async { [weak self] in
+                self?.devices = devices
+                if !devices.isEmpty && ((self?.selectedDeviceId.isEmpty) != nil) {
+                    self?.selectedDeviceId = devices.first?.id ?? ""
+                }
+            }
+        }
+    }
 }

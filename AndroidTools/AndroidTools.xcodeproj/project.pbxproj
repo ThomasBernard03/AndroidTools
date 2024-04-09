@@ -17,6 +17,9 @@
 		81E6A75B2BC5CDC20034EBFB /* FilesView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 81E6A75A2BC5CDC20034EBFB /* FilesView.swift */; };
 		81E6A75D2BC5CDFF0034EBFB /* SideBarViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 81E6A75C2BC5CDFF0034EBFB /* SideBarViewModel.swift */; };
 		81E6A75F2BC5D2840034EBFB /* InformationViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 81E6A75E2BC5D2840034EBFB /* InformationViewModel.swift */; };
+		81E6A7652BC5D7020034EBFB /* AdbHelper.swift in Sources */ = {isa = PBXBuildFile; fileRef = 81E6A7642BC5D7020034EBFB /* AdbHelper.swift */; };
+		81E6A7682BC5D7200034EBFB /* Device.swift in Sources */ = {isa = PBXBuildFile; fileRef = 81E6A7672BC5D7200034EBFB /* Device.swift */; };
+		81E6A76A2BC5DB0C0034EBFB /* adb in Resources */ = {isa = PBXBuildFile; fileRef = 81E6A7692BC5DB0C0034EBFB /* adb */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
@@ -32,6 +35,9 @@
 		81E6A75A2BC5CDC20034EBFB /* FilesView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FilesView.swift; sourceTree = "<group>"; };
 		81E6A75C2BC5CDFF0034EBFB /* SideBarViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SideBarViewModel.swift; sourceTree = "<group>"; };
 		81E6A75E2BC5D2840034EBFB /* InformationViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = InformationViewModel.swift; sourceTree = "<group>"; };
+		81E6A7642BC5D7020034EBFB /* AdbHelper.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AdbHelper.swift; sourceTree = "<group>"; };
+		81E6A7672BC5D7200034EBFB /* Device.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Device.swift; sourceTree = "<group>"; };
+		81E6A7692BC5DB0C0034EBFB /* adb */ = {isa = PBXFileReference; lastKnownFileType = "compiled.mach-o.executable"; path = adb; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -64,6 +70,9 @@
 		8178547C2BC59F6300B5B2EE /* AndroidTools */ = {
 			isa = PBXGroup;
 			children = (
+				81E6A7662BC5D7100034EBFB /* Models */,
+				81E6A7632BC5D6F60034EBFB /* Helpers */,
+				81E6A7602BC5D5D00034EBFB /* Data */,
 				81E6A74F2BC5CC0F0034EBFB /* Views */,
 				8178547D2BC59F6300B5B2EE /* AndroidToolsApp.swift */,
 				8178547F2BC59F6300B5B2EE /* ContentView.swift */,
@@ -127,6 +136,30 @@
 			path = Screen;
 			sourceTree = "<group>";
 		};
+		81E6A7602BC5D5D00034EBFB /* Data */ = {
+			isa = PBXGroup;
+			children = (
+				81E6A7692BC5DB0C0034EBFB /* adb */,
+			);
+			path = Data;
+			sourceTree = "<group>";
+		};
+		81E6A7632BC5D6F60034EBFB /* Helpers */ = {
+			isa = PBXGroup;
+			children = (
+				81E6A7642BC5D7020034EBFB /* AdbHelper.swift */,
+			);
+			path = Helpers;
+			sourceTree = "<group>";
+		};
+		81E6A7662BC5D7100034EBFB /* Models */ = {
+			isa = PBXGroup;
+			children = (
+				81E6A7672BC5D7200034EBFB /* Device.swift */,
+			);
+			path = Models;
+			sourceTree = "<group>";
+		};
 /* End PBXGroup section */
 
 /* Begin PBXNativeTarget section */
@@ -185,6 +218,7 @@
 			isa = PBXResourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				81E6A76A2BC5DB0C0034EBFB /* adb in Resources */,
 				817854852BC59F6500B5B2EE /* Preview Assets.xcassets in Resources */,
 				817854822BC59F6500B5B2EE /* Assets.xcassets in Resources */,
 			);
@@ -200,11 +234,13 @@
 				81E6A7592BC5CD9D0034EBFB /* InformationView.swift in Sources */,
 				81E6A7512BC5CC260034EBFB /* SideBarView.swift in Sources */,
 				81E6A75B2BC5CDC20034EBFB /* FilesView.swift in Sources */,
+				81E6A7652BC5D7020034EBFB /* AdbHelper.swift in Sources */,
 				817854802BC59F6300B5B2EE /* ContentView.swift in Sources */,
 				81E6A75D2BC5CDFF0034EBFB /* SideBarViewModel.swift in Sources */,
 				81E6A7572BC5CD890034EBFB /* ScreenView.swift in Sources */,
 				8178547E2BC59F6300B5B2EE /* AndroidToolsApp.swift in Sources */,
 				81E6A75F2BC5D2840034EBFB /* InformationViewModel.swift in Sources */,
+				81E6A7682BC5D7200034EBFB /* Device.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};

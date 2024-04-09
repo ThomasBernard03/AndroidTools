@@ -10,23 +10,31 @@ import SwiftUI
 struct SideBarView: View {
     
     @StateObject var viewModel = ViewModel()
-    
-    @State private var selection = "Red"
-    let colors = ["Red", "Green", "Blue", "Black", "Tartan"]
+
     
     var body: some View {
         
         NavigationView {
             List {
                 
-                Picker("", selection: $selection) {
-                    ForEach(colors, id: \.self) {
-                        Text($0)
+                HStack {
+                    Picker("", selection: $viewModel.selectedDeviceId) {
+                        ForEach(viewModel.devices, id: \.self) { device in
+                            Text(device.name).tag(device.id)
+                        }
                     }
+                    .pickerStyle(.menu)
+                    .padding([.leading], -14)
+                    .padding([.trailing], -6)
+                    
+                    Spacer()
+
+                     Button(action: viewModel.getAndroidDevices) {
+                         Image(systemName: "arrow.clockwise")
+                     }
                 }
-                .pickerStyle(.menu)
-                .padding([.leading], -14)
-                .padding([.trailing], -6)
+                
+   
                 
                 NavigationLink(destination: InformationView()) {
                     Text("Informations")
@@ -42,6 +50,8 @@ struct SideBarView: View {
                 
             }
             .listStyle(.sidebar)
+        }.onAppear {
+            viewModel.getAndroidDevices()
         }
 
     }
