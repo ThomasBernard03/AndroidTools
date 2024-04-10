@@ -41,15 +41,15 @@ struct SideBarView: View {
                 }
                 
                 NavigationLink(destination: InformationView()) {
-                    Text("Informations")
+                    Label("Informations", systemImage: "info.circle")
                 }
                 
                 NavigationLink(destination: FilesView()) {
-                    Text("Files")
+                    Label("Files", systemImage: "folder")
                 }
                 
                 NavigationLink(destination: ScreenView()) {
-                    Text("Screen")
+                    Label("Screen", systemImage: "smartphone")
                 }
 
                 

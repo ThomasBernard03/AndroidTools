@@ -76,16 +76,20 @@ struct InstallerView: View {
         
         Button {
             loadApkFile()
-            
         } label: {
             Text("Open file explorer")
         }
         
         switch viewModel.installStatus {
         case .notStarted : Text("Not started")
-        case .loading(let fileName) : Text("Loading " + fileName)
+        case .loading(let fileName) : ProgressView(){
+            Text("Installing \(fileName)")
+        }
+        .progressViewStyle(.linear)
+        .padding()
         case .success : Text("Apk installed")
-        case .error(let message) : Text("Error " + message)
+        case .error(let message) : Text("Error \(message)")
+                .foregroundStyle(.red)
         }
     }
         
