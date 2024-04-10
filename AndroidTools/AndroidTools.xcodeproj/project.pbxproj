@@ -1,0 +1,502 @@
+// !$*UTF8*$!
+{
+	archiveVersion = 1;
+	classes = {
+	};
+	objectVersion = 56;
+	objects = {
+
+/* Begin PBXBuildFile section */
+		812A62B92BC6F1FB00388105 /* InstallingApkStatus.swift in Sources */ = {isa = PBXBuildFile; fileRef = 812A62B82BC6F1FB00388105 /* InstallingApkStatus.swift */; };
+		812A62BB2BC6F2FC00388105 /* StringExtensions.swift in Sources */ = {isa = PBXBuildFile; fileRef = 812A62BA2BC6F2FC00388105 /* StringExtensions.swift */; };
+		814319502BC6715100044934 /* InstallerView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8143194F2BC6715100044934 /* InstallerView.swift */; };
+		814319522BC6715B00044934 /* InstallerViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 814319512BC6715B00044934 /* InstallerViewModel.swift */; };
+		814319562BC6B3C000044934 /* UTTypeExtensions.swift in Sources */ = {isa = PBXBuildFile; fileRef = 814319552BC6B3C000044934 /* UTTypeExtensions.swift */; };
+		8178547E2BC59F6300B5B2EE /* AndroidToolsApp.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8178547D2BC59F6300B5B2EE /* AndroidToolsApp.swift */; };
+		817854822BC59F6500B5B2EE /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 817854812BC59F6500B5B2EE /* Assets.xcassets */; };
+		817854852BC59F6500B5B2EE /* Preview Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 817854842BC59F6500B5B2EE /* Preview Assets.xcassets */; };
+		81E598B82BC6CF8A00FB614B /* DetailPage.swift in Sources */ = {isa = PBXBuildFile; fileRef = 81E598B72BC6CF8A00FB614B /* DetailPage.swift */; };
+		81E6A7512BC5CC260034EBFB /* SideBarView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 81E6A7502BC5CC260034EBFB /* SideBarView.swift */; };
+		81E6A7572BC5CD890034EBFB /* ScreenView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 81E6A7562BC5CD890034EBFB /* ScreenView.swift */; };
+		81E6A7592BC5CD9D0034EBFB /* InformationView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 81E6A7582BC5CD9D0034EBFB /* InformationView.swift */; };
+		81E6A75B2BC5CDC20034EBFB /* FilesView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 81E6A75A2BC5CDC20034EBFB /* FilesView.swift */; };
+		81E6A75D2BC5CDFF0034EBFB /* SideBarViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 81E6A75C2BC5CDFF0034EBFB /* SideBarViewModel.swift */; };
+		81E6A75F2BC5D2840034EBFB /* InformationViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 81E6A75E2BC5D2840034EBFB /* InformationViewModel.swift */; };
+		81E6A7652BC5D7020034EBFB /* AdbHelper.swift in Sources */ = {isa = PBXBuildFile; fileRef = 81E6A7642BC5D7020034EBFB /* AdbHelper.swift */; };
+		81E6A7682BC5D7200034EBFB /* Device.swift in Sources */ = {isa = PBXBuildFile; fileRef = 81E6A7672BC5D7200034EBFB /* Device.swift */; };
+		81E6A76A2BC5DB0C0034EBFB /* adb in Resources */ = {isa = PBXBuildFile; fileRef = 81E6A7692BC5DB0C0034EBFB /* adb */; };
+/* End PBXBuildFile section */
+
+/* Begin PBXFileReference section */
+		812A62B82BC6F1FB00388105 /* InstallingApkStatus.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = InstallingApkStatus.swift; sourceTree = "<group>"; };
+		812A62BA2BC6F2FC00388105 /* StringExtensions.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = StringExtensions.swift; sourceTree = "<group>"; };
+		8143194F2BC6715100044934 /* InstallerView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = InstallerView.swift; sourceTree = "<group>"; };
+		814319512BC6715B00044934 /* InstallerViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = InstallerViewModel.swift; sourceTree = "<group>"; };
+		814319552BC6B3C000044934 /* UTTypeExtensions.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = UTTypeExtensions.swift; sourceTree = "<group>"; };
+		814319572BC6B4D900044934 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist; path = Info.plist; sourceTree = "<group>"; };
+		8178547A2BC59F6300B5B2EE /* AndroidTools.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = AndroidTools.app; sourceTree = BUILT_PRODUCTS_DIR; };
+		8178547D2BC59F6300B5B2EE /* AndroidToolsApp.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AndroidToolsApp.swift; sourceTree = "<group>"; };
+		817854812BC59F6500B5B2EE /* Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Assets.xcassets; sourceTree = "<group>"; };
+		817854842BC59F6500B5B2EE /* Preview Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = "Preview Assets.xcassets"; sourceTree = "<group>"; };
+		817854862BC59F6500B5B2EE /* AndroidTools.entitlements */ = {isa = PBXFileReference; lastKnownFileType = text.plist.entitlements; path = AndroidTools.entitlements; sourceTree = "<group>"; };
+		81E598B72BC6CF8A00FB614B /* DetailPage.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DetailPage.swift; sourceTree = "<group>"; };
+		81E6A7502BC5CC260034EBFB /* SideBarView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SideBarView.swift; sourceTree = "<group>"; };
+		81E6A7562BC5CD890034EBFB /* ScreenView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ScreenView.swift; sourceTree = "<group>"; };
+		81E6A7582BC5CD9D0034EBFB /* InformationView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = InformationView.swift; sourceTree = "<group>"; };
+		81E6A75A2BC5CDC20034EBFB /* FilesView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FilesView.swift; sourceTree = "<group>"; };
+		81E6A75C2BC5CDFF0034EBFB /* SideBarViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SideBarViewModel.swift; sourceTree = "<group>"; };
+		81E6A75E2BC5D2840034EBFB /* InformationViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = InformationViewModel.swift; sourceTree = "<group>"; };
+		81E6A7642BC5D7020034EBFB /* AdbHelper.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AdbHelper.swift; sourceTree = "<group>"; };
+		81E6A7672BC5D7200034EBFB /* Device.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Device.swift; sourceTree = "<group>"; };
+		81E6A7692BC5DB0C0034EBFB /* adb */ = {isa = PBXFileReference; lastKnownFileType = "compiled.mach-o.executable"; path = adb; sourceTree = "<group>"; };
+/* End PBXFileReference section */
+
+/* Begin PBXFrameworksBuildPhase section */
+		817854772BC59F6300B5B2EE /* Frameworks */ = {
+			isa = PBXFrameworksBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+/* End PBXFrameworksBuildPhase section */
+
+/* Begin PBXGroup section */
+		8143194E2BC6714000044934 /* Installer */ = {
+			isa = PBXGroup;
+			children = (
+				8143194F2BC6715100044934 /* InstallerView.swift */,
+				814319512BC6715B00044934 /* InstallerViewModel.swift */,
+			);
+			path = Installer;
+			sourceTree = "<group>";
+		};
+		814319532BC6B3AC00044934 /* Commons */ = {
+			isa = PBXGroup;
+			children = (
+				814319542BC6B3B100044934 /* Extensions */,
+			);
+			path = Commons;
+			sourceTree = "<group>";
+		};
+		814319542BC6B3B100044934 /* Extensions */ = {
+			isa = PBXGroup;
+			children = (
+				814319552BC6B3C000044934 /* UTTypeExtensions.swift */,
+				812A62BA2BC6F2FC00388105 /* StringExtensions.swift */,
+			);
+			path = Extensions;
+			sourceTree = "<group>";
+		};
+		817854712BC59F6300B5B2EE = {
+			isa = PBXGroup;
+			children = (
+				8178547C2BC59F6300B5B2EE /* AndroidTools */,
+				8178547B2BC59F6300B5B2EE /* Products */,
+			);
+			sourceTree = "<group>";
+		};
+		8178547B2BC59F6300B5B2EE /* Products */ = {
+			isa = PBXGroup;
+			children = (
+				8178547A2BC59F6300B5B2EE /* AndroidTools.app */,
+			);
+			name = Products;
+			sourceTree = "<group>";
+		};
+		8178547C2BC59F6300B5B2EE /* AndroidTools */ = {
+			isa = PBXGroup;
+			children = (
+				814319572BC6B4D900044934 /* Info.plist */,
+				814319532BC6B3AC00044934 /* Commons */,
+				81E6A7662BC5D7100034EBFB /* Models */,
+				81E6A7632BC5D6F60034EBFB /* Helpers */,
+				81E6A7602BC5D5D00034EBFB /* Data */,
+				81E6A74F2BC5CC0F0034EBFB /* Views */,
+				8178547D2BC59F6300B5B2EE /* AndroidToolsApp.swift */,
+				817854812BC59F6500B5B2EE /* Assets.xcassets */,
+				817854862BC59F6500B5B2EE /* AndroidTools.entitlements */,
+				817854832BC59F6500B5B2EE /* Preview Content */,
+			);
+			path = AndroidTools;
+			sourceTree = "<group>";
+		};
+		817854832BC59F6500B5B2EE /* Preview Content */ = {
+			isa = PBXGroup;
+			children = (
+				817854842BC59F6500B5B2EE /* Preview Assets.xcassets */,
+			);
+			path = "Preview Content";
+			sourceTree = "<group>";
+		};
+		81E598B42BC6CA4F00FB614B /* Composants */ = {
+			isa = PBXGroup;
+			children = (
+			);
+			path = Composants;
+			sourceTree = "<group>";
+		};
+		81E6A74F2BC5CC0F0034EBFB /* Views */ = {
+			isa = PBXGroup;
+			children = (
+				81E598B42BC6CA4F00FB614B /* Composants */,
+				8143194E2BC6714000044934 /* Installer */,
+				81E6A7552BC5CD780034EBFB /* Screen */,
+				81E6A7542BC5CD650034EBFB /* Information */,
+				81E6A7532BC5CD500034EBFB /* Files */,
+				81E6A7522BC5CD440034EBFB /* SideBar */,
+			);
+			path = Views;
+			sourceTree = "<group>";
+		};
+		81E6A7522BC5CD440034EBFB /* SideBar */ = {
+			isa = PBXGroup;
+			children = (
+				81E6A7502BC5CC260034EBFB /* SideBarView.swift */,
+				81E6A75C2BC5CDFF0034EBFB /* SideBarViewModel.swift */,
+			);
+			path = SideBar;
+			sourceTree = "<group>";
+		};
+		81E6A7532BC5CD500034EBFB /* Files */ = {
+			isa = PBXGroup;
+			children = (
+				81E6A75A2BC5CDC20034EBFB /* FilesView.swift */,
+			);
+			path = Files;
+			sourceTree = "<group>";
+		};
+		81E6A7542BC5CD650034EBFB /* Information */ = {
+			isa = PBXGroup;
+			children = (
+				81E6A7582BC5CD9D0034EBFB /* InformationView.swift */,
+				81E6A75E2BC5D2840034EBFB /* InformationViewModel.swift */,
+			);
+			path = Information;
+			sourceTree = "<group>";
+		};
+		81E6A7552BC5CD780034EBFB /* Screen */ = {
+			isa = PBXGroup;
+			children = (
+				81E6A7562BC5CD890034EBFB /* ScreenView.swift */,
+			);
+			path = Screen;
+			sourceTree = "<group>";
+		};
+		81E6A7602BC5D5D00034EBFB /* Data */ = {
+			isa = PBXGroup;
+			children = (
+				81E6A7692BC5DB0C0034EBFB /* adb */,
+			);
+			path = Data;
+			sourceTree = "<group>";
+		};
+		81E6A7632BC5D6F60034EBFB /* Helpers */ = {
+			isa = PBXGroup;
+			children = (
+				81E6A7642BC5D7020034EBFB /* AdbHelper.swift */,
+			);
+			path = Helpers;
+			sourceTree = "<group>";
+		};
+		81E6A7662BC5D7100034EBFB /* Models */ = {
+			isa = PBXGroup;
+			children = (
+				81E6A7672BC5D7200034EBFB /* Device.swift */,
+				81E598B72BC6CF8A00FB614B /* DetailPage.swift */,
+				812A62B82BC6F1FB00388105 /* InstallingApkStatus.swift */,
+			);
+			path = Models;
+			sourceTree = "<group>";
+		};
+/* End PBXGroup section */
+
+/* Begin PBXNativeTarget section */
+		817854792BC59F6300B5B2EE /* AndroidTools */ = {
+			isa = PBXNativeTarget;
+			buildConfigurationList = 817854892BC59F6500B5B2EE /* Build configuration list for PBXNativeTarget "AndroidTools" */;
+			buildPhases = (
+				817854762BC59F6300B5B2EE /* Sources */,
+				817854772BC59F6300B5B2EE /* Frameworks */,
+				817854782BC59F6300B5B2EE /* Resources */,
+			);
+			buildRules = (
+			);
+			dependencies = (
+			);
+			name = AndroidTools;
+			productName = AndroidTools;
+			productReference = 8178547A2BC59F6300B5B2EE /* AndroidTools.app */;
+			productType = "com.apple.product-type.application";
+		};
+/* End PBXNativeTarget section */
+
+/* Begin PBXProject section */
+		817854722BC59F6300B5B2EE /* Project object */ = {
+			isa = PBXProject;
+			attributes = {
+				BuildIndependentTargetsInParallel = 1;
+				LastSwiftUpdateCheck = 1500;
+				LastUpgradeCheck = 1500;
+				TargetAttributes = {
+					817854792BC59F6300B5B2EE = {
+						CreatedOnToolsVersion = 15.0.1;
+					};
+				};
+			};
+			buildConfigurationList = 817854752BC59F6300B5B2EE /* Build configuration list for PBXProject "AndroidTools" */;
+			compatibilityVersion = "Xcode 14.0";
+			developmentRegion = en;
+			hasScannedForEncodings = 0;
+			knownRegions = (
+				en,
+				Base,
+			);
+			mainGroup = 817854712BC59F6300B5B2EE;
+			productRefGroup = 8178547B2BC59F6300B5B2EE /* Products */;
+			projectDirPath = "";
+			projectRoot = "";
+			targets = (
+				817854792BC59F6300B5B2EE /* AndroidTools */,
+			);
+		};
+/* End PBXProject section */
+
+/* Begin PBXResourcesBuildPhase section */
+		817854782BC59F6300B5B2EE /* Resources */ = {
+			isa = PBXResourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				81E6A76A2BC5DB0C0034EBFB /* adb in Resources */,
+				817854852BC59F6500B5B2EE /* Preview Assets.xcassets in Resources */,
+				817854822BC59F6500B5B2EE /* Assets.xcassets in Resources */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+/* End PBXResourcesBuildPhase section */
+
+/* Begin PBXSourcesBuildPhase section */
+		817854762BC59F6300B5B2EE /* Sources */ = {
+			isa = PBXSourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				81E6A7592BC5CD9D0034EBFB /* InformationView.swift in Sources */,
+				814319522BC6715B00044934 /* InstallerViewModel.swift in Sources */,
+				814319562BC6B3C000044934 /* UTTypeExtensions.swift in Sources */,
+				81E6A7512BC5CC260034EBFB /* SideBarView.swift in Sources */,
+				81E6A75B2BC5CDC20034EBFB /* FilesView.swift in Sources */,
+				81E6A7652BC5D7020034EBFB /* AdbHelper.swift in Sources */,
+				81E6A75D2BC5CDFF0034EBFB /* SideBarViewModel.swift in Sources */,
+				814319502BC6715100044934 /* InstallerView.swift in Sources */,
+				81E6A7572BC5CD890034EBFB /* ScreenView.swift in Sources */,
+				8178547E2BC59F6300B5B2EE /* AndroidToolsApp.swift in Sources */,
+				81E6A75F2BC5D2840034EBFB /* InformationViewModel.swift in Sources */,
+				812A62B92BC6F1FB00388105 /* InstallingApkStatus.swift in Sources */,
+				812A62BB2BC6F2FC00388105 /* StringExtensions.swift in Sources */,
+				81E6A7682BC5D7200034EBFB /* Device.swift in Sources */,
+				81E598B82BC6CF8A00FB614B /* DetailPage.swift in Sources */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+/* End PBXSourcesBuildPhase section */
+
+/* Begin XCBuildConfiguration section */
+		817854872BC59F6500B5B2EE /* Debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ALWAYS_SEARCH_USER_PATHS = NO;
+				ASSETCATALOG_COMPILER_GENERATE_SWIFT_ASSET_SYMBOL_EXTENSIONS = YES;
+				CLANG_ANALYZER_NONNULL = YES;
+				CLANG_ANALYZER_NUMBER_OBJECT_CONVERSION = YES_AGGRESSIVE;
+				CLANG_CXX_LANGUAGE_STANDARD = "gnu++20";
+				CLANG_ENABLE_MODULES = YES;
+				CLANG_ENABLE_OBJC_ARC = YES;
+				CLANG_ENABLE_OBJC_WEAK = YES;
+				CLANG_WARN_BLOCK_CAPTURE_AUTORELEASING = YES;
+				CLANG_WARN_BOOL_CONVERSION = YES;
+				CLANG_WARN_COMMA = YES;
+				CLANG_WARN_CONSTANT_CONVERSION = YES;
+				CLANG_WARN_DEPRECATED_OBJC_IMPLEMENTATIONS = YES;
+				CLANG_WARN_DIRECT_OBJC_ISA_USAGE = YES_ERROR;
+				CLANG_WARN_DOCUMENTATION_COMMENTS = YES;
+				CLANG_WARN_EMPTY_BODY = YES;
+				CLANG_WARN_ENUM_CONVERSION = YES;
+				CLANG_WARN_INFINITE_RECURSION = YES;
+				CLANG_WARN_INT_CONVERSION = YES;
+				CLANG_WARN_NON_LITERAL_NULL_CONVERSION = YES;
+				CLANG_WARN_OBJC_IMPLICIT_RETAIN_SELF = YES;
+				CLANG_WARN_OBJC_LITERAL_CONVERSION = YES;
+				CLANG_WARN_OBJC_ROOT_CLASS = YES_ERROR;
+				CLANG_WARN_QUOTED_INCLUDE_IN_FRAMEWORK_HEADER = YES;
+				CLANG_WARN_RANGE_LOOP_ANALYSIS = YES;
+				CLANG_WARN_STRICT_PROTOTYPES = YES;
+				CLANG_WARN_SUSPICIOUS_MOVE = YES;
+				CLANG_WARN_UNGUARDED_AVAILABILITY = YES_AGGRESSIVE;
+				CLANG_WARN_UNREACHABLE_CODE = YES;
+				CLANG_WARN__DUPLICATE_METHOD_MATCH = YES;
+				COPY_PHASE_STRIP = NO;
+				DEBUG_INFORMATION_FORMAT = dwarf;
+				ENABLE_STRICT_OBJC_MSGSEND = YES;
+				ENABLE_TESTABILITY = YES;
+				ENABLE_USER_SCRIPT_SANDBOXING = YES;
+				GCC_C_LANGUAGE_STANDARD = gnu17;
+				GCC_DYNAMIC_NO_PIC = NO;
+				GCC_NO_COMMON_BLOCKS = YES;
+				GCC_OPTIMIZATION_LEVEL = 0;
+				GCC_PREPROCESSOR_DEFINITIONS = (
+					"DEBUG=1",
+					"$(inherited)",
+				);
+				GCC_WARN_64_TO_32_BIT_CONVERSION = YES;
+				GCC_WARN_ABOUT_RETURN_TYPE = YES_ERROR;
+				GCC_WARN_UNDECLARED_SELECTOR = YES;
+				GCC_WARN_UNINITIALIZED_AUTOS = YES_AGGRESSIVE;
+				GCC_WARN_UNUSED_FUNCTION = YES;
+				GCC_WARN_UNUSED_VARIABLE = YES;
+				LOCALIZATION_PREFERS_STRING_CATALOGS = YES;
+				MACOSX_DEPLOYMENT_TARGET = 14.0;
+				MTL_ENABLE_DEBUG_INFO = INCLUDE_SOURCE;
+				MTL_FAST_MATH = YES;
+				ONLY_ACTIVE_ARCH = YES;
+				SDKROOT = macosx;
+				SWIFT_ACTIVE_COMPILATION_CONDITIONS = "DEBUG $(inherited)";
+				SWIFT_OPTIMIZATION_LEVEL = "-Onone";
+			};
+			name = Debug;
+		};
+		817854882BC59F6500B5B2EE /* Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ALWAYS_SEARCH_USER_PATHS = NO;
+				ASSETCATALOG_COMPILER_GENERATE_SWIFT_ASSET_SYMBOL_EXTENSIONS = YES;
+				CLANG_ANALYZER_NONNULL = YES;
+				CLANG_ANALYZER_NUMBER_OBJECT_CONVERSION = YES_AGGRESSIVE;
+				CLANG_CXX_LANGUAGE_STANDARD = "gnu++20";
+				CLANG_ENABLE_MODULES = YES;
+				CLANG_ENABLE_OBJC_ARC = YES;
+				CLANG_ENABLE_OBJC_WEAK = YES;
+				CLANG_WARN_BLOCK_CAPTURE_AUTORELEASING = YES;
+				CLANG_WARN_BOOL_CONVERSION = YES;
+				CLANG_WARN_COMMA = YES;
+				CLANG_WARN_CONSTANT_CONVERSION = YES;
+				CLANG_WARN_DEPRECATED_OBJC_IMPLEMENTATIONS = YES;
+				CLANG_WARN_DIRECT_OBJC_ISA_USAGE = YES_ERROR;
+				CLANG_WARN_DOCUMENTATION_COMMENTS = YES;
+				CLANG_WARN_EMPTY_BODY = YES;
+				CLANG_WARN_ENUM_CONVERSION = YES;
+				CLANG_WARN_INFINITE_RECURSION = YES;
+				CLANG_WARN_INT_CONVERSION = YES;
+				CLANG_WARN_NON_LITERAL_NULL_CONVERSION = YES;
+				CLANG_WARN_OBJC_IMPLICIT_RETAIN_SELF = YES;
+				CLANG_WARN_OBJC_LITERAL_CONVERSION = YES;
+				CLANG_WARN_OBJC_ROOT_CLASS = YES_ERROR;
+				CLANG_WARN_QUOTED_INCLUDE_IN_FRAMEWORK_HEADER = YES;
+				CLANG_WARN_RANGE_LOOP_ANALYSIS = YES;
+				CLANG_WARN_STRICT_PROTOTYPES = YES;
+				CLANG_WARN_SUSPICIOUS_MOVE = YES;
+				CLANG_WARN_UNGUARDED_AVAILABILITY = YES_AGGRESSIVE;
+				CLANG_WARN_UNREACHABLE_CODE = YES;
+				CLANG_WARN__DUPLICATE_METHOD_MATCH = YES;
+				COPY_PHASE_STRIP = NO;
+				DEBUG_INFORMATION_FORMAT = "dwarf-with-dsym";
+				ENABLE_NS_ASSERTIONS = NO;
+				ENABLE_STRICT_OBJC_MSGSEND = YES;
+				ENABLE_USER_SCRIPT_SANDBOXING = YES;
+				GCC_C_LANGUAGE_STANDARD = gnu17;
+				GCC_NO_COMMON_BLOCKS = YES;
+				GCC_WARN_64_TO_32_BIT_CONVERSION = YES;
+				GCC_WARN_ABOUT_RETURN_TYPE = YES_ERROR;
+				GCC_WARN_UNDECLARED_SELECTOR = YES;
+				GCC_WARN_UNINITIALIZED_AUTOS = YES_AGGRESSIVE;
+				GCC_WARN_UNUSED_FUNCTION = YES;
+				GCC_WARN_UNUSED_VARIABLE = YES;
+				LOCALIZATION_PREFERS_STRING_CATALOGS = YES;
+				MACOSX_DEPLOYMENT_TARGET = 14.0;
+				MTL_ENABLE_DEBUG_INFO = NO;
+				MTL_FAST_MATH = YES;
+				SDKROOT = macosx;
+				SWIFT_COMPILATION_MODE = wholemodule;
+			};
+			name = Release;
+		};
+		8178548A2BC59F6500B5B2EE /* Debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
+				ASSETCATALOG_COMPILER_GLOBAL_ACCENT_COLOR_NAME = AccentColor;
+				CODE_SIGN_ENTITLEMENTS = AndroidTools/AndroidTools.entitlements;
+				CODE_SIGN_STYLE = Automatic;
+				COMBINE_HIDPI_IMAGES = YES;
+				CURRENT_PROJECT_VERSION = 1;
+				DEVELOPMENT_ASSET_PATHS = "\"AndroidTools/Preview Content\"";
+				DEVELOPMENT_TEAM = H9DTPYA8RY;
+				ENABLE_HARDENED_RUNTIME = YES;
+				ENABLE_PREVIEWS = YES;
+				GENERATE_INFOPLIST_FILE = YES;
+				INFOPLIST_FILE = AndroidTools/Info.plist;
+				INFOPLIST_KEY_NSHumanReadableCopyright = "";
+				LD_RUNPATH_SEARCH_PATHS = (
+					"$(inherited)",
+					"@executable_path/../Frameworks",
+				);
+				MARKETING_VERSION = 1.0;
+				PRODUCT_BUNDLE_IDENTIFIER = fr.thomasbernard03.AndroidTools;
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				SWIFT_EMIT_LOC_STRINGS = YES;
+				SWIFT_VERSION = 5.0;
+			};
+			name = Debug;
+		};
+		8178548B2BC59F6500B5B2EE /* Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
+				ASSETCATALOG_COMPILER_GLOBAL_ACCENT_COLOR_NAME = AccentColor;
+				CODE_SIGN_ENTITLEMENTS = AndroidTools/AndroidTools.entitlements;
+				CODE_SIGN_STYLE = Automatic;
+				COMBINE_HIDPI_IMAGES = YES;
+				CURRENT_PROJECT_VERSION = 1;
+				DEVELOPMENT_ASSET_PATHS = "\"AndroidTools/Preview Content\"";
+				DEVELOPMENT_TEAM = H9DTPYA8RY;
+				ENABLE_HARDENED_RUNTIME = YES;
+				ENABLE_PREVIEWS = YES;
+				GENERATE_INFOPLIST_FILE = YES;
+				INFOPLIST_FILE = AndroidTools/Info.plist;
+				INFOPLIST_KEY_NSHumanReadableCopyright = "";
+				LD_RUNPATH_SEARCH_PATHS = (
+					"$(inherited)",
+					"@executable_path/../Frameworks",
+				);
+				MARKETING_VERSION = 1.0;
+				PRODUCT_BUNDLE_IDENTIFIER = fr.thomasbernard03.AndroidTools;
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				SWIFT_EMIT_LOC_STRINGS = YES;
+				SWIFT_VERSION = 5.0;
+			};
+			name = Release;
+		};
+/* End XCBuildConfiguration section */
+
+/* Begin XCConfigurationList section */
+		817854752BC59F6300B5B2EE /* Build configuration list for PBXProject "AndroidTools" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				817854872BC59F6500B5B2EE /* Debug */,
+				817854882BC59F6500B5B2EE /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
+		};
+		817854892BC59F6500B5B2EE /* Build configuration list for PBXNativeTarget "AndroidTools" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				8178548A2BC59F6500B5B2EE /* Debug */,
+				8178548B2BC59F6500B5B2EE /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
+		};
+/* End XCConfigurationList section */
+	};
+	rootObject = 817854722BC59F6300B5B2EE /* Project object */;
+}
