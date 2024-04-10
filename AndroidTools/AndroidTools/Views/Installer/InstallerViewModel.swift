@@ -8,12 +8,27 @@
 import Foundation
 
 final class InstallerViewModel: ObservableObject {
+    
+    @Published var installStatus : InstallingApkStatus = .notStarted
 
     func installApk(path : String){
+        DispatchQueue.main.async {
+            self.installStatus = .loading(fileName: path.substringAfterLast("/"))
+        }
+        
         
         print("Installing apk " + path)
         
         
-        AdbHelper().installApk(path: path)
+        let result = AdbHelper().installApk(path: path)
+        
+        DispatchQueue.main.async {
+            if result.hasSuffix("Success") {
+                self.installStatus = .success
+            }
+            else {
+                self.installStatus = .error(message: result)
+            }
+         }
     }
 }
