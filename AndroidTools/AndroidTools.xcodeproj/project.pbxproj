@@ -11,7 +11,6 @@
 		814319522BC6715B00044934 /* InstallerViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 814319512BC6715B00044934 /* InstallerViewModel.swift */; };
 		814319562BC6B3C000044934 /* UTTypeExtensions.swift in Sources */ = {isa = PBXBuildFile; fileRef = 814319552BC6B3C000044934 /* UTTypeExtensions.swift */; };
 		8178547E2BC59F6300B5B2EE /* AndroidToolsApp.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8178547D2BC59F6300B5B2EE /* AndroidToolsApp.swift */; };
-		817854802BC59F6300B5B2EE /* ContentView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8178547F2BC59F6300B5B2EE /* ContentView.swift */; };
 		817854822BC59F6500B5B2EE /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 817854812BC59F6500B5B2EE /* Assets.xcassets */; };
 		817854852BC59F6500B5B2EE /* Preview Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 817854842BC59F6500B5B2EE /* Preview Assets.xcassets */; };
 		81E6A7512BC5CC260034EBFB /* SideBarView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 81E6A7502BC5CC260034EBFB /* SideBarView.swift */; };
@@ -32,7 +31,6 @@
 		814319572BC6B4D900044934 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist; path = Info.plist; sourceTree = "<group>"; };
 		8178547A2BC59F6300B5B2EE /* AndroidTools.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = AndroidTools.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		8178547D2BC59F6300B5B2EE /* AndroidToolsApp.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AndroidToolsApp.swift; sourceTree = "<group>"; };
-		8178547F2BC59F6300B5B2EE /* ContentView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ContentView.swift; sourceTree = "<group>"; };
 		817854812BC59F6500B5B2EE /* Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Assets.xcassets; sourceTree = "<group>"; };
 		817854842BC59F6500B5B2EE /* Preview Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = "Preview Assets.xcassets"; sourceTree = "<group>"; };
 		817854862BC59F6500B5B2EE /* AndroidTools.entitlements */ = {isa = PBXFileReference; lastKnownFileType = text.plist.entitlements; path = AndroidTools.entitlements; sourceTree = "<group>"; };
@@ -109,7 +107,6 @@
 				81E6A7602BC5D5D00034EBFB /* Data */,
 				81E6A74F2BC5CC0F0034EBFB /* Views */,
 				8178547D2BC59F6300B5B2EE /* AndroidToolsApp.swift */,
-				8178547F2BC59F6300B5B2EE /* ContentView.swift */,
 				817854812BC59F6500B5B2EE /* Assets.xcassets */,
 				817854862BC59F6500B5B2EE /* AndroidTools.entitlements */,
 				817854832BC59F6500B5B2EE /* Preview Content */,
@@ -272,7 +269,6 @@
 				81E6A7512BC5CC260034EBFB /* SideBarView.swift in Sources */,
 				81E6A75B2BC5CDC20034EBFB /* FilesView.swift in Sources */,
 				81E6A7652BC5D7020034EBFB /* AdbHelper.swift in Sources */,
-				817854802BC59F6300B5B2EE /* ContentView.swift in Sources */,
 				81E6A75D2BC5CDFF0034EBFB /* SideBarViewModel.swift in Sources */,
 				814319502BC6715100044934 /* InstallerView.swift in Sources */,
 				81E6A7572BC5CD890034EBFB /* ScreenView.swift in Sources */,
