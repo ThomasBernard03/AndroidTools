@@ -13,6 +13,7 @@
 		8178547E2BC59F6300B5B2EE /* AndroidToolsApp.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8178547D2BC59F6300B5B2EE /* AndroidToolsApp.swift */; };
 		817854822BC59F6500B5B2EE /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 817854812BC59F6500B5B2EE /* Assets.xcassets */; };
 		817854852BC59F6500B5B2EE /* Preview Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 817854842BC59F6500B5B2EE /* Preview Assets.xcassets */; };
+		81E598B82BC6CF8A00FB614B /* DetailPage.swift in Sources */ = {isa = PBXBuildFile; fileRef = 81E598B72BC6CF8A00FB614B /* DetailPage.swift */; };
 		81E6A7512BC5CC260034EBFB /* SideBarView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 81E6A7502BC5CC260034EBFB /* SideBarView.swift */; };
 		81E6A7572BC5CD890034EBFB /* ScreenView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 81E6A7562BC5CD890034EBFB /* ScreenView.swift */; };
 		81E6A7592BC5CD9D0034EBFB /* InformationView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 81E6A7582BC5CD9D0034EBFB /* InformationView.swift */; };
@@ -34,6 +35,7 @@
 		817854812BC59F6500B5B2EE /* Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Assets.xcassets; sourceTree = "<group>"; };
 		817854842BC59F6500B5B2EE /* Preview Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = "Preview Assets.xcassets"; sourceTree = "<group>"; };
 		817854862BC59F6500B5B2EE /* AndroidTools.entitlements */ = {isa = PBXFileReference; lastKnownFileType = text.plist.entitlements; path = AndroidTools.entitlements; sourceTree = "<group>"; };
+		81E598B72BC6CF8A00FB614B /* DetailPage.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DetailPage.swift; sourceTree = "<group>"; };
 		81E6A7502BC5CC260034EBFB /* SideBarView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SideBarView.swift; sourceTree = "<group>"; };
 		81E6A7562BC5CD890034EBFB /* ScreenView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ScreenView.swift; sourceTree = "<group>"; };
 		81E6A7582BC5CD9D0034EBFB /* InformationView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = InformationView.swift; sourceTree = "<group>"; };
@@ -122,9 +124,17 @@
 			path = "Preview Content";
 			sourceTree = "<group>";
 		};
+		81E598B42BC6CA4F00FB614B /* Composants */ = {
+			isa = PBXGroup;
+			children = (
+			);
+			path = Composants;
+			sourceTree = "<group>";
+		};
 		81E6A74F2BC5CC0F0034EBFB /* Views */ = {
 			isa = PBXGroup;
 			children = (
+				81E598B42BC6CA4F00FB614B /* Composants */,
 				8143194E2BC6714000044934 /* Installer */,
 				81E6A7552BC5CD780034EBFB /* Screen */,
 				81E6A7542BC5CD650034EBFB /* Information */,
@@ -188,6 +198,7 @@
 			isa = PBXGroup;
 			children = (
 				81E6A7672BC5D7200034EBFB /* Device.swift */,
+				81E598B72BC6CF8A00FB614B /* DetailPage.swift */,
 			);
 			path = Models;
 			sourceTree = "<group>";
@@ -275,6 +286,7 @@
 				8178547E2BC59F6300B5B2EE /* AndroidToolsApp.swift in Sources */,
 				81E6A75F2BC5D2840034EBFB /* InformationViewModel.swift in Sources */,
 				81E6A7682BC5D7200034EBFB /* Device.swift in Sources */,
+				81E598B82BC6CF8A00FB614B /* DetailPage.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};

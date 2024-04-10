@@ -6,6 +6,7 @@
 //
 
 import SwiftUI
+import UniformTypeIdentifiers.UTType
 
 struct InstallerView: View {
     
@@ -20,10 +21,11 @@ struct InstallerView: View {
         RoundedRectangle(cornerRadius: 20)
             .stroke(style: StrokeStyle(lineWidth: 1, dash: [5]))
             .frame(width: 200, height: 200)
-            .onDrop(of: [.apk], isTargeted: $dropTargetted, perform: { providers in
+            .onDrop(of: [.apk], isTargeted: $dropTargetted) { providers in
+                
                 
                 return true
-            })
+            }
             .overlay {
                    if dropTargetted {
                        ZStack {
@@ -43,6 +45,7 @@ struct InstallerView: View {
                    }
                }
                .animation(.default, value: dropTargetted)
+               .padding()
         
         
         Button {
@@ -62,6 +65,7 @@ struct InstallerView: View {
         
         
     }
+        
 }
 
 #Preview {

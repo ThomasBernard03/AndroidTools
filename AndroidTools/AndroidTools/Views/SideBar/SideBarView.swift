@@ -35,6 +35,10 @@ struct SideBarView: View {
                      }
                 }
                 
+                NavigationLink(destination: InstallerView()) {
+                    Label("Installer", systemImage: "app.badge")
+                }
+                
    
                 
                 NavigationLink(destination: InformationView()) {
@@ -48,9 +52,7 @@ struct SideBarView: View {
                 NavigationLink(destination: ScreenView()) {
                     Text("Screen")
                 }
-                NavigationLink(destination: InstallerView()) {
-                    Text("Installer")
-                }
+
                 
             }
             .listStyle(.sidebar)
