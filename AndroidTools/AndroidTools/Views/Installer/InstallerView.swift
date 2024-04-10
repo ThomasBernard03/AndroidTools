@@ -8,10 +8,24 @@
 import SwiftUI
 import UniformTypeIdentifiers.UTType
 
+
 struct InstallerView: View {
     
     @State private var dropTargetted: Bool = false
     @ObservedObject private var viewModel = InstallerViewModel()
+    
+    
+    private func loadApkFile(){
+        let panel = NSOpenPanel()
+        panel.allowsMultipleSelection = false
+        panel.canChooseDirectories = false
+        panel.allowedContentTypes = [.apk]
+        panel.begin { (response) in
+            if response == .OK, let url = panel.url {
+                viewModel.installApk(path: url.path)
+            }
+        }
+    }
     
     
     var body: some View {
@@ -21,7 +35,16 @@ struct InstallerView: View {
         RoundedRectangle(cornerRadius: 20)
             .stroke(style: StrokeStyle(lineWidth: 1, dash: [5]))
             .frame(width: 200, height: 200)
+   
             .onDrop(of: [.apk], isTargeted: $dropTargetted) { providers in
+                providers.first?.loadItem(forTypeIdentifier: UTType.apk.identifier, options: nil) { (item, error) in
+                    
+                    if let item = item as? URL {
+                        let fileUrl = item.startAccessingSecurityScopedResource() ? item : URL(fileURLWithPath: item.path)
+                            viewModel.installApk(path: fileUrl.path)
+                            item.stopAccessingSecurityScopedResource()
+                    }
+                }
                 
                 
                 return true
@@ -33,7 +56,7 @@ struct InstallerView: View {
 
                            VStack(spacing: 8) {
                                Image(systemName: "plus.circle.fill")
-                                   .font(.system(size: 40))
+                                   .font(.system(size: 30))
                                Text("Drop your apk here...")
                            }
                            .font(.title2)
@@ -49,15 +72,8 @@ struct InstallerView: View {
         
         
         Button {
-            let panel = NSOpenPanel()
-            panel.allowsMultipleSelection = false
-            panel.canChooseDirectories = false
-            panel.allowedContentTypes = [.apk]
-            panel.begin { (response) in
-                if response == .OK, let url = panel.url {
-                    viewModel.installApk(path: url.path)
-                }
-            }
+            loadApkFile()
+
         } label: {
             Text("Open file explorer")
         }

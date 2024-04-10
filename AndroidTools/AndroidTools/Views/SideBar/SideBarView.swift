@@ -34,12 +34,11 @@ struct SideBarView: View {
                          Image(systemName: "arrow.clockwise")
                      }
                 }
+                .padding([.bottom], 10)
                 
                 NavigationLink(destination: InstallerView()) {
                     Label("Installer", systemImage: "app.badge")
                 }
-                
-   
                 
                 NavigationLink(destination: InformationView()) {
                     Text("Informations")
