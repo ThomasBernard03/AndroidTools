@@ -34,19 +34,26 @@ class AdbHelper {
         return deviceName
     }
     
+    func installApk(path : String) {
+        let command = "install \(path)"
+        
+        print(runAdbCommand(command))
+    }
+    
     private func runAdbCommand(_ command: String) -> String {
         let task = Process()
         let pipe = Pipe()
         
         task.standardOutput = pipe
         task.standardError = pipe
-        task.arguments = ["-c", adb!.path + " " + command]
+        task.arguments = ["-c", "\(adb!.path) \(command)"]
         task.launchPath = "/bin/sh"
         task.launch()
         
         let data = pipe.fileHandleForReading.readDataToEndOfFile()
-        let output = String(data: data, encoding: .utf8)!.trimmingCharacters(in: .whitespacesAndNewlines)
+        let output = String(data: data, encoding: .utf8)?.trimmingCharacters(in: .whitespacesAndNewlines) ?? ""
         return output
     }
+
     
 }

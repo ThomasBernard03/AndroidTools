@@ -13,5 +13,7 @@ final class InstallerViewModel: ObservableObject {
         
         print("Installing apk " + path)
         
+        
+        AdbHelper().installApk(path: path)
     }
 }
