@@ -33,6 +33,8 @@ struct InstallerView: View {
     
     var body: some View {
         
+        Text("Easily install an application on the connected phone using an .apk file")
+        
         
         
         RoundedRectangle(cornerRadius: 20)
@@ -68,6 +70,9 @@ struct InstallerView: View {
                         .multilineTextAlignment(.center)
                     }
                     .cornerRadius(20)
+                }
+                else {
+                    Text("Your .apk file here")
                 }
             }
             .animation(.default, value: dropTargetted)

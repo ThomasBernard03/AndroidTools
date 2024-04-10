@@ -9,6 +9,31 @@ import SwiftUI
 
 struct InformationView: View {
     var body: some View {
+        
+        HStack{
+            Image("Phone")
+
+                .resizable()
+                .scaledToFit()
+                .frame(height: 50)
+            
+            VStack {
+                HStack {
+                    Text("AK12 HD")
+                    Spacer()
+                }
+                
+                HStack {
+                    Text("Xiaomi REDMIN K20 PRO")
+                    
+                    Spacer()
+                }
+            }
+                
+                
+        }
+        .padding()
+        
         List {
             Section(header: Text("General informations")) {
                 HStack{
