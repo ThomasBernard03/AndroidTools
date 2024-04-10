@@ -8,23 +8,32 @@
 import SwiftUI
 
 struct InformationView: View {
+    
+    @ObservedObject private var viewModel = InformationViewModel()
+    
     var body: some View {
         
         HStack{
             Image("Phone")
-
                 .resizable()
                 .scaledToFit()
                 .frame(height: 50)
             
             VStack {
                 HStack {
-                    Text("AK12 HD")
+                    Text(viewModel.device?.serialNumber ?? "-")
+                        .font(.headline)
+                        .textSelection(.enabled)
                     Spacer()
                 }
                 
                 HStack {
-                    Text("Xiaomi REDMIN K20 PRO")
+                    Text("\(viewModel.device?.manufacturer ?? "-") \(viewModel.device?.model ?? "-")")
+                        .textSelection(.enabled)
+                    
+                    Text("\(String(viewModel.device?.batteryInfo.percentage ?? 0)) %")
+                    
+                    Image(systemName:  (viewModel.device?.batteryInfo.percentage.toBatteryIcon(charging: viewModel.device?.batteryInfo.charging ?? false)) ?? "battery.0percent")
                     
                     Spacer()
                 }
@@ -33,34 +42,28 @@ struct InformationView: View {
                 
         }
         .padding()
+        .onAppear {
+            viewModel.getDeviceDetail()
+        }
         
         List {
             Section(header: Text("General informations")) {
                 HStack{
-                    Image(systemName: "smartphone" )
                     Text("Android version")
-                    
                     Spacer()
-                    
-                    Text("11.0")
+                    Text(viewModel.device?.androidVersion ?? "")
                 }
                 
                 HStack{
-                    Image(systemName: "smartphone" )
-                    Text("Constructeur")
-                    
+                    Text("Manufacturer")
                     Spacer()
-                    
-                    Text("Xiaomi")
+                    Text(viewModel.device?.manufacturer ?? "")
                 }
                 
                 HStack{
-                    Image(systemName: "smartphone" )
-                    Text("Modèle")
-                    
+                    Text("Model")
                     Spacer()
-                    
-                    Text("Redmi K20PRO")
+                    Text(viewModel.device?.model ?? "")
                 }
             }
         }

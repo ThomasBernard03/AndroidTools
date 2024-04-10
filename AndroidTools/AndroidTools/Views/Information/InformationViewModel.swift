@@ -9,5 +9,10 @@ import Foundation
 
 
 final class InformationViewModel: ObservableObject {
-  @Published var selectedPage : String?
+    @Published var device : DeviceDetail? = nil
+    
+    
+    func getDeviceDetail(){
+        device = AdbHelper().getDeviceInformation()
+    }
 }
