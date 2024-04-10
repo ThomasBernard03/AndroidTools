@@ -9,12 +9,13 @@ import SwiftUI
 
 struct SideBarView: View {
     
-    @StateObject var viewModel = ViewModel()
+    @StateObject var viewModel = SideBarViewModel()
+    @State private var sideBarVisible = false
 
     
     var body: some View {
         
-        NavigationView {
+        NavigationSplitView {
             List {
                 
                 HStack {
@@ -47,13 +48,18 @@ struct SideBarView: View {
                 NavigationLink(destination: ScreenView()) {
                     Text("Screen")
                 }
+                NavigationLink(destination: InstallerView()) {
+                    Text("Installer")
+                }
                 
             }
             .listStyle(.sidebar)
-        }.onAppear {
+        } detail: {
+            
+        }
+        .onAppear {
             viewModel.getAndroidDevices()
         }
-
     }
 }
 

@@ -7,7 +7,7 @@
 
 import Foundation
 
-final class ViewModel: ObservableObject {
+final class SideBarViewModel: ObservableObject {
     @Published var selectedDeviceId: String = ""
     @Published var devices: [Device] = []
 
