@@ -51,7 +51,7 @@ struct SideBarView: View {
                         Label("Informations", systemImage: "info.circle")
                     }
                     
-                    NavigationLink(destination: FilesView()) {
+                    NavigationLink(destination: FilesView(deviceId: viewModel.selectedDeviceId)) {
                         Label("Files", systemImage: "folder")
                     }
                     
