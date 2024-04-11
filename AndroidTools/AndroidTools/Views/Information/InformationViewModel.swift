@@ -12,7 +12,7 @@ final class InformationViewModel: ObservableObject {
     @Published var device : DeviceDetail? = nil
     
     
-    func getDeviceDetail(){
-        device = AdbHelper().getDeviceInformation()
+    func getDeviceDetail(deviceId : String){
+        device = AdbHelper().getDeviceInformation(deviceId:deviceId)
     }
 }

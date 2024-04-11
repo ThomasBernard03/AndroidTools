@@ -11,12 +11,8 @@ import Foundation
 import Foundation
 
 extension Int {
-    func toBatteryIcon(charging: Bool) -> String {
+    func toBatteryIcon() -> String {
         let iconName: String
-        
-        if charging {
-            return "battery.100percent.bolt"
-        }
         
         switch self {
         case 0..<20:

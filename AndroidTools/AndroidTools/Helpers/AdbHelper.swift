@@ -28,20 +28,34 @@ class AdbHelper {
             }
     }
     
-    func getDeviceInformation() -> DeviceDetail {
+    func getDeviceInformation(deviceId: String) -> DeviceDetail {
         
-        let batteryInfo = runAdbCommand("shell dumpsys battery")
+        let batteryInfoCommand = "shell dumpsys battery"
+        let manufacturerCommand = "shell getprop ro.product.manufacturer"
+        let modelCommand = "shell getprop ro.product.model"
+        let serialNumberCommand = "get-serialno"
+        let androidVersionCommand = "shell getprop ro.build.version.release"
+        
+        let batteryInfo = runAdbCommand("-s \(deviceId) \(batteryInfoCommand)")
+        let manufacturer = runAdbCommand("-s \(deviceId) \(manufacturerCommand)")
+        let model = runAdbCommand("-s \(deviceId) \(modelCommand)")
+        let serialNumber = runAdbCommand("-s \(deviceId) \(serialNumberCommand)")
+        let androidVersion = runAdbCommand("-s \(deviceId) \(androidVersionCommand)")
         
         let infos = deserializeBatteryInfo(batteryInfo)
 
         return DeviceDetail(
-            manufacturer: runAdbCommand("shell getprop ro.product.manufacturer"),
-            model: runAdbCommand("shell getprop ro.product.model"),
-            serialNumber: runAdbCommand("get-serialno"),
-            androidVersion: runAdbCommand("shell getprop ro.build.version.release"),
-            batteryInfo: BatteryInfo(charging: infos["AC powered"] as? Bool ?? false, percentage: infos["level"] as? Int ?? 0))
-        
+            manufacturer: manufacturer,
+            model: model,
+            serialNumber: serialNumber,
+            androidVersion: androidVersion,
+            batteryInfo: BatteryInfo(
+                charging: infos["AC powered"] as? Bool ?? false,
+                percentage: infos["level"] as? Int ?? 0
+            )
+        )
     }
+
     
    private func getDeviceName(deviceId: String) -> String {
         let command = "-s " + deviceId + " shell getprop ro.product.model"
@@ -73,8 +87,8 @@ class AdbHelper {
         return batteryDict
     }
     
-    func installApk(path : String) -> String {
-        let command = "install \(path)"
+    func installApk(deviceId : String, path : String) -> String {
+        let command = "-s \(deviceId) install \(path)"
         return runAdbCommand(command)
     }
     

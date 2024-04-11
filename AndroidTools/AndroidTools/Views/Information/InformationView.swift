@@ -9,6 +9,8 @@ import SwiftUI
 
 struct InformationView: View {
     
+    let deviceId : String
+    
     @ObservedObject private var viewModel = InformationViewModel()
     
     var body: some View {
@@ -33,7 +35,19 @@ struct InformationView: View {
                     
                     Text("\(String(viewModel.device?.batteryInfo.percentage ?? 0)) %")
                     
-                    Image(systemName:  (viewModel.device?.batteryInfo.percentage.toBatteryIcon(charging: viewModel.device?.batteryInfo.charging ?? false)) ?? "battery.0percent")
+
+                    if viewModel.device?.batteryInfo.charging ?? false {
+                        Image(systemName:"battery.100percent.bolt")
+                            .symbolRenderingMode(.palette)
+                            .foregroundStyle(.gray, .gray, .green)
+                            .font(.system(size: 16))
+                    }
+                    else {
+                        Image(systemName:  (viewModel.device?.batteryInfo.percentage.toBatteryIcon()) ?? "battery.0percent")
+                            .symbolRenderingMode(.palette)
+                            .foregroundStyle(.green, .gray)
+                            .font(.system(size: 16))
+                    }
                     
                     Spacer()
                 }
@@ -43,7 +57,7 @@ struct InformationView: View {
         }
         .padding()
         .onAppear {
-            viewModel.getDeviceDetail()
+            viewModel.getDeviceDetail(deviceId: deviceId)
         }
         
         List {
@@ -71,5 +85,5 @@ struct InformationView: View {
 }
 
 #Preview {
-    InformationView()
+    InformationView(deviceId: "4dfda047")
 }

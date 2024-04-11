@@ -11,6 +11,8 @@ import UniformTypeIdentifiers.UTType
 
 struct InstallerView: View {
     
+    let deviceId : String
+    
     @State private var dropTargetted: Bool = false
     @ObservedObject private var viewModel = InstallerViewModel()
     
@@ -23,7 +25,7 @@ struct InstallerView: View {
         panel.begin { (response) in
             if response == .OK, let url = panel.url {
                 DispatchQueue.global(qos: .userInitiated).async {
-                    viewModel.installApk(path: url.path)
+                    viewModel.installApk(deviceId: deviceId, path: url.path)
                 }
                 
             }
@@ -46,7 +48,7 @@ struct InstallerView: View {
                     
                     if let item = item as? URL {
                         let fileUrl = item.startAccessingSecurityScopedResource() ? item : URL(fileURLWithPath: item.path)
-                        viewModel.installApk(path: fileUrl.path)
+                        viewModel.installApk(deviceId: deviceId, path: fileUrl.path)
                         item.stopAccessingSecurityScopedResource()
                     }
                 }
@@ -101,5 +103,5 @@ struct InstallerView: View {
 }
 
 #Preview {
-    InstallerView()
+    InstallerView(deviceId: "4dfda049")
 }

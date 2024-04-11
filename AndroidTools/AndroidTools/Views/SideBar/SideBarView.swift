@@ -10,57 +10,65 @@ import SwiftUI
 struct SideBarView: View {
     
     @StateObject var viewModel = SideBarViewModel()
-    @State private var sideBarVisible = false
-
     
     var body: some View {
         
-        NavigationSplitView {
-            List {
-                
-                HStack {
-                    Picker("", selection: $viewModel.selectedDeviceId) {
-                        ForEach(viewModel.devices, id: \.self) { device in
-                            Text(device.name).tag(device.id)
-                        }
-                    }
-                    .pickerStyle(.menu)
-                    .padding([.leading], -14)
-                    .padding([.trailing], -6)
-                    
-                    Spacer()
-
-                     Button(action: viewModel.getAndroidDevices) {
-                         Image(systemName: "arrow.clockwise")
-                     }
-                }
-                .padding([.bottom], 10)
-                
-                NavigationLink(destination: InstallerView()) {
-                    Label("Installer", systemImage: "app.badge")
-                }
-                
-                NavigationLink(destination: InformationView()) {
-                    Label("Informations", systemImage: "info.circle")
-                }
-                
-                NavigationLink(destination: FilesView()) {
-                    Label("Files", systemImage: "folder")
-                }
-                
-                NavigationLink(destination: ScreenView()) {
-                    Label("Screen", systemImage: "smartphone")
-                }
-
-                
+        if viewModel.devices.isEmpty {
+            NoDeviceConnectedView() {
+                viewModel.getAndroidDevices()
             }
-            .listStyle(.sidebar)
-        } detail: {
-            
+            .onAppear {
+                viewModel.getAndroidDevices()
+            }
         }
-        .onAppear {
-            viewModel.getAndroidDevices()
+        else {
+            NavigationSplitView {
+                List {
+                    
+                    HStack {
+                        Picker("", selection: $viewModel.selectedDeviceId) {
+                            ForEach(viewModel.devices, id: \.self) { device in
+                                Text(device.name).tag(device.id)
+                            }
+                        }
+                        .pickerStyle(.menu)
+                        .padding([.leading], -14)
+                        .padding([.trailing], -6)
+                        
+                        Spacer()
+
+                         Button(action: viewModel.getAndroidDevices) {
+                             Image(systemName: "arrow.clockwise")
+                         }
+                    }
+                    .padding([.bottom], 10)
+                    
+                    NavigationLink(destination: InstallerView(deviceId: viewModel.selectedDeviceId)) {
+                        Label("Installer", systemImage: "app.badge")
+                    }
+                    
+                    NavigationLink(destination: InformationView(deviceId: viewModel.selectedDeviceId)) {
+                        Label("Informations", systemImage: "info.circle")
+                    }
+                    
+                    NavigationLink(destination: FilesView()) {
+                        Label("Files", systemImage: "folder")
+                    }
+                    
+                    NavigationLink(destination: ScreenView()) {
+                        Label("Screen", systemImage: "smartphone")
+                    }
+
+                    
+                }
+                .listStyle(.sidebar)
+            } detail: {
+                Text("Hello")
+                    .id(viewModel.selectedDeviceId)
+            }
         }
+        
+
     }
 }
 

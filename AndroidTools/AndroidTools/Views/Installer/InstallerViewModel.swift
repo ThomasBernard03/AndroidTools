@@ -11,7 +11,7 @@ final class InstallerViewModel: ObservableObject {
     
     @Published var installStatus : InstallingApkStatus = .notStarted
 
-    func installApk(path : String){
+    func installApk(deviceId : String, path : String){
         DispatchQueue.main.async {
             self.installStatus = .loading(fileName: path.substringAfterLast("/"))
         }
@@ -20,7 +20,7 @@ final class InstallerViewModel: ObservableObject {
         print("Installing apk " + path)
         
         
-        let result = AdbHelper().installApk(path: path)
+        let result = AdbHelper().installApk(deviceId:deviceId,path: path)
         
         DispatchQueue.main.async {
             if result.hasSuffix("Success") {
