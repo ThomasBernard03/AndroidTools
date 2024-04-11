@@ -13,12 +13,4 @@ struct FileItem: Hashable, Identifiable {
     var name: String
     var childrens: [FileItem]? = nil
     var size : Int
-    var description: String {
-             switch childrens {
-             case nil:
-                 return "📄 \(name)"
-             case .some(let children):
-                 return children.isEmpty ? "📂 \(name)" : "📁 \(name)"
-             }
-         }
 }

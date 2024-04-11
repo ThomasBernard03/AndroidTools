@@ -18,15 +18,20 @@ struct FilesView: View {
 
 
         List(viewModel.root, children: \.childrens) { item in
-            Text(item.description)
-        }
-        
-        
-
-        Text("Files view")
-            .onAppear {
-                viewModel.getFiles(deviceId: deviceId)
+            
+            if item.childrens == nil {
+                Label(item.name, systemImage: "doc")
             }
+            else {
+                Label(item.name, systemImage: "folder")
+            }
+            
+            
+
+        }
+        .onAppear {
+            viewModel.getFiles(deviceId: deviceId)
+        }
     }
 }
 

@@ -12,11 +12,14 @@ final class FilesViewModel : ObservableObject {
     @Published var root : [FileItem] = []
     
     func getFiles(deviceId : String, path : String = ""){
-        var files = AdbHelper().getFiles(deviceId:deviceId, path: path)
-        
-        if path == "" {
-            root = files
+        DispatchQueue.global(qos: .userInitiated).async {
+            let result = AdbHelper().getFiles(deviceId:deviceId, path: path)
+            
+            DispatchQueue.main.async {
+                self.root = result
+            }
         }
+
     }
     
 }

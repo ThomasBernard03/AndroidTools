@@ -13,6 +13,12 @@ final class InformationViewModel: ObservableObject {
     
     
     func getDeviceDetail(deviceId : String){
-        device = AdbHelper().getDeviceInformation(deviceId:deviceId)
+        DispatchQueue.global(qos: .userInitiated).async {
+            let result = AdbHelper().getDeviceInformation(deviceId:deviceId)
+            DispatchQueue.main.async {
+                self.device = result
+            }
+        }
+        
     }
 }
