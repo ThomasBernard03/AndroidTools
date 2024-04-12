@@ -16,6 +16,12 @@ struct FileItem: Hashable, Identifiable {
     var size : Int
     
     var fullPath: String {
-        path + name
+        if childrens == nil {
+            return path + name
+        }
+        else {
+            return path + name + "/"
+        }
+        
     }
 }

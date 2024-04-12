@@ -14,6 +14,7 @@ struct FilesView: View {
     @ObservedObject private var viewModel = FilesViewModel()
     @State private var selectedPath : String? = nil
     @State private var searchQuery : String = ""
+
     
     var body: some View {
         
@@ -32,10 +33,16 @@ struct FilesView: View {
                 }
                 else {
                     selectedPath = path
-                    viewModel.getFiles(deviceId: deviceId, path: path)
+                    if path.last == "/" {
+                        viewModel.getFiles(deviceId: deviceId, path: path)
+                    }
+                    
                 }
             } onDoubleTap: { path in
-                viewModel.getFiles(deviceId: deviceId, path: path)
+                selectedPath = path
+                if path.last == "/" {
+                    viewModel.getFiles(deviceId: deviceId, path: path)
+                }
             }
         }
         .onAppear {

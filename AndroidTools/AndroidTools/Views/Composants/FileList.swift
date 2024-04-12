@@ -21,6 +21,9 @@ struct FileList: View {
                     FileRow(name:item.name)
                 }
                 else {
+                    Image(systemName: "chevron.right")
+                        .rotationEffect(.degrees((item.childrens?.isEmpty ?? false) ? 0 : 90))
+                        .animation(.easeInOut, value: item.childrens?.isEmpty)
                     Label(item.name, systemImage:"folder")
                 }
                 

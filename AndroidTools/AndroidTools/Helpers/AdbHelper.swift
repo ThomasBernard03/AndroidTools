@@ -100,6 +100,7 @@ class AdbHelper {
     }
     
     private func runAdbCommand(_ command: String) -> String {
+        print("Running command : \n adb\(command)")
         let task = Process()
         let pipe = Pipe()
 
@@ -113,6 +114,7 @@ class AdbHelper {
 
         let data = pipe.fileHandleForReading.readDataToEndOfFile()
         let output = String(data: data, encoding: .isoLatin1)?.trimmingCharacters(in: .whitespacesAndNewlines) ?? ""
+        print("Result : \n\(output)")
         return output
     }
 

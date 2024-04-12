@@ -25,13 +25,9 @@ extension String {
 
         // Parcourt chaque ligne
         for line in lines {
-            let components = line.split(separator: " ", maxSplits: 8, omittingEmptySubsequences: true)
-            if components.count >= 8, let name = components.last, let sizeString = components[4].split(separator: " ").first, let size = Int(sizeString) {
-                let dateString = "\(components[5]) \(components[6]) \(components[7])"
-                let dateFormatter = DateFormatter()
-                dateFormatter.dateFormat = "yyyy-MM-dd HH:mm"
-                let date = dateFormatter.date(from: dateString) ?? Date()
-                
+            let components = line.split(separator: " ")
+            if components.count >= 8, let name = components.last {
+                let size = Int(components[4]) ?? 0
                 if line.hasPrefix("d") {
                     // Il s'agit d'un dossier
                     childrens.append(FileItem(name: String(name), path : path, childrens: [], size: size))
