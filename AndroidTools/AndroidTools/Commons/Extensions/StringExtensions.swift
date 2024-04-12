@@ -17,7 +17,7 @@ extension String {
         return String(self[indexAfterDelimiter...])
     }
     
-    func toFileItem() -> [FileItem] {
+    func toFileItem(path : String) -> [FileItem] {
         // Découpe la chaîne de caractères en lignes
         let lines = self.split(separator: "\n")
         // Crée des tableaux vides pour les dossiers et fichiers
@@ -34,10 +34,10 @@ extension String {
                 
                 if line.hasPrefix("d") {
                     // Il s'agit d'un dossier
-                    childrens.append(FileItem(name: String(name), childrens: [], size: size))
+                    childrens.append(FileItem(name: String(name), path : path, childrens: [], size: size))
                 } else {
                     // Il s'agit d'un fichier
-                    childrens.append(FileItem(name: String(name), childrens: nil, size: size))
+                    childrens.append(FileItem(name: String(name), path : path, childrens: nil, size: size))
                 }
             }
         }

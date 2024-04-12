@@ -12,29 +12,19 @@ struct FilesView: View {
     let deviceId : String
     
     @ObservedObject private var viewModel = FilesViewModel()
-    @State private var searchValue : String = ""
+    @State private var selectedFile : String? = nil
+    @State private var searchQuery : String = ""
     
     var body: some View {
         
-
-
-        List(viewModel.root, children: \.childrens) { item in
+        FileList(
+            files: viewModel.root,
+            selection:$selectedFile
+        ) { path in
+            viewModel.getFiles(deviceId: deviceId, path: path)
             
-            if item.childrens == nil {
-
-                Label(title: {Text(item.name)}) {
-                    let fileExtension = item.name.substringAfterLast(".").replacingOccurrences(of: ".", with: "")
-                    Image(nsImage: NSWorkspace.shared.icon(forFileType: fileExtension))
-                        .resizable()
-                        .frame(width: 20, height: 20)
-                }
-            }
-            else {
-                Label(item.name, systemImage: "folder")
-            }
+        } onDoubleTap: { path in
             
-            
-
         }
         .onAppear {
             viewModel.getFiles(deviceId: deviceId)
@@ -44,10 +34,14 @@ struct FilesView: View {
                 viewModel.getFiles(deviceId: deviceId)
             } label: {
                 Label("Refresh", systemImage: "arrow.clockwise")
-
             }
             
-            TextField("Search a file", text: $searchValue)
+            Button {
+            } label: {
+                Label("Create folder", systemImage: "folder.badge.plus")
+            }
+            
+            TextField("Search a file", text: $searchQuery)
                      .textFieldStyle(RoundedBorderTextFieldStyle())
                      .frame(minWidth: 200)
 

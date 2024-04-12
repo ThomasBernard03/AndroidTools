@@ -11,6 +11,7 @@ import Foundation
 struct FileItem: Hashable, Identifiable {
     var id: Self { self }
     var name: String
+    var path : String
     var childrens: [FileItem]? = nil
     var size : Int
 }
