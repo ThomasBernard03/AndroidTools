@@ -21,11 +21,12 @@ final class FilesViewModel : ObservableObject {
                     self.root = result
                 }
                 else {
-                    if let index = self.root.firstIndex(where: { path == $0.path + $0.name}) {
-                      var item = self.root[index]
-                      item.childrens?.append(contentsOf: result)
-                      self.root[index] = item // Update the array to trigger UI updates
-                  }
+                    if let index = self.root.firstIndex(where: { path == $0.fullPath}) {
+                        var item = self.root[index]
+                        item.childrens?.removeAll()
+                        item.childrens?.append(contentsOf: result)
+                        self.root[index] = item // Update the array to trigger UI updates
+                    }
                 }
                 
             }

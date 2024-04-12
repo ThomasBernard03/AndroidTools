@@ -12,17 +12,28 @@ struct FilesView: View {
     let deviceId : String
     
     @ObservedObject private var viewModel = FilesViewModel()
-    @State private var selectedFile : String? = nil
+    @State private var selectedPath : String? = nil
     @State private var searchQuery : String = ""
     
     var body: some View {
         
-        List(selection: $selectedFile) {
+        List(selection: $selectedPath) {
             FileList(
                 files: viewModel.root,
-                selection:$selectedFile
+                selection:$selectedPath
             ) { path in
-                
+                if selectedPath == path {
+                    selectedPath = nil
+                    if let index = viewModel.root.firstIndex(where: { path == $0.fullPath}) {
+                        var item = viewModel.root[index]
+                        item.childrens?.removeAll()
+                        viewModel.root[index] = item 
+                    }
+                }
+                else {
+                    selectedPath = path
+                    viewModel.getFiles(deviceId: deviceId, path: path)
+                }
             } onDoubleTap: { path in
                 viewModel.getFiles(deviceId: deviceId, path: path)
             }

@@ -112,7 +112,7 @@ class AdbHelper {
         //task.waitUntilExit()
 
         let data = pipe.fileHandleForReading.readDataToEndOfFile()
-        let output = String(data: data, encoding: .utf8)?.trimmingCharacters(in: .whitespacesAndNewlines) ?? ""
+        let output = String(data: data, encoding: .isoLatin1)?.trimmingCharacters(in: .whitespacesAndNewlines) ?? ""
         return output
     }
 

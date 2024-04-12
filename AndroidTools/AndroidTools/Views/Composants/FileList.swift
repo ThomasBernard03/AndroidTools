@@ -15,7 +15,7 @@ struct FileList: View {
     let onDoubleTap: (String) -> Void
     
     var body: some View {
-        ForEach(files, id:\.name) { item in
+        ForEach(files, id:\.fullPath) { item in
             HStack {
                 if item.childrens == nil {
                     FileRow(name:item.name)
@@ -27,13 +27,12 @@ struct FileList: View {
                 Spacer()
             }
             .contentShape(Rectangle())
-            .onTapGesture {
-                onTap("\(item.path)\(item.name)")
-            }
             .onTapGesture(count: 2) {
-                onDoubleTap("\(item.path)\(item.name)")
+                onDoubleTap(item.fullPath)
             }
-            
+            .onTapGesture {
+                onTap(item.fullPath)
+            }
             if !(item.childrens?.isEmpty ?? true) {
                 FileList(files: item.childrens!, selection: selection, onTap: onTap, onDoubleTap: onDoubleTap)
                     .padding([.leading])

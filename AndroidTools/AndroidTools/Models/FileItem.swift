@@ -14,4 +14,8 @@ struct FileItem: Hashable, Identifiable {
     var path : String
     var childrens: [FileItem]? = nil
     var size : Int
+    
+    var fullPath: String {
+        path + name
+    }
 }
