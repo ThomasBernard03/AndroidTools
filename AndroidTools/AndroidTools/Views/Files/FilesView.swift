@@ -17,14 +17,15 @@ struct FilesView: View {
     
     var body: some View {
         
-        FileList(
-            files: viewModel.root,
-            selection:$selectedFile
-        ) { path in
-            viewModel.getFiles(deviceId: deviceId, path: path)
-            
-        } onDoubleTap: { path in
-            
+        List(selection: $selectedFile) {
+            FileList(
+                files: viewModel.root,
+                selection:$selectedFile
+            ) { path in
+                
+            } onDoubleTap: { path in
+                viewModel.getFiles(deviceId: deviceId, path: path)
+            }
         }
         .onAppear {
             viewModel.getFiles(deviceId: deviceId)

@@ -15,7 +15,7 @@ struct FileList: View {
     let onDoubleTap: (String) -> Void
     
     var body: some View {
-        List(files, id:\.name, selection: selection) { item in
+        ForEach(files, id:\.name) { item in
             HStack {
                 if item.childrens == nil {
                     FileRow(name:item.name)
@@ -36,6 +36,7 @@ struct FileList: View {
             
             if !(item.childrens?.isEmpty ?? true) {
                 FileList(files: item.childrens!, selection: selection, onTap: onTap, onDoubleTap: onDoubleTap)
+                    .padding([.leading])
             }
         }
         
