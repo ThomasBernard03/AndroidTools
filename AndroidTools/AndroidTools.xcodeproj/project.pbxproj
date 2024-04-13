@@ -25,7 +25,6 @@
 		817EE85D2BC8247F00740D4A /* FileItem.swift in Sources */ = {isa = PBXBuildFile; fileRef = 817EE85C2BC8247F00740D4A /* FileItem.swift */; };
 		81D04F582BCA49C300B04FAB /* FileExplorerItem.swift in Sources */ = {isa = PBXBuildFile; fileRef = 81D04F572BCA49C300B04FAB /* FileExplorerItem.swift */; };
 		81D04F5A2BCA4B3400B04FAB /* FolderItem.swift in Sources */ = {isa = PBXBuildFile; fileRef = 81D04F592BCA4B3400B04FAB /* FolderItem.swift */; };
-		81E598B82BC6CF8A00FB614B /* DetailPage.swift in Sources */ = {isa = PBXBuildFile; fileRef = 81E598B72BC6CF8A00FB614B /* DetailPage.swift */; };
 		81E6A7512BC5CC260034EBFB /* SideBarView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 81E6A7502BC5CC260034EBFB /* SideBarView.swift */; };
 		81E6A7572BC5CD890034EBFB /* ScreenView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 81E6A7562BC5CD890034EBFB /* ScreenView.swift */; };
 		81E6A7592BC5CD9D0034EBFB /* InformationView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 81E6A7582BC5CD9D0034EBFB /* InformationView.swift */; };
@@ -59,7 +58,6 @@
 		817EE85C2BC8247F00740D4A /* FileItem.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FileItem.swift; sourceTree = "<group>"; };
 		81D04F572BCA49C300B04FAB /* FileExplorerItem.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FileExplorerItem.swift; sourceTree = "<group>"; };
 		81D04F592BCA4B3400B04FAB /* FolderItem.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FolderItem.swift; sourceTree = "<group>"; };
-		81E598B72BC6CF8A00FB614B /* DetailPage.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DetailPage.swift; sourceTree = "<group>"; };
 		81E6A7502BC5CC260034EBFB /* SideBarView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SideBarView.swift; sourceTree = "<group>"; };
 		81E6A7562BC5CD890034EBFB /* ScreenView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ScreenView.swift; sourceTree = "<group>"; };
 		81E6A7582BC5CD9D0034EBFB /* InformationView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = InformationView.swift; sourceTree = "<group>"; };
@@ -236,7 +234,6 @@
 			isa = PBXGroup;
 			children = (
 				81E6A7672BC5D7200034EBFB /* Device.swift */,
-				81E598B72BC6CF8A00FB614B /* DetailPage.swift */,
 				812A62B82BC6F1FB00388105 /* InstallingApkStatus.swift */,
 				812A62BC2BC707A400388105 /* BatteryInfo.swift */,
 				812A62BE2BC708D400388105 /* DeviceDetail.swift */,
@@ -342,7 +339,6 @@
 				812A62BF2BC708D400388105 /* DeviceDetail.swift in Sources */,
 				812A62BB2BC6F2FC00388105 /* StringExtensions.swift in Sources */,
 				81E6A7682BC5D7200034EBFB /* Device.swift in Sources */,
-				81E598B82BC6CF8A00FB614B /* DetailPage.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
