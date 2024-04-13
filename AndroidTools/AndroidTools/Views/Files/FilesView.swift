@@ -23,12 +23,14 @@ struct FilesView: View {
                 files: viewModel.root,
                 selection:$selectedPath
             ) { path in
+                selectedPath = path
+            } onDoubleTap: { path in
                 if selectedPath == path {
                     selectedPath = nil
                     if let index = viewModel.root.firstIndex(where: { path == $0.fullPath}) {
                         var item = viewModel.root[index]
                         item.childrens?.removeAll()
-                        viewModel.root[index] = item 
+                        viewModel.root[index] = item
                     }
                 }
                 else {
@@ -38,11 +40,7 @@ struct FilesView: View {
                     }
                     
                 }
-            } onDoubleTap: { path in
-                selectedPath = path
-                if path.last == "/" {
-                    viewModel.getFiles(deviceId: deviceId, path: path)
-                }
+          
             }
         }
         .onAppear {

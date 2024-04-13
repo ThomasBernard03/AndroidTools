@@ -24,6 +24,10 @@ struct FileList: View {
                     Image(systemName: "chevron.right")
                         .rotationEffect(.degrees((item.childrens?.isEmpty ?? false) ? 0 : 90))
                         .animation(.easeInOut, value: item.childrens?.isEmpty)
+                        .contentShape(Rectangle())
+                        .onTapGesture {
+                            onDoubleTap(item.fullPath)
+                        }
                     Label(item.name, systemImage:"folder")
                 }
                 
@@ -41,7 +45,5 @@ struct FileList: View {
                     .padding([.leading])
             }
         }
-        
-        
     }
 }
