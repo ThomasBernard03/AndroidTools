@@ -50,23 +50,42 @@ struct FilesView: View {
         .onAppear {
             viewModel.getFiles(deviceId: deviceId)
         }
-        .toolbar(content: {
-            Button {
-                viewModel.getFiles(deviceId: deviceId)
-            } label: {
-                Label("Refresh", systemImage: "arrow.clockwise")
+        .toolbar {
+            ToolbarItemGroup {
+                Button { } label: {
+                    Label("Upload file", systemImage: "square.and.arrow.up")
+                }
+                
+                Button { } label: {
+                    Label("Download file", systemImage: "square.and.arrow.down")
+                }
+                .disabled(selectedPath == nil)
+                
+                Button { } label: {
+                    Label("Create folder", systemImage: "folder.badge.plus")
+                }
+                
+                Button { } label: {
+                    Label("Delete", systemImage: "xmark.bin")
+                }
+                .disabled(selectedPath == nil)
+                
+                Spacer()
             }
             
-            Button {
-            } label: {
-                Label("Create folder", systemImage: "folder.badge.plus")
-            }
             
-            TextField("Search a file", text: $searchQuery)
-                     .textFieldStyle(RoundedBorderTextFieldStyle())
-                     .frame(minWidth: 200)
+            ToolbarItemGroup {
+                Button {viewModel.getFiles(deviceId: deviceId)} label: {
+                    Label("Refresh", systemImage: "arrow.clockwise")
+                }
+                
+                TextField("Search a file", text: $searchQuery)
+                         .textFieldStyle(RoundedBorderTextFieldStyle())
+                         .frame(minWidth: 200)
+            }
 
-        })
+
+        }
     }
 }
 
