@@ -17,27 +17,28 @@ extension String {
         return String(self[indexAfterDelimiter...])
     }
     
-    func toFileItem(path : String) -> [FileItem] {
+    func toFileItem(path : String) -> [FileExplorerItem] {
         // Découpe la chaîne de caractères en lignes
         let lines = self.split(separator: "\n")
         // Crée des tableaux vides pour les dossiers et fichiers
-        var childrens: [FileItem] = []
+        var items: [FileExplorerItem] = []
 
         // Parcourt chaque ligne
         for line in lines {
             let components = line.split(separator: " ")
             if components.count >= 8, let name = components.last {
-                let size = Int(components[4]) ?? 0
+                // If it's a folder
                 if line.hasPrefix("d") {
-                    // Il s'agit d'un dossier
-                    childrens.append(FileItem(name: String(name), path : path, childrens: [], size: size))
-                } else {
-                    // Il s'agit d'un fichier
-                    childrens.append(FileItem(name: String(name), path : path, childrens: nil, size: size))
+                    items.append(FolderItem(name: String(name), path: path, childrens: []))
+                }
+                // It's a file
+                else {
+                    let size = Int(components[4]) ?? 0
+                    items.append(FileItem(name: String(name), path : path, size: size))
                 }
             }
         }
         
-        return childrens
+        return items
     }
 }

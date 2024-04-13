@@ -28,7 +28,7 @@ class AdbHelper {
             }
     }
     
-    func getFiles(deviceId : String, path : String) -> [FileItem] {
+    func getFiles(deviceId : String, path : String) -> [FileExplorerItem] {
         let finalPath = "/storage/emulated/0" + path
         let result = runAdbCommand("-s \(deviceId) shell ls \(finalPath) -l")
         

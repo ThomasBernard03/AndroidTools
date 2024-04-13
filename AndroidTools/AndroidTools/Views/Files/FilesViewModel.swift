@@ -10,7 +10,7 @@ import Foundation
 import Foundation
 
 final class FilesViewModel: ObservableObject {
-    @Published var root: [FileItem] = []
+    @Published var root: [any FileExplorerItem] = []
 
     func getFiles(deviceId: String, path: String = "/") {
         DispatchQueue.global(qos: .userInitiated).async {
@@ -22,28 +22,24 @@ final class FilesViewModel: ObservableObject {
         }
     }
 
-    private func updateItems(at path: String, with result: [FileItem]) {
+    private func updateItems(at path: String, with result: [any FileExplorerItem]) {
         if path.isEmpty || path == "/" {
             root = result
         } else {
-            // Mettre à jour l'arbre à l'emplacement spécifié
-            updateDirectory(&root, path: path, result: result)
+            _ = updateDirectory(&root, path: path, result: result)
         }
     }
 
-    private func updateDirectory(_ items: inout [FileItem], path: String, result: [FileItem]) -> Bool {
-        if let index = items.firstIndex(where: { $0.fullPath == path }) {
-            var item = items[index]
-            item.childrens = result
-            items[index] = item
-            return true
-        } else {
-            for index in 0..<items.count {
-                if var children = items[index].childrens {
-                    if updateDirectory(&children, path: path, result: result) {
-                        items[index].childrens = children
-                        return true
-                    }
+    private func updateDirectory(_ items: inout [any FileExplorerItem], path: String, result: [any FileExplorerItem]) -> Bool {
+        for index in items.indices {
+            if items[index].fullPath == path, var folderItem = items[index] as? FolderItem {
+                folderItem.childrens = result
+                items[index] = folderItem
+                return true
+            } else if var folderItem = items[index] as? FolderItem {
+                if updateDirectory(&folderItem.childrens, path: path, result: result) {
+                    items[index] = folderItem
+                    return true
                 }
             }
         }

@@ -8,20 +8,12 @@
 import Foundation
 
 
-struct FileItem: Hashable, Identifiable {
-    var id: Self { self }
-    var name: String
-    var path : String
-    var childrens: [FileItem]? = nil
-    var size : Int
-    
+struct FileItem: FileExplorerItem {
+    let name: String
+    let path : String
     var fullPath: String {
-        if childrens == nil {
-            return path + name
-        }
-        else {
-            return path + name + "/"
-        }
-        
+        return path + name
     }
+    
+    let size : Int
 }

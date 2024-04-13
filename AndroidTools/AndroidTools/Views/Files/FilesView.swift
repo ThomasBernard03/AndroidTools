@@ -28,9 +28,13 @@ struct FilesView: View {
                 if selectedPath == path {
                     selectedPath = nil
                     if let index = viewModel.root.firstIndex(where: { path == $0.fullPath}) {
-                        var item = viewModel.root[index]
-                        item.childrens?.removeAll()
-                        viewModel.root[index] = item
+                        
+                        if var folder = viewModel.root[index] as? FolderItem {
+                            folder.childrens.removeAll()
+                            viewModel.root[index] = folder
+                        }
+                        
+                       
                     }
                 }
                 else {
