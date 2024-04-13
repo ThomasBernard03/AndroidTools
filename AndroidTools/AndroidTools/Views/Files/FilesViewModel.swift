@@ -11,10 +11,14 @@ import Foundation
 
 final class FilesViewModel: ObservableObject {
     @Published var root: [any FileExplorerItem] = []
+    @Published var deleting : Bool = false
+    
+    
+    private let adbHelper = AdbHelper()
 
     func getFiles(deviceId: String, path: String = "/") {
         DispatchQueue.global(qos: .userInitiated).async {
-            let result = AdbHelper().getFiles(deviceId: deviceId, path: path)
+            let result = self.adbHelper.getFiles(deviceId: deviceId, path: path)
             
             DispatchQueue.main.async {
                 self.updateItems(at: path, with: result)
@@ -44,5 +48,35 @@ final class FilesViewModel: ObservableObject {
             }
         }
         return false
+    }
+    
+    func deleteFileExplorerItem(deviceId : String, fullPath : String){
+        
+        if deleting {
+            return
+        }
+        
+        deleting = true
+    
+        DispatchQueue.global(qos: .userInitiated).async {
+            _ = self.adbHelper.deleteFileExplorerItem(deviceId: deviceId, fullPath: fullPath)
+            
+            DispatchQueue.main.async {
+                self.deleting = false
+                let parentPath = self.getParentPath(fromFullPath: fullPath)
+                self.getFiles(deviceId: deviceId, path: parentPath)
+                
+            }
+        }
+        
+    }
+    
+    private func getParentPath(fromFullPath fullPath: String) -> String {
+        let pathComponents = fullPath.split(separator: "/").dropLast()
+        if pathComponents.isEmpty {
+            return "/"
+        } else {
+            return "/" + pathComponents.joined(separator: "/") + "/"
+        }
     }
 }

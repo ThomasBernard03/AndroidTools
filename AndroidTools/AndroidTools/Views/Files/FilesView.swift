@@ -65,10 +65,12 @@ struct FilesView: View {
                     Label("Create folder", systemImage: "folder.badge.plus")
                 }
                 
-                Button { } label: {
+                Button {
+                    viewModel.deleteFileExplorerItem(deviceId: deviceId, fullPath: selectedPath!)
+                } label: {
                     Label("Delete", systemImage: "xmark.bin")
                 }
-                .disabled(selectedPath == nil)
+                .disabled(selectedPath == nil && viewModel.deleting)
                 
                 Spacer()
             }
