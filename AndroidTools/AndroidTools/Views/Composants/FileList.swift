@@ -22,7 +22,7 @@ struct FileList: View {
                 } else if let folderItem = item as? FolderItem {
                     Image(systemName: "chevron.right")
                         .rotationEffect(.degrees(folderItem.childrens.isEmpty ? 0 : 90))
-                        .animation(.easeInOut, value: folderItem.childrens.isEmpty)
+                        .animation(.easeInOut(duration: 0.1), value: folderItem.childrens.isEmpty)
                         .contentShape(Rectangle())
                         .onTapGesture {
                             onDoubleTap(folderItem.fullPath)
@@ -41,7 +41,7 @@ struct FileList: View {
             }
             if let folderItem = item as? FolderItem, !folderItem.childrens.isEmpty {
                 FileList(files: folderItem.childrens, selection: selection, onTap: onTap, onDoubleTap: onDoubleTap)
-                    .padding([.leading])
+                    .padding([.leading], 24)
             }
         }
     }

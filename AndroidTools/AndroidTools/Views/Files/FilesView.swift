@@ -70,7 +70,7 @@ struct FilesView: View {
                 } label: {
                     Label("Delete", systemImage: "xmark.bin")
                 }
-                .disabled(selectedPath == nil && viewModel.deleting)
+                .disabled(selectedPath == nil || viewModel.deleting)
                 
                 Spacer()
             }

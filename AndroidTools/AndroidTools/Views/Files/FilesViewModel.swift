@@ -8,11 +8,14 @@
 import Foundation
 
 import Foundation
+import SwiftUI
 
 final class FilesViewModel: ObservableObject {
     @Published var root: [any FileExplorerItem] = []
+    
     @Published var deleting : Bool = false
     
+    @Published var exportedDocument : FileDocument? = nil
     
     private let adbHelper = AdbHelper()
 
@@ -59,24 +62,12 @@ final class FilesViewModel: ObservableObject {
         deleting = true
     
         DispatchQueue.global(qos: .userInitiated).async {
-            _ = self.adbHelper.deleteFileExplorerItem(deviceId: deviceId, fullPath: fullPath)
+            self.adbHelper.deleteFileExplorerItem(deviceId: deviceId, fullPath: fullPath)
             
             DispatchQueue.main.async {
                 self.deleting = false
-                let parentPath = self.getParentPath(fromFullPath: fullPath)
-                self.getFiles(deviceId: deviceId, path: parentPath)
-                
             }
         }
         
-    }
-    
-    private func getParentPath(fromFullPath fullPath: String) -> String {
-        let pathComponents = fullPath.split(separator: "/").dropLast()
-        if pathComponents.isEmpty {
-            return "/"
-        } else {
-            return "/" + pathComponents.joined(separator: "/") + "/"
-        }
     }
 }
