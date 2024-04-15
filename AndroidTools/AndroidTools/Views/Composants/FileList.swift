@@ -41,7 +41,7 @@ struct FileList: View {
             }
             if let folderItem = item as? FolderItem, !folderItem.childrens.isEmpty {
                 FileList(files: folderItem.childrens, selection: selection, onTap: onTap, onDoubleTap: onDoubleTap)
-                    .padding([.leading], 24)
+                    .padding([.leading], 20)
             }
         }
     }

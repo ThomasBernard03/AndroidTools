@@ -33,7 +33,6 @@
 		81E6A75F2BC5D2840034EBFB /* InformationViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 81E6A75E2BC5D2840034EBFB /* InformationViewModel.swift */; };
 		81E6A7652BC5D7020034EBFB /* AdbHelper.swift in Sources */ = {isa = PBXBuildFile; fileRef = 81E6A7642BC5D7020034EBFB /* AdbHelper.swift */; };
 		81E6A7682BC5D7200034EBFB /* Device.swift in Sources */ = {isa = PBXBuildFile; fileRef = 81E6A7672BC5D7200034EBFB /* Device.swift */; };
-		81E6A76A2BC5DB0C0034EBFB /* adb in Resources */ = {isa = PBXBuildFile; fileRef = 81E6A7692BC5DB0C0034EBFB /* adb */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
@@ -66,7 +65,6 @@
 		81E6A75E2BC5D2840034EBFB /* InformationViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = InformationViewModel.swift; sourceTree = "<group>"; };
 		81E6A7642BC5D7020034EBFB /* AdbHelper.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AdbHelper.swift; sourceTree = "<group>"; };
 		81E6A7672BC5D7200034EBFB /* Device.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Device.swift; sourceTree = "<group>"; };
-		81E6A7692BC5DB0C0034EBFB /* adb */ = {isa = PBXFileReference; lastKnownFileType = "compiled.mach-o.executable"; path = adb; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -138,7 +136,6 @@
 				814319532BC6B3AC00044934 /* Commons */,
 				81E6A7662BC5D7100034EBFB /* Models */,
 				81E6A7632BC5D6F60034EBFB /* Helpers */,
-				81E6A7602BC5D5D00034EBFB /* Data */,
 				81E6A74F2BC5CC0F0034EBFB /* Views */,
 				8178547D2BC59F6300B5B2EE /* AndroidToolsApp.swift */,
 				817854812BC59F6500B5B2EE /* Assets.xcassets */,
@@ -212,14 +209,6 @@
 				81E6A7562BC5CD890034EBFB /* ScreenView.swift */,
 			);
 			path = Screen;
-			sourceTree = "<group>";
-		};
-		81E6A7602BC5D5D00034EBFB /* Data */ = {
-			isa = PBXGroup;
-			children = (
-				81E6A7692BC5DB0C0034EBFB /* adb */,
-			);
-			path = Data;
 			sourceTree = "<group>";
 		};
 		81E6A7632BC5D6F60034EBFB /* Helpers */ = {
@@ -302,7 +291,6 @@
 			isa = PBXResourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				81E6A76A2BC5DB0C0034EBFB /* adb in Resources */,
 				817854852BC59F6500B5B2EE /* Preview Assets.xcassets in Resources */,
 				817854822BC59F6500B5B2EE /* Assets.xcassets in Resources */,
 			);
@@ -382,7 +370,7 @@
 				DEBUG_INFORMATION_FORMAT = dwarf;
 				ENABLE_STRICT_OBJC_MSGSEND = YES;
 				ENABLE_TESTABILITY = YES;
-				ENABLE_USER_SCRIPT_SANDBOXING = YES;
+				ENABLE_USER_SCRIPT_SANDBOXING = NO;
 				GCC_C_LANGUAGE_STANDARD = gnu17;
 				GCC_DYNAMIC_NO_PIC = NO;
 				GCC_NO_COMMON_BLOCKS = YES;
@@ -445,7 +433,7 @@
 				DEBUG_INFORMATION_FORMAT = "dwarf-with-dsym";
 				ENABLE_NS_ASSERTIONS = NO;
 				ENABLE_STRICT_OBJC_MSGSEND = YES;
-				ENABLE_USER_SCRIPT_SANDBOXING = YES;
+				ENABLE_USER_SCRIPT_SANDBOXING = NO;
 				GCC_C_LANGUAGE_STANDARD = gnu17;
 				GCC_NO_COMMON_BLOCKS = YES;
 				GCC_WARN_64_TO_32_BIT_CONVERSION = YES;
@@ -469,7 +457,7 @@
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				ASSETCATALOG_COMPILER_GLOBAL_ACCENT_COLOR_NAME = AccentColor;
 				ASSETCATALOG_COMPILER_INCLUDE_ALL_APPICON_ASSETS = YES;
-				CODE_SIGN_ENTITLEMENTS = AndroidTools/AndroidTools.entitlements;
+				CODE_SIGN_ENTITLEMENTS = "";
 				"CODE_SIGN_IDENTITY[sdk=macosx*]" = "Apple Development";
 				CODE_SIGN_STYLE = Automatic;
 				COMBINE_HIDPI_IMAGES = YES;
@@ -478,6 +466,7 @@
 				DEVELOPMENT_TEAM = H9DTPYA8RY;
 				ENABLE_HARDENED_RUNTIME = YES;
 				ENABLE_PREVIEWS = YES;
+				ENABLE_USER_SELECTED_FILES = "";
 				GENERATE_INFOPLIST_FILE = YES;
 				INFOPLIST_FILE = AndroidTools/Info.plist;
 				INFOPLIST_KEY_LSApplicationCategoryType = "public.app-category.developer-tools";
@@ -500,7 +489,7 @@
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				ASSETCATALOG_COMPILER_GLOBAL_ACCENT_COLOR_NAME = AccentColor;
 				ASSETCATALOG_COMPILER_INCLUDE_ALL_APPICON_ASSETS = YES;
-				CODE_SIGN_ENTITLEMENTS = AndroidTools/AndroidTools.entitlements;
+				CODE_SIGN_ENTITLEMENTS = "";
 				"CODE_SIGN_IDENTITY[sdk=macosx*]" = "Apple Development";
 				CODE_SIGN_STYLE = Automatic;
 				COMBINE_HIDPI_IMAGES = YES;
@@ -509,6 +498,7 @@
 				DEVELOPMENT_TEAM = H9DTPYA8RY;
 				ENABLE_HARDENED_RUNTIME = YES;
 				ENABLE_PREVIEWS = YES;
+				ENABLE_USER_SELECTED_FILES = "";
 				GENERATE_INFOPLIST_FILE = YES;
 				INFOPLIST_FILE = AndroidTools/Info.plist;
 				INFOPLIST_KEY_LSApplicationCategoryType = "public.app-category.developer-tools";

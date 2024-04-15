@@ -9,7 +9,7 @@ import Foundation
 
 class AdbHelper {
     
-    let adb = Bundle.main.url(forResource: "adb", withExtension: nil)
+    let adbPath = "/usr/local/bin/adb"
     
     init() {
         _ = runAdbCommand("root")
@@ -106,21 +106,19 @@ class AdbHelper {
     }
     
     private func runAdbCommand(_ command: String) -> String {
-        print("Running command : \n adb\(command)")
+        print("Running command: adb \(command)")
         let task = Process()
         let pipe = Pipe()
 
         task.standardOutput = pipe
         task.standardError = pipe
-        task.arguments = ["-c", "\(adb!.path) \(command)"]
+        task.arguments = ["-c", "\(adbPath) \(command)"]
         task.launchPath = "/bin/sh"
         task.launch()
-
-        //task.waitUntilExit()
-
+        
         let data = pipe.fileHandleForReading.readDataToEndOfFile()
-        let output = String(data: data, encoding: .isoLatin1)?.trimmingCharacters(in: .whitespacesAndNewlines) ?? ""
-        print("Result : \n\(output)")
+        let output = String(data: data, encoding: .utf8)?.trimmingCharacters(in: .whitespacesAndNewlines) ?? ""
+        print("Result: \(output)")
         return output
     }
 
