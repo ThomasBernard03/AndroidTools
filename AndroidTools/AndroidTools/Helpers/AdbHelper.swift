@@ -105,6 +105,16 @@ class AdbHelper {
         return runAdbCommand(command)
     }
     
+    
+    func importFile(deviceId: String, filePath: String, targetPath: String) -> String {
+        let cleanedFilePath = filePath.replacingOccurrences(of: "file://", with: "")
+        let targetDevicePath = "/storage/emulated/0\(targetPath)"
+        let pushCommand = "-s \(deviceId) push \"\(cleanedFilePath)\" \"\(targetDevicePath)\""
+        
+        let result = runAdbCommand(pushCommand)
+        return result
+    }
+    
     private func runAdbCommand(_ command: String) -> String {
         print("Running command: adb \(command)")
         let task = Process()

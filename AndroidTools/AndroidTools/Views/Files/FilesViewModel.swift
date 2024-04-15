@@ -13,7 +13,7 @@ import SwiftUI
 final class FilesViewModel: ObservableObject {
     @Published var root: [any FileExplorerItem] = []
     
-    @Published var deleting : Bool = false
+    @Published var loading : Bool = false
     
     @Published var exportedDocument : FileDocument? = nil
     
@@ -55,17 +55,29 @@ final class FilesViewModel: ObservableObject {
     
     func deleteFileExplorerItem(deviceId : String, fullPath : String){
         
-        if deleting {
-            return
-        }
-        
-        deleting = true
+        if loading { return }
+        loading = true
     
         DispatchQueue.global(qos: .userInitiated).async {
             self.adbHelper.deleteFileExplorerItem(deviceId: deviceId, fullPath: fullPath)
             
             DispatchQueue.main.async {
-                self.deleting = false
+                self.loading = false
+            }
+        }
+        
+    }
+    
+    
+    func importFile(deviceId : String, filePath : String, targetPath : String) {
+        if loading { return }
+        loading = true
+        
+        DispatchQueue.global(qos: .userInitiated).async {
+            self.adbHelper.importFile(deviceId: deviceId, filePath: filePath, targetPath: targetPath)
+            
+            DispatchQueue.main.async {
+                self.loading = false
             }
         }
         

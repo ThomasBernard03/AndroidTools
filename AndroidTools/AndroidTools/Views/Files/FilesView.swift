@@ -41,6 +41,7 @@ struct FilesView: View {
                 Button { showImportFileDialog.toggle() } label: {
                     Label("Upload file", systemImage: "square.and.arrow.up")
                 }
+                .disabled(viewModel.loading)
                 
                 Button { } label: {
                     Label("Download file", systemImage: "square.and.arrow.down")
@@ -56,7 +57,7 @@ struct FilesView: View {
                 } label: {
                     Label("Delete", systemImage: "xmark.bin")
                 }
-                .disabled(selectedPath == nil || viewModel.deleting)
+                .disabled(selectedPath == nil || viewModel.loading)
                 
                 Spacer()
             }
@@ -76,6 +77,7 @@ struct FilesView: View {
             switch result {
             case .success(let file):
                 print(file.absoluteString)
+                viewModel.importFile(deviceId: deviceId, filePath: file.absoluteString, targetPath: selectedPath ?? "")
             case .failure(let error):
                 print(error.localizedDescription)
             }
