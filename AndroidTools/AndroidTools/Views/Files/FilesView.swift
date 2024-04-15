@@ -6,6 +6,7 @@
 //
 
 import SwiftUI
+import UniformTypeIdentifiers.UTType
 
 struct FilesView: View {
     
@@ -14,45 +15,30 @@ struct FilesView: View {
     @ObservedObject private var viewModel = FilesViewModel()
     @State private var selectedPath : String? = nil
     @State private var searchQuery : String = ""
-
+    @State private var showImportFileDialog : Bool = false
     
     var body: some View {
         
-        List(selection: $selectedPath) {
-            FileList(
-                files: viewModel.root,
-                selection:$selectedPath
-            ) { path in
-                selectedPath = path
-            } onDoubleTap: { path in
-                if selectedPath == path {
-                    selectedPath = nil
-                    if let index = viewModel.root.firstIndex(where: { path == $0.fullPath}) {
-                        
-                        if var folder = viewModel.root[index] as? FolderItem {
-                            folder.childrens.removeAll()
-                            viewModel.root[index] = folder
-                        }
-                        
-                       
-                    }
+        
+        List(viewModel.root, id: \.fullPath, selection: $selectedPath) { item in
+            HStack {
+                if let fileItem = item as? FileItem {
+                    FileRow(name: fileItem.name)
+                } else if let folderItem = item as? FolderItem {
+                    Label(folderItem.name, systemImage: "folder")
                 }
-                else {
-                    selectedPath = path
-                    if path.last == "/" {
-                        viewModel.getFiles(deviceId: deviceId, path: path)
-                    }
-                    
-                }
-          
             }
+        }
+        .contextMenu(forSelectionType: String.self, menu: { _ in }) {_ in 
+            // double tap action
+            print("Double tapped")
         }
         .onAppear {
             viewModel.getFiles(deviceId: deviceId)
         }
         .toolbar {
             ToolbarItemGroup {
-                Button { } label: {
+                Button { showImportFileDialog.toggle() } label: {
                     Label("Upload file", systemImage: "square.and.arrow.up")
                 }
                 
@@ -85,8 +71,14 @@ struct FilesView: View {
                          .textFieldStyle(RoundedBorderTextFieldStyle())
                          .frame(minWidth: 200)
             }
-
-
+        }
+        .fileImporter(isPresented: $showImportFileDialog, allowedContentTypes: [UTType.png]) { result in
+            switch result {
+            case .success(let file):
+                print(file.absoluteString)
+            case .failure(let error):
+                print(error.localizedDescription)
+            }
         }
     }
 }
