@@ -8,6 +8,8 @@
 import Foundation
 
 struct FolderItem : FileExplorerItem {
+    var parent: FileExplorerItem?
+    
     let name: String
     let path: String
     var fullPath: String {

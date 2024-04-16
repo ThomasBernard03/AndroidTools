@@ -12,6 +12,7 @@ struct AndroidToolsApp: App {
     var body: some Scene {
         WindowGroup {
             SideBarView()
+                .frame(minWidth: 600, minHeight: 400)
         }
     }
 }

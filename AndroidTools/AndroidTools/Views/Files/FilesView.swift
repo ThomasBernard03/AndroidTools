@@ -13,14 +13,12 @@ struct FilesView: View {
     let deviceId : String
     
     @ObservedObject private var viewModel = FilesViewModel()
-    @State private var selectedPath : String? = nil
     @State private var searchQuery : String = ""
     @State private var showImportFileDialog : Bool = false
     
     var body: some View {
         
-        
-        List(viewModel.root, id: \.fullPath, selection: $selectedPath) { item in
+        List(viewModel.files, id: \.fullPath, selection: $viewModel.currentPath) { item in
             HStack {
                 if let fileItem = item as? FileItem {
                     FileRow(name: fileItem.name)
@@ -29,14 +27,18 @@ struct FilesView: View {
                 }
             }
         }
-        .contextMenu(forSelectionType: String.self, menu: { _ in }) {_ in 
-            // double tap action
-            print("Double tapped")
+        .contextMenu(forSelectionType: String.self, menu: { _ in }) {_ in
+            viewModel.getFiles(deviceId: deviceId, path: viewModel.currentPath ?? "/")
         }
         .onAppear {
             viewModel.getFiles(deviceId: deviceId)
         }
         .toolbar {
+            ToolbarItemGroup(placement: .navigation) {
+                Button { viewModel.GoBack() } label: {
+                    Label("Go back", systemImage: "chevron.left")
+                }
+            }
             ToolbarItemGroup {
                 Button { showImportFileDialog.toggle() } label: {
                     Label("Upload file", systemImage: "square.and.arrow.up")
@@ -46,18 +48,18 @@ struct FilesView: View {
                 Button { } label: {
                     Label("Download file", systemImage: "square.and.arrow.down")
                 }
-                .disabled(selectedPath == nil)
+                .disabled(viewModel.currentPath == nil)
                 
                 Button { } label: {
                     Label("Create folder", systemImage: "folder.badge.plus")
                 }
                 
                 Button {
-                    viewModel.deleteFileExplorerItem(deviceId: deviceId, fullPath: selectedPath!)
+                    viewModel.deleteFileExplorerItem(deviceId: deviceId, fullPath: viewModel.currentPath!)
                 } label: {
                     Label("Delete", systemImage: "xmark.bin")
                 }
-                .disabled(selectedPath == nil || viewModel.loading)
+                .disabled(viewModel.currentPath == nil || viewModel.loading)
                 
                 Spacer()
             }
@@ -73,11 +75,15 @@ struct FilesView: View {
                          .frame(minWidth: 200)
             }
         }
+        .navigationTitle(viewModel.currentPath ?? "/")
         .fileImporter(isPresented: $showImportFileDialog, allowedContentTypes: [UTType.png]) { result in
             switch result {
             case .success(let file):
                 print(file.absoluteString)
-                viewModel.importFile(deviceId: deviceId, filePath: file.absoluteString, targetPath: selectedPath ?? "")
+                viewModel.importFile(
+                    deviceId: deviceId,
+                    filePath: file.absoluteString,
+                    targetPath: viewModel.currentPath ?? "/")
             case .failure(let error):
                 print(error.localizedDescription)
             }

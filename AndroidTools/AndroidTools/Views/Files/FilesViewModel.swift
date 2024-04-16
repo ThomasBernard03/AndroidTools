@@ -11,29 +11,53 @@ import Foundation
 import SwiftUI
 
 final class FilesViewModel: ObservableObject {
-    @Published var root: [any FileExplorerItem] = []
+    @Published var files: [any FileExplorerItem] = []
     
     @Published var loading : Bool = false
     
     @Published var exportedDocument : FileDocument? = nil
     
+    @Published var currentPath : String? = nil
+    @Published var currentFolder : FolderItem? = nil
+    
     private let adbHelper = AdbHelper()
 
     func getFiles(deviceId: String, path: String = "/") {
-        DispatchQueue.global(qos: .userInitiated).async {
-            let result = self.adbHelper.getFiles(deviceId: deviceId, path: path)
+        DispatchQueue.global(qos: .userInitiated).async { [self] in
             
-            DispatchQueue.main.async {
-                self.updateItems(at: path, with: result)
+            let selectedFile = files.first { file in
+                file.fullPath == currentPath
+            }
+            
+            // If it's a file, get list of parent
+            if selectedFile as? FileItem != nil {
+                let result = self.adbHelper.getFiles(deviceId: deviceId, file: selectedFile?.parent)
+                
+                DispatchQueue.main.async {
+                    self.files = result
+
+                }
+            }
+            // It's folder so get childrens
+            else {
+                let result = self.adbHelper.getFiles(deviceId: deviceId, file: selectedFile)
+                
+                DispatchQueue.main.async {
+                    self.files = result
+                }
             }
         }
+    }
+    
+    func GoBack(){
+        files = (files.first?.parent as? FolderItem)?.childrens ?? files
     }
 
     private func updateItems(at path: String, with result: [any FileExplorerItem]) {
         if path.isEmpty || path == "/" {
-            root = result
+            files = result
         } else {
-            _ = updateDirectory(&root, path: path, result: result)
+            _ = updateDirectory(&files, path: path, result: result)
         }
     }
 
@@ -54,18 +78,17 @@ final class FilesViewModel: ObservableObject {
     }
     
     func deleteFileExplorerItem(deviceId : String, fullPath : String){
-        
         if loading { return }
         loading = true
     
         DispatchQueue.global(qos: .userInitiated).async {
-            self.adbHelper.deleteFileExplorerItem(deviceId: deviceId, fullPath: fullPath)
+            let fileDeleted = self.adbHelper.deleteFileExplorerItem(deviceId: deviceId, fullPath: fullPath)
             
             DispatchQueue.main.async {
+                self.getFiles(deviceId: deviceId, path: self.currentPath ?? "/")
                 self.loading = false
             }
         }
-        
     }
     
     
@@ -74,12 +97,15 @@ final class FilesViewModel: ObservableObject {
         loading = true
         
         DispatchQueue.global(qos: .userInitiated).async {
-            self.adbHelper.importFile(deviceId: deviceId, filePath: filePath, targetPath: targetPath)
+            let fileImported = self.adbHelper.importFile(
+                deviceId: deviceId,
+                filePath: filePath,
+                targetPath: targetPath)
             
             DispatchQueue.main.async {
+                self.getFiles(deviceId: deviceId, path: self.currentPath ?? "/")
                 self.loading = false
             }
         }
-        
     }
 }

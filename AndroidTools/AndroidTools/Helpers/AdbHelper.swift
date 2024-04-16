@@ -28,11 +28,11 @@ class AdbHelper {
             }
     }
     
-    func getFiles(deviceId : String, path : String) -> [FileExplorerItem] {
-        let finalPath = "/storage/emulated/0" + path
+    func getFiles(deviceId : String, file : FileExplorerItem?) -> [FileExplorerItem] {
+        let finalPath = "/storage/emulated/0" + (file?.fullPath ?? "")
         let result = runAdbCommand("-s \(deviceId) shell ls \(finalPath) -l")
         
-        return result.toFileItem(path:path)
+        return result.toFileItem(parent:file)
     }
     
     func deleteFileExplorerItem(deviceId: String, fullPath: String) -> String {
