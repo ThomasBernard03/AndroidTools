@@ -38,6 +38,7 @@ struct FilesView: View {
                 Button { viewModel.goBack(deviceId:deviceId) } label: {
                     Label("Go back", systemImage: "chevron.left")
                 }
+                .disabled(viewModel.currentFolder?.parent == nil)
             }
             ToolbarItemGroup {
                 Button { showImportFileDialog.toggle() } label: {

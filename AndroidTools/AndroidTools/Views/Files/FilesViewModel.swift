@@ -56,17 +56,8 @@ final class FilesViewModel: ObservableObject {
     }
     
     func goBack(deviceId : String){
-        DispatchQueue.global(qos: .userInitiated).async { [self] in
-            
-            // It's folder so get childrens
-            if let parent = currentFolder?.parent {
-                let result = self.adbHelper.getFiles(deviceId: deviceId, parent: parent)
-
-                DispatchQueue.main.async {
-                    self.currentFolder = result
-                }
-            }
- 
+        if let parent = currentFolder?.parent {
+            currentFolder = parent
         }
     }
     
