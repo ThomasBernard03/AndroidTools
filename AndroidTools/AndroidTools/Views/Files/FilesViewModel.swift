@@ -11,70 +11,75 @@ import Foundation
 import SwiftUI
 
 final class FilesViewModel: ObservableObject {
-    @Published var files: [any FileExplorerItem] = []
+    @Published var currentFolder: FolderItem? = nil
     
     @Published var loading : Bool = false
     
     @Published var exportedDocument : FileDocument? = nil
     
     @Published var currentPath : String? = nil
-    @Published var currentFolder : FolderItem? = nil
     
     private let adbHelper = AdbHelper()
+    
+    
+    func itemDoubleClicked(deviceId : String){
+        let selectedItem = currentFolder?.childrens.first { file in file.fullPath == currentPath }
+        
+        if let folderItem = selectedItem as? FolderItem {
+            currentFolder = folderItem
+            getFiles(deviceId: deviceId, parent: folderItem)
+        }
+    }
 
-    func getFiles(deviceId: String, path: String = "/") {
+    func getFiles(deviceId: String, path : String?) {
         DispatchQueue.global(qos: .userInitiated).async { [self] in
             
-            let selectedFile = files.first { file in
-                file.fullPath == currentPath
-            }
-            
-            // If it's a file, get list of parent
-            if selectedFile as? FileItem != nil {
-                let result = self.adbHelper.getFiles(deviceId: deviceId, file: selectedFile?.parent)
-                
-                DispatchQueue.main.async {
-                    self.files = result
-
-                }
-            }
             // It's folder so get childrens
-            else {
-                let result = self.adbHelper.getFiles(deviceId: deviceId, file: selectedFile)
-                
-                DispatchQueue.main.async {
-                    self.files = result
-                }
+            let result = self.adbHelper.getFiles(deviceId: deviceId, path: path ?? "/")
+
+            DispatchQueue.main.async {
+                self.currentFolder = result
             }
         }
     }
     
-    func GoBack(){
-        files = (files.first?.parent as? FolderItem)?.childrens ?? files
-    }
+    func getFiles(deviceId: String, parent : FolderItem) {
+        DispatchQueue.global(qos: .userInitiated).async { [self] in
+            
+            // It's folder so get childrens
+            let result = self.adbHelper.getFiles(deviceId: deviceId, parent: parent)
 
-    private func updateItems(at path: String, with result: [any FileExplorerItem]) {
-        if path.isEmpty || path == "/" {
-            files = result
-        } else {
-            _ = updateDirectory(&files, path: path, result: result)
+            DispatchQueue.main.async {
+                self.currentFolder = result
+            }
         }
     }
+    
+    func goBack(deviceId : String){
+        DispatchQueue.global(qos: .userInitiated).async { [self] in
+            
+            // It's folder so get childrens
+            if let parent = currentFolder?.parent {
+                let result = self.adbHelper.getFiles(deviceId: deviceId, parent: parent)
 
-    private func updateDirectory(_ items: inout [any FileExplorerItem], path: String, result: [any FileExplorerItem]) -> Bool {
-        for index in items.indices {
-            if items[index].fullPath == path, var folderItem = items[index] as? FolderItem {
-                folderItem.childrens = result
-                items[index] = folderItem
-                return true
-            } else if var folderItem = items[index] as? FolderItem {
-                if updateDirectory(&folderItem.childrens, path: path, result: result) {
-                    items[index] = folderItem
-                    return true
+                DispatchQueue.main.async {
+                    self.currentFolder = result
+                }
+            }
+ 
+        }
+    }
+    
+    func refreshList(deviceId : String){
+        DispatchQueue.global(qos: .userInitiated).async { [self] in
+            if let parent = currentFolder {
+                let result = self.adbHelper.getFiles(deviceId: deviceId, parent: parent)
+
+                DispatchQueue.main.async {
+                    self.currentFolder = result
                 }
             }
         }
-        return false
     }
     
     func deleteFileExplorerItem(deviceId : String, fullPath : String){
@@ -83,9 +88,9 @@ final class FilesViewModel: ObservableObject {
     
         DispatchQueue.global(qos: .userInitiated).async {
             let fileDeleted = self.adbHelper.deleteFileExplorerItem(deviceId: deviceId, fullPath: fullPath)
+            self.refreshList(deviceId: deviceId)
             
             DispatchQueue.main.async {
-                self.getFiles(deviceId: deviceId, path: self.currentPath ?? "/")
                 self.loading = false
             }
         }
@@ -102,8 +107,9 @@ final class FilesViewModel: ObservableObject {
                 filePath: filePath,
                 targetPath: targetPath)
             
+            self.refreshList(deviceId: deviceId)
+            
             DispatchQueue.main.async {
-                self.getFiles(deviceId: deviceId, path: self.currentPath ?? "/")
                 self.loading = false
             }
         }

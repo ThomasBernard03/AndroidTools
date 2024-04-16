@@ -8,9 +8,11 @@
 import Foundation
 
 protocol FileExplorerItem {
-    var parent : FileExplorerItem? { get }
     var name: String { get }
     var path : String { get }
     
     var fullPath : String { get }
+    
+    var parent : FolderItem? { get }
+    
 }

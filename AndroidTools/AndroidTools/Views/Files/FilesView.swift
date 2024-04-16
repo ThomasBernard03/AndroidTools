@@ -18,7 +18,7 @@ struct FilesView: View {
     
     var body: some View {
         
-        List(viewModel.files, id: \.fullPath, selection: $viewModel.currentPath) { item in
+        List(viewModel.currentFolder?.childrens ?? [], id: \.fullPath, selection: $viewModel.currentPath) { item in
             HStack {
                 if let fileItem = item as? FileItem {
                     FileRow(name: fileItem.name)
@@ -28,14 +28,14 @@ struct FilesView: View {
             }
         }
         .contextMenu(forSelectionType: String.self, menu: { _ in }) {_ in
-            viewModel.getFiles(deviceId: deviceId, path: viewModel.currentPath ?? "/")
+            viewModel.itemDoubleClicked(deviceId: deviceId)
         }
         .onAppear {
-            viewModel.getFiles(deviceId: deviceId)
+            viewModel.getFiles(deviceId: deviceId, path:nil)
         }
         .toolbar {
             ToolbarItemGroup(placement: .navigation) {
-                Button { viewModel.GoBack() } label: {
+                Button { viewModel.goBack(deviceId:deviceId) } label: {
                     Label("Go back", systemImage: "chevron.left")
                 }
             }
@@ -66,7 +66,7 @@ struct FilesView: View {
             
             
             ToolbarItemGroup {
-                Button {viewModel.getFiles(deviceId: deviceId)} label: {
+                Button {viewModel.refreshList(deviceId: deviceId)} label: {
                     Label("Refresh", systemImage: "arrow.clockwise")
                 }
                 
@@ -75,7 +75,7 @@ struct FilesView: View {
                          .frame(minWidth: 200)
             }
         }
-        .navigationTitle(viewModel.currentPath ?? "/")
+        .navigationTitle(viewModel.currentFolder?.path ?? "/")
         .fileImporter(isPresented: $showImportFileDialog, allowedContentTypes: [UTType.png]) { result in
             switch result {
             case .success(let file):

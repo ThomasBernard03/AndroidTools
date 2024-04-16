@@ -8,14 +8,22 @@
 import Foundation
 
 
-struct FileItem: FileExplorerItem {
-    var parent: FileExplorerItem?
+class FileItem: FileExplorerItem {
+    let parent: FolderItem?
     
     let name: String
     let path : String
+    
     var fullPath: String {
         return path + name
     }
     
     let size : Int
+    
+    init(parent : FolderItem?, name: String, path: String, size: Int) {
+        self.parent = parent
+        self.name = name
+        self.path = path
+        self.size = size
+    }
 }
