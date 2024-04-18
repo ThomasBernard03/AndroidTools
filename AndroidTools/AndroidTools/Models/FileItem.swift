@@ -15,7 +15,7 @@ class FileItem: FileExplorerItem {
     let path : String
     
     var fullPath: String {
-        return path + name
+        return path + name + "/"
     }
     
     let size : Int

@@ -9,9 +9,14 @@ import SwiftUI
 
 struct SideBarView: View {
     
-    @StateObject var viewModel = SideBarViewModel()
+    @ObservedObject var viewModel = SideBarViewModel()
+
+    
+    @AppStorage("isDarkMode") private var isDarkMode = false
     
     var body: some View {
+        
+        
         
         if viewModel.devices.isEmpty {
             NoDeviceConnectedView() {
@@ -24,7 +29,6 @@ struct SideBarView: View {
         else {
             NavigationSplitView {
                 List {
-                    
                     HStack {
                         Picker("", selection: $viewModel.selectedDeviceId) {
                             ForEach(viewModel.devices, id: \.self) { device in
@@ -43,21 +47,30 @@ struct SideBarView: View {
                     }
                     .padding([.bottom], 10)
                     
-                    NavigationLink(destination: InstallerView(deviceId: viewModel.selectedDeviceId)) {
+                    NavigationLink(
+                        destination: InstallerView(deviceId: viewModel.selectedDeviceId)) {
                         Label("Installer", systemImage: "app.badge")
+
                     }
                     
                     NavigationLink(destination: InformationView(deviceId: viewModel.selectedDeviceId)) {
                         Label("Informations", systemImage: "info.circle")
+
                     }
                     
                     NavigationLink(destination: FilesView(deviceId: viewModel.selectedDeviceId)) {
                         Label("Files", systemImage: "folder")
+
                     }
                     
                     NavigationLink(destination: ScreenView()) {
                         Label("Screen", systemImage: "smartphone")
+
                     }
+                    
+                    HStack{
+                         Toggle("Dark Mode", isOn: $isDarkMode)
+                       }
 
                     
                 }

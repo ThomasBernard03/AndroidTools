@@ -13,7 +13,8 @@ class FolderItem : FileExplorerItem {
     let path: String
     
     var fullPath: String {
-        return path + name
+        let adjustedPath = path.hasSuffix("/") ? path : path + "/"
+        return adjustedPath + name
     }
     
     var childrens : [any FileExplorerItem]

@@ -12,7 +12,7 @@ class AdbHelper {
     let adbPath = "/usr/local/bin/adb"
     
     init() {
-        _ = runAdbCommand("root")
+        // _ = runAdbCommand("root")
     }
     
     func getDevices() -> [Device] {
