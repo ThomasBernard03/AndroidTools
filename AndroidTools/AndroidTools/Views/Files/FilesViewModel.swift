@@ -51,6 +51,7 @@ final class FilesViewModel: ObservableObject {
 
             DispatchQueue.main.async {
                 self.currentFolder = result
+                self.currentPath = nil
             }
         }
     }
@@ -83,7 +84,7 @@ final class FilesViewModel: ObservableObject {
             
             DispatchQueue.main.async {
                 self.loading = false
-                self.currentFolder = nil
+                self.currentPath = nil
             }
         }
     }

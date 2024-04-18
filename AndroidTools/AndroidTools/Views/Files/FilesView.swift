@@ -77,7 +77,7 @@ struct FilesView: View {
             }
         }
         .navigationTitle(viewModel.currentFolder?.name ?? "")
-        .fileImporter(isPresented: $showImportFileDialog, allowedContentTypes: [UTType.png]) { result in
+        .fileImporter(isPresented: $showImportFileDialog, allowedContentTypes: [UTType.item]) { result in
             switch result {
             case .success(let file):
                 viewModel.importFile(
