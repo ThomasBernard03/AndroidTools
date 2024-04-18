@@ -80,11 +80,9 @@ struct FilesView: View {
         .fileImporter(isPresented: $showImportFileDialog, allowedContentTypes: [UTType.png]) { result in
             switch result {
             case .success(let file):
-                print(file.absoluteString)
                 viewModel.importFile(
                     deviceId: deviceId,
-                    filePath: file.absoluteString,
-                    targetPath: viewModel.currentPath ?? "/")
+                    filePath: file.absoluteString)
             case .failure(let error):
                 print(error.localizedDescription)
             }

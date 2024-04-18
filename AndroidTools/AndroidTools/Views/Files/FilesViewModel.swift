@@ -83,12 +83,13 @@ final class FilesViewModel: ObservableObject {
             
             DispatchQueue.main.async {
                 self.loading = false
+                self.currentFolder = nil
             }
         }
     }
     
     
-    func importFile(deviceId : String, filePath : String, targetPath : String) {
+    func importFile(deviceId : String, filePath : String) {
         if loading { return }
         loading = true
         
@@ -96,7 +97,7 @@ final class FilesViewModel: ObservableObject {
             let fileImported = self.adbHelper.importFile(
                 deviceId: deviceId,
                 filePath: filePath,
-                targetPath: targetPath)
+                targetPath: self.currentFolder?.fullPath ?? "/")
             
             self.refreshList(deviceId: deviceId)
             
