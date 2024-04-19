@@ -22,6 +22,7 @@
 		817854852BC59F6500B5B2EE /* Preview Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 817854842BC59F6500B5B2EE /* Preview Assets.xcassets */; };
 		817EE8592BC81D4100740D4A /* FilesViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 817EE8582BC81D4100740D4A /* FilesViewModel.swift */; };
 		817EE85D2BC8247F00740D4A /* FileItem.swift in Sources */ = {isa = PBXBuildFile; fileRef = 817EE85C2BC8247F00740D4A /* FileItem.swift */; };
+		81C3FEE12BD2E76000E18035 /* SettingsView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 81C3FEE02BD2E76000E18035 /* SettingsView.swift */; };
 		81D04F582BCA49C300B04FAB /* FileExplorerItem.swift in Sources */ = {isa = PBXBuildFile; fileRef = 81D04F572BCA49C300B04FAB /* FileExplorerItem.swift */; };
 		81D04F5A2BCA4B3400B04FAB /* FolderItem.swift in Sources */ = {isa = PBXBuildFile; fileRef = 81D04F592BCA4B3400B04FAB /* FolderItem.swift */; };
 		81E6A7512BC5CC260034EBFB /* SideBarView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 81E6A7502BC5CC260034EBFB /* SideBarView.swift */; };
@@ -53,6 +54,7 @@
 		817854862BC59F6500B5B2EE /* AndroidTools.entitlements */ = {isa = PBXFileReference; lastKnownFileType = text.plist.entitlements; path = AndroidTools.entitlements; sourceTree = "<group>"; };
 		817EE8582BC81D4100740D4A /* FilesViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FilesViewModel.swift; sourceTree = "<group>"; };
 		817EE85C2BC8247F00740D4A /* FileItem.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FileItem.swift; sourceTree = "<group>"; };
+		81C3FEE02BD2E76000E18035 /* SettingsView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SettingsView.swift; sourceTree = "<group>"; };
 		81D04F572BCA49C300B04FAB /* FileExplorerItem.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FileExplorerItem.swift; sourceTree = "<group>"; };
 		81D04F592BCA4B3400B04FAB /* FolderItem.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FolderItem.swift; sourceTree = "<group>"; };
 		81E6A7502BC5CC260034EBFB /* SideBarView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SideBarView.swift; sourceTree = "<group>"; };
@@ -151,6 +153,14 @@
 			path = "Preview Content";
 			sourceTree = "<group>";
 		};
+		81C3FEDF2BD2E75000E18035 /* Settings */ = {
+			isa = PBXGroup;
+			children = (
+				81C3FEE02BD2E76000E18035 /* SettingsView.swift */,
+			);
+			path = Settings;
+			sourceTree = "<group>";
+		};
 		81E598B42BC6CA4F00FB614B /* Components */ = {
 			isa = PBXGroup;
 			children = (
@@ -162,6 +172,7 @@
 		81E6A74F2BC5CC0F0034EBFB /* Views */ = {
 			isa = PBXGroup;
 			children = (
+				81C3FEDF2BD2E75000E18035 /* Settings */,
 				812A62C22BC72D4500388105 /* NoDeviceConnected */,
 				81E598B42BC6CA4F00FB614B /* Components */,
 				8143194E2BC6714000044934 /* Installer */,
@@ -309,6 +320,7 @@
 				81E6A75B2BC5CDC20034EBFB /* FilesView.swift in Sources */,
 				81E6A7652BC5D7020034EBFB /* AdbHelper.swift in Sources */,
 				81D04F5A2BCA4B3400B04FAB /* FolderItem.swift in Sources */,
+				81C3FEE12BD2E76000E18035 /* SettingsView.swift in Sources */,
 				81E6A75D2BC5CDFF0034EBFB /* SideBarViewModel.swift in Sources */,
 				814319502BC6715100044934 /* InstallerView.swift in Sources */,
 				812A62C12BC70C3E00388105 /* IntExtensions.swift in Sources */,

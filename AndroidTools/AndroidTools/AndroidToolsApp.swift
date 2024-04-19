@@ -18,5 +18,11 @@ struct AndroidToolsApp: App {
                 .frame(minWidth: 600, minHeight: 400)
                 .preferredColorScheme(isDarkMode ? .dark : .light)
         }
+        
+        Settings {
+            SettingsView()
+                .preferredColorScheme(isDarkMode ? .dark : .light)
+        }
+        
     }
 }

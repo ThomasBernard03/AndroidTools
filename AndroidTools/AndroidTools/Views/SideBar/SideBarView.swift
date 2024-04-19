@@ -12,7 +12,7 @@ struct SideBarView: View {
     @ObservedObject var viewModel = SideBarViewModel()
 
     
-    @AppStorage("isDarkMode") private var isDarkMode = false
+
     
     var body: some View {
         
@@ -67,11 +67,6 @@ struct SideBarView: View {
                         Label("Screen", systemImage: "smartphone")
 
                     }
-                    
-                    HStack{
-                         Toggle("Dark Mode", isOn: $isDarkMode)
-                       }
-
                     
                 }
                 .listStyle(.sidebar)
