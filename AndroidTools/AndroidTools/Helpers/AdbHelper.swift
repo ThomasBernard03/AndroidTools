@@ -67,7 +67,7 @@ class AdbHelper {
     }
     
     func deleteFileExplorerItem(deviceId: String, fullPath: String) -> String {
-        let deleteCommand = "shell rm -r \"/storage/emulated/0\(fullPath)\""
+        let deleteCommand = "shell 'rm -r \"/storage/emulated/0\(fullPath)\"'"
         let result = runAdbCommand("-s \(deviceId) \(deleteCommand)")
         return result
     }
