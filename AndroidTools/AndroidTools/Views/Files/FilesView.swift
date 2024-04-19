@@ -17,7 +17,6 @@ struct FilesView: View {
     @State private var showImportFileDialog : Bool = false
     
     var body: some View {
-        
         List(viewModel.currentFolder?.childrens ?? [], id: \.fullPath, selection: $viewModel.currentPath) { item in
             HStack {
                 if let fileItem = item as? FileItem {
@@ -29,6 +28,19 @@ struct FilesView: View {
         }
         .contextMenu(forSelectionType: String.self, menu: { _ in }) {_ in
             viewModel.itemDoubleClicked(deviceId: deviceId)
+        }
+        .alert("Create folder", isPresented: $viewModel.showCreateFolderAlert){
+            TextField("Folder name", text: $viewModel.createFolderAlertName)
+            HStack {
+                Button("Create",action: {
+                    viewModel.createFolder(deviceId: deviceId)
+                })
+                    .disabled(viewModel.createFolderAlertName.isEmpty)
+                
+                Button("Cancel",action: {})
+            }
+        } message: {
+            Text("The folder will be created at : \n \(viewModel.currentFolder?.fullPath ?? "/")")
         }
         .onAppear {
             viewModel.getFiles(deviceId: deviceId, path:nil)
@@ -49,9 +61,9 @@ struct FilesView: View {
                 Button { } label: {
                     Label("Download file", systemImage: "square.and.arrow.down")
                 }
-                .disabled(viewModel.currentPath == nil)
+                .disabled(viewModel.currentPath == nil || viewModel.loading)
                 
-                Button { } label: {
+                Button {viewModel.showCreateFolderAlert.toggle()} label: {
                     Label("Create folder", systemImage: "folder.badge.plus")
                 }
                 

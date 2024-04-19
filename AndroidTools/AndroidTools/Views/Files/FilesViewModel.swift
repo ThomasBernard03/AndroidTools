@@ -19,6 +19,9 @@ final class FilesViewModel: ObservableObject {
     
     @Published var currentPath : String? = nil
     
+    @Published var showCreateFolderAlert = false
+    @Published var createFolderAlertName = ""
+    
     private let adbHelper = AdbHelper()
     
     
@@ -50,14 +53,15 @@ final class FilesViewModel: ObservableObject {
             let result = self.adbHelper.getFiles(deviceId: deviceId, parent: parent)
 
             DispatchQueue.main.async {
-                self.currentFolder = result
                 self.currentPath = nil
+                self.currentFolder = result
             }
         }
     }
     
     func goBack(deviceId : String){
         if let parent = currentFolder?.parent {
+            currentPath = nil
             currentFolder = parent
         }
     }
@@ -106,5 +110,21 @@ final class FilesViewModel: ObservableObject {
                 self.loading = false
             }
         }
+    }
+    
+    func createFolder(deviceId : String){
+        if loading { return }
+        loading = true
+        
+        DispatchQueue.global(qos: .userInitiated).async {
+            self.adbHelper.createFolder(deviceId: deviceId, path: self.currentFolder?.fullPath ?? "/", name: self.createFolderAlertName)
+            
+            self.refreshList(deviceId: deviceId)
+            
+            DispatchQueue.main.async {
+                self.loading = false
+            }
+        }
+        
     }
 }
