@@ -6,11 +6,11 @@
 	<array>
 		<dict>
 			<key>CFBundleTypeIconFile</key>
-			<string>/Users/thomasbernard/Downloads/android.svg</string>
+			<string>ApkForeground</string>
 			<key>CFBundleTypeIconSystemGenerated</key>
-			<integer>0</integer>
+			<integer>1</integer>
 			<key>CFBundleTypeName</key>
-			<string>APK File</string>
+			<string>Apk files</string>
 			<key>CFBundleTypeRole</key>
 			<string>Viewer</string>
 			<key>LSHandlerRank</key>
@@ -33,7 +33,14 @@
 			<key>UTTypeDescription</key>
 			<string>Apk files</string>
 			<key>UTTypeIcons</key>
-			<dict/>
+			<dict>
+				<key>UTTypeIconBackgroundName</key>
+				<string>ApkBackground</string>
+				<key>UTTypeIconBadgeName</key>
+				<string>ApkForeground</string>
+				<key>UTTypeIconText</key>
+				<string>Apk</string>
+			</dict>
 			<key>UTTypeIdentifier</key>
 			<string>com.domain.apk</string>
 			<key>UTTypeTagSpecification</key>
