@@ -10,73 +10,68 @@ import SwiftUI
 struct SideBarView: View {
     
     @ObservedObject var viewModel = SideBarViewModel()
-
-    
-
     
     var body: some View {
         
-        
-        
-        if viewModel.devices.isEmpty {
-            NoDeviceConnectedView() {
-                viewModel.getAndroidDevices()
-            }
-            .onAppear {
-                viewModel.getAndroidDevices()
-            }
-        }
-        else {
-            NavigationSplitView {
-                List {
-                    HStack {
-                        Picker("", selection: $viewModel.selectedDeviceId) {
-                            ForEach(viewModel.devices, id: \.self) { device in
-                                Text(device.name).tag(device.id)
-                            }
+        NavigationSplitView {
+            List {
+                HStack {
+                    Picker("", selection: $viewModel.selectedDeviceId) {
+                        ForEach(viewModel.devices, id: \.self) { device in
+                            Text(device.name).tag(device.id)
                         }
-                        .pickerStyle(.menu)
-                        .padding([.leading], -14)
-                        .padding([.trailing], -6)
-                        
-                        Spacer()
-
-                         Button(action: viewModel.getAndroidDevices) {
-                             Image(systemName: "arrow.clockwise")
-                         }
                     }
-                    .padding([.bottom], 10)
+                    .pickerStyle(.menu)
+                    .padding([.leading], -14)
+                    .padding([.trailing], -6)
                     
-                    NavigationLink(
-                        destination: InstallerView(deviceId: viewModel.selectedDeviceId)) {
-                        Label("Installer", systemImage: "app.badge")
+                    Spacer()
 
-                    }
-                    
-                    NavigationLink(destination: InformationView(deviceId: viewModel.selectedDeviceId)) {
-                        Label("Informations", systemImage: "info.circle")
-
-                    }
-                    
-                    NavigationLink(destination: FilesView(deviceId: viewModel.selectedDeviceId)) {
-                        Label("Files", systemImage: "folder")
-
-                    }
-                    
-                    NavigationLink(destination: ScreenView()) {
-                        Label("Screen", systemImage: "smartphone")
-
-                    }
-                    
+                     Button(action: viewModel.getAndroidDevices) {
+                         Image(systemName: "arrow.clockwise")
+                     }
                 }
-                .listStyle(.sidebar)
-            } detail: {
-                Text("Hello")
-                    .id(viewModel.selectedDeviceId)
-            }
-        }
-        
+                .padding([.bottom], 10)
+                
+                NavigationLink(destination: HomeView()) {
+                    Label("Home", systemImage: "house.fill")
+                }
+                
+                NavigationLink(
+                    destination: InstallerView(deviceId: viewModel.selectedDeviceId)) {
+                    Label("Installer", systemImage: "app.badge")
+                }
+                .disabled(viewModel.devices.isEmpty)
+                
+                NavigationLink(destination: InformationView(deviceId: viewModel.selectedDeviceId)) {
+                    Label("Informations", systemImage: "info.circle")
+                }
+                .disabled(viewModel.devices.isEmpty)
+                
+                NavigationLink(destination: FilesView(deviceId: viewModel.selectedDeviceId)) {
+                    Label("Files", systemImage: "folder")
+                }
+                .disabled(viewModel.devices.isEmpty)
+                
+                NavigationLink(destination: ScreenView()) {
+                    Label("Screen", systemImage: "smartphone")
+                }
+                .disabled(viewModel.devices.isEmpty)
+                
+                NavigationLink {
+                    SettingsView()
+                } label: {
+                    Label("Settings", systemImage: "gearshape.circle.fill")
+                }
 
+                
+                
+                
+            }
+            .listStyle(.sidebar)
+        } detail: {
+            HomeView()
+        }
     }
 }
 

@@ -12,7 +12,7 @@
 		812A62BD2BC707A400388105 /* BatteryInfo.swift in Sources */ = {isa = PBXBuildFile; fileRef = 812A62BC2BC707A400388105 /* BatteryInfo.swift */; };
 		812A62BF2BC708D400388105 /* DeviceDetail.swift in Sources */ = {isa = PBXBuildFile; fileRef = 812A62BE2BC708D400388105 /* DeviceDetail.swift */; };
 		812A62C12BC70C3E00388105 /* IntExtensions.swift in Sources */ = {isa = PBXBuildFile; fileRef = 812A62C02BC70C3E00388105 /* IntExtensions.swift */; };
-		812A62C42BC72D5900388105 /* NoDeviceConnectedView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 812A62C32BC72D5900388105 /* NoDeviceConnectedView.swift */; };
+		812AB6EB2BD3AFFE00DB60A5 /* HomeView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 812AB6EA2BD3AFFE00DB60A5 /* HomeView.swift */; };
 		814319502BC6715100044934 /* InstallerView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8143194F2BC6715100044934 /* InstallerView.swift */; };
 		814319522BC6715B00044934 /* InstallerViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 814319512BC6715B00044934 /* InstallerViewModel.swift */; };
 		814319562BC6B3C000044934 /* UTTypeExtensions.swift in Sources */ = {isa = PBXBuildFile; fileRef = 814319552BC6B3C000044934 /* UTTypeExtensions.swift */; };
@@ -41,7 +41,7 @@
 		812A62BC2BC707A400388105 /* BatteryInfo.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = BatteryInfo.swift; sourceTree = "<group>"; };
 		812A62BE2BC708D400388105 /* DeviceDetail.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DeviceDetail.swift; sourceTree = "<group>"; };
 		812A62C02BC70C3E00388105 /* IntExtensions.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = IntExtensions.swift; sourceTree = "<group>"; };
-		812A62C32BC72D5900388105 /* NoDeviceConnectedView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NoDeviceConnectedView.swift; sourceTree = "<group>"; };
+		812AB6EA2BD3AFFE00DB60A5 /* HomeView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = HomeView.swift; sourceTree = "<group>"; };
 		8143194F2BC6715100044934 /* InstallerView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = InstallerView.swift; sourceTree = "<group>"; };
 		814319512BC6715B00044934 /* InstallerViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = InstallerViewModel.swift; sourceTree = "<group>"; };
 		814319552BC6B3C000044934 /* UTTypeExtensions.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = UTTypeExtensions.swift; sourceTree = "<group>"; };
@@ -78,12 +78,12 @@
 /* End PBXFrameworksBuildPhase section */
 
 /* Begin PBXGroup section */
-		812A62C22BC72D4500388105 /* NoDeviceConnected */ = {
+		812AB6E92BD3AFE900DB60A5 /* Home */ = {
 			isa = PBXGroup;
 			children = (
-				812A62C32BC72D5900388105 /* NoDeviceConnectedView.swift */,
+				812AB6EA2BD3AFFE00DB60A5 /* HomeView.swift */,
 			);
-			path = NoDeviceConnected;
+			path = Home;
 			sourceTree = "<group>";
 		};
 		8143194E2BC6714000044934 /* Installer */ = {
@@ -172,8 +172,8 @@
 		81E6A74F2BC5CC0F0034EBFB /* Views */ = {
 			isa = PBXGroup;
 			children = (
+				812AB6E92BD3AFE900DB60A5 /* Home */,
 				81C3FEDF2BD2E75000E18035 /* Settings */,
-				812A62C22BC72D4500388105 /* NoDeviceConnected */,
 				81E598B42BC6CA4F00FB614B /* Components */,
 				8143194E2BC6714000044934 /* Installer */,
 				81E6A7552BC5CD780034EBFB /* Screen */,
@@ -311,7 +311,6 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				812A62C42BC72D5900388105 /* NoDeviceConnectedView.swift in Sources */,
 				81E6A7592BC5CD9D0034EBFB /* InformationView.swift in Sources */,
 				814319522BC6715B00044934 /* InstallerViewModel.swift in Sources */,
 				814319562BC6B3C000044934 /* UTTypeExtensions.swift in Sources */,
@@ -333,6 +332,7 @@
 				817EE85D2BC8247F00740D4A /* FileItem.swift in Sources */,
 				817EE8592BC81D4100740D4A /* FilesViewModel.swift in Sources */,
 				812A62BF2BC708D400388105 /* DeviceDetail.swift in Sources */,
+				812AB6EB2BD3AFFE00DB60A5 /* HomeView.swift in Sources */,
 				812A62BB2BC6F2FC00388105 /* StringExtensions.swift in Sources */,
 				81E6A7682BC5D7200034EBFB /* Device.swift in Sources */,
 			);

@@ -122,6 +122,7 @@ final class FilesViewModel: ObservableObject {
             self.refreshList(deviceId: deviceId)
             
             DispatchQueue.main.async {
+                self.currentPath = self.currentFolder?.fullPath ?? "/" + self.createFolderAlertName
                 self.loading = false
             }
         }

@@ -39,8 +39,9 @@ struct InstallerView: View {
         
         
         
-        RoundedRectangle(cornerRadius: 20)
-            .stroke(style: StrokeStyle(lineWidth: 1, dash: [5]))
+        Image("AndroidApk")
+            .resizable()
+            .cornerRadius(44)
             .frame(width: 200, height: 200)
         
             .onDrop(of: [.apk], isTargeted: $dropTargetted) { providers in
@@ -71,21 +72,20 @@ struct InstallerView: View {
                         .frame(maxWidth: 250)
                         .multilineTextAlignment(.center)
                     }
-                    .cornerRadius(20)
+                    .cornerRadius(44)
                 }
                 else {
-                    Text("Your .apk file here")
+                    Text("Click or drag .apk")
+                        .foregroundStyle(.white)
+                        .offset(CGSize(width: 0, height: 60.0))
                 }
             }
             .animation(.default, value: dropTargetted)
             .padding()
+            .onTapGesture {
+                loadApkFile()
+            }
         
-        
-        Button {
-            loadApkFile()
-        } label: {
-            Text("Open file explorer")
-        }
         
         switch viewModel.installStatus {
         case .notStarted : Text("Not started")
