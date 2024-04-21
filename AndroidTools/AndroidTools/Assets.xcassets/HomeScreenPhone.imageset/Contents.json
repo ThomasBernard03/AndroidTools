@@ -1,0 +1,12 @@
+{
+  "images" : [
+    {
+      "filename" : "HomeScreenPhone-portrait 1.png",
+      "idiom" : "mac"
+    }
+  ],
+  "info" : {
+    "author" : "xcode",
+    "version" : 1
+  }
+}
