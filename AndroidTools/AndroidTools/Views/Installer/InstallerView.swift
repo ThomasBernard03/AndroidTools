@@ -36,67 +36,95 @@ struct InstallerView: View {
     
     var body: some View {
         
-        Text("Easily install an application on the connected phone using an .apk file")
-        
         ZStack {
-            
-            Image("AndroidApk")
-                .resizable()
-                .cornerRadius(44)
-                .frame(width: 200, height: 200)
-            
-                .onDrop(of: [.apk], isTargeted: $dropTargetted) { providers in
-                    providers.first?.loadItem(forTypeIdentifier: UTType.apk.identifier, options: nil) { (item, error) in
-                        
-                        if let item = item as? URL {
-                            let fileUrl = item.startAccessingSecurityScopedResource() ? item : URL(fileURLWithPath: item.path)
-                            viewModel.installApk(deviceId: deviceId, path: fileUrl.path)
-                            item.stopAccessingSecurityScopedResource()
-                        }
-                    }
-                    
-                    
-                    return true
+            VStack(spacing:20) {
+                HStack {
+                    Text("Install applications")
+                        .font(.title)
+                    Spacer()
                 }
-                .overlay {
-                    if dropTargetted {
-                        ZStack {
-                            Color.black.opacity(0.5)
-                            
-                            VStack(spacing: 8) {
-                                Image(systemName: "plus.circle.fill")
-                                    .font(.system(size: 30))
-                                Text("Drop your apk here...")
-                            }
-                            .font(.title2)
-                            .foregroundColor(.white)
-                            .frame(maxWidth: 250)
-                            .multilineTextAlignment(.center)
-                        }
-                        .cornerRadius(44)
-                    }
-                    else {
-                        Text("Click or drag .apk")
-                            .foregroundStyle(.white)
-                            .offset(CGSize(width: 0, height: 60.0))
-                    }
+                
+                HStack {
+                    Text("You can easily install applications from an .apk file on your Mac. \n To do this, you can use the file explorer or drag and drop an apk file.")
+                    
+                    Spacer()
                 }
-                .animation(.default, value: dropTargetted)
-                .padding()
-                .onTapGesture {
+                
+                Button {
                     loadApkFile()
+                } label: {
+                    Label("Open file explorer", systemImage: "folder")
                 }
-
-            Image("HomeScreenPhone")
-                .resizable()
-                .scaledToFit()
-                .onHover { hovering in
-                    isHoveringPhone = hovering
+                
+                Spacer()
+            }
+            .padding()
+            .padding([.trailing], 100)
+            .zIndex(1)
+            
+            HStack {
+                Spacer()
+                
+                Image("ApplicationInstaller")
+                    .resizable()
+                    .scaledToFit()
+                    .onHover { hovering in
+                        isHoveringPhone = hovering
+                    }
+                    .offset(x: 50)
+                    .frame(width: 300)
+            }
+            
+            
+            VStack {
+                Spacer()
+                
+                if true {
+                    ProgressView()
+                        .progressViewStyle(.linear)
                 }
-                .offset(y: isHoveringPhone ? 180 : 200)
-                .animation(.easeInOut(duration: 0.2), value: isHoveringPhone)
-                .frame(maxWidth: 300)
+                
+    
+            }
+            .offset(y:7)
         }
+        
+        .onDrop(of: [.apk], isTargeted: $dropTargetted) { providers in
+            providers.first?.loadItem(forTypeIdentifier: UTType.apk.identifier, options: nil) { (item, error) in
+                
+                if let item = item as? URL {
+                    let fileUrl = item.startAccessingSecurityScopedResource() ? item : URL(fileURLWithPath: item.path)
+                    viewModel.installApk(deviceId: deviceId, path: fileUrl.path)
+                    item.stopAccessingSecurityScopedResource()
+                }
+            }
+            
+            
+            return true
+        }
+        .overlay {
+            if dropTargetted {
+                ZStack {
+                    Color.black.opacity(0.5)
+                    
+                    VStack(spacing: 8) {
+                        Image(systemName: "plus.circle.fill")
+                            .font(.system(size: 30))
+                        Text("Drop your apk here...")
+                    }
+                    .font(.title2)
+                    .foregroundColor(.white)
+                    .multilineTextAlignment(.center)
+                }
+            }
+        }
+        .animation(.default, value: dropTargetted)
+        .navigationTitle("Application installer")
+        
+
+        
+
+        
     }
 }
 
