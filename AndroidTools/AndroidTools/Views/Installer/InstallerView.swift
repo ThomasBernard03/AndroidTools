@@ -45,7 +45,7 @@ struct InstallerView: View {
                 }
                 
                 HStack {
-                    Text("You can easily install applications from an .apk file on your Mac. \n To do this, you can use the file explorer or drag and drop an apk file.")
+                    Text("You can easily install applications from an .apk file on your Mac. \nTo do this, you can use the file explorer or drag and drop an apk file.")
                     
                     Spacer()
                 }
@@ -79,14 +79,27 @@ struct InstallerView: View {
             VStack {
                 Spacer()
                 
-                if true {
-                    ProgressView()
-                        .progressViewStyle(.linear)
+                switch viewModel.installStatus {
+                case .loading(let fileName):
+                    ProgressView {
+                        Text("Intalling \(fileName)")
+                            .padding([.horizontal])
+                    }
+                    .progressViewStyle(LinearProgressViewStyle())
+                    .offset(y:7)
+                case .success:
+                    Text("Install sucess")
+                        .padding()
+                case .error(let message):
+                    Text("Error: \(message)")
+                        .foregroundStyle(.red)
+                        .padding()
+                case .notStarted:
+                    EmptyView()
                 }
                 
     
             }
-            .offset(y:7)
         }
         
         .onDrop(of: [.apk], isTargeted: $dropTargetted) { providers in

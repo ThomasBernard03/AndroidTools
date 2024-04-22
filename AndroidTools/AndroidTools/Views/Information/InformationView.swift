@@ -59,6 +59,9 @@ struct InformationView: View {
         .onAppear {
             viewModel.getDeviceDetail(deviceId: deviceId)
         }
+        .onChange(of: deviceId) { oldValue, newValue in
+            viewModel.getDeviceDetail(deviceId: newValue)
+        }
         
         List {
             Section(header: Text("General informations")) {

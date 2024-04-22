@@ -17,9 +17,19 @@ struct SideBarView: View {
             List {
                 HStack {
                     Picker("", selection: $viewModel.selectedDeviceId) {
-                        ForEach(viewModel.devices, id: \.self) { device in
-                            Text(device.name).tag(device.id)
+                        
+                        if(viewModel.devices.isEmpty){
+                            Text("No device connected")
                         }
+                        else {
+                            ForEach(viewModel.devices, id: \.self) { device in
+                                Label(device.name, systemImage: "smartphone")
+                                    .tag(device.id)
+                                    .labelStyle(.titleAndIcon)
+                            }
+                        }
+                        
+
                     }
                     .pickerStyle(.menu)
                     .padding([.leading], -14)
@@ -53,22 +63,16 @@ struct SideBarView: View {
                 }
                 .disabled(viewModel.devices.isEmpty)
                 
-                NavigationLink(destination: ScreenView()) {
-                    Label("Screen", systemImage: "smartphone")
-                }
-                .disabled(viewModel.devices.isEmpty)
-                
                 NavigationLink {
                     SettingsView()
                 } label: {
                     Label("Settings", systemImage: "gearshape.circle.fill")
                 }
-
-                
-                
-                
             }
             .listStyle(.sidebar)
+            .onAppear {
+                viewModel.getAndroidDevices()
+            }
         } detail: {
             HomeView()
         }

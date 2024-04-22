@@ -45,6 +45,9 @@ struct FilesView: View {
         .onAppear {
             viewModel.getFiles(deviceId: deviceId, path:nil)
         }
+        .onChange(of: deviceId, { oldValue, newValue in
+            viewModel.getFiles(deviceId: newValue, path:nil)
+        })
         .toolbar {
             ToolbarItemGroup(placement: .navigation) {
                 Button { viewModel.goBack(deviceId:deviceId) } label: {
