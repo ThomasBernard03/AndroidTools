@@ -18,7 +18,7 @@ jobs:
         xcode-version: '14.2.0'  
 
     - name: Build the project
-      run: xcodebuild -project AndroidTools/AndroidTools.xcodeproj/project.xcodeproj -scheme AndroidTools/AndroidTools.xcodeproj/xcshareddata/scschemes/AndroidTools.xcscheme -sdk macosx
+      run: xcodebuild -project AndroidTools/AndroidTools.xcodeproj -scheme AndroidTools -sdk macosx
 
     - name: Archive the project
       run: xcodebuild -project YourProject.xcodeproj -scheme YourScheme -sdk macosx -configuration Release archive -archivePath ${{github.workspace}}/build/YourApp.xcarchive
