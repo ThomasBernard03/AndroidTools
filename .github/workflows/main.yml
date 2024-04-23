@@ -1,15 +1,33 @@
+name: Build macOS App
+
 on:
   push:
-    branches: [ "main" ]
+    branches:
+      - main
 
 jobs:
   build:
-
     runs-on: macos-latest
-
     steps:
-    - uses: actions/checkout@v3
-    - name: Build
-      run: swift build -v
-    - name: Run tests
-      run: swift test -v
+    - name: Checkout code
+      uses: actions/checkout@v2
+
+    - name: Set up Xcode
+      uses: maxim-lobanov/setup-xcode@v1
+      with:
+        xcode-version: '15'  # spécifiez la version d'Xcode nécessaire
+
+    - name: Build the project
+      run: xcodebuild -project AndroidTools/AndroidTools.xcodeproj/project.xcodeproj -scheme AndroidTools/AndroidTools.xcodeproj/xcshareddata/scschemes/AndroidTools.xcscheme -sdk macosx
+
+    - name: Archive the project
+      run: xcodebuild -project YourProject.xcodeproj -scheme YourScheme -sdk macosx -configuration Release archive -archivePath ${{github.workspace}}/build/YourApp.xcarchive
+
+    - name: Export the archive
+      run: xcodebuild -exportArchive -archivePath ${{github.workspace}}/build/AndroidTools.xcarchive -exportPath ${{github.workspace}}/build -exportOptionsPlist ExportOptions.plist
+
+    - name: Upload Artifacts
+      uses: actions/upload-artifact@v2
+      with:
+        name: YourApp
+        path: ${{github.workspace}}/build/*.ipa
