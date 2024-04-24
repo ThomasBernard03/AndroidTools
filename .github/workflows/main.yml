@@ -24,7 +24,7 @@ jobs:
       run: xcodebuild -project AndroidTools/AndroidTools.xcodeproj -scheme AndroidTools -sdk macosx -configuration Release archive -archivePath ${{github.workspace}}/build/YourApp.xcarchive CODE_SIGN_IDENTITY="" CODE_SIGNING_REQUIRED=NO CODE_SIGNING_ALLOWED=NO
 
     - name: Export the archive
-      run: xcodebuild -exportArchive -archivePath ${{github.workspace}}/build/AndroidTools.xcarchive -exportPath ${{github.workspace}}/build -exportOptionsPlist ExportOptions.plist CODE_SIGN_IDENTITY="" CODE_SIGNING_REQUIRED=NO
+      run: xcodebuild -exportArchive -archivePath ${{github.workspace}}/build/AndroidTools.xcarchive -exportPath ${{github.workspace}}/build -exportOptionsPlist AndroidTools/ExportOptions.plist CODE_SIGN_IDENTITY="" CODE_SIGNING_REQUIRED=NO
 
     - name: Upload Artifacts
       uses: actions/upload-artifact@v2
