@@ -15,7 +15,7 @@ jobs:
     - name: Set up Xcode
       uses: maxim-lobanov/setup-xcode@v1
       with:
-        xcode-version: '14.2.0'  
+        xcode-version: '15.1'  
 
     - name: Build the project
       run: xcodebuild -project AndroidTools/AndroidTools.xcodeproj -scheme AndroidTools -sdk macosx CODE_SIGN_IDENTITY="" CODE_SIGNING_REQUIRED=NO CODE_SIGNING_ALLOWED=NO
