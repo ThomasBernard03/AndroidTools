@@ -94,9 +94,6 @@ struct FilesView: View {
                          .frame(minWidth: 200)
             }
         }
-        .fileExporter(isPresented: $showExportFileDialog, document: FileDocument()) { result in
-            
-        }
         .navigationTitle(viewModel.currentFolder?.name ?? "")
         .fileImporter(isPresented: $showImportFileDialog, allowedContentTypes: [UTType.item]) { result in
             switch result {

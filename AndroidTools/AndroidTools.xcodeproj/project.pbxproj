@@ -22,7 +22,6 @@
 		817854852BC59F6500B5B2EE /* Preview Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 817854842BC59F6500B5B2EE /* Preview Assets.xcassets */; };
 		817EE8592BC81D4100740D4A /* FilesViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 817EE8582BC81D4100740D4A /* FilesViewModel.swift */; };
 		817EE85D2BC8247F00740D4A /* FileItem.swift in Sources */ = {isa = PBXBuildFile; fileRef = 817EE85C2BC8247F00740D4A /* FileItem.swift */; };
-		8199D6AD2BD851BE00EF7233 /* FileDocument.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8199D6AC2BD851BE00EF7233 /* FileDocument.swift */; };
 		81C3FEE12BD2E76000E18035 /* SettingsView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 81C3FEE02BD2E76000E18035 /* SettingsView.swift */; };
 		81D04F582BCA49C300B04FAB /* FileExplorerItem.swift in Sources */ = {isa = PBXBuildFile; fileRef = 81D04F572BCA49C300B04FAB /* FileExplorerItem.swift */; };
 		81D04F5A2BCA4B3400B04FAB /* FolderItem.swift in Sources */ = {isa = PBXBuildFile; fileRef = 81D04F592BCA4B3400B04FAB /* FolderItem.swift */; };
@@ -56,7 +55,6 @@
 		817854862BC59F6500B5B2EE /* AndroidTools.entitlements */ = {isa = PBXFileReference; lastKnownFileType = text.plist.entitlements; path = AndroidTools.entitlements; sourceTree = "<group>"; };
 		817EE8582BC81D4100740D4A /* FilesViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FilesViewModel.swift; sourceTree = "<group>"; };
 		817EE85C2BC8247F00740D4A /* FileItem.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FileItem.swift; sourceTree = "<group>"; };
-		8199D6AC2BD851BE00EF7233 /* FileDocument.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FileDocument.swift; sourceTree = "<group>"; };
 		81C3FEE02BD2E76000E18035 /* SettingsView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SettingsView.swift; sourceTree = "<group>"; };
 		81D04F572BCA49C300B04FAB /* FileExplorerItem.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FileExplorerItem.swift; sourceTree = "<group>"; };
 		81D04F592BCA4B3400B04FAB /* FolderItem.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FolderItem.swift; sourceTree = "<group>"; };
@@ -242,7 +240,6 @@
 				817EE85C2BC8247F00740D4A /* FileItem.swift */,
 				81D04F572BCA49C300B04FAB /* FileExplorerItem.swift */,
 				81D04F592BCA4B3400B04FAB /* FolderItem.swift */,
-				8199D6AC2BD851BE00EF7233 /* FileDocument.swift */,
 			);
 			path = Models;
 			sourceTree = "<group>";
@@ -321,7 +318,6 @@
 				81E6A7592BC5CD9D0034EBFB /* InformationView.swift in Sources */,
 				814319522BC6715B00044934 /* InstallerViewModel.swift in Sources */,
 				814319562BC6B3C000044934 /* UTTypeExtensions.swift in Sources */,
-				8199D6AD2BD851BE00EF7233 /* FileDocument.swift in Sources */,
 				812A62BD2BC707A400388105 /* BatteryInfo.swift in Sources */,
 				81E6A7512BC5CC260034EBFB /* SideBarView.swift in Sources */,
 				81E6A75B2BC5CDC20034EBFB /* FilesView.swift in Sources */,
