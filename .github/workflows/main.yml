@@ -31,9 +31,14 @@ jobs:
           -exportOptionsPlist AndroidTools/ExportOptions.plist \
           CODE_SIGN_IDENTITY="" CODE_SIGNING_REQUIRED=NO
 
+    - name: List files
+      run: ls -l ${{github.workspace}}/build/
 
     - name: Upload Artifacts
       uses: actions/upload-artifact@v2
       with:
         name: AndroidTools
-        path: ${{github.workspace}}/build/*
+        path: |
+          ${{github.workspace}}/build/*.pkg
+          ${{github.workspace}}/build/*.app
+
