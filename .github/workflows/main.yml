@@ -21,7 +21,7 @@ jobs:
       run: xcodebuild -project AndroidTools/AndroidTools.xcodeproj -scheme AndroidTools -sdk macosx CODE_SIGN_IDENTITY="" CODE_SIGNING_REQUIRED=NO CODE_SIGNING_ALLOWED=NO
 
     - name: Archive the project
-      run: xcodebuild -project YourProject.xcodeproj -scheme YourScheme -sdk macosx -configuration Release archive -archivePath ${{github.workspace}}/build/YourApp.xcarchive
+      run: xcodebuild -project AndroidTools/AndroidTools.xcodeproj -scheme AndroidTools -sdk macosx -configuration Release archive -archivePath ${{github.workspace}}/build/YourApp.xcarchive
 
     - name: Export the archive
       run: xcodebuild -exportArchive -archivePath ${{github.workspace}}/build/AndroidTools.xcarchive -exportPath ${{github.workspace}}/build -exportOptionsPlist ExportOptions.plist
