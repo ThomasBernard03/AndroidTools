@@ -10,17 +10,20 @@ import Foundation
 import Foundation
 import SwiftUI
 
+@Observable
 final class FilesViewModel: ObservableObject {
-    @Published var currentFolder: FolderItem? = nil
+    var currentFolder: FolderItem? = nil
     
-    @Published var loading : Bool = false
+    var loading : Bool = false
     
-    @Published var exportedDocument : FileDocument? = nil
+    var exportedDocument : FileDocument? = nil
     
-    @Published var currentPath : String? = nil
+    var currentPath : String? = nil
     
-    @Published var showCreateFolderAlert = false
-    @Published var createFolderAlertName = ""
+    var showCreateFolderAlert = false
+    var createFolderAlertName = ""
+    
+    var showExporter = false
     
     private let adbHelper = AdbHelper()
     
@@ -64,6 +67,11 @@ final class FilesViewModel: ObservableObject {
             currentPath = nil
             currentFolder = parent
         }
+    }
+    
+    func downloadFile(deviceId : String){
+        adbHelper.saveFile(deviceId: deviceId, filePath: currentPath!)
+        showExporter.toggle()
     }
     
     func refreshList(deviceId : String){

@@ -136,6 +136,24 @@ class AdbHelper {
         return runAdbCommand(command)
     }
     
+    func saveFile(deviceId: String, filePath: String) {
+        let fileManager = FileManager.default
+        let tempDirectory = NSTemporaryDirectory()
+        let fileName = URL(fileURLWithPath: filePath).lastPathComponent
+        let tempUrl = URL(fileURLWithPath: tempDirectory).appendingPathComponent(fileName)
+
+        // Construire la commande ADB pour tirer le fichier de l'appareil
+        let pullCommand = "-s \(deviceId) pull \"\(filePath)\" \"\(tempUrl.path)\""
+        
+        // Exécuter la commande ADB
+        let result = runAdbCommand(pullCommand)
+        print("Fichier sauvegardé temporairement à : \(tempUrl.path)")
+        
+        // Supprimez ici le fichier de l'appareil si nécessaire
+        // let deleteCommand = "-s \(deviceId) shell rm \"\(filePath)\""
+        // _ = runAdbCommand(deleteCommand)
+    }
+
     
     func importFile(deviceId: String, filePath: String, targetPath: String) -> String {
         let cleanedFilePath = filePath.replacingOccurrences(of: "file://", with: "")

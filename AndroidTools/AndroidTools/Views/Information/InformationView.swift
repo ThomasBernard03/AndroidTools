@@ -11,7 +11,7 @@ struct InformationView: View {
     
     let deviceId : String
     
-    @ObservedObject private var viewModel = InformationViewModel()
+    @State private var viewModel = InformationViewModel()
     
     var body: some View {
         

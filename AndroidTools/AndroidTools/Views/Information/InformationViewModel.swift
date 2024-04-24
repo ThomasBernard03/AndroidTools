@@ -7,9 +7,9 @@
 
 import Foundation
 
-
+@Observable
 final class InformationViewModel: ObservableObject {
-    @Published var device : DeviceDetail? = nil
+    var device : DeviceDetail? = nil
     
     
     func getDeviceDetail(deviceId : String){

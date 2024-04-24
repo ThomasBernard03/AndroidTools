@@ -7,9 +7,10 @@
 
 import Foundation
 
+@Observable
 final class InstallerViewModel: ObservableObject {
     
-    @Published var installStatus : InstallingApkStatus = .notStarted
+    var installStatus : InstallingApkStatus = .notStarted
 
     func installApk(deviceId : String, path : String){
         DispatchQueue.main.async {

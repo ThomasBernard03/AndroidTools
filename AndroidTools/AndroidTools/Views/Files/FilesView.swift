@@ -12,9 +12,10 @@ struct FilesView: View {
     
     let deviceId : String
     
-    @ObservedObject private var viewModel = FilesViewModel()
+    @State private var viewModel = FilesViewModel()
     @State private var searchQuery : String = ""
     @State private var showImportFileDialog : Bool = false
+    @State private var showExportFileDialog : Bool = false
     
     var body: some View {
         List(viewModel.currentFolder?.childrens ?? [], id: \.fullPath, selection: $viewModel.currentPath) { item in
@@ -61,7 +62,9 @@ struct FilesView: View {
                 }
                 .disabled(viewModel.loading)
                 
-                Button { } label: {
+                Button {
+                    showExportFileDialog.toggle()
+                } label: {
                     Label("Download file", systemImage: "square.and.arrow.down")
                 }
                 .disabled(viewModel.currentPath == nil || viewModel.loading)
@@ -91,17 +94,19 @@ struct FilesView: View {
                          .frame(minWidth: 200)
             }
         }
+        .fileExporter(isPresented: $showExportFileDialog, document: FileDocument()) { result in
+            
+        }
         .navigationTitle(viewModel.currentFolder?.name ?? "")
         .fileImporter(isPresented: $showImportFileDialog, allowedContentTypes: [UTType.item]) { result in
             switch result {
             case .success(let file):
-                viewModel.importFile(
-                    deviceId: deviceId,
-                    filePath: file.absoluteString)
+                viewModel.importFile(deviceId: deviceId,filePath: file.absoluteString)
             case .failure(let error):
                 print(error.localizedDescription)
             }
         }
+
     }
 }
 

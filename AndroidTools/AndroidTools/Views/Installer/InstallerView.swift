@@ -15,7 +15,7 @@ struct InstallerView: View {
     
     @State private var dropTargetted: Bool = false
     @State private var isHoveringPhone : Bool = false
-    @ObservedObject private var viewModel = InstallerViewModel()
+    @State private var viewModel = InstallerViewModel()
     
     
     private func loadApkFile(){
