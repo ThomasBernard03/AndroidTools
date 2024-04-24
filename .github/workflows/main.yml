@@ -36,4 +36,4 @@ jobs:
       uses: actions/upload-artifact@v2
       with:
         name: AndroidTools
-        path: ${{github.workspace}}/build/*
+        path: ${{github.workspace}}/build/*.pkg
