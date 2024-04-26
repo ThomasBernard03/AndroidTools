@@ -37,7 +37,7 @@ struct InstallerView: View {
     var body: some View {
         
         ZStack {
-            VStack(spacing:20) {
+            VStack(alignment: .leading, spacing:20) {
                 HStack {
                     Text("Install applications")
                         .font(.title)
@@ -57,6 +57,11 @@ struct InstallerView: View {
                 }
                 
                 Spacer()
+                
+                TerminalWindow(commandText: "adb install my-app.apk")
+                    .frame(maxWidth: 400)
+                
+
             }
             .padding()
             .padding([.trailing], 100)

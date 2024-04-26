@@ -13,6 +13,7 @@
 		812A62BF2BC708D400388105 /* DeviceDetail.swift in Sources */ = {isa = PBXBuildFile; fileRef = 812A62BE2BC708D400388105 /* DeviceDetail.swift */; };
 		812A62C12BC70C3E00388105 /* IntExtensions.swift in Sources */ = {isa = PBXBuildFile; fileRef = 812A62C02BC70C3E00388105 /* IntExtensions.swift */; };
 		812AB6EB2BD3AFFE00DB60A5 /* HomeView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 812AB6EA2BD3AFFE00DB60A5 /* HomeView.swift */; };
+		812DC7882BDC047E009B2E87 /* TerminalWindow.swift in Sources */ = {isa = PBXBuildFile; fileRef = 812DC7872BDC047E009B2E87 /* TerminalWindow.swift */; };
 		814319502BC6715100044934 /* InstallerView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8143194F2BC6715100044934 /* InstallerView.swift */; };
 		814319522BC6715B00044934 /* InstallerViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 814319512BC6715B00044934 /* InstallerViewModel.swift */; };
 		814319562BC6B3C000044934 /* UTTypeExtensions.swift in Sources */ = {isa = PBXBuildFile; fileRef = 814319552BC6B3C000044934 /* UTTypeExtensions.swift */; };
@@ -42,6 +43,7 @@
 		812A62BE2BC708D400388105 /* DeviceDetail.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DeviceDetail.swift; sourceTree = "<group>"; };
 		812A62C02BC70C3E00388105 /* IntExtensions.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = IntExtensions.swift; sourceTree = "<group>"; };
 		812AB6EA2BD3AFFE00DB60A5 /* HomeView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = HomeView.swift; sourceTree = "<group>"; };
+		812DC7872BDC047E009B2E87 /* TerminalWindow.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TerminalWindow.swift; sourceTree = "<group>"; };
 		8143194F2BC6715100044934 /* InstallerView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = InstallerView.swift; sourceTree = "<group>"; };
 		814319512BC6715B00044934 /* InstallerViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = InstallerViewModel.swift; sourceTree = "<group>"; };
 		814319552BC6B3C000044934 /* UTTypeExtensions.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = UTTypeExtensions.swift; sourceTree = "<group>"; };
@@ -165,6 +167,7 @@
 			isa = PBXGroup;
 			children = (
 				81600C8E2BC98F65008D471C /* FileRow.swift */,
+				812DC7872BDC047E009B2E87 /* TerminalWindow.swift */,
 			);
 			path = Components;
 			sourceTree = "<group>";
@@ -318,6 +321,7 @@
 				81E6A7512BC5CC260034EBFB /* SideBarView.swift in Sources */,
 				81E6A75B2BC5CDC20034EBFB /* FilesView.swift in Sources */,
 				81E6A7652BC5D7020034EBFB /* AdbHelper.swift in Sources */,
+				812DC7882BDC047E009B2E87 /* TerminalWindow.swift in Sources */,
 				81D04F5A2BCA4B3400B04FAB /* FolderItem.swift in Sources */,
 				81C3FEE12BD2E76000E18035 /* SettingsView.swift in Sources */,
 				81E6A75D2BC5CDFF0034EBFB /* SideBarViewModel.swift in Sources */,
