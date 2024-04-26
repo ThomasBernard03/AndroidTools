@@ -10,18 +10,18 @@ import SwiftUI
 @main
 struct AndroidToolsApp: App {
     
-    @AppStorage("isDarkMode") private var isDarkMode = false
+    @AppStorage("mode") private var mode = false
     
     var body: some Scene {
         WindowGroup {
             SideBarView()
                 .frame(minWidth: 600, minHeight: 400)
-                .preferredColorScheme(isDarkMode ? .dark : .light)
+                .preferredColorScheme(.light)
         }
         
         Settings {
             SettingsView()
-                .preferredColorScheme(isDarkMode ? .dark : .light)
+                .preferredColorScheme(.dark)
         }
         
     }

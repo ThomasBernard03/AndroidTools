@@ -1,10 +1,3 @@
-//
-//  SettingsView.swift
-//  AndroidTools
-//
-//  Created by Thomas Bernard on 19/04/2024.
-//
-
 import SwiftUI
 
 struct SettingsView: View {
@@ -13,30 +6,66 @@ struct SettingsView: View {
         case general, advanced
     }
     
-    @AppStorage("isDarkMode") private var isDarkMode = false
+    let appIcons: [String] = ["AppIconDark", "AppIconLight", "AppIconAndroid"]
+    let modes : [String] = ["Automatic", "Dark", "Light"]
+    
+    @AppStorage("mode") private var mode = "Automatic"
+    @AppStorage("appIconName") private var appIconName = "AppIconDark"
+    
+    
+    // State to track the currently selected icon
+    @State private var selectedIcon: String = (NSApplication.shared.applicationIconImage.name() ?? "")
     
     var body: some View {
-        TabView {
-            VStack{
-                Toggle("Dark Mode", isOn: $isDarkMode)
+        Form {
+            Group {
+
+                Section("Apparance") {
+                    VStack {
+                        Picker("", selection: $mode) {
+                            ForEach(modes, id: \.self) { mode in
+                                Text(mode)
+                                if mode == modes.first {
+                                    Divider()
+                                }
+                                
+                            }
+                        }
+                        
+                        ScrollView(.horizontal, showsIndicators: false) {
+                            HStack {
+                                ForEach(appIcons, id: \.self) { name in
+                                    VStack {
+                                        Image(nsImage: NSImage(named: name)!)
+                                            .resizable()
+                                            .aspectRatio(contentMode: .fit)
+                                            .frame(width: 60, height: 60) // Highlight the selected icon
+                                    }
+                                
+                                    .background(appIconName == name ? Color.accentColor : Color.clear)
+                                    .cornerRadius(13.4)
+
+                                    .onTapGesture {
+                                        NSApplication.shared.applicationIconImage = NSImage(named: name)
+                                        appIconName = name  // Update the selected icon
+                                    }
+                                }
+                            }
+                            .padding()
+                        }
+                        
+                        Spacer()
+                    }
+                }
             }
-            .tabItem {
-                Label("General", systemImage: "gear")
-            }
-            .tag(Tabs.general)
-            VStack {
-                
-            }
-            .tabItem {
-                Label("Advanced", systemImage: "star")
-            }
-            .tag(Tabs.advanced)
         }
-        .padding(20)
-        .frame(width: 375, height: 150)
+
+
     }
 }
 
-#Preview {
-    SettingsView()
+struct SettingsView_Previews: PreviewProvider {
+    static var previews: some View {
+        SettingsView()
+    }
 }
