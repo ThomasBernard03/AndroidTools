@@ -1,24 +1,18 @@
-//
-//  InstallerView.swift
-//  AndroidTools
-//
-//  Created by Thomas Bernard on 10/04/2024.
-//
-
 import SwiftUI
 import UniformTypeIdentifiers.UTType
 
-
 struct InstallerView: View {
     
-    let deviceId : String
+    let deviceId: String
     
     @State private var dropTargetted: Bool = false
-    @State private var isHoveringPhone : Bool = false
+    @State private var isHoveringPhone: Bool = false
     @State private var viewModel = InstallerViewModel()
     
+    @State private var scale: [Double] = [1, 1, 1, 1, 1, 1]
+    @State private var opacity: [Double] = [1, 1, 1, 1, 1, 1]
     
-    private func loadApkFile(){
+    private func loadApkFile() {
         let panel = NSOpenPanel()
         panel.allowsMultipleSelection = false
         panel.canChooseDirectories = false
@@ -28,72 +22,48 @@ struct InstallerView: View {
                 DispatchQueue.global(qos: .userInitiated).async {
                     viewModel.installApk(deviceId: deviceId, path: url.path)
                 }
-                
             }
         }
     }
     
-    
     var body: some View {
-        
         ZStack {
-            VStack(alignment: .leading, spacing:20) {
-                HStack {
-                    Text("Install applications")
-                        .font(.title)
-                    Spacer()
-                }
-                
-                HStack {
-                    Text("You can easily install applications from an .apk file on your Mac. \nTo do this, you can use the file explorer or drag and drop an apk file.")
-                    
-                    Spacer()
-                }
-                
-                Button {
-                    loadApkFile()
-                } label: {
-                    Label("Open file explorer", systemImage: "folder")
-                }
-                
-                Spacer()
-                
-                TerminalWindow(commandText: "adb install my-app.apk")
-                    .frame(maxWidth: 400)
-                
-
-            }
-            .padding()
-            .padding([.trailing], 100)
-            .zIndex(1)
-            
-            HStack {
-                Spacer()
-                
-                Image("ApplicationInstaller")
-                    .resizable()
-                    .scaledToFit()
-                    .onHover { hovering in
-                        isHoveringPhone = hovering
+            // Animated background waves
+            ForEach(0..<6, id: \.self) { index in
+                Circle()
+                    .frame(width: 100, height: 100)
+                    .foregroundColor(.accentColor)
+                    .scaleEffect(scale[index])
+                    .opacity(opacity[index])
+                    .animation(
+                        Animation.easeOut(duration: 5).repeatForever(autoreverses: false).delay(Double(index)),
+                        value: scale[index]
+                    )
+                    .onAppear {
+                        scale[index] = 5
+                        opacity[index] = 0
                     }
-                    .offset(x: 50)
-                    .frame(width: 300)
             }
-            
-            
+
+            // Image to represent APK dropping
+            Image("ApkFile")
+                .resizable()
+                .scaledToFit()
+                .frame(width: 200)
+
             VStack {
                 Spacer()
                 
                 switch viewModel.installStatus {
                 case .loading(let fileName):
                     ProgressView {
-                        Text("Intalling \(fileName)")
+                        Text("Installing \(fileName)")
                             .padding([.horizontal])
                     }
                     .progressViewStyle(LinearProgressViewStyle())
-                    .offset(y:7)
+                    .offset(y: 7)
                 case .success:
-                    Text("Install sucess")
+                    Text("Install success")
                         .padding()
                 case .error(let message):
                     Text("Error: \(message)")
@@ -102,29 +72,23 @@ struct InstallerView: View {
                 case .notStarted:
                     EmptyView()
                 }
-                
-    
             }
         }
-        
+        .frame(maxWidth: .infinity, maxHeight: .infinity)  // Make drop zone full screen
         .onDrop(of: [.apk], isTargeted: $dropTargetted) { providers in
             providers.first?.loadItem(forTypeIdentifier: UTType.apk.identifier, options: nil) { (item, error) in
-                
                 if let item = item as? URL {
                     let fileUrl = item.startAccessingSecurityScopedResource() ? item : URL(fileURLWithPath: item.path)
                     viewModel.installApk(deviceId: deviceId, path: fileUrl.path)
                     item.stopAccessingSecurityScopedResource()
                 }
             }
-            
-            
             return true
         }
         .overlay {
             if dropTargetted {
                 ZStack {
                     Color.black.opacity(0.5)
-                    
                     VStack(spacing: 8) {
                         Image(systemName: "plus.circle.fill")
                             .font(.system(size: 30))
@@ -137,15 +101,12 @@ struct InstallerView: View {
             }
         }
         .animation(.default, value: dropTargetted)
-        .navigationTitle("Application installer")
-        
-
-        
-
-        
+        .navigationTitle("Application Installer")
     }
 }
 
-#Preview {
-    InstallerView(deviceId: "4dfda049")
+struct InstallerView_Previews: PreviewProvider {
+    static var previews: some View {
+        InstallerView(deviceId: "4dfda049")
+    }
 }
