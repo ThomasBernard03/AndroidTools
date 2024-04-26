@@ -50,6 +50,7 @@ struct InstallerView: View {
                 .resizable()
                 .scaledToFit()
                 .frame(width: 200)
+                
 
             VStack {
                 Spacer()
@@ -102,6 +103,11 @@ struct InstallerView: View {
         }
         .animation(.default, value: dropTargetted)
         .navigationTitle("Application Installer")
+        .toolbar {
+            Button(action: {loadApkFile()}, label: {
+                Label("Load file from finder", systemImage: "folder.badge.plus")
+            })
+        }
     }
 }
 
