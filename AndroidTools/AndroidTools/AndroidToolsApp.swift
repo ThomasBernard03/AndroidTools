@@ -21,6 +21,7 @@ struct AndroidToolsApp: App {
         
         Settings {
             SettingsView()
+                .padding()
                 .preferredColorScheme(.dark)
         }
         

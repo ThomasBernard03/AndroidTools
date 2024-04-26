@@ -23,14 +23,17 @@ struct InformationView: View {
             
             VStack {
                 HStack {
-                    Text(viewModel.device?.serialNumber ?? "-")
+                    Text(viewModel.device?.model.uppercased() ?? "-")
                         .font(.headline)
                         .textSelection(.enabled)
                     Spacer()
                 }
                 
                 HStack {
-                    Text("\(viewModel.device?.manufacturer ?? "-") \(viewModel.device?.model ?? "-")")
+                    Text("\(viewModel.device?.manufacturer ?? "-") -")
+                        .textSelection(.enabled)
+                    
+                    Text(viewModel.device?.serialNumber ?? "")
                         .textSelection(.enabled)
                     
                     Text("\(String(viewModel.device?.batteryInfo.percentage ?? 0)) %")

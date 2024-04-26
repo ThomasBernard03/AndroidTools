@@ -76,7 +76,7 @@ class AdbHelper {
         
         let batteryInfoCommand = "shell dumpsys battery"
         let manufacturerCommand = "shell getprop ro.product.manufacturer"
-        let modelCommand = "shell getprop ro.product.model"
+        let modelCommand = "shell getprop ro.product.device"
         let serialNumberCommand = "get-serialno"
         let androidVersionCommand = "shell getprop ro.build.version.release"
         
