@@ -23,6 +23,12 @@
 			<string>NSDocument</string>
 		</dict>
 	</array>
+	<key>SUEnableInstallerLauncherService</key>
+	<true/>
+	<key>SUFeedURL</key>
+	<string>https://thomasbernard03.github.io/AndroidTools/appcast.xml</string>
+	<key>SUPublicEDKey</key>
+	<string>WvmR3eUGuRziee4gLL1K/g6s3PY1zJ8ukwPQ8LbnTVw=</string>
 	<key>UTExportedTypeDeclarations</key>
 	<array>
 		<dict>

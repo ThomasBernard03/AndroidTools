@@ -16,4 +16,4 @@ Android tools makes the communication between Macos and Android devices easier. 
 
 ## ⚡️ Installation
 
-You can install application from githib releases
+You can install application from Github releases
