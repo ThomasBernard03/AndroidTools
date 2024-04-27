@@ -50,6 +50,26 @@ struct InstallerView: View {
                 .resizable()
                 .scaledToFit()
                 .frame(width: 200)
+            
+            VStack(alignment:.leading) {
+                HStack {
+                    HStack {
+                        Image(systemName: "info.circle")
+                            .foregroundColor(.blue)
+                        Text("Drag and drop your .apk file to install your application\nYou can also click on the add button to import file from Finder")
+        
+                    }
+                    .padding()
+                    .background(.background.opacity(0.9))
+                    .cornerRadius(8)
+                    .shadow(radius: 2)
+                    .padding(16)
+
+                    Spacer()
+                }
+
+                Spacer()
+            }
                 
         }
         .frame(maxWidth: .infinity, maxHeight: .infinity)  // Make drop zone full screen
@@ -82,7 +102,7 @@ struct InstallerView: View {
         .navigationTitle("Application Installer")
         .toolbar {
             Button(action: {loadApkFile()}, label: {
-                Label("Load file from finder", systemImage: "folder.badge.plus")
+                Label("Load file from finder", systemImage: "doc.badge.plus")
             })
         }
         .toastView(toast: $viewModel.toast)
