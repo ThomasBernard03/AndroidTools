@@ -9,10 +9,12 @@ import Foundation
 import SwiftUI
 
 enum ToastStyle {
-  case error
-  case warning
-  case success
-  case info
+    case error
+    case warning
+    case success
+    case info
+    case loading
+    
 }
 
 extension ToastStyle {
@@ -22,6 +24,7 @@ extension ToastStyle {
     case .warning: return Color.orange
     case .info: return Color.blue
     case .success: return Color.green
+    case .loading: return Color.blue
     }
   }
   
@@ -31,6 +34,7 @@ extension ToastStyle {
     case .warning: return "exclamationmark.triangle.fill"
     case .success: return "checkmark.circle.fill"
     case .error: return "xmark.circle.fill"
+    case.loading: return "hourglass"
     }
   }
 }

@@ -51,29 +51,6 @@ struct InstallerView: View {
                 .scaledToFit()
                 .frame(width: 200)
                 
-
-            VStack {
-                Spacer()
-                
-                switch viewModel.installStatus {
-                case .loading(let fileName):
-                    ProgressView {
-                        Text("Installing \(fileName)")
-                            .padding([.horizontal])
-                    }
-                    .progressViewStyle(LinearProgressViewStyle())
-                    .offset(y: 7)
-                case .success:
-                    Text("Install success")
-                        .padding()
-                case .error(let message):
-                    Text("Error: \(message)")
-                        .foregroundStyle(.red)
-                        .padding()
-                case .notStarted:
-                    EmptyView()
-                }
-            }
         }
         .frame(maxWidth: .infinity, maxHeight: .infinity)  // Make drop zone full screen
         .onDrop(of: [.apk], isTargeted: $dropTargetted) { providers in

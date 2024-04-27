@@ -15,13 +15,22 @@ struct ToastView: View {
   var width = CGFloat.infinity
   
   var body: some View {
-      HStack(alignment: .bottom, spacing: 12) {
-          Image(systemName: style.iconFileName)
-            .foregroundColor(style.themeColor)
-          Text(message)
-            .font(Font.caption)
-          
-          Spacer()
+      HStack(alignment: .center, spacing: 12) {
+          if style == .loading {
+              ProgressView {
+                  Text(message)
+                      .padding([.horizontal])
+              }
+              .progressViewStyle(LinearProgressViewStyle())
+          }
+          else {
+              Image(systemName: style.iconFileName)
+                .foregroundColor(style.themeColor)
+              Text(message)
+                .font(Font.caption)
+              
+              Spacer()
+          }
     }
     .padding()
     .frame(minWidth: 0, maxWidth: width)

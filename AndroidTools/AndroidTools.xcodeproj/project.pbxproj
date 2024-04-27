@@ -12,7 +12,6 @@
 		812399C82BDC3CC7004219C9 /* ToastView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 812399C72BDC3CC7004219C9 /* ToastView.swift */; };
 		812399CA2BDC3CE3004219C9 /* ToastModifier.swift in Sources */ = {isa = PBXBuildFile; fileRef = 812399C92BDC3CE3004219C9 /* ToastModifier.swift */; };
 		812399CC2BDC3D22004219C9 /* ViewExtensions.swift in Sources */ = {isa = PBXBuildFile; fileRef = 812399CB2BDC3D22004219C9 /* ViewExtensions.swift */; };
-		812A62B92BC6F1FB00388105 /* InstallingApkStatus.swift in Sources */ = {isa = PBXBuildFile; fileRef = 812A62B82BC6F1FB00388105 /* InstallingApkStatus.swift */; };
 		812A62BB2BC6F2FC00388105 /* StringExtensions.swift in Sources */ = {isa = PBXBuildFile; fileRef = 812A62BA2BC6F2FC00388105 /* StringExtensions.swift */; };
 		812A62BD2BC707A400388105 /* BatteryInfo.swift in Sources */ = {isa = PBXBuildFile; fileRef = 812A62BC2BC707A400388105 /* BatteryInfo.swift */; };
 		812A62BF2BC708D400388105 /* DeviceDetail.swift in Sources */ = {isa = PBXBuildFile; fileRef = 812A62BE2BC708D400388105 /* DeviceDetail.swift */; };
@@ -47,7 +46,6 @@
 		812399C72BDC3CC7004219C9 /* ToastView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ToastView.swift; sourceTree = "<group>"; };
 		812399C92BDC3CE3004219C9 /* ToastModifier.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ToastModifier.swift; sourceTree = "<group>"; };
 		812399CB2BDC3D22004219C9 /* ViewExtensions.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ViewExtensions.swift; sourceTree = "<group>"; };
-		812A62B82BC6F1FB00388105 /* InstallingApkStatus.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = InstallingApkStatus.swift; sourceTree = "<group>"; };
 		812A62BA2BC6F2FC00388105 /* StringExtensions.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = StringExtensions.swift; sourceTree = "<group>"; };
 		812A62BC2BC707A400388105 /* BatteryInfo.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = BatteryInfo.swift; sourceTree = "<group>"; };
 		812A62BE2BC708D400388105 /* DeviceDetail.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DeviceDetail.swift; sourceTree = "<group>"; };
@@ -245,7 +243,6 @@
 			isa = PBXGroup;
 			children = (
 				81E6A7672BC5D7200034EBFB /* Device.swift */,
-				812A62B82BC6F1FB00388105 /* InstallingApkStatus.swift */,
 				812A62BC2BC707A400388105 /* BatteryInfo.swift */,
 				812A62BE2BC708D400388105 /* DeviceDetail.swift */,
 				817EE85C2BC8247F00740D4A /* FileItem.swift */,
@@ -349,7 +346,6 @@
 				81600C8F2BC98F65008D471C /* FileRow.swift in Sources */,
 				8178547E2BC59F6300B5B2EE /* AndroidToolsApp.swift in Sources */,
 				81E6A75F2BC5D2840034EBFB /* InformationViewModel.swift in Sources */,
-				812A62B92BC6F1FB00388105 /* InstallingApkStatus.swift in Sources */,
 				81D04F582BCA49C300B04FAB /* FileExplorerItem.swift in Sources */,
 				817EE85D2BC8247F00740D4A /* FileItem.swift in Sources */,
 				817EE8592BC81D4100740D4A /* FilesViewModel.swift in Sources */,

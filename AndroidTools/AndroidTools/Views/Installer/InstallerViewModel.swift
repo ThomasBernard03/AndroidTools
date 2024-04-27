@@ -9,29 +9,22 @@ import Foundation
 
 @Observable
 final class InstallerViewModel: ObservableObject {
-    
-    var installStatus : InstallingApkStatus = .notStarted
     var toast : Toast? = nil
 
     func installApk(deviceId : String, path : String){
+        let fileName = path.substringAfterLast("/")
         DispatchQueue.main.async {
-            self.installStatus = .loading(fileName: path.substringAfterLast("/"))
+            self.toast = Toast(style: .loading, message: "Installing \(fileName)")
         }
-        
-        
-        print("Installing apk " + path)
-        
         
         let result = AdbHelper().installApk(deviceId:deviceId,path: path)
         
         DispatchQueue.main.async {
             if result.hasSuffix("Success") {
-                self.installStatus = .success
-                self.toast = Toast(style: .success, message: "Saved.", width: .infinity)
+                self.toast = Toast(style: .success, message: "Installation of \(fileName) completed successfully", width: .infinity)
             }
             else {
-                self.installStatus = .error(message: result)
-                self.toast = Toast(style: .error, message: "Error \n\(result)", width: .infinity)
+                self.toast = Toast(style: .error, message: "Error during installation of \(fileName) :\n\(result)", width: .infinity)
             }
          }
     }
