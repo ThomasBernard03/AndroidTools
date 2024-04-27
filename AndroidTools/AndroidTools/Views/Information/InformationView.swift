@@ -16,7 +16,7 @@ struct InformationView: View {
     var body: some View {
         
         HStack{
-            Image("Phone")
+            Image("GenericPhone")
                 .resizable()
                 .scaledToFit()
                 .frame(height: 50)

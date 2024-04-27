@@ -19,7 +19,6 @@ struct ToastView: View {
           if style == .loading {
               ProgressView {
                   Text(message)
-                      .padding([.horizontal])
               }
               .progressViewStyle(LinearProgressViewStyle())
           }
