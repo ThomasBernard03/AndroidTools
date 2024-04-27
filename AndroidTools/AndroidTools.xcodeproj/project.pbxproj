@@ -38,6 +38,7 @@
 		81E6A75F2BC5D2840034EBFB /* InformationViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 81E6A75E2BC5D2840034EBFB /* InformationViewModel.swift */; };
 		81E6A7652BC5D7020034EBFB /* AdbHelper.swift in Sources */ = {isa = PBXBuildFile; fileRef = 81E6A7642BC5D7020034EBFB /* AdbHelper.swift */; };
 		81E6A7682BC5D7200034EBFB /* Device.swift in Sources */ = {isa = PBXBuildFile; fileRef = 81E6A7672BC5D7200034EBFB /* Device.swift */; };
+		81E9822D2BDD06600004B154 /* InstallApplicationUseCase.swift in Sources */ = {isa = PBXBuildFile; fileRef = 81E9822C2BDD06600004B154 /* InstallApplicationUseCase.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
@@ -75,6 +76,7 @@
 		81E6A75E2BC5D2840034EBFB /* InformationViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = InformationViewModel.swift; sourceTree = "<group>"; };
 		81E6A7642BC5D7020034EBFB /* AdbHelper.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AdbHelper.swift; sourceTree = "<group>"; };
 		81E6A7672BC5D7200034EBFB /* Device.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Device.swift; sourceTree = "<group>"; };
+		81E9822C2BDD06600004B154 /* InstallApplicationUseCase.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = InstallApplicationUseCase.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -143,6 +145,7 @@
 		8178547C2BC59F6300B5B2EE /* AndroidTools */ = {
 			isa = PBXGroup;
 			children = (
+				81E9822B2BDD06500004B154 /* UseCases */,
 				814319572BC6B4D900044934 /* Info.plist */,
 				814319532BC6B3AC00044934 /* Commons */,
 				81E6A7662BC5D7100034EBFB /* Models */,
@@ -256,6 +259,14 @@
 			path = Models;
 			sourceTree = "<group>";
 		};
+		81E9822B2BDD06500004B154 /* UseCases */ = {
+			isa = PBXGroup;
+			children = (
+				81E9822C2BDD06600004B154 /* InstallApplicationUseCase.swift */,
+			);
+			path = UseCases;
+			sourceTree = "<group>";
+		};
 /* End PBXGroup section */
 
 /* Begin PBXNativeTarget section */
@@ -334,6 +345,7 @@
 				81E6A75B2BC5CDC20034EBFB /* FilesView.swift in Sources */,
 				81E6A7652BC5D7020034EBFB /* AdbHelper.swift in Sources */,
 				812DC7882BDC047E009B2E87 /* TerminalWindow.swift in Sources */,
+				81E9822D2BDD06600004B154 /* InstallApplicationUseCase.swift in Sources */,
 				812399C82BDC3CC7004219C9 /* ToastView.swift in Sources */,
 				81D04F5A2BCA4B3400B04FAB /* FolderItem.swift in Sources */,
 				81C3FEE12BD2E76000E18035 /* SettingsView.swift in Sources */,

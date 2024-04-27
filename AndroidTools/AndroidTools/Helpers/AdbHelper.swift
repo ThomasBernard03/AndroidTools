@@ -131,11 +131,6 @@ class AdbHelper {
         return batteryDict
     }
     
-    func installApk(deviceId : String, path : String) -> String {
-        let command = "-s \(deviceId) install \(path)"
-        return runAdbCommand(command)
-    }
-    
     func saveFile(deviceId: String, filePath: String) {
         let fileManager = FileManager.default
         let tempDirectory = NSTemporaryDirectory()
@@ -164,7 +159,7 @@ class AdbHelper {
         return result
     }
     
-    private func runAdbCommand(_ command: String) -> String {
+    func runAdbCommand(_ command: String) -> String {
         print("Running command: adb \(command)")
         let task = Process()
         let pipe = Pipe()
@@ -180,7 +175,4 @@ class AdbHelper {
         print("Result: \(output)")
         return output
     }
-
-
-    
 }
