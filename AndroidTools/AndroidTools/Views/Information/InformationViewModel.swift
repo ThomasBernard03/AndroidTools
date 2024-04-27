@@ -11,14 +11,19 @@ import Foundation
 final class InformationViewModel: ObservableObject {
     var device : DeviceDetail? = nil
     
+    private let getDeviceInformationUseCase = GetDeviceInformationUseCase()
+    private let rebootDeviceUseCase = RebootDeviceUseCase()
     
     func getDeviceDetail(deviceId : String){
         DispatchQueue.global(qos: .userInitiated).async {
-            let result = AdbHelper().getDeviceInformation(deviceId:deviceId)
+            let result = self.getDeviceInformationUseCase.execute(deviceId:deviceId)
             DispatchQueue.main.async {
                 self.device = result
             }
         }
-        
+    }
+    
+    func rebootDevice(deviceId : String){
+        rebootDeviceUseCase.execute(deviceId: deviceId)
     }
 }

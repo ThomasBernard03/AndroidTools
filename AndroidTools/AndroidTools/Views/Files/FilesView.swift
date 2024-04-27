@@ -76,7 +76,7 @@ struct FilesView: View {
                 Button {
                     viewModel.deleteFileExplorerItem(deviceId: deviceId, fullPath: viewModel.currentPath!)
                 } label: {
-                    Label("Delete", systemImage: "xmark.bin")
+                    Label("Delete", systemImage: "trash")
                 }
                 .disabled(viewModel.currentPath == nil || viewModel.loading)
                 

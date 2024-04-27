@@ -39,6 +39,8 @@
 		81E6A7652BC5D7020034EBFB /* AdbHelper.swift in Sources */ = {isa = PBXBuildFile; fileRef = 81E6A7642BC5D7020034EBFB /* AdbHelper.swift */; };
 		81E6A7682BC5D7200034EBFB /* Device.swift in Sources */ = {isa = PBXBuildFile; fileRef = 81E6A7672BC5D7200034EBFB /* Device.swift */; };
 		81E9822D2BDD06600004B154 /* InstallApplicationUseCase.swift in Sources */ = {isa = PBXBuildFile; fileRef = 81E9822C2BDD06600004B154 /* InstallApplicationUseCase.swift */; };
+		81E9822F2BDD09E70004B154 /* GetDeviceInformationUseCase.swift in Sources */ = {isa = PBXBuildFile; fileRef = 81E9822E2BDD09E70004B154 /* GetDeviceInformationUseCase.swift */; };
+		81E982312BDD0F190004B154 /* RebootDeviceUseCase.swift in Sources */ = {isa = PBXBuildFile; fileRef = 81E982302BDD0F190004B154 /* RebootDeviceUseCase.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
@@ -77,6 +79,8 @@
 		81E6A7642BC5D7020034EBFB /* AdbHelper.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AdbHelper.swift; sourceTree = "<group>"; };
 		81E6A7672BC5D7200034EBFB /* Device.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Device.swift; sourceTree = "<group>"; };
 		81E9822C2BDD06600004B154 /* InstallApplicationUseCase.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = InstallApplicationUseCase.swift; sourceTree = "<group>"; };
+		81E9822E2BDD09E70004B154 /* GetDeviceInformationUseCase.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = GetDeviceInformationUseCase.swift; sourceTree = "<group>"; };
+		81E982302BDD0F190004B154 /* RebootDeviceUseCase.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RebootDeviceUseCase.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -263,6 +267,8 @@
 			isa = PBXGroup;
 			children = (
 				81E9822C2BDD06600004B154 /* InstallApplicationUseCase.swift */,
+				81E9822E2BDD09E70004B154 /* GetDeviceInformationUseCase.swift */,
+				81E982302BDD0F190004B154 /* RebootDeviceUseCase.swift */,
 			);
 			path = UseCases;
 			sourceTree = "<group>";
@@ -343,6 +349,7 @@
 				812A62BD2BC707A400388105 /* BatteryInfo.swift in Sources */,
 				81E6A7512BC5CC260034EBFB /* SideBarView.swift in Sources */,
 				81E6A75B2BC5CDC20034EBFB /* FilesView.swift in Sources */,
+				81E9822F2BDD09E70004B154 /* GetDeviceInformationUseCase.swift in Sources */,
 				81E6A7652BC5D7020034EBFB /* AdbHelper.swift in Sources */,
 				812DC7882BDC047E009B2E87 /* TerminalWindow.swift in Sources */,
 				81E9822D2BDD06600004B154 /* InstallApplicationUseCase.swift in Sources */,
@@ -360,6 +367,7 @@
 				81E6A75F2BC5D2840034EBFB /* InformationViewModel.swift in Sources */,
 				81D04F582BCA49C300B04FAB /* FileExplorerItem.swift in Sources */,
 				817EE85D2BC8247F00740D4A /* FileItem.swift in Sources */,
+				81E982312BDD0F190004B154 /* RebootDeviceUseCase.swift in Sources */,
 				817EE8592BC81D4100740D4A /* FilesViewModel.swift in Sources */,
 				812A62BF2BC708D400388105 /* DeviceDetail.swift in Sources */,
 				812AB6EB2BD3AFFE00DB60A5 /* HomeView.swift in Sources */,

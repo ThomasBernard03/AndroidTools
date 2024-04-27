@@ -12,6 +12,8 @@ struct InformationView: View {
     let deviceId : String
     
     @State private var viewModel = InformationViewModel()
+    @State private var isPresentingRebootConfirmation: Bool = false
+
     
     var body: some View {
         
@@ -23,20 +25,22 @@ struct InformationView: View {
             
             VStack {
                 HStack {
-                    Text(viewModel.device?.model.uppercased() ?? "-")
+                    Text(viewModel.device?.model.uppercased() ?? "")
                         .font(.headline)
                         .textSelection(.enabled)
                     Spacer()
                 }
                 
                 HStack {
-                    Text("\(viewModel.device?.manufacturer ?? "-") -")
+                    Text(viewModel.device?.manufacturer ?? "")
                         .textSelection(.enabled)
+                    
+                    Text("-")
                     
                     Text(viewModel.device?.serialNumber ?? "")
                         .textSelection(.enabled)
                     
-                    Text("\(String(viewModel.device?.batteryInfo.percentage ?? 0)) %")
+                    Text("\(String(viewModel.device?.batteryInfo.percentage ?? 0))%")
                     
 
                     if viewModel.device?.batteryInfo.charging ?? false {
@@ -86,6 +90,17 @@ struct InformationView: View {
                     Text(viewModel.device?.model ?? "")
                 }
             }
+        }
+        .toolbar {
+            Button {isPresentingRebootConfirmation.toggle()} label: {
+                Label("Reboot device", systemImage: "arrow.circlepath")
+            }
+        }
+        .confirmationDialog("Reboot connected device ?",
+          isPresented: $isPresentingRebootConfirmation) {
+          Button("Confirm", role: .destructive) {
+              viewModel.rebootDevice(deviceId: deviceId)
+          }
         }
     }
 }
