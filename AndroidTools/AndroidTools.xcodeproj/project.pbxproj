@@ -7,7 +7,11 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
-		812399C22BDC39ED004219C9 /* ViewExtensions.swift in Sources */ = {isa = PBXBuildFile; fileRef = 812399C12BDC39ED004219C9 /* ViewExtensions.swift */; };
+		812399C42BDC3C92004219C9 /* Toast.swift in Sources */ = {isa = PBXBuildFile; fileRef = 812399C32BDC3C92004219C9 /* Toast.swift */; };
+		812399C62BDC3CA9004219C9 /* ToastStyle.swift in Sources */ = {isa = PBXBuildFile; fileRef = 812399C52BDC3CA9004219C9 /* ToastStyle.swift */; };
+		812399C82BDC3CC7004219C9 /* ToastView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 812399C72BDC3CC7004219C9 /* ToastView.swift */; };
+		812399CA2BDC3CE3004219C9 /* ToastModifier.swift in Sources */ = {isa = PBXBuildFile; fileRef = 812399C92BDC3CE3004219C9 /* ToastModifier.swift */; };
+		812399CC2BDC3D22004219C9 /* ViewExtensions.swift in Sources */ = {isa = PBXBuildFile; fileRef = 812399CB2BDC3D22004219C9 /* ViewExtensions.swift */; };
 		812A62B92BC6F1FB00388105 /* InstallingApkStatus.swift in Sources */ = {isa = PBXBuildFile; fileRef = 812A62B82BC6F1FB00388105 /* InstallingApkStatus.swift */; };
 		812A62BB2BC6F2FC00388105 /* StringExtensions.swift in Sources */ = {isa = PBXBuildFile; fileRef = 812A62BA2BC6F2FC00388105 /* StringExtensions.swift */; };
 		812A62BD2BC707A400388105 /* BatteryInfo.swift in Sources */ = {isa = PBXBuildFile; fileRef = 812A62BC2BC707A400388105 /* BatteryInfo.swift */; };
@@ -38,7 +42,11 @@
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
-		812399C12BDC39ED004219C9 /* ViewExtensions.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ViewExtensions.swift; sourceTree = "<group>"; };
+		812399C32BDC3C92004219C9 /* Toast.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Toast.swift; sourceTree = "<group>"; };
+		812399C52BDC3CA9004219C9 /* ToastStyle.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ToastStyle.swift; sourceTree = "<group>"; };
+		812399C72BDC3CC7004219C9 /* ToastView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ToastView.swift; sourceTree = "<group>"; };
+		812399C92BDC3CE3004219C9 /* ToastModifier.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ToastModifier.swift; sourceTree = "<group>"; };
+		812399CB2BDC3D22004219C9 /* ViewExtensions.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ViewExtensions.swift; sourceTree = "<group>"; };
 		812A62B82BC6F1FB00388105 /* InstallingApkStatus.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = InstallingApkStatus.swift; sourceTree = "<group>"; };
 		812A62BA2BC6F2FC00388105 /* StringExtensions.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = StringExtensions.swift; sourceTree = "<group>"; };
 		812A62BC2BC707A400388105 /* BatteryInfo.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = BatteryInfo.swift; sourceTree = "<group>"; };
@@ -113,7 +121,7 @@
 				814319552BC6B3C000044934 /* UTTypeExtensions.swift */,
 				812A62BA2BC6F2FC00388105 /* StringExtensions.swift */,
 				812A62C02BC70C3E00388105 /* IntExtensions.swift */,
-				812399C12BDC39ED004219C9 /* ViewExtensions.swift */,
+				812399CB2BDC3D22004219C9 /* ViewExtensions.swift */,
 			);
 			path = Extensions;
 			sourceTree = "<group>";
@@ -243,6 +251,10 @@
 				817EE85C2BC8247F00740D4A /* FileItem.swift */,
 				81D04F572BCA49C300B04FAB /* FileExplorerItem.swift */,
 				81D04F592BCA4B3400B04FAB /* FolderItem.swift */,
+				812399C32BDC3C92004219C9 /* Toast.swift */,
+				812399C52BDC3CA9004219C9 /* ToastStyle.swift */,
+				812399C72BDC3CC7004219C9 /* ToastView.swift */,
+				812399C92BDC3CE3004219C9 /* ToastModifier.swift */,
 			);
 			path = Models;
 			sourceTree = "<group>";
@@ -325,23 +337,27 @@
 				81E6A75B2BC5CDC20034EBFB /* FilesView.swift in Sources */,
 				81E6A7652BC5D7020034EBFB /* AdbHelper.swift in Sources */,
 				812DC7882BDC047E009B2E87 /* TerminalWindow.swift in Sources */,
+				812399C82BDC3CC7004219C9 /* ToastView.swift in Sources */,
 				81D04F5A2BCA4B3400B04FAB /* FolderItem.swift in Sources */,
 				81C3FEE12BD2E76000E18035 /* SettingsView.swift in Sources */,
 				81E6A75D2BC5CDFF0034EBFB /* SideBarViewModel.swift in Sources */,
 				814319502BC6715100044934 /* InstallerView.swift in Sources */,
 				812A62C12BC70C3E00388105 /* IntExtensions.swift in Sources */,
+				812399C42BDC3C92004219C9 /* Toast.swift in Sources */,
 				81E6A7572BC5CD890034EBFB /* ScreenView.swift in Sources */,
+				812399CA2BDC3CE3004219C9 /* ToastModifier.swift in Sources */,
 				81600C8F2BC98F65008D471C /* FileRow.swift in Sources */,
 				8178547E2BC59F6300B5B2EE /* AndroidToolsApp.swift in Sources */,
 				81E6A75F2BC5D2840034EBFB /* InformationViewModel.swift in Sources */,
 				812A62B92BC6F1FB00388105 /* InstallingApkStatus.swift in Sources */,
 				81D04F582BCA49C300B04FAB /* FileExplorerItem.swift in Sources */,
 				817EE85D2BC8247F00740D4A /* FileItem.swift in Sources */,
-				812399C22BDC39ED004219C9 /* ViewExtensions.swift in Sources */,
 				817EE8592BC81D4100740D4A /* FilesViewModel.swift in Sources */,
 				812A62BF2BC708D400388105 /* DeviceDetail.swift in Sources */,
 				812AB6EB2BD3AFFE00DB60A5 /* HomeView.swift in Sources */,
 				812A62BB2BC6F2FC00388105 /* StringExtensions.swift in Sources */,
+				812399C62BDC3CA9004219C9 /* ToastStyle.swift in Sources */,
+				812399CC2BDC3D22004219C9 /* ViewExtensions.swift in Sources */,
 				81E6A7682BC5D7200034EBFB /* Device.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;

@@ -11,6 +11,7 @@ import Foundation
 final class InstallerViewModel: ObservableObject {
     
     var installStatus : InstallingApkStatus = .notStarted
+    var toast : Toast? = nil
 
     func installApk(deviceId : String, path : String){
         DispatchQueue.main.async {
@@ -26,9 +27,11 @@ final class InstallerViewModel: ObservableObject {
         DispatchQueue.main.async {
             if result.hasSuffix("Success") {
                 self.installStatus = .success
+                self.toast = Toast(style: .success, message: "Saved.", width: .infinity)
             }
             else {
                 self.installStatus = .error(message: result)
+                self.toast = Toast(style: .error, message: "Error \n\(result)", width: .infinity)
             }
          }
     }

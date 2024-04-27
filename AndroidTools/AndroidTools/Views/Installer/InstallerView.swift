@@ -108,6 +108,7 @@ struct InstallerView: View {
                 Label("Load file from finder", systemImage: "folder.badge.plus")
             })
         }
+        .toastView(toast: $viewModel.toast)
     }
 }
 
