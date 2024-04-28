@@ -16,6 +16,7 @@ struct FilesView: View {
     @State private var searchQuery : String = ""
     @State private var showImportFileDialog : Bool = false
     @State private var showExportFileDialog : Bool = false
+    @State private var dropTargetted: Bool = false
     
     var body: some View {
         List(viewModel.currentFolder?.childrens ?? [], id: \.fullPath, selection: $viewModel.currentPath) { item in
@@ -24,6 +25,31 @@ struct FilesView: View {
                     FileRow(name: fileItem.name)
                 } else if let folderItem = item as? FolderItem {
                     Label(folderItem.name, systemImage: "folder")
+                }
+            }
+        }
+        .onDrop(of: [.item], isTargeted: $dropTargetted) { providers in
+            providers.first?.loadItem(forTypeIdentifier: UTType.item.identifier, options: nil) { (item, error) in
+                if let item = item as? URL {
+                    let fileUrl = item.startAccessingSecurityScopedResource() ? item : URL(fileURLWithPath: item.path)
+                    viewModel.importFile(deviceId: deviceId, filePath: fileUrl.path)
+                    item.stopAccessingSecurityScopedResource()
+                }
+            }
+            return true
+        }
+        .overlay {
+            if dropTargetted {
+                ZStack {
+                    Color.black.opacity(0.5)
+                    VStack(spacing: 8) {
+                        Image(systemName: "plus.circle.fill")
+                            .font(.system(size: 30))
+                        Text("Drop your file here...")
+                    }
+                    .font(.title2)
+                    .foregroundColor(.white)
+                    .multilineTextAlignment(.center)
                 }
             }
         }

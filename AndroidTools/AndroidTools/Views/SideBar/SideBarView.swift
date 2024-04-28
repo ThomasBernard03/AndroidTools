@@ -50,7 +50,7 @@ struct SideBarView: View {
                     
                     NavigationLink(
                         destination: InstallerView(deviceId: viewModel.selectedDeviceId)) {
-                        Label("Installer", systemImage: "app.badge")
+                        Label("App installer", systemImage: "app.badge")
                     }
                     .disabled(viewModel.devices.isEmpty)
                     
