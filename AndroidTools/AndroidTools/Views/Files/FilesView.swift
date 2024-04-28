@@ -53,6 +53,15 @@ struct FilesView: View {
                 }
             }
         }
+        .fileExporter(isPresented: $showExportFileDialog, document: viewModel.exportedDocument, contentType: UTType.data, defaultFilename: viewModel.exportedDocument?.fileTitle) { result in
+             // Handle file save result
+             switch result {
+             case .success:
+                 print("File saved successfully")
+             case .failure(let error):
+                 print("Error saving file: \(error.localizedDescription)")
+             }
+         }
         .contextMenu(forSelectionType: String.self, menu: { _ in }) {_ in
             viewModel.itemDoubleClicked(deviceId: deviceId)
         }
@@ -89,6 +98,7 @@ struct FilesView: View {
                 .disabled(viewModel.loading)
                 
                 Button {
+                    viewModel.prepareExport(fileURL: viewModel.currentPath!)
                     showExportFileDialog.toggle()
                 } label: {
                     Label("Download file", systemImage: "square.and.arrow.down")

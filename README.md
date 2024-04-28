@@ -1,6 +1,6 @@
 <p align="center">
-  <img width="300" alt="Android tools logo" src= "https://github.com/ThomasBernard03/AndroidTools/blob/main/.github/light-banner.png#gh-light-mode-only"/>
-  <img width="300" alt="Android tools logo" src= "https://github.com/ThomasBernard03/AndroidTools/blob/main/.github/dark-banner.png#gh-dark-mode-only"/>
+  <img width="300" alt="Android tools logo" src= "./Documentation/light-banner.png#gh-light-mode-only"/>
+  <img width="300" alt="Android tools logo" src= "./Documentation/dark-banner.png#gh-dark-mode-only"/>
 </p>
 
 ---
@@ -17,3 +17,15 @@ Android tools makes the communication between Macos and Android devices easier. 
 ## ⚡️ Installation
 
 You can install application from Github releases
+
+
+## Features
+
+### Install Applications 💾
+
+You can install an application from any .apk file on your Mac. You can drag and drop it into the application, or load it from the finder.
+
+
+<img src="./Documentation/dark-install-apk.gif#gh-dark-mode-only"/>
+<img src="./Documentation/light-install-apk.gif#gh-light-mode-only"/>
+

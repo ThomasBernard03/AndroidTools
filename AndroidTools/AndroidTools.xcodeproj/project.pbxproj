@@ -22,6 +22,7 @@
 		814319522BC6715B00044934 /* InstallerViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 814319512BC6715B00044934 /* InstallerViewModel.swift */; };
 		814319562BC6B3C000044934 /* UTTypeExtensions.swift in Sources */ = {isa = PBXBuildFile; fileRef = 814319552BC6B3C000044934 /* UTTypeExtensions.swift */; };
 		81600C8F2BC98F65008D471C /* FileRow.swift in Sources */ = {isa = PBXBuildFile; fileRef = 81600C8E2BC98F65008D471C /* FileRow.swift */; };
+		8164F8B02BDE40A70097422C /* FileDocument.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8164F8AF2BDE40A70097422C /* FileDocument.swift */; };
 		8178547E2BC59F6300B5B2EE /* AndroidToolsApp.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8178547D2BC59F6300B5B2EE /* AndroidToolsApp.swift */; };
 		817854822BC59F6500B5B2EE /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 817854812BC59F6500B5B2EE /* Assets.xcassets */; };
 		817854852BC59F6500B5B2EE /* Preview Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 817854842BC59F6500B5B2EE /* Preview Assets.xcassets */; };
@@ -63,6 +64,7 @@
 		814319552BC6B3C000044934 /* UTTypeExtensions.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = UTTypeExtensions.swift; sourceTree = "<group>"; };
 		814319572BC6B4D900044934 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist; path = Info.plist; sourceTree = "<group>"; };
 		81600C8E2BC98F65008D471C /* FileRow.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FileRow.swift; sourceTree = "<group>"; };
+		8164F8AF2BDE40A70097422C /* FileDocument.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FileDocument.swift; sourceTree = "<group>"; };
 		8178547A2BC59F6300B5B2EE /* AndroidTools.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = AndroidTools.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		8178547D2BC59F6300B5B2EE /* AndroidToolsApp.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AndroidToolsApp.swift; sourceTree = "<group>"; };
 		817854812BC59F6500B5B2EE /* Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Assets.xcassets; sourceTree = "<group>"; };
@@ -266,6 +268,7 @@
 				812399C52BDC3CA9004219C9 /* ToastStyle.swift */,
 				812399C72BDC3CC7004219C9 /* ToastView.swift */,
 				812399C92BDC3CE3004219C9 /* ToastModifier.swift */,
+				8164F8AF2BDE40A70097422C /* FileDocument.swift */,
 			);
 			path = Models;
 			sourceTree = "<group>";
@@ -398,6 +401,7 @@
 				812A62BB2BC6F2FC00388105 /* StringExtensions.swift in Sources */,
 				812399C62BDC3CA9004219C9 /* ToastStyle.swift in Sources */,
 				812399CC2BDC3D22004219C9 /* ViewExtensions.swift in Sources */,
+				8164F8B02BDE40A70097422C /* FileDocument.swift in Sources */,
 				81E6A7682BC5D7200034EBFB /* Device.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;

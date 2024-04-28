@@ -6,8 +6,6 @@
 //
 
 import Foundation
-
-import Foundation
 import SwiftUI
 
 @Observable
@@ -16,7 +14,7 @@ final class FilesViewModel: ObservableObject {
     
     var loading : Bool = false
     
-    var exportedDocument : FileDocument? = nil
+    var exportedDocument : ExportableFile? = nil
     
     var currentPath : String? = nil
     
@@ -134,6 +132,14 @@ final class FilesViewModel: ObservableObject {
                 self.loading = false
             }
         }
-        
     }
+    
+    func prepareExport(fileURL: String) {
+        if let url = URL(string: fileURL) {
+            self.exportedDocument = ExportableFile(configuration: Ex)
+            print(self.exportedDocument?.fileTitle)
+        } else {
+            print("Invalid URL string: \(fileURL)")
+        }
+     }
 }
