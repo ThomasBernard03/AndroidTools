@@ -21,7 +21,7 @@ You can install application from Github releases
 
 ## Features
 
-### Install Applications 💾
+### 💾 Install Applications 
 
 You can install an application from any .apk file on your Mac. You can drag and drop it into the application, or load it from the finder.
 

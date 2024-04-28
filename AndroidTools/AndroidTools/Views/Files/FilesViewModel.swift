@@ -136,7 +136,7 @@ final class FilesViewModel: ObservableObject {
     
     func prepareExport(fileURL: String) {
         if let url = URL(string: fileURL) {
-            self.exportedDocument = ExportableFile(configuration: Ex)
+            // self.exportedDocument = ExportableFile(configuration: url)
             print(self.exportedDocument?.fileTitle)
         } else {
             print("Invalid URL string: \(fileURL)")

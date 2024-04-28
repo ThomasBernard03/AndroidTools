@@ -60,7 +60,7 @@ struct InstallerView: View {
         
                     }
                     .padding()
-                    .background(.background.opacity(0.9))
+                    .background(Material.ultraThin)
                     .cornerRadius(8)
                     .shadow(radius: 2)
                     .padding(16)

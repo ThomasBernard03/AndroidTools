@@ -14,7 +14,7 @@ struct ToastModifier: ViewModifier {
         .overlay(alignment: .bottom, content: {
             mainToastView()
         })
-        .animation(.spring(), value: toast)
+        .animation(.bouncy, value: toast)
         .onChange(of: toast) { _ in
             showToast()
         }

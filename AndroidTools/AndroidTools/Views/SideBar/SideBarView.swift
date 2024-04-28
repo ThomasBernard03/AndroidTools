@@ -45,22 +45,22 @@ struct SideBarView: View {
                     .padding([.bottom], 10)
                     
                     NavigationLink(destination: HomeView()) {
-                        Label("Home", systemImage: "house.fill")
+                        SideBarItem(label:"Home", systemImage: "house.fill")
                     }
                     
                     NavigationLink(
                         destination: InstallerView(deviceId: viewModel.selectedDeviceId)) {
-                        Label("App installer", systemImage: "app.badge")
+                            SideBarItem(label: "App installer", systemImage: "app.badge")
                     }
                     .disabled(viewModel.devices.isEmpty)
                     
                     NavigationLink(destination: InformationView(deviceId: viewModel.selectedDeviceId)) {
-                        Label("Informations", systemImage: "info.circle")
+                        SideBarItem(label:"Informations", systemImage: "info.circle")
                     }
                     .disabled(viewModel.devices.isEmpty)
                     
                     NavigationLink(destination: FilesView(deviceId: viewModel.selectedDeviceId)) {
-                        Label("Files", systemImage: "folder")
+                        SideBarItem(label:"Files", systemImage: "folder")
                     }
                     .disabled(viewModel.devices.isEmpty)
                     

@@ -19,8 +19,10 @@ struct SettingsView: View {
     var body: some View {
         Form {
             Group {
+                
 
-                Section("Apparance") {
+
+                Section(header: Text("Apparence").padding(.horizontal)) {
                     VStack {
                         Picker("", selection: $mode) {
                             ForEach(modes, id: \.self) { mode in
@@ -31,6 +33,7 @@ struct SettingsView: View {
                                 
                             }
                         }
+                        .padding(.horizontal)
                         
                         ScrollView(.horizontal, showsIndicators: false) {
                             HStack {
@@ -54,11 +57,21 @@ struct SettingsView: View {
                             .padding()
                         }
                         
-                        Spacer()
+                        
                     }
                 }
+                
+                Section("Application"){
+                
+                    
+                }
+                .padding()
             }
+            
+            Spacer()
         }
+        
+
 
 
     }

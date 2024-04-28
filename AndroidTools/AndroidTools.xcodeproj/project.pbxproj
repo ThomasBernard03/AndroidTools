@@ -7,6 +7,7 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
+		811E65042BDE8C16003528B7 /* SideBarItem.swift in Sources */ = {isa = PBXBuildFile; fileRef = 811E65032BDE8C16003528B7 /* SideBarItem.swift */; };
 		812399C42BDC3C92004219C9 /* Toast.swift in Sources */ = {isa = PBXBuildFile; fileRef = 812399C32BDC3C92004219C9 /* Toast.swift */; };
 		812399C62BDC3CA9004219C9 /* ToastStyle.swift in Sources */ = {isa = PBXBuildFile; fileRef = 812399C52BDC3CA9004219C9 /* ToastStyle.swift */; };
 		812399C82BDC3CC7004219C9 /* ToastView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 812399C72BDC3CC7004219C9 /* ToastView.swift */; };
@@ -48,6 +49,7 @@
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
+		811E65032BDE8C16003528B7 /* SideBarItem.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SideBarItem.swift; sourceTree = "<group>"; };
 		812399C32BDC3C92004219C9 /* Toast.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Toast.swift; sourceTree = "<group>"; };
 		812399C52BDC3CA9004219C9 /* ToastStyle.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ToastStyle.swift; sourceTree = "<group>"; };
 		812399C72BDC3CC7004219C9 /* ToastView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ToastView.swift; sourceTree = "<group>"; };
@@ -190,8 +192,10 @@
 		81E598B42BC6CA4F00FB614B /* Components */ = {
 			isa = PBXGroup;
 			children = (
+				812399C72BDC3CC7004219C9 /* ToastView.swift */,
 				81600C8E2BC98F65008D471C /* FileRow.swift */,
 				812DC7872BDC047E009B2E87 /* TerminalWindow.swift */,
+				811E65032BDE8C16003528B7 /* SideBarItem.swift */,
 			);
 			path = Components;
 			sourceTree = "<group>";
@@ -266,7 +270,6 @@
 				81D04F592BCA4B3400B04FAB /* FolderItem.swift */,
 				812399C32BDC3C92004219C9 /* Toast.swift */,
 				812399C52BDC3CA9004219C9 /* ToastStyle.swift */,
-				812399C72BDC3CC7004219C9 /* ToastView.swift */,
 				812399C92BDC3CE3004219C9 /* ToastModifier.swift */,
 				8164F8AF2BDE40A70097422C /* FileDocument.swift */,
 			);
@@ -393,6 +396,7 @@
 				81E6A75F2BC5D2840034EBFB /* InformationViewModel.swift in Sources */,
 				81D04F582BCA49C300B04FAB /* FileExplorerItem.swift in Sources */,
 				817EE85D2BC8247F00740D4A /* FileItem.swift in Sources */,
+				811E65042BDE8C16003528B7 /* SideBarItem.swift in Sources */,
 				81E982312BDD0F190004B154 /* RebootDeviceUseCase.swift in Sources */,
 				817EE8592BC81D4100740D4A /* FilesViewModel.swift in Sources */,
 				81E982372BDD3A740004B154 /* CheckForUpdateViewModel.swift in Sources */,

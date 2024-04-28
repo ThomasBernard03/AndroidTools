@@ -33,7 +33,7 @@ struct ToastView: View {
     }
     .padding()
     .frame(minWidth: 0, maxWidth: width)
-    .background(.background.opacity(0.9))
+    .background(Material.ultraThin)
     .cornerRadius(8)
     .shadow(radius: 2)
     .padding(16)
