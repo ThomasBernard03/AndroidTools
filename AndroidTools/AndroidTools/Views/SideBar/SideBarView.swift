@@ -67,7 +67,7 @@ struct SideBarView: View {
                     NavigationLink {
                         SettingsView()
                     } label: {
-                        Label("Settings", systemImage: "gearshape.circle.fill")
+                        SideBarItem(label:"Settings", systemImage: "gearshape.circle")
                     }
                 
                 }

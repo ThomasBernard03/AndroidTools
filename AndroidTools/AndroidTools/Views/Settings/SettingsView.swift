@@ -6,8 +6,10 @@ struct SettingsView: View {
         case general, advanced
     }
     
-    let appIcons: [String] = ["AppIconDark", "AppIconLight", "AppIconAndroid"]
-    let modes : [String] = ["Automatic", "Dark", "Light"]
+    private let viewModel = SettingsViewModel()
+    
+    private let appIcons: [String] = ["AppIconDark", "AppIconLight", "AppIconAndroid"]
+    private let modes : [String] = ["Automatic", "Dark", "Light"]
     
     @AppStorage("mode") private var mode = "Automatic"
     @AppStorage("appIconName") private var appIconName = "AppIconDark"
@@ -62,10 +64,16 @@ struct SettingsView: View {
                 }
                 
                 Section("Application"){
-                
+                    Button {
+                        viewModel.checkForUpdates()
+                    } label: {
+                        Text("Check for updates")
+                        
+                    }.buttonStyle(LargeButtonStyle())
+
+                    
                     
                 }
-                .padding()
             }
             
             Spacer()
