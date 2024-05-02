@@ -132,14 +132,5 @@ final class FilesViewModel: ObservableObject {
     
     func prepareExport(deviceId : String, path: String) {
         let path = adbHelper.saveFileInTemporaryDirectory(deviceId: deviceId, filePath: path)
-        
-        let fileURL = URL(fileURLWithPath: path)
-        
-        do {
-            let data = try Data(contentsOf: fileURL)
-            self.exportedDocument = ExportableFile(data: data)
-        } catch {
-            print("Failed to load file: \(error)")
-        }
      }
 }
