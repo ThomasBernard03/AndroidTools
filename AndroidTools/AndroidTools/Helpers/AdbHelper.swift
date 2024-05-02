@@ -78,22 +78,19 @@ class AdbHelper {
         return deviceName
     }
     
-    func saveFile(deviceId: String, filePath: String) {
+    func saveFileInTemporaryDirectory(deviceId: String, filePath: String) -> String {
         let fileManager = FileManager.default
         let tempDirectory = NSTemporaryDirectory()
         let fileName = URL(fileURLWithPath: filePath).lastPathComponent
         let tempUrl = URL(fileURLWithPath: tempDirectory).appendingPathComponent(fileName)
 
         // Construire la commande ADB pour tirer le fichier de l'appareil
-        let pullCommand = "-s \(deviceId) pull \"\(filePath)\" \"\(tempUrl.path)\""
+        let pullCommand = "-s \(deviceId) pull '/storage/emulated/0\(filePath)' '\(tempUrl.path)'"
         
         // Exécuter la commande ADB
         let result = runAdbCommand(pullCommand)
-        print("Fichier sauvegardé temporairement à : \(tempUrl.path)")
-        
-        // Supprimez ici le fichier de l'appareil si nécessaire
-        // let deleteCommand = "-s \(deviceId) shell rm \"\(filePath)\""
-        // _ = runAdbCommand(deleteCommand)
+        print("File saved in temp : \(tempUrl.path)")
+        return tempUrl.path
     }
 
     

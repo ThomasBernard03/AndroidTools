@@ -66,11 +66,7 @@ final class FilesViewModel: ObservableObject {
             currentFolder = parent
         }
     }
-    
-    func downloadFile(deviceId : String){
-        adbHelper.saveFile(deviceId: deviceId, filePath: currentPath!)
-        showExporter.toggle()
-    }
+
     
     func refreshList(deviceId : String){
         DispatchQueue.global(qos: .userInitiated).async { [self] in
@@ -134,12 +130,16 @@ final class FilesViewModel: ObservableObject {
         }
     }
     
-    func prepareExport(fileURL: String) {
-        if let url = URL(string: fileURL) {
-            // self.exportedDocument = ExportableFile(configuration: url)
-            print(self.exportedDocument?.fileTitle)
-        } else {
-            print("Invalid URL string: \(fileURL)")
+    func prepareExport(deviceId : String, path: String) {
+        let path = adbHelper.saveFileInTemporaryDirectory(deviceId: deviceId, filePath: path)
+        
+        let fileURL = URL(fileURLWithPath: path)
+        
+        do {
+            let data = try Data(contentsOf: fileURL)
+            self.exportedDocument = ExportableFile(data: data)
+        } catch {
+            print("Failed to load file: \(error)")
         }
      }
 }

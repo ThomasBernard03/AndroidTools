@@ -53,15 +53,6 @@ struct FilesView: View {
                 }
             }
         }
-        .fileExporter(isPresented: $showExportFileDialog, document: viewModel.exportedDocument, contentType: UTType.data, defaultFilename: viewModel.exportedDocument?.fileTitle) { result in
-             // Handle file save result
-             switch result {
-             case .success:
-                 print("File saved successfully")
-             case .failure(let error):
-                 print("Error saving file: \(error.localizedDescription)")
-             }
-         }
         .contextMenu(forSelectionType: String.self, menu: { _ in }) {_ in
             viewModel.itemDoubleClicked(deviceId: deviceId)
         }
@@ -98,7 +89,7 @@ struct FilesView: View {
                 .disabled(viewModel.loading)
                 
                 Button {
-                    viewModel.prepareExport(fileURL: viewModel.currentPath!)
+                    viewModel.prepareExport(deviceId: deviceId, path: viewModel.currentPath!)
                     showExportFileDialog.toggle()
                 } label: {
                     Label("Download file", systemImage: "square.and.arrow.down")
@@ -109,9 +100,7 @@ struct FilesView: View {
                     Label("Create folder", systemImage: "folder.badge.plus")
                 }
                 
-                Button {
-                    viewModel.deleteFileExplorerItem(deviceId: deviceId, fullPath: viewModel.currentPath!)
-                } label: {
+                Button { viewModel.deleteFileExplorerItem(deviceId: deviceId, fullPath: viewModel.currentPath!) } label: {
                     Label("Delete", systemImage: "trash")
                 }
                 .disabled(viewModel.currentPath == nil || viewModel.loading)
@@ -139,6 +128,15 @@ struct FilesView: View {
                 print(error.localizedDescription)
             }
         }
+        .fileExporter(isPresented: $showExportFileDialog, document: viewModel.exportedDocument, contentType: UTType.data, defaultFilename: viewModel.exportedDocument?.fileTitle) { result in
+             // Handle file save result
+             switch result {
+             case .success:
+                 print("File saved successfully")
+             case .failure(let error):
+                 print("Error saving file: \(error.localizedDescription)")
+             }
+         }
 
     }
 }
