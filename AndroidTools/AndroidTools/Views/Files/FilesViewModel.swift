@@ -143,7 +143,7 @@ final class FilesViewModel: ObservableObject {
         do {
             let data = try Data(contentsOf: url)
             let contentType = UTType(filenameExtension: url.pathExtension) ?? .item
-            return UniversalFileDocument(data: data, contentType: contentType)
+            return UniversalFileDocument(data: data, contentType: contentType, fileName: url.lastPathComponent)
         } catch {
             print("Erreur lors du chargement du fichier : \(error)")
             return nil

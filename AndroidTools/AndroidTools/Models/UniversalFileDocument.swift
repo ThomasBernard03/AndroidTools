@@ -11,12 +11,14 @@ import UniformTypeIdentifiers
 struct UniversalFileDocument: FileDocument {
     var data: Data
     var contentType: UTType
+    var fileName : String
 
     static var readableContentTypes: [UTType] { [.item] } // Accepte n'importe quel type de fichier
 
-    init(data: Data, contentType: UTType = .plainText) {
+    init(data: Data, contentType: UTType = .plainText, fileName : String) {
         self.data = data
         self.contentType = contentType
+        self.fileName = fileName
     }
 
     init(configuration: ReadConfiguration) throws {
@@ -25,6 +27,7 @@ struct UniversalFileDocument: FileDocument {
         }
         self.data = data
         self.contentType = configuration.contentType
+        self.fileName = ""
     }
 
     func fileWrapper(configuration: WriteConfiguration) throws -> FileWrapper {
