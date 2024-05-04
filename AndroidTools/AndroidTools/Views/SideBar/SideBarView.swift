@@ -17,24 +17,21 @@ struct SideBarView: View {
             VStack {
                 List {
                     HStack {
-                        Picker("", selection: $viewModel.selectedDeviceId) {
+                        Menu(viewModel.selectedDeviceId) {
+                            Text("\(viewModel.devices.count) device(s) connected")
                             
-                            if(viewModel.devices.isEmpty){
-                                Text("No device connected")
-                            }
-                            else {
-                                ForEach(viewModel.devices, id: \.self) { device in
-                                    Label(device.name, systemImage: "smartphone")
-                                        .tag(device.id)
+                            Divider()
+                            
+                            ForEach(viewModel.devices, id: \.self) { device in
+                                
+                                Button {
+                                    viewModel.selectedDeviceId = device.id
+                                } label: {
+                                    Label(device.id, systemImage: "smartphone")
                                         .labelStyle(.titleAndIcon)
                                 }
                             }
-                            
-
                         }
-                        .pickerStyle(.menu)
-                        .padding([.leading], -14)
-                        .padding([.trailing], -6)
                         
                         Spacer()
 
