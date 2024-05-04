@@ -7,6 +7,7 @@
 
 import Foundation
 import SwiftUI
+import UniformTypeIdentifiers
 
 @Observable
 final class FilesViewModel: ObservableObject {
@@ -14,7 +15,7 @@ final class FilesViewModel: ObservableObject {
     
     var loading : Bool = false
     
-    var exportedDocument : ExportableFile? = nil
+    var exportedDocument : UniversalFileDocument? = nil
     
     var currentPath : String? = nil
     
@@ -132,5 +133,20 @@ final class FilesViewModel: ObservableObject {
     
     func prepareExport(deviceId : String, path: String) {
         let path = adbHelper.saveFileInTemporaryDirectory(deviceId: deviceId, filePath: path)
+        if let loadedDocument = loadDocument(from: path) {
+            exportedDocument = loadedDocument
+        }
      }
+    
+    private func loadDocument(from path: String) -> UniversalFileDocument? {
+        let url = URL(fileURLWithPath: path)
+        do {
+            let data = try Data(contentsOf: url)
+            let contentType = UTType(filenameExtension: url.pathExtension) ?? .item
+            return UniversalFileDocument(data: data, contentType: contentType)
+        } catch {
+            print("Erreur lors du chargement du fichier : \(error)")
+            return nil
+        }
+    }
 }

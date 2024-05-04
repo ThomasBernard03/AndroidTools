@@ -128,7 +128,7 @@ struct FilesView: View {
                 print(error.localizedDescription)
             }
         }
-        .fileExporter(isPresented: $showExportFileDialog, document: viewModel.exportedDocument, contentType: UTType.data, defaultFilename: viewModel.exportedDocument?.fileTitle) { result in
+        .fileExporter(isPresented: $showExportFileDialog, document: viewModel.exportedDocument, contentType: UTType.data, defaultFilename: "viewModel.exportedDocument?.fileTitle") { result in
              // Handle file save result
              switch result {
              case .success:
