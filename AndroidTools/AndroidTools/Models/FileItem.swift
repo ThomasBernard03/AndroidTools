@@ -9,6 +9,7 @@ import Foundation
 
 
 class FileItem: FileExplorerItem {
+    let id : UUID
     let parent: FolderItem?
     
     let name: String
@@ -22,6 +23,7 @@ class FileItem: FileExplorerItem {
     let size : Int
     
     init(parent : FolderItem?, name: String, path: String, size: Int) {
+        self.id = UUID()
         self.parent = parent
         self.name = name
         self.path = path

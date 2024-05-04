@@ -7,12 +7,13 @@
 
 import Foundation
 
-protocol FileExplorerItem {
+protocol FileExplorerItem : Identifiable {
+    var id: UUID { get }
+    
     var name: String { get }
     var path : String { get }
     
     var fullPath : String { get }
     
     var parent : FolderItem? { get }
-    
 }

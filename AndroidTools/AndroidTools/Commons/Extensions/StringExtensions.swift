@@ -25,11 +25,11 @@ extension String {
         return String(self[..<range.lowerBound])
     }
     
-    func toFileItem(parent: FolderItem) -> [FileExplorerItem] {
+    func toFileItem(parent: FolderItem) -> [any FileExplorerItem] {
         // Découpe la chaîne de caractères en lignes
         let lines = self.split(separator: "\n")
         // Crée des tableaux vides pour les dossiers et fichiers
-        var items: [FileExplorerItem] = []
+        var items: [any FileExplorerItem] = []
 
         // Parcourt chaque ligne
         for line in lines {

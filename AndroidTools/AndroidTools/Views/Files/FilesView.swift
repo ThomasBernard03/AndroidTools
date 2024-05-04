@@ -19,6 +19,13 @@ struct FilesView: View {
     @State private var dropTargetted: Bool = false
     
     var body: some View {
+        
+        var items = viewModel.currentFolder?.childrens.map({ item in IdentifiableFileExplorerItem(item: item)}) ?? []
+        
+        Table(items){
+            TableColumn("Name", value: \.item.name)
+        }
+        
         List(viewModel.currentFolder?.childrens ?? [], id: \.fullPath, selection: $viewModel.currentPath) { item in
             HStack {
                 if let fileItem = item as? FileItem {

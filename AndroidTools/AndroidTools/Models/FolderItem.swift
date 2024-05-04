@@ -7,7 +7,8 @@
 
 import Foundation
 
-class FolderItem : FileExplorerItem {    
+class FolderItem : FileExplorerItem {
+    let id: UUID
     let parent: FolderItem?
     let name: String
     let path: String
@@ -20,9 +21,20 @@ class FolderItem : FileExplorerItem {
     var childrens : [any FileExplorerItem]
     
     init(parent : FolderItem?, name: String, path: String, childrens: [any FileExplorerItem]) {
+        self.id = UUID() 
         self.parent = parent
         self.name = name
         self.path = path
         self.childrens = childrens
+    }
+}
+
+struct IdentifiableFileExplorerItem: Identifiable {
+    let id: UUID
+    let item: any FileExplorerItem
+
+    init(item: any FileExplorerItem) {
+        self.id = UUID()
+        self.item = item
     }
 }
