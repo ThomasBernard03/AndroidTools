@@ -9,7 +9,7 @@ import SwiftUI
 
 struct SideBarView: View {
     
-    @ObservedObject var viewModel = SideBarViewModel()
+    @State var viewModel = SideBarViewModel()
     
     var body: some View {
         
@@ -17,7 +17,7 @@ struct SideBarView: View {
             VStack {
                 List {
                     HStack {
-                        Menu(viewModel.selectedDeviceId) {
+                        Menu(viewModel.selectedDevice?.name ?? "") {
                             Text("\(viewModel.devices.count) device(s) connected")
                             
                             Divider()
@@ -25,9 +25,9 @@ struct SideBarView: View {
                             ForEach(viewModel.devices, id: \.self) { device in
                                 
                                 Button {
-                                    viewModel.selectedDeviceId = device.id
+                                    viewModel.selectedDevice = device
                                 } label: {
-                                    Label(device.id, systemImage: "smartphone")
+                                    Label(device.name, systemImage: "smartphone")
                                         .labelStyle(.titleAndIcon)
                                 }
                             }
@@ -46,17 +46,17 @@ struct SideBarView: View {
                     }
                     
                     NavigationLink(
-                        destination: InstallerView(deviceId: viewModel.selectedDeviceId)) {
+                        destination: InstallerView(deviceId: viewModel.selectedDevice?.id ?? "")) {
                             SideBarItem(label: "App installer", systemImage: "app.badge")
                     }
                     .disabled(viewModel.devices.isEmpty)
                     
-                    NavigationLink(destination: InformationView(deviceId: viewModel.selectedDeviceId)) {
+                    NavigationLink(destination: InformationView(deviceId: viewModel.selectedDevice?.id ?? "")) {
                         SideBarItem(label:"Informations", systemImage: "info.circle")
                     }
                     .disabled(viewModel.devices.isEmpty)
                     
-                    NavigationLink(destination: FilesView(deviceId: viewModel.selectedDeviceId)) {
+                    NavigationLink(destination: FilesView(deviceId: viewModel.selectedDevice?.id ?? "")) {
                         SideBarItem(label:"Files", systemImage: "folder")
                     }
                     .disabled(viewModel.devices.isEmpty)

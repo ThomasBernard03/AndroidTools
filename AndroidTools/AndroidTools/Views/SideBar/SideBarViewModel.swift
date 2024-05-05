@@ -7,9 +7,10 @@
 
 import Foundation
 
+@Observable
 final class SideBarViewModel: ObservableObject {
-    @Published var selectedDeviceId: String = ""
-    @Published var devices: [Device] = []
+    var selectedDevice: Device? = nil
+    var devices: [Device] = []
     
     private let adbHelper = AdbHelper()
 
@@ -19,8 +20,8 @@ final class SideBarViewModel: ObservableObject {
             
             DispatchQueue.main.async { [weak self] in
                 self?.devices = devices
-                if !devices.isEmpty && ((self?.selectedDeviceId.isEmpty) != nil) {
-                    self?.selectedDeviceId = devices.first?.id ?? ""
+                if !devices.isEmpty && self?.selectedDevice == nil {
+                    self?.selectedDevice = devices.first!
                 }
             }
         }
