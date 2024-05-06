@@ -21,24 +21,27 @@
 		812A62C12BC70C3E00388105 /* IntExtensions.swift in Sources */ = {isa = PBXBuildFile; fileRef = 812A62C02BC70C3E00388105 /* IntExtensions.swift */; };
 		812AB6EB2BD3AFFE00DB60A5 /* HomeView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 812AB6EA2BD3AFFE00DB60A5 /* HomeView.swift */; };
 		812DC7882BDC047E009B2E87 /* TerminalWindow.swift in Sources */ = {isa = PBXBuildFile; fileRef = 812DC7872BDC047E009B2E87 /* TerminalWindow.swift */; };
-		814319502BC6715100044934 /* InstallerView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8143194F2BC6715100044934 /* InstallerView.swift */; };
-		814319522BC6715B00044934 /* InstallerViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 814319512BC6715B00044934 /* InstallerViewModel.swift */; };
+		814319502BC6715100044934 /* InstallApplicationView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8143194F2BC6715100044934 /* InstallApplicationView.swift */; };
+		814319522BC6715B00044934 /* InstallApplicationViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 814319512BC6715B00044934 /* InstallApplicationViewModel.swift */; };
 		814319562BC6B3C000044934 /* UTTypeExtensions.swift in Sources */ = {isa = PBXBuildFile; fileRef = 814319552BC6B3C000044934 /* UTTypeExtensions.swift */; };
 		81600C8F2BC98F65008D471C /* FileRow.swift in Sources */ = {isa = PBXBuildFile; fileRef = 81600C8E2BC98F65008D471C /* FileRow.swift */; };
 		8164F8B02BDE40A70097422C /* UniversalFileDocument.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8164F8AF2BDE40A70097422C /* UniversalFileDocument.swift */; };
+		816A1D3A2BE8CAA300E7DA71 /* ApplicationRepository.swift in Sources */ = {isa = PBXBuildFile; fileRef = 816A1D392BE8CAA300E7DA71 /* ApplicationRepository.swift */; };
+		816A1D3C2BE8CAC300E7DA71 /* ApplicationRepositoryImpl.swift in Sources */ = {isa = PBXBuildFile; fileRef = 816A1D3B2BE8CAC300E7DA71 /* ApplicationRepositoryImpl.swift */; };
+		816A1D402BE8CDE000E7DA71 /* InstallApplicationError.swift in Sources */ = {isa = PBXBuildFile; fileRef = 816A1D3F2BE8CDE000E7DA71 /* InstallApplicationError.swift */; };
+		816A1D452BE8D3A200E7DA71 /* CircleWavesAnimation.swift in Sources */ = {isa = PBXBuildFile; fileRef = 816A1D442BE8D3A200E7DA71 /* CircleWavesAnimation.swift */; };
 		8178547E2BC59F6300B5B2EE /* AndroidToolsApp.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8178547D2BC59F6300B5B2EE /* AndroidToolsApp.swift */; };
 		817854822BC59F6500B5B2EE /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 817854812BC59F6500B5B2EE /* Assets.xcassets */; };
 		817854852BC59F6500B5B2EE /* Preview Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 817854842BC59F6500B5B2EE /* Preview Assets.xcassets */; };
-		817EE8592BC81D4100740D4A /* FilesViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 817EE8582BC81D4100740D4A /* FilesViewModel.swift */; };
+		817EE8592BC81D4100740D4A /* FileExplorerViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 817EE8582BC81D4100740D4A /* FileExplorerViewModel.swift */; };
 		817EE85D2BC8247F00740D4A /* FileItem.swift in Sources */ = {isa = PBXBuildFile; fileRef = 817EE85C2BC8247F00740D4A /* FileItem.swift */; };
 		81C3FEE12BD2E76000E18035 /* SettingsView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 81C3FEE02BD2E76000E18035 /* SettingsView.swift */; };
 		81D04F582BCA49C300B04FAB /* FileExplorerItem.swift in Sources */ = {isa = PBXBuildFile; fileRef = 81D04F572BCA49C300B04FAB /* FileExplorerItem.swift */; };
 		81D04F5A2BCA4B3400B04FAB /* FolderItem.swift in Sources */ = {isa = PBXBuildFile; fileRef = 81D04F592BCA4B3400B04FAB /* FolderItem.swift */; };
-		81E6A7512BC5CC260034EBFB /* SideBarView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 81E6A7502BC5CC260034EBFB /* SideBarView.swift */; };
-		81E6A7572BC5CD890034EBFB /* ScreenView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 81E6A7562BC5CD890034EBFB /* ScreenView.swift */; };
+		81E6A7512BC5CC260034EBFB /* MenuView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 81E6A7502BC5CC260034EBFB /* MenuView.swift */; };
 		81E6A7592BC5CD9D0034EBFB /* InformationView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 81E6A7582BC5CD9D0034EBFB /* InformationView.swift */; };
-		81E6A75B2BC5CDC20034EBFB /* FilesView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 81E6A75A2BC5CDC20034EBFB /* FilesView.swift */; };
-		81E6A75D2BC5CDFF0034EBFB /* SideBarViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 81E6A75C2BC5CDFF0034EBFB /* SideBarViewModel.swift */; };
+		81E6A75B2BC5CDC20034EBFB /* FileExplorerView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 81E6A75A2BC5CDC20034EBFB /* FileExplorerView.swift */; };
+		81E6A75D2BC5CDFF0034EBFB /* MenuViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 81E6A75C2BC5CDFF0034EBFB /* MenuViewModel.swift */; };
 		81E6A75F2BC5D2840034EBFB /* InformationViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 81E6A75E2BC5D2840034EBFB /* InformationViewModel.swift */; };
 		81E6A7652BC5D7020034EBFB /* AdbHelper.swift in Sources */ = {isa = PBXBuildFile; fileRef = 81E6A7642BC5D7020034EBFB /* AdbHelper.swift */; };
 		81E6A7682BC5D7200034EBFB /* Device.swift in Sources */ = {isa = PBXBuildFile; fileRef = 81E6A7672BC5D7200034EBFB /* Device.swift */; };
@@ -65,27 +68,30 @@
 		812A62C02BC70C3E00388105 /* IntExtensions.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = IntExtensions.swift; sourceTree = "<group>"; };
 		812AB6EA2BD3AFFE00DB60A5 /* HomeView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = HomeView.swift; sourceTree = "<group>"; };
 		812DC7872BDC047E009B2E87 /* TerminalWindow.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TerminalWindow.swift; sourceTree = "<group>"; };
-		8143194F2BC6715100044934 /* InstallerView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = InstallerView.swift; sourceTree = "<group>"; };
-		814319512BC6715B00044934 /* InstallerViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = InstallerViewModel.swift; sourceTree = "<group>"; };
+		8143194F2BC6715100044934 /* InstallApplicationView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = InstallApplicationView.swift; sourceTree = "<group>"; };
+		814319512BC6715B00044934 /* InstallApplicationViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = InstallApplicationViewModel.swift; sourceTree = "<group>"; };
 		814319552BC6B3C000044934 /* UTTypeExtensions.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = UTTypeExtensions.swift; sourceTree = "<group>"; };
 		814319572BC6B4D900044934 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist; path = Info.plist; sourceTree = "<group>"; };
 		81600C8E2BC98F65008D471C /* FileRow.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FileRow.swift; sourceTree = "<group>"; };
 		8164F8AF2BDE40A70097422C /* UniversalFileDocument.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = UniversalFileDocument.swift; sourceTree = "<group>"; };
+		816A1D392BE8CAA300E7DA71 /* ApplicationRepository.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ApplicationRepository.swift; sourceTree = "<group>"; };
+		816A1D3B2BE8CAC300E7DA71 /* ApplicationRepositoryImpl.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ApplicationRepositoryImpl.swift; sourceTree = "<group>"; };
+		816A1D3F2BE8CDE000E7DA71 /* InstallApplicationError.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = InstallApplicationError.swift; sourceTree = "<group>"; };
+		816A1D442BE8D3A200E7DA71 /* CircleWavesAnimation.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CircleWavesAnimation.swift; sourceTree = "<group>"; };
 		8178547A2BC59F6300B5B2EE /* AndroidTools.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = AndroidTools.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		8178547D2BC59F6300B5B2EE /* AndroidToolsApp.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AndroidToolsApp.swift; sourceTree = "<group>"; };
 		817854812BC59F6500B5B2EE /* Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Assets.xcassets; sourceTree = "<group>"; };
 		817854842BC59F6500B5B2EE /* Preview Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = "Preview Assets.xcassets"; sourceTree = "<group>"; };
 		817854862BC59F6500B5B2EE /* AndroidTools.entitlements */ = {isa = PBXFileReference; lastKnownFileType = text.plist.entitlements; path = AndroidTools.entitlements; sourceTree = "<group>"; };
-		817EE8582BC81D4100740D4A /* FilesViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FilesViewModel.swift; sourceTree = "<group>"; };
+		817EE8582BC81D4100740D4A /* FileExplorerViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FileExplorerViewModel.swift; sourceTree = "<group>"; };
 		817EE85C2BC8247F00740D4A /* FileItem.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FileItem.swift; sourceTree = "<group>"; };
 		81C3FEE02BD2E76000E18035 /* SettingsView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SettingsView.swift; sourceTree = "<group>"; };
 		81D04F572BCA49C300B04FAB /* FileExplorerItem.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FileExplorerItem.swift; sourceTree = "<group>"; };
 		81D04F592BCA4B3400B04FAB /* FolderItem.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FolderItem.swift; sourceTree = "<group>"; };
-		81E6A7502BC5CC260034EBFB /* SideBarView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SideBarView.swift; sourceTree = "<group>"; };
-		81E6A7562BC5CD890034EBFB /* ScreenView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ScreenView.swift; sourceTree = "<group>"; };
+		81E6A7502BC5CC260034EBFB /* MenuView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MenuView.swift; sourceTree = "<group>"; };
 		81E6A7582BC5CD9D0034EBFB /* InformationView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = InformationView.swift; sourceTree = "<group>"; };
-		81E6A75A2BC5CDC20034EBFB /* FilesView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FilesView.swift; sourceTree = "<group>"; };
-		81E6A75C2BC5CDFF0034EBFB /* SideBarViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SideBarViewModel.swift; sourceTree = "<group>"; };
+		81E6A75A2BC5CDC20034EBFB /* FileExplorerView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FileExplorerView.swift; sourceTree = "<group>"; };
+		81E6A75C2BC5CDFF0034EBFB /* MenuViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MenuViewModel.swift; sourceTree = "<group>"; };
 		81E6A75E2BC5D2840034EBFB /* InformationViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = InformationViewModel.swift; sourceTree = "<group>"; };
 		81E6A7642BC5D7020034EBFB /* AdbHelper.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AdbHelper.swift; sourceTree = "<group>"; };
 		81E6A7672BC5D7200034EBFB /* Device.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Device.swift; sourceTree = "<group>"; };
@@ -108,26 +114,10 @@
 /* End PBXFrameworksBuildPhase section */
 
 /* Begin PBXGroup section */
-		812AB6E92BD3AFE900DB60A5 /* Home */ = {
-			isa = PBXGroup;
-			children = (
-				812AB6EA2BD3AFFE00DB60A5 /* HomeView.swift */,
-			);
-			path = Home;
-			sourceTree = "<group>";
-		};
-		8143194E2BC6714000044934 /* Installer */ = {
-			isa = PBXGroup;
-			children = (
-				8143194F2BC6715100044934 /* InstallerView.swift */,
-				814319512BC6715B00044934 /* InstallerViewModel.swift */,
-			);
-			path = Installer;
-			sourceTree = "<group>";
-		};
 		814319532BC6B3AC00044934 /* Commons */ = {
 			isa = PBXGroup;
 			children = (
+				81E6A7642BC5D7020034EBFB /* AdbHelper.swift */,
 				814319542BC6B3B100044934 /* Extensions */,
 			);
 			path = Commons;
@@ -142,6 +132,126 @@
 				812399CB2BDC3D22004219C9 /* ViewExtensions.swift */,
 			);
 			path = Extensions;
+			sourceTree = "<group>";
+		};
+		816A1D2C2BE8C70300E7DA71 /* Presentation */ = {
+			isa = PBXGroup;
+			children = (
+				816A1D372BE8C7FB00E7DA71 /* Menu */,
+				81E598B42BC6CA4F00FB614B /* Components */,
+				816A1D352BE8C77000E7DA71 /* Settings */,
+				816A1D342BE8C74F00E7DA71 /* FileExplorer */,
+				816A1D322BE8C73600E7DA71 /* Information */,
+				816A1D312BE8C73000E7DA71 /* InstallApplication */,
+				816A1D302BE8C72800E7DA71 /* Home */,
+			);
+			path = Presentation;
+			sourceTree = "<group>";
+		};
+		816A1D2D2BE8C70C00E7DA71 /* Domain */ = {
+			isa = PBXGroup;
+			children = (
+				816A1D382BE8CA8B00E7DA71 /* Repositories */,
+				81E6A7662BC5D7100034EBFB /* Models */,
+				81E9822B2BDD06500004B154 /* UseCases */,
+			);
+			path = Domain;
+			sourceTree = "<group>";
+		};
+		816A1D2E2BE8C71300E7DA71 /* Data */ = {
+			isa = PBXGroup;
+			children = (
+				816A1D412BE8D2BE00E7DA71 /* Repositories */,
+			);
+			path = Data;
+			sourceTree = "<group>";
+		};
+		816A1D302BE8C72800E7DA71 /* Home */ = {
+			isa = PBXGroup;
+			children = (
+				812AB6EA2BD3AFFE00DB60A5 /* HomeView.swift */,
+			);
+			path = Home;
+			sourceTree = "<group>";
+		};
+		816A1D312BE8C73000E7DA71 /* InstallApplication */ = {
+			isa = PBXGroup;
+			children = (
+				8143194F2BC6715100044934 /* InstallApplicationView.swift */,
+				814319512BC6715B00044934 /* InstallApplicationViewModel.swift */,
+				816A1D442BE8D3A200E7DA71 /* CircleWavesAnimation.swift */,
+			);
+			path = InstallApplication;
+			sourceTree = "<group>";
+		};
+		816A1D322BE8C73600E7DA71 /* Information */ = {
+			isa = PBXGroup;
+			children = (
+				81E6A7582BC5CD9D0034EBFB /* InformationView.swift */,
+				81E6A75E2BC5D2840034EBFB /* InformationViewModel.swift */,
+			);
+			path = Information;
+			sourceTree = "<group>";
+		};
+		816A1D342BE8C74F00E7DA71 /* FileExplorer */ = {
+			isa = PBXGroup;
+			children = (
+				81E6A75A2BC5CDC20034EBFB /* FileExplorerView.swift */,
+				817EE8582BC81D4100740D4A /* FileExplorerViewModel.swift */,
+			);
+			path = FileExplorer;
+			sourceTree = "<group>";
+		};
+		816A1D352BE8C77000E7DA71 /* Settings */ = {
+			isa = PBXGroup;
+			children = (
+				816A1D362BE8C7AF00E7DA71 /* Updater */,
+				81C3FEE02BD2E76000E18035 /* SettingsView.swift */,
+				811E65052BDEAAE2003528B7 /* SettingsViewModel.swift */,
+			);
+			path = Settings;
+			sourceTree = "<group>";
+		};
+		816A1D362BE8C7AF00E7DA71 /* Updater */ = {
+			isa = PBXGroup;
+			children = (
+				81E982362BDD3A740004B154 /* CheckForUpdateViewModel.swift */,
+				81E982382BDD3B480004B154 /* CheckForUpdateView.swift */,
+			);
+			path = Updater;
+			sourceTree = "<group>";
+		};
+		816A1D372BE8C7FB00E7DA71 /* Menu */ = {
+			isa = PBXGroup;
+			children = (
+				81E6A7502BC5CC260034EBFB /* MenuView.swift */,
+				81E6A75C2BC5CDFF0034EBFB /* MenuViewModel.swift */,
+			);
+			path = Menu;
+			sourceTree = "<group>";
+		};
+		816A1D382BE8CA8B00E7DA71 /* Repositories */ = {
+			isa = PBXGroup;
+			children = (
+				816A1D392BE8CAA300E7DA71 /* ApplicationRepository.swift */,
+			);
+			path = Repositories;
+			sourceTree = "<group>";
+		};
+		816A1D3E2BE8CDD200E7DA71 /* Errors */ = {
+			isa = PBXGroup;
+			children = (
+				816A1D3F2BE8CDE000E7DA71 /* InstallApplicationError.swift */,
+			);
+			path = Errors;
+			sourceTree = "<group>";
+		};
+		816A1D412BE8D2BE00E7DA71 /* Repositories */ = {
+			isa = PBXGroup;
+			children = (
+				816A1D3B2BE8CAC300E7DA71 /* ApplicationRepositoryImpl.swift */,
+			);
+			path = Repositories;
 			sourceTree = "<group>";
 		};
 		817854712BC59F6300B5B2EE = {
@@ -163,12 +273,11 @@
 		8178547C2BC59F6300B5B2EE /* AndroidTools */ = {
 			isa = PBXGroup;
 			children = (
-				81E9822B2BDD06500004B154 /* UseCases */,
+				816A1D2E2BE8C71300E7DA71 /* Data */,
+				816A1D2D2BE8C70C00E7DA71 /* Domain */,
+				816A1D2C2BE8C70300E7DA71 /* Presentation */,
 				814319572BC6B4D900044934 /* Info.plist */,
 				814319532BC6B3AC00044934 /* Commons */,
-				81E6A7662BC5D7100034EBFB /* Models */,
-				81E6A7632BC5D6F60034EBFB /* Helpers */,
-				81E6A74F2BC5CC0F0034EBFB /* Views */,
 				8178547D2BC59F6300B5B2EE /* AndroidToolsApp.swift */,
 				817854812BC59F6500B5B2EE /* Assets.xcassets */,
 				817854862BC59F6500B5B2EE /* AndroidTools.entitlements */,
@@ -185,15 +294,6 @@
 			path = "Preview Content";
 			sourceTree = "<group>";
 		};
-		81C3FEDF2BD2E75000E18035 /* Settings */ = {
-			isa = PBXGroup;
-			children = (
-				81C3FEE02BD2E76000E18035 /* SettingsView.swift */,
-				811E65052BDEAAE2003528B7 /* SettingsViewModel.swift */,
-			);
-			path = Settings;
-			sourceTree = "<group>";
-		};
 		81E598B42BC6CA4F00FB614B /* Components */ = {
 			isa = PBXGroup;
 			children = (
@@ -206,68 +306,10 @@
 			path = Components;
 			sourceTree = "<group>";
 		};
-		81E6A74F2BC5CC0F0034EBFB /* Views */ = {
-			isa = PBXGroup;
-			children = (
-				81E982352BDD3A620004B154 /* Update */,
-				812AB6E92BD3AFE900DB60A5 /* Home */,
-				81C3FEDF2BD2E75000E18035 /* Settings */,
-				81E598B42BC6CA4F00FB614B /* Components */,
-				8143194E2BC6714000044934 /* Installer */,
-				81E6A7552BC5CD780034EBFB /* Screen */,
-				81E6A7542BC5CD650034EBFB /* Information */,
-				81E6A7532BC5CD500034EBFB /* Files */,
-				81E6A7522BC5CD440034EBFB /* SideBar */,
-			);
-			path = Views;
-			sourceTree = "<group>";
-		};
-		81E6A7522BC5CD440034EBFB /* SideBar */ = {
-			isa = PBXGroup;
-			children = (
-				81E6A7502BC5CC260034EBFB /* SideBarView.swift */,
-				81E6A75C2BC5CDFF0034EBFB /* SideBarViewModel.swift */,
-			);
-			path = SideBar;
-			sourceTree = "<group>";
-		};
-		81E6A7532BC5CD500034EBFB /* Files */ = {
-			isa = PBXGroup;
-			children = (
-				81E6A75A2BC5CDC20034EBFB /* FilesView.swift */,
-				817EE8582BC81D4100740D4A /* FilesViewModel.swift */,
-			);
-			path = Files;
-			sourceTree = "<group>";
-		};
-		81E6A7542BC5CD650034EBFB /* Information */ = {
-			isa = PBXGroup;
-			children = (
-				81E6A7582BC5CD9D0034EBFB /* InformationView.swift */,
-				81E6A75E2BC5D2840034EBFB /* InformationViewModel.swift */,
-			);
-			path = Information;
-			sourceTree = "<group>";
-		};
-		81E6A7552BC5CD780034EBFB /* Screen */ = {
-			isa = PBXGroup;
-			children = (
-				81E6A7562BC5CD890034EBFB /* ScreenView.swift */,
-			);
-			path = Screen;
-			sourceTree = "<group>";
-		};
-		81E6A7632BC5D6F60034EBFB /* Helpers */ = {
-			isa = PBXGroup;
-			children = (
-				81E6A7642BC5D7020034EBFB /* AdbHelper.swift */,
-			);
-			path = Helpers;
-			sourceTree = "<group>";
-		};
 		81E6A7662BC5D7100034EBFB /* Models */ = {
 			isa = PBXGroup;
 			children = (
+				816A1D3E2BE8CDD200E7DA71 /* Errors */,
 				81E6A7672BC5D7200034EBFB /* Device.swift */,
 				812A62BC2BC707A400388105 /* BatteryInfo.swift */,
 				812A62BE2BC708D400388105 /* DeviceDetail.swift */,
@@ -290,15 +332,6 @@
 				81E982302BDD0F190004B154 /* RebootDeviceUseCase.swift */,
 			);
 			path = UseCases;
-			sourceTree = "<group>";
-		};
-		81E982352BDD3A620004B154 /* Update */ = {
-			isa = PBXGroup;
-			children = (
-				81E982362BDD3A740004B154 /* CheckForUpdateViewModel.swift */,
-				81E982382BDD3B480004B154 /* CheckForUpdateView.swift */,
-			);
-			path = Update;
 			sourceTree = "<group>";
 		};
 /* End PBXGroup section */
@@ -378,25 +411,27 @@
 			buildActionMask = 2147483647;
 			files = (
 				81E6A7592BC5CD9D0034EBFB /* InformationView.swift in Sources */,
-				814319522BC6715B00044934 /* InstallerViewModel.swift in Sources */,
+				814319522BC6715B00044934 /* InstallApplicationViewModel.swift in Sources */,
 				814319562BC6B3C000044934 /* UTTypeExtensions.swift in Sources */,
 				812A62BD2BC707A400388105 /* BatteryInfo.swift in Sources */,
-				81E6A7512BC5CC260034EBFB /* SideBarView.swift in Sources */,
-				81E6A75B2BC5CDC20034EBFB /* FilesView.swift in Sources */,
+				81E6A7512BC5CC260034EBFB /* MenuView.swift in Sources */,
+				816A1D452BE8D3A200E7DA71 /* CircleWavesAnimation.swift in Sources */,
+				81E6A75B2BC5CDC20034EBFB /* FileExplorerView.swift in Sources */,
 				81E9822F2BDD09E70004B154 /* GetDeviceInformationUseCase.swift in Sources */,
 				81E6A7652BC5D7020034EBFB /* AdbHelper.swift in Sources */,
 				812DC7882BDC047E009B2E87 /* TerminalWindow.swift in Sources */,
 				81E9822D2BDD06600004B154 /* InstallApplicationUseCase.swift in Sources */,
+				816A1D3A2BE8CAA300E7DA71 /* ApplicationRepository.swift in Sources */,
 				812399C82BDC3CC7004219C9 /* ToastView.swift in Sources */,
 				81D04F5A2BCA4B3400B04FAB /* FolderItem.swift in Sources */,
+				816A1D402BE8CDE000E7DA71 /* InstallApplicationError.swift in Sources */,
 				81E982392BDD3B480004B154 /* CheckForUpdateView.swift in Sources */,
 				811E65062BDEAAE2003528B7 /* SettingsViewModel.swift in Sources */,
 				81C3FEE12BD2E76000E18035 /* SettingsView.swift in Sources */,
-				81E6A75D2BC5CDFF0034EBFB /* SideBarViewModel.swift in Sources */,
-				814319502BC6715100044934 /* InstallerView.swift in Sources */,
+				81E6A75D2BC5CDFF0034EBFB /* MenuViewModel.swift in Sources */,
+				814319502BC6715100044934 /* InstallApplicationView.swift in Sources */,
 				812A62C12BC70C3E00388105 /* IntExtensions.swift in Sources */,
 				812399C42BDC3C92004219C9 /* Toast.swift in Sources */,
-				81E6A7572BC5CD890034EBFB /* ScreenView.swift in Sources */,
 				812399CA2BDC3CE3004219C9 /* ToastModifier.swift in Sources */,
 				81600C8F2BC98F65008D471C /* FileRow.swift in Sources */,
 				8178547E2BC59F6300B5B2EE /* AndroidToolsApp.swift in Sources */,
@@ -406,8 +441,9 @@
 				811E65042BDE8C16003528B7 /* SideBarItem.swift in Sources */,
 				811E650A2BDEAEBC003528B7 /* LargeButtonStyle.swift in Sources */,
 				81E982312BDD0F190004B154 /* RebootDeviceUseCase.swift in Sources */,
-				817EE8592BC81D4100740D4A /* FilesViewModel.swift in Sources */,
+				817EE8592BC81D4100740D4A /* FileExplorerViewModel.swift in Sources */,
 				81E982372BDD3A740004B154 /* CheckForUpdateViewModel.swift in Sources */,
+				816A1D3C2BE8CAC300E7DA71 /* ApplicationRepositoryImpl.swift in Sources */,
 				812A62BF2BC708D400388105 /* DeviceDetail.swift in Sources */,
 				812AB6EB2BD3AFFE00DB60A5 /* HomeView.swift in Sources */,
 				812A62BB2BC6F2FC00388105 /* StringExtensions.swift in Sources */,

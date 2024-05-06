@@ -7,9 +7,7 @@
 
 import Foundation
 
-protocol FileExplorerItem : Identifiable {
-    var id: UUID { get }
-    
+protocol FileExplorerItem {
     var name: String { get }
     var path : String { get }
     

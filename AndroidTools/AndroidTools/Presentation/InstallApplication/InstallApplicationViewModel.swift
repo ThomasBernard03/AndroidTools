@@ -19,11 +19,24 @@ final class InstallerViewModel: ObservableObject {
         
         let result = installApplicationUseCase.execute(deviceId: deviceId, path: path)
         
-        if result.hasSuffix("Success") {
+        switch(result){
+        case .success: 
             self.toast = Toast(style: .success, message: "Installation of \(fileName) completed successfully", width: .infinity)
+            break
+        case .failure(let error):
+            manageError(applicationName: fileName, error: error)
+            break
         }
-        else {
-            self.toast = Toast(style: .error, message: "Error during installation of \(fileName) :\n\(result)", width: .infinity)
+    }
+    
+    private func manageError(applicationName : String, error : InstallApplicationError){
+        switch(error){
+        case .versionDowngradeError:
+            self.toast = Toast(style: .error, message: "Error during installation of \(applicationName) :\nA newer version is already installed", width: .infinity)
+            break
+        case .unknownError(let message):
+            self.toast = Toast(style: .error, message: "Error during installation of \(applicationName) :\n\(message)", width: .infinity)
+            break
         }
     }
 }

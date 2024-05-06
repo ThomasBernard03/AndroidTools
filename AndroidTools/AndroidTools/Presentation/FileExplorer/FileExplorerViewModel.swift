@@ -11,10 +11,11 @@ import UniformTypeIdentifiers
 
 @Observable
 final class FilesViewModel: ObservableObject {
-    var currentFolder: FolderItem? = nil
     
     var loading : Bool = false
     
+    var currentFolder: FolderItem? = nil
+
     var exportedDocument : UniversalFileDocument? = nil
     
     var currentPath : String? = nil
@@ -25,7 +26,6 @@ final class FilesViewModel: ObservableObject {
     var showExporter = false
     
     private let adbHelper = AdbHelper()
-    
     
     func itemDoubleClicked(deviceId : String){
         let selectedItem = currentFolder?.childrens.first { file in file.fullPath == currentPath }

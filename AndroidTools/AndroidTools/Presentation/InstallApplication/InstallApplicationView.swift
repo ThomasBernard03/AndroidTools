@@ -9,8 +9,7 @@ struct InstallerView: View {
     @State private var isHoveringPhone: Bool = false
     @State private var viewModel = InstallerViewModel()
     
-    @State private var scale: [Double] = [1, 1, 1, 1, 1, 1]
-    @State private var opacity: [Double] = [1, 1, 1, 1, 1, 1]
+
     
     private func loadApkFile() {
         let panel = NSOpenPanel()
@@ -29,21 +28,7 @@ struct InstallerView: View {
     var body: some View {
         ZStack {
             // Animated background waves
-            ForEach(0..<6, id: \.self) { index in
-                Circle()
-                    .frame(width: 100, height: 100)
-                    .foregroundColor(.accentColor)
-                    .scaleEffect(scale[index])
-                    .opacity(opacity[index])
-                    .animation(
-                        Animation.easeOut(duration: 5).repeatForever(autoreverses: false).delay(Double(index)),
-                        value: scale[index]
-                    )
-                    .onAppear {
-                        scale[index] = 5
-                        opacity[index] = 0
-                    }
-            }
+            CircleWavesAnimation()
 
             // Image to represent APK dropping
             Image("ApkFile")
@@ -51,13 +36,12 @@ struct InstallerView: View {
                 .scaledToFit()
                 .frame(width: 200)
             
-            VStack(alignment:.leading) {
+            VStack {
                 HStack {
                     HStack {
                         Image(systemName: "info.circle")
                             .foregroundColor(.blue)
                         Text("Drag and drop your .apk file to install your application\nYou can also click on the add button to import file from Finder")
-        
                     }
                     .padding()
                     .background(Material.ultraThin)
