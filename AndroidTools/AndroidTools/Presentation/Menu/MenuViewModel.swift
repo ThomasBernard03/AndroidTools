@@ -9,8 +9,8 @@ import Foundation
 
 @Observable
 final class SideBarViewModel: ObservableObject {
-    var selectedDevice: Device? = nil
-    var devices: [Device] = []
+    var selectedDevice: DeviceListModel? = nil
+    var devices: [DeviceListModel] = []
     
     private let adbHelper = AdbHelper()
 

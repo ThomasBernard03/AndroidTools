@@ -8,7 +8,7 @@
 import Foundation
 
 @Observable
-final class InstallerViewModel: ObservableObject {
+final class InstallApplicationViewModel: ObservableObject {
     var toast : Toast? = nil
     
     private let installApplicationUseCase = InstallApplicationUseCase()

@@ -7,7 +7,7 @@
 
 import Foundation
 
-struct Device : Identifiable, Hashable {
+struct DeviceListModel : Identifiable, Hashable {
     var id: String
     var name: String
 }

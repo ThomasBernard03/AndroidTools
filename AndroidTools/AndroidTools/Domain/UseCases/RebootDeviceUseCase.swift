@@ -10,10 +10,9 @@ import Foundation
 
 class RebootDeviceUseCase {
     
-    private let adbHelper = AdbHelper()
+    private let deviceRepository : DeviceRepository = DeviceRepositoryImpl()
     
     func execute(deviceId : String) {
-        let command = "-s \(deviceId) reboot"
-        let result = adbHelper.runAdbCommand(command)
+        deviceRepository.rebootDevice(deviceId: deviceId)
     }
 }

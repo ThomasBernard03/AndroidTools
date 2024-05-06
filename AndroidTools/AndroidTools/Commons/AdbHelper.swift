@@ -15,7 +15,7 @@ class AdbHelper {
         // _ = runAdbCommand("root")
     }
     
-    func getDevices() -> [Device] {
+    func getDevices() -> [DeviceListModel] {
         let command = "devices -l | awk 'NR>1 {print $1}'"
         let devicesResult = runAdbCommand(command)
         return devicesResult
@@ -23,8 +23,8 @@ class AdbHelper {
             .filter({ (id) -> Bool in
                 !id.isEmpty
             })
-            .map { (id) -> Device in
-                Device(id: id, name: getDeviceName(deviceId: id))
+            .map { (id) -> DeviceListModel in
+                DeviceListModel(id: id, name: getDeviceName(deviceId: id))
             }
     }
     

@@ -7,6 +7,7 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
+		810E8E1A2BE9196500ED561A /* GetConnectedDeviceListUseCase.swift in Sources */ = {isa = PBXBuildFile; fileRef = 810E8E192BE9196500ED561A /* GetConnectedDeviceListUseCase.swift */; };
 		811E65042BDE8C16003528B7 /* SideBarItem.swift in Sources */ = {isa = PBXBuildFile; fileRef = 811E65032BDE8C16003528B7 /* SideBarItem.swift */; };
 		811E65062BDEAAE2003528B7 /* SettingsViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 811E65052BDEAAE2003528B7 /* SettingsViewModel.swift */; };
 		811E650A2BDEAEBC003528B7 /* LargeButtonStyle.swift in Sources */ = {isa = PBXBuildFile; fileRef = 811E65092BDEAEBC003528B7 /* LargeButtonStyle.swift */; };
@@ -16,8 +17,7 @@
 		812399CA2BDC3CE3004219C9 /* ToastModifier.swift in Sources */ = {isa = PBXBuildFile; fileRef = 812399C92BDC3CE3004219C9 /* ToastModifier.swift */; };
 		812399CC2BDC3D22004219C9 /* ViewExtensions.swift in Sources */ = {isa = PBXBuildFile; fileRef = 812399CB2BDC3D22004219C9 /* ViewExtensions.swift */; };
 		812A62BB2BC6F2FC00388105 /* StringExtensions.swift in Sources */ = {isa = PBXBuildFile; fileRef = 812A62BA2BC6F2FC00388105 /* StringExtensions.swift */; };
-		812A62BD2BC707A400388105 /* BatteryInfo.swift in Sources */ = {isa = PBXBuildFile; fileRef = 812A62BC2BC707A400388105 /* BatteryInfo.swift */; };
-		812A62BF2BC708D400388105 /* DeviceDetail.swift in Sources */ = {isa = PBXBuildFile; fileRef = 812A62BE2BC708D400388105 /* DeviceDetail.swift */; };
+		812A62BF2BC708D400388105 /* DeviceInformationModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 812A62BE2BC708D400388105 /* DeviceInformationModel.swift */; };
 		812A62C12BC70C3E00388105 /* IntExtensions.swift in Sources */ = {isa = PBXBuildFile; fileRef = 812A62C02BC70C3E00388105 /* IntExtensions.swift */; };
 		812AB6EB2BD3AFFE00DB60A5 /* HomeView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 812AB6EA2BD3AFFE00DB60A5 /* HomeView.swift */; };
 		812DC7882BDC047E009B2E87 /* TerminalWindow.swift in Sources */ = {isa = PBXBuildFile; fileRef = 812DC7872BDC047E009B2E87 /* TerminalWindow.swift */; };
@@ -30,6 +30,8 @@
 		816A1D3C2BE8CAC300E7DA71 /* ApplicationRepositoryImpl.swift in Sources */ = {isa = PBXBuildFile; fileRef = 816A1D3B2BE8CAC300E7DA71 /* ApplicationRepositoryImpl.swift */; };
 		816A1D402BE8CDE000E7DA71 /* InstallApplicationError.swift in Sources */ = {isa = PBXBuildFile; fileRef = 816A1D3F2BE8CDE000E7DA71 /* InstallApplicationError.swift */; };
 		816A1D452BE8D3A200E7DA71 /* CircleWavesAnimation.swift in Sources */ = {isa = PBXBuildFile; fileRef = 816A1D442BE8D3A200E7DA71 /* CircleWavesAnimation.swift */; };
+		816A1D472BE8F66100E7DA71 /* DeviceRepositoryImpl.swift in Sources */ = {isa = PBXBuildFile; fileRef = 816A1D462BE8F66100E7DA71 /* DeviceRepositoryImpl.swift */; };
+		816A1D492BE8F67000E7DA71 /* DeviceRepository.swift in Sources */ = {isa = PBXBuildFile; fileRef = 816A1D482BE8F67000E7DA71 /* DeviceRepository.swift */; };
 		8178547E2BC59F6300B5B2EE /* AndroidToolsApp.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8178547D2BC59F6300B5B2EE /* AndroidToolsApp.swift */; };
 		817854822BC59F6500B5B2EE /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 817854812BC59F6500B5B2EE /* Assets.xcassets */; };
 		817854852BC59F6500B5B2EE /* Preview Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 817854842BC59F6500B5B2EE /* Preview Assets.xcassets */; };
@@ -39,12 +41,12 @@
 		81D04F582BCA49C300B04FAB /* FileExplorerItem.swift in Sources */ = {isa = PBXBuildFile; fileRef = 81D04F572BCA49C300B04FAB /* FileExplorerItem.swift */; };
 		81D04F5A2BCA4B3400B04FAB /* FolderItem.swift in Sources */ = {isa = PBXBuildFile; fileRef = 81D04F592BCA4B3400B04FAB /* FolderItem.swift */; };
 		81E6A7512BC5CC260034EBFB /* MenuView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 81E6A7502BC5CC260034EBFB /* MenuView.swift */; };
-		81E6A7592BC5CD9D0034EBFB /* InformationView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 81E6A7582BC5CD9D0034EBFB /* InformationView.swift */; };
+		81E6A7592BC5CD9D0034EBFB /* DeviceInformationView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 81E6A7582BC5CD9D0034EBFB /* DeviceInformationView.swift */; };
 		81E6A75B2BC5CDC20034EBFB /* FileExplorerView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 81E6A75A2BC5CDC20034EBFB /* FileExplorerView.swift */; };
 		81E6A75D2BC5CDFF0034EBFB /* MenuViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 81E6A75C2BC5CDFF0034EBFB /* MenuViewModel.swift */; };
-		81E6A75F2BC5D2840034EBFB /* InformationViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 81E6A75E2BC5D2840034EBFB /* InformationViewModel.swift */; };
+		81E6A75F2BC5D2840034EBFB /* DeviceInformationViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 81E6A75E2BC5D2840034EBFB /* DeviceInformationViewModel.swift */; };
 		81E6A7652BC5D7020034EBFB /* AdbHelper.swift in Sources */ = {isa = PBXBuildFile; fileRef = 81E6A7642BC5D7020034EBFB /* AdbHelper.swift */; };
-		81E6A7682BC5D7200034EBFB /* Device.swift in Sources */ = {isa = PBXBuildFile; fileRef = 81E6A7672BC5D7200034EBFB /* Device.swift */; };
+		81E6A7682BC5D7200034EBFB /* DeviceListModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 81E6A7672BC5D7200034EBFB /* DeviceListModel.swift */; };
 		81E9822D2BDD06600004B154 /* InstallApplicationUseCase.swift in Sources */ = {isa = PBXBuildFile; fileRef = 81E9822C2BDD06600004B154 /* InstallApplicationUseCase.swift */; };
 		81E9822F2BDD09E70004B154 /* GetDeviceInformationUseCase.swift in Sources */ = {isa = PBXBuildFile; fileRef = 81E9822E2BDD09E70004B154 /* GetDeviceInformationUseCase.swift */; };
 		81E982312BDD0F190004B154 /* RebootDeviceUseCase.swift in Sources */ = {isa = PBXBuildFile; fileRef = 81E982302BDD0F190004B154 /* RebootDeviceUseCase.swift */; };
@@ -54,6 +56,7 @@
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
+		810E8E192BE9196500ED561A /* GetConnectedDeviceListUseCase.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = GetConnectedDeviceListUseCase.swift; sourceTree = "<group>"; };
 		811E65032BDE8C16003528B7 /* SideBarItem.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SideBarItem.swift; sourceTree = "<group>"; };
 		811E65052BDEAAE2003528B7 /* SettingsViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SettingsViewModel.swift; sourceTree = "<group>"; };
 		811E65092BDEAEBC003528B7 /* LargeButtonStyle.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LargeButtonStyle.swift; sourceTree = "<group>"; };
@@ -63,8 +66,7 @@
 		812399C92BDC3CE3004219C9 /* ToastModifier.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ToastModifier.swift; sourceTree = "<group>"; };
 		812399CB2BDC3D22004219C9 /* ViewExtensions.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ViewExtensions.swift; sourceTree = "<group>"; };
 		812A62BA2BC6F2FC00388105 /* StringExtensions.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = StringExtensions.swift; sourceTree = "<group>"; };
-		812A62BC2BC707A400388105 /* BatteryInfo.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = BatteryInfo.swift; sourceTree = "<group>"; };
-		812A62BE2BC708D400388105 /* DeviceDetail.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DeviceDetail.swift; sourceTree = "<group>"; };
+		812A62BE2BC708D400388105 /* DeviceInformationModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DeviceInformationModel.swift; sourceTree = "<group>"; };
 		812A62C02BC70C3E00388105 /* IntExtensions.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = IntExtensions.swift; sourceTree = "<group>"; };
 		812AB6EA2BD3AFFE00DB60A5 /* HomeView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = HomeView.swift; sourceTree = "<group>"; };
 		812DC7872BDC047E009B2E87 /* TerminalWindow.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TerminalWindow.swift; sourceTree = "<group>"; };
@@ -78,6 +80,8 @@
 		816A1D3B2BE8CAC300E7DA71 /* ApplicationRepositoryImpl.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ApplicationRepositoryImpl.swift; sourceTree = "<group>"; };
 		816A1D3F2BE8CDE000E7DA71 /* InstallApplicationError.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = InstallApplicationError.swift; sourceTree = "<group>"; };
 		816A1D442BE8D3A200E7DA71 /* CircleWavesAnimation.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CircleWavesAnimation.swift; sourceTree = "<group>"; };
+		816A1D462BE8F66100E7DA71 /* DeviceRepositoryImpl.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DeviceRepositoryImpl.swift; sourceTree = "<group>"; };
+		816A1D482BE8F67000E7DA71 /* DeviceRepository.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DeviceRepository.swift; sourceTree = "<group>"; };
 		8178547A2BC59F6300B5B2EE /* AndroidTools.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = AndroidTools.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		8178547D2BC59F6300B5B2EE /* AndroidToolsApp.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AndroidToolsApp.swift; sourceTree = "<group>"; };
 		817854812BC59F6500B5B2EE /* Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Assets.xcassets; sourceTree = "<group>"; };
@@ -89,12 +93,12 @@
 		81D04F572BCA49C300B04FAB /* FileExplorerItem.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FileExplorerItem.swift; sourceTree = "<group>"; };
 		81D04F592BCA4B3400B04FAB /* FolderItem.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FolderItem.swift; sourceTree = "<group>"; };
 		81E6A7502BC5CC260034EBFB /* MenuView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MenuView.swift; sourceTree = "<group>"; };
-		81E6A7582BC5CD9D0034EBFB /* InformationView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = InformationView.swift; sourceTree = "<group>"; };
+		81E6A7582BC5CD9D0034EBFB /* DeviceInformationView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DeviceInformationView.swift; sourceTree = "<group>"; };
 		81E6A75A2BC5CDC20034EBFB /* FileExplorerView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FileExplorerView.swift; sourceTree = "<group>"; };
 		81E6A75C2BC5CDFF0034EBFB /* MenuViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MenuViewModel.swift; sourceTree = "<group>"; };
-		81E6A75E2BC5D2840034EBFB /* InformationViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = InformationViewModel.swift; sourceTree = "<group>"; };
+		81E6A75E2BC5D2840034EBFB /* DeviceInformationViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DeviceInformationViewModel.swift; sourceTree = "<group>"; };
 		81E6A7642BC5D7020034EBFB /* AdbHelper.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AdbHelper.swift; sourceTree = "<group>"; };
-		81E6A7672BC5D7200034EBFB /* Device.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Device.swift; sourceTree = "<group>"; };
+		81E6A7672BC5D7200034EBFB /* DeviceListModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DeviceListModel.swift; sourceTree = "<group>"; };
 		81E9822C2BDD06600004B154 /* InstallApplicationUseCase.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = InstallApplicationUseCase.swift; sourceTree = "<group>"; };
 		81E9822E2BDD09E70004B154 /* GetDeviceInformationUseCase.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = GetDeviceInformationUseCase.swift; sourceTree = "<group>"; };
 		81E982302BDD0F190004B154 /* RebootDeviceUseCase.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RebootDeviceUseCase.swift; sourceTree = "<group>"; };
@@ -141,7 +145,7 @@
 				81E598B42BC6CA4F00FB614B /* Components */,
 				816A1D352BE8C77000E7DA71 /* Settings */,
 				816A1D342BE8C74F00E7DA71 /* FileExplorer */,
-				816A1D322BE8C73600E7DA71 /* Information */,
+				816A1D322BE8C73600E7DA71 /* DeviceInformation */,
 				816A1D312BE8C73000E7DA71 /* InstallApplication */,
 				816A1D302BE8C72800E7DA71 /* Home */,
 			);
@@ -184,13 +188,13 @@
 			path = InstallApplication;
 			sourceTree = "<group>";
 		};
-		816A1D322BE8C73600E7DA71 /* Information */ = {
+		816A1D322BE8C73600E7DA71 /* DeviceInformation */ = {
 			isa = PBXGroup;
 			children = (
-				81E6A7582BC5CD9D0034EBFB /* InformationView.swift */,
-				81E6A75E2BC5D2840034EBFB /* InformationViewModel.swift */,
+				81E6A7582BC5CD9D0034EBFB /* DeviceInformationView.swift */,
+				81E6A75E2BC5D2840034EBFB /* DeviceInformationViewModel.swift */,
 			);
-			path = Information;
+			path = DeviceInformation;
 			sourceTree = "<group>";
 		};
 		816A1D342BE8C74F00E7DA71 /* FileExplorer */ = {
@@ -234,6 +238,7 @@
 			isa = PBXGroup;
 			children = (
 				816A1D392BE8CAA300E7DA71 /* ApplicationRepository.swift */,
+				816A1D482BE8F67000E7DA71 /* DeviceRepository.swift */,
 			);
 			path = Repositories;
 			sourceTree = "<group>";
@@ -250,6 +255,7 @@
 			isa = PBXGroup;
 			children = (
 				816A1D3B2BE8CAC300E7DA71 /* ApplicationRepositoryImpl.swift */,
+				816A1D462BE8F66100E7DA71 /* DeviceRepositoryImpl.swift */,
 			);
 			path = Repositories;
 			sourceTree = "<group>";
@@ -273,11 +279,11 @@
 		8178547C2BC59F6300B5B2EE /* AndroidTools */ = {
 			isa = PBXGroup;
 			children = (
+				814319532BC6B3AC00044934 /* Commons */,
 				816A1D2E2BE8C71300E7DA71 /* Data */,
 				816A1D2D2BE8C70C00E7DA71 /* Domain */,
 				816A1D2C2BE8C70300E7DA71 /* Presentation */,
 				814319572BC6B4D900044934 /* Info.plist */,
-				814319532BC6B3AC00044934 /* Commons */,
 				8178547D2BC59F6300B5B2EE /* AndroidToolsApp.swift */,
 				817854812BC59F6500B5B2EE /* Assets.xcassets */,
 				817854862BC59F6500B5B2EE /* AndroidTools.entitlements */,
@@ -310,9 +316,8 @@
 			isa = PBXGroup;
 			children = (
 				816A1D3E2BE8CDD200E7DA71 /* Errors */,
-				81E6A7672BC5D7200034EBFB /* Device.swift */,
-				812A62BC2BC707A400388105 /* BatteryInfo.swift */,
-				812A62BE2BC708D400388105 /* DeviceDetail.swift */,
+				81E6A7672BC5D7200034EBFB /* DeviceListModel.swift */,
+				812A62BE2BC708D400388105 /* DeviceInformationModel.swift */,
 				817EE85C2BC8247F00740D4A /* FileItem.swift */,
 				81D04F572BCA49C300B04FAB /* FileExplorerItem.swift */,
 				81D04F592BCA4B3400B04FAB /* FolderItem.swift */,
@@ -330,6 +335,7 @@
 				81E9822C2BDD06600004B154 /* InstallApplicationUseCase.swift */,
 				81E9822E2BDD09E70004B154 /* GetDeviceInformationUseCase.swift */,
 				81E982302BDD0F190004B154 /* RebootDeviceUseCase.swift */,
+				810E8E192BE9196500ED561A /* GetConnectedDeviceListUseCase.swift */,
 			);
 			path = UseCases;
 			sourceTree = "<group>";
@@ -410,10 +416,9 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				81E6A7592BC5CD9D0034EBFB /* InformationView.swift in Sources */,
+				81E6A7592BC5CD9D0034EBFB /* DeviceInformationView.swift in Sources */,
 				814319522BC6715B00044934 /* InstallApplicationViewModel.swift in Sources */,
 				814319562BC6B3C000044934 /* UTTypeExtensions.swift in Sources */,
-				812A62BD2BC707A400388105 /* BatteryInfo.swift in Sources */,
 				81E6A7512BC5CC260034EBFB /* MenuView.swift in Sources */,
 				816A1D452BE8D3A200E7DA71 /* CircleWavesAnimation.swift in Sources */,
 				81E6A75B2BC5CDC20034EBFB /* FileExplorerView.swift in Sources */,
@@ -430,27 +435,30 @@
 				81C3FEE12BD2E76000E18035 /* SettingsView.swift in Sources */,
 				81E6A75D2BC5CDFF0034EBFB /* MenuViewModel.swift in Sources */,
 				814319502BC6715100044934 /* InstallApplicationView.swift in Sources */,
+				816A1D472BE8F66100E7DA71 /* DeviceRepositoryImpl.swift in Sources */,
 				812A62C12BC70C3E00388105 /* IntExtensions.swift in Sources */,
 				812399C42BDC3C92004219C9 /* Toast.swift in Sources */,
 				812399CA2BDC3CE3004219C9 /* ToastModifier.swift in Sources */,
 				81600C8F2BC98F65008D471C /* FileRow.swift in Sources */,
 				8178547E2BC59F6300B5B2EE /* AndroidToolsApp.swift in Sources */,
-				81E6A75F2BC5D2840034EBFB /* InformationViewModel.swift in Sources */,
+				810E8E1A2BE9196500ED561A /* GetConnectedDeviceListUseCase.swift in Sources */,
+				81E6A75F2BC5D2840034EBFB /* DeviceInformationViewModel.swift in Sources */,
 				81D04F582BCA49C300B04FAB /* FileExplorerItem.swift in Sources */,
 				817EE85D2BC8247F00740D4A /* FileItem.swift in Sources */,
 				811E65042BDE8C16003528B7 /* SideBarItem.swift in Sources */,
+				816A1D492BE8F67000E7DA71 /* DeviceRepository.swift in Sources */,
 				811E650A2BDEAEBC003528B7 /* LargeButtonStyle.swift in Sources */,
 				81E982312BDD0F190004B154 /* RebootDeviceUseCase.swift in Sources */,
 				817EE8592BC81D4100740D4A /* FileExplorerViewModel.swift in Sources */,
 				81E982372BDD3A740004B154 /* CheckForUpdateViewModel.swift in Sources */,
 				816A1D3C2BE8CAC300E7DA71 /* ApplicationRepositoryImpl.swift in Sources */,
-				812A62BF2BC708D400388105 /* DeviceDetail.swift in Sources */,
+				812A62BF2BC708D400388105 /* DeviceInformationModel.swift in Sources */,
 				812AB6EB2BD3AFFE00DB60A5 /* HomeView.swift in Sources */,
 				812A62BB2BC6F2FC00388105 /* StringExtensions.swift in Sources */,
 				812399C62BDC3CA9004219C9 /* ToastStyle.swift in Sources */,
 				812399CC2BDC3D22004219C9 /* ViewExtensions.swift in Sources */,
 				8164F8B02BDE40A70097422C /* UniversalFileDocument.swift in Sources */,
-				81E6A7682BC5D7200034EBFB /* Device.swift in Sources */,
+				81E6A7682BC5D7200034EBFB /* DeviceListModel.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};

@@ -1,13 +1,13 @@
 import SwiftUI
 import UniformTypeIdentifiers.UTType
 
-struct InstallerView: View {
+struct InstallApplicationView: View {
     
     let deviceId: String
     
     @State private var dropTargetted: Bool = false
     @State private var isHoveringPhone: Bool = false
-    @State private var viewModel = InstallerViewModel()
+    @State private var viewModel = InstallApplicationViewModel()
     
 
     
@@ -95,6 +95,6 @@ struct InstallerView: View {
 
 struct InstallerView_Previews: PreviewProvider {
     static var previews: some View {
-        InstallerView(deviceId: "4dfda049")
+        InstallApplicationView(deviceId: "4dfda049")
     }
 }

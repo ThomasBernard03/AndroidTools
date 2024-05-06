@@ -8,8 +8,8 @@
 import Foundation
 
 @Observable
-final class InformationViewModel: ObservableObject {
-    var device : DeviceDetail? = nil
+final class DeviceInformationViewModel: ObservableObject {
+    var device : DeviceInformationModel? = nil
     
     private let getDeviceInformationUseCase = GetDeviceInformationUseCase()
     private let rebootDeviceUseCase = RebootDeviceUseCase()

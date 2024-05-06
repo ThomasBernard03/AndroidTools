@@ -46,12 +46,12 @@ struct SideBarView: View {
                     }
                     
                     NavigationLink(
-                        destination: InstallerView(deviceId: viewModel.selectedDevice?.id ?? "")) {
-                            SideBarItem(label: "App installer", systemImage: "app.badge")
+                        destination: InstallApplicationView(deviceId: viewModel.selectedDevice?.id ?? "")) {
+                            SideBarItem(label: "Application installer", systemImage: "app.badge")
                     }
                     .disabled(viewModel.devices.isEmpty)
                     
-                    NavigationLink(destination: InformationView(deviceId: viewModel.selectedDevice?.id ?? "")) {
+                    NavigationLink(destination: DeviceInformationView(deviceId: viewModel.selectedDevice?.id ?? "")) {
                         SideBarItem(label:"Informations", systemImage: "info.circle")
                     }
                     .disabled(viewModel.devices.isEmpty)

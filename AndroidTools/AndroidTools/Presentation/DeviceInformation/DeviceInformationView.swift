@@ -7,11 +7,11 @@
 
 import SwiftUI
 
-struct InformationView: View {
+struct DeviceInformationView: View {
     
     let deviceId : String
     
-    @State private var viewModel = InformationViewModel()
+    @State private var viewModel = DeviceInformationViewModel()
     @State private var isPresentingRebootConfirmation: Bool = false
 
     
@@ -40,17 +40,17 @@ struct InformationView: View {
                     Text(viewModel.device?.serialNumber ?? "")
                         .textSelection(.enabled)
                     
-                    Text("\(String(viewModel.device?.batteryInfo.percentage ?? 0))%")
+                    Text("\(String(viewModel.device?.batteryInformation.percentage ?? 0))%")
                     
 
-                    if viewModel.device?.batteryInfo.charging ?? false {
+                    if viewModel.device?.batteryInformation.charging ?? false {
                         Image(systemName:"battery.100percent.bolt")
                             .symbolRenderingMode(.palette)
                             .foregroundStyle(.gray, .gray, .green)
                             .font(.system(size: 16))
                     }
                     else {
-                        Image(systemName:  (viewModel.device?.batteryInfo.percentage.toBatteryIcon()) ?? "battery.0percent")
+                        Image(systemName:  (viewModel.device?.batteryInformation.percentage.toBatteryIcon()) ?? "battery.0percent")
                             .symbolRenderingMode(.palette)
                             .foregroundStyle(.green, .gray)
                             .font(.system(size: 16))
@@ -106,5 +106,5 @@ struct InformationView: View {
 }
 
 #Preview {
-    InformationView(deviceId: "4dfda047")
+    DeviceInformationView(deviceId: "4dfda047")
 }
