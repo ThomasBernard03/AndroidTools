@@ -9,8 +9,6 @@ import Foundation
 
 class FileRepositoryImpl : FileRepository {
 
-    
-
     private let adbHelper = AdbHelper()
     let basePath = "/storage/emulated/0/"
     
@@ -26,6 +24,12 @@ class FileRepositoryImpl : FileRepository {
         _ = adbHelper.runAdbCommand("-s \(deviceId) \(deleteCommand)")
     }
     
+    func importFile(deviceId: String, filePath: String, targetPath: String) {
+        let cleanedFilePath = filePath.replacingOccurrences(of: "file://", with: "")
+        let targetDevicePath = "\(basePath)\(targetPath)"
+        let pushCommand = "-s \(deviceId) push \"\(cleanedFilePath)\" \"\(targetDevicePath)\""
+        _ = adbHelper.runAdbCommand(pushCommand)
+    }
     
     func getFiles(deviceId: String, path: String) -> FileExplorerResultModel {
         let finalPath = basePath + path

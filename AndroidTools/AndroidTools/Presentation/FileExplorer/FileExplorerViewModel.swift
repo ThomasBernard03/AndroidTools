@@ -15,11 +15,13 @@ final class FilesViewModel: ObservableObject {
     private let listFilesUseCase = ListFilesUseCase()
     private let createFolderUseCase = CreateFolderUseCase()
     private let deleteFileItemUseCase = DeleteFileItemUseCase()
+    private let importFileUseCase = ImportFileUseCase()
     
     var loading : Bool = true
     var fileExplorerResult: FileExplorerResultModel? = nil
     var showCreateFolderAlert = false
     var showDeleteItemAlert = false
+    var showExportFileDialog : Bool = false
     
     private let adbHelper = AdbHelper()
     
@@ -33,11 +35,12 @@ final class FilesViewModel: ObservableObject {
     var showExporter = false
     
     var showImportFileDialog : Bool = false
-    var showExportFileDialog : Bool = false
+    
     var dropTargetted: Bool = false
     
     
     func getFiles(deviceId: String) {
+        loading = true
         DispatchQueue.global(qos: .userInitiated).async { [self] in
             let filesResult = listFilesUseCase.execute(deviceId: deviceId)
             DispatchQueue.main.async {
@@ -48,7 +51,7 @@ final class FilesViewModel: ObservableObject {
     }
     
     func getFiles(deviceId: String, path : String) {
-        self.loading = true
+        loading = true
         DispatchQueue.global(qos: .userInitiated).async { [self] in
             let filesResult = listFilesUseCase.execute(deviceId: deviceId, path: path)
             DispatchQueue.main.async {
@@ -59,7 +62,7 @@ final class FilesViewModel: ObservableObject {
     }
     
     func createFolder(deviceId : String){
-        self.loading = true
+        loading = true
         DispatchQueue.global(qos: .userInitiated).async { [self] in
             createFolderUseCase.execute(deviceId: deviceId, path: fileExplorerResult!.fullPath, name: createFolderAlertName)
             getFiles(deviceId: deviceId, path: fileExplorerResult!.fullPath)
@@ -70,9 +73,20 @@ final class FilesViewModel: ObservableObject {
     }
     
     func deleteItem(deviceId : String, path : String){
-        self.loading = true
+        loading = true
         DispatchQueue.global(qos: .userInitiated).async { [self] in
             deleteFileItemUseCase.execute(deviceId: deviceId, path: path)
+            getFiles(deviceId: deviceId, path: fileExplorerResult!.fullPath)
+            DispatchQueue.main.async {
+                self.loading = false
+            }
+        }
+    }
+    
+    func importFile(deviceId : String, filePath : String) {
+        loading = true
+        DispatchQueue.global(qos: .userInitiated).async { [self] in
+            importFileUseCase.execute(deviceId: deviceId, filePath: filePath, targetPath: fileExplorerResult!.fullPath)
             getFiles(deviceId: deviceId, path: fileExplorerResult!.fullPath)
             DispatchQueue.main.async {
                 self.loading = false
@@ -94,23 +108,7 @@ final class FilesViewModel: ObservableObject {
     }
     
     
-    func importFile(deviceId : String, filePath : String) {
-//        if loading { return }
-//        loading = true
-//        
-//        DispatchQueue.global(qos: .userInitiated).async {
-//            let fileImported = self.adbHelper.importFile(
-//                deviceId: deviceId,
-//                filePath: filePath,
-//                targetPath: self.currentFolder?.fullPath ?? "/")
-//            
-//            self.refreshList(deviceId: deviceId)
-//            
-//            DispatchQueue.main.async {
-//                self.loading = false
-//            }
-//        }
-    }
+
     
 
     

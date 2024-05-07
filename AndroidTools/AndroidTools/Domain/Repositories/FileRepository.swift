@@ -37,4 +37,15 @@ protocol FileRepository {
         - path: The location of files
      */
     func deleteFileItem(deviceId : String, path : String)
+    
+    
+    /**
+        Import a file from mac to device
+     
+     - Parameters:
+        - deviceId: The unique identifier of the device
+        - filePath: The location of file in mac
+        - targetPath: The location where we copy the file on device
+     */
+    func importFile(deviceId : String, filePath : String, targetPath : String)
 }

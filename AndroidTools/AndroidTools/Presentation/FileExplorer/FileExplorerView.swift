@@ -25,6 +25,7 @@ struct FilesView: View {
     
     @State private var viewModel = FilesViewModel()
     @State private var selection: IdentifiableFileExplorerItem.ID? = nil
+    @State private var dropTargetted: Bool = false
     
     var body: some View {
         
@@ -50,8 +51,7 @@ struct FilesView: View {
                     .offset(y:8)
             }
         }
-        .confirmationDialog("Delete this item ?",
-                            isPresented: $viewModel.showDeleteItemAlert) {
+        .confirmationDialog("Delete this item ?", isPresented: $viewModel.showDeleteItemAlert) {
           Button("Delete", role: .destructive) {
               let path = "\(viewModel.fileExplorerResult!.fullPath)/\(currentItem!.name)"
               selection = nil
@@ -71,6 +71,39 @@ struct FilesView: View {
         } message: {
             Text("The folder will be created at : \n \(viewModel.fileExplorerResult?.fullPath ?? "/")")
         }
+        .onDrop(of: [.item], isTargeted: $dropTargetted) { providers in
+            providers.first?.loadItem(forTypeIdentifier: UTType.item.identifier, options: nil) { (item, error) in
+                if let item = item as? URL {
+                    let fileUrl = item.startAccessingSecurityScopedResource() ? item : URL(fileURLWithPath: item.path)
+                    viewModel.importFile(deviceId: deviceId, filePath: fileUrl.path)
+                    item.stopAccessingSecurityScopedResource()
+                }
+            }
+            return true
+        }
+        .overlay {
+            if dropTargetted {
+                ZStack {
+                    Color.black.opacity(0.5)
+                    VStack(spacing: 8) {
+                        Image(systemName: "plus.circle.fill")
+                            .font(.system(size: 30))
+                        Text("Drop your file here...")
+                    }
+                    .font(.title2)
+                    .foregroundColor(.white)
+                    .multilineTextAlignment(.center)
+                }
+            }
+        }
+        .fileImporter(isPresented: $viewModel.showImportFileDialog, allowedContentTypes: [UTType.item]) { result in
+            switch result {
+            case .success(let file):
+                viewModel.importFile(deviceId: deviceId,filePath: file.absoluteString)
+            case .failure(let error):
+                print(error.localizedDescription)
+            }
+        }
         .onAppear {
             viewModel.getFiles(deviceId: deviceId)
         }
@@ -86,6 +119,9 @@ struct FilesView: View {
             }
             
             ToolbarItemGroup {
+                Button { viewModel.showImportFileDialog.toggle() } label: {
+                    Label("Upload file", systemImage: "square.and.arrow.up")
+                }
                 Button { viewModel.showCreateFolderAlert.toggle() } label: {
                     Label("Create folder", systemImage: "folder.badge.plus")
                 }

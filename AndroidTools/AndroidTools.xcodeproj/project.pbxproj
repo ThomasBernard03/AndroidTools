@@ -60,6 +60,7 @@
 		81F41C5B2BEA4DF4005F1730 /* TableView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 81F41C5A2BEA4DF4005F1730 /* TableView.swift */; };
 		81F41C5D2BEA7B3D005F1730 /* CreateFolderUseCase.swift in Sources */ = {isa = PBXBuildFile; fileRef = 81F41C5C2BEA7B3D005F1730 /* CreateFolderUseCase.swift */; };
 		81F41C5F2BEA95FB005F1730 /* DeleteFileItemUseCase.swift in Sources */ = {isa = PBXBuildFile; fileRef = 81F41C5E2BEA95FB005F1730 /* DeleteFileItemUseCase.swift */; };
+		81F41C612BEA995D005F1730 /* ImportFileUseCase.swift in Sources */ = {isa = PBXBuildFile; fileRef = 81F41C602BEA995D005F1730 /* ImportFileUseCase.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
@@ -118,6 +119,7 @@
 		81F41C5A2BEA4DF4005F1730 /* TableView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TableView.swift; sourceTree = "<group>"; };
 		81F41C5C2BEA7B3D005F1730 /* CreateFolderUseCase.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CreateFolderUseCase.swift; sourceTree = "<group>"; };
 		81F41C5E2BEA95FB005F1730 /* DeleteFileItemUseCase.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DeleteFileItemUseCase.swift; sourceTree = "<group>"; };
+		81F41C602BEA995D005F1730 /* ImportFileUseCase.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ImportFileUseCase.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -357,6 +359,7 @@
 				810E8E1B2BE92EA800ED561A /* ListFilesUseCase.swift */,
 				81F41C5C2BEA7B3D005F1730 /* CreateFolderUseCase.swift */,
 				81F41C5E2BEA95FB005F1730 /* DeleteFileItemUseCase.swift */,
+				81F41C602BEA995D005F1730 /* ImportFileUseCase.swift */,
 			);
 			path = UseCases;
 			sourceTree = "<group>";
@@ -446,6 +449,7 @@
 				81E9822F2BDD09E70004B154 /* GetDeviceInformationUseCase.swift in Sources */,
 				81E6A7652BC5D7020034EBFB /* AdbHelper.swift in Sources */,
 				812DC7882BDC047E009B2E87 /* TerminalWindow.swift in Sources */,
+				81F41C612BEA995D005F1730 /* ImportFileUseCase.swift in Sources */,
 				81E9822D2BDD06600004B154 /* InstallApplicationUseCase.swift in Sources */,
 				816A1D3A2BE8CAA300E7DA71 /* ApplicationRepository.swift in Sources */,
 				812399C82BDC3CC7004219C9 /* ToastView.swift in Sources */,
