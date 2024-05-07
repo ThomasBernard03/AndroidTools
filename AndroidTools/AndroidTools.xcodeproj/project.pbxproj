@@ -57,6 +57,7 @@
 		81E982342BDD2FD10004B154 /* Sparkle in Frameworks */ = {isa = PBXBuildFile; productRef = 81E982332BDD2FD10004B154 /* Sparkle */; };
 		81E982372BDD3A740004B154 /* CheckForUpdateViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 81E982362BDD3A740004B154 /* CheckForUpdateViewModel.swift */; };
 		81E982392BDD3B480004B154 /* CheckForUpdateView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 81E982382BDD3B480004B154 /* CheckForUpdateView.swift */; };
+		81F41C5B2BEA4DF4005F1730 /* TableView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 81F41C5A2BEA4DF4005F1730 /* TableView.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
@@ -112,6 +113,7 @@
 		81E982302BDD0F190004B154 /* RebootDeviceUseCase.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RebootDeviceUseCase.swift; sourceTree = "<group>"; };
 		81E982362BDD3A740004B154 /* CheckForUpdateViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CheckForUpdateViewModel.swift; sourceTree = "<group>"; };
 		81E982382BDD3B480004B154 /* CheckForUpdateView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CheckForUpdateView.swift; sourceTree = "<group>"; };
+		81F41C5A2BEA4DF4005F1730 /* TableView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TableView.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -210,6 +212,7 @@
 			children = (
 				81E6A75A2BC5CDC20034EBFB /* FileExplorerView.swift */,
 				817EE8582BC81D4100740D4A /* FileExplorerViewModel.swift */,
+				81F41C5A2BEA4DF4005F1730 /* TableView.swift */,
 			);
 			path = FileExplorer;
 			sourceTree = "<group>";
@@ -441,6 +444,7 @@
 				816A1D3A2BE8CAA300E7DA71 /* ApplicationRepository.swift in Sources */,
 				812399C82BDC3CC7004219C9 /* ToastView.swift in Sources */,
 				81D04F5A2BCA4B3400B04FAB /* FolderItem.swift in Sources */,
+				81F41C5B2BEA4DF4005F1730 /* TableView.swift in Sources */,
 				816A1D402BE8CDE000E7DA71 /* InstallApplicationError.swift in Sources */,
 				81E982392BDD3B480004B154 /* CheckForUpdateView.swift in Sources */,
 				810E8E202BE9311100ED561A /* FileRepositoryImpl.swift in Sources */,
