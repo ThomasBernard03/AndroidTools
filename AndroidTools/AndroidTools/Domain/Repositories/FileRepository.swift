@@ -16,4 +16,15 @@ protocol FileRepository {
         - path: The location of files
      */
     func getFiles(deviceId : String, path : String) -> FileExplorerResultModel
+    
+    
+    /**
+        Create a new folder
+     
+     - Parameters:
+        - deviceId: The unique identifier of the device
+        - path: The location of files
+        - path: The name of the folder
+     */
+    func createFolder(deviceId : String, path : String, name : String)
 }

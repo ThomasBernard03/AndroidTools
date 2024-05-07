@@ -27,12 +27,6 @@ class AdbHelper {
                 DeviceListModel(id: id, name: getDeviceName(deviceId: id))
             }
     }
-    
-    func createFolder(deviceId : String, path : String, name : String) {
-        let directoryPath = "/storage/emulated/0\(path)/\(name)"
-        let createDirCommand = "-s \(deviceId) shell mkdir -p \"\(directoryPath)\""
-        let result = runAdbCommand(createDirCommand)
-    }
 
     
     func getFiles(deviceId : String, path : String) -> FolderItem {

@@ -8,9 +8,17 @@
 import Foundation
 
 class FileRepositoryImpl : FileRepository {
-    
+
     private let adbHelper = AdbHelper()
     let basePath = "/storage/emulated/0/"
+    
+    
+    func createFolder(deviceId: String, path: String, name: String) {
+        let directoryPath = "\(basePath)\(path)/\(name)"
+        let createDirCommand = "-s \(deviceId) shell mkdir -p \"\(directoryPath)\""
+        _ = adbHelper.runAdbCommand(createDirCommand)
+    }
+    
     
     func getFiles(deviceId: String, path: String) -> FileExplorerResultModel {
         let finalPath = basePath + path

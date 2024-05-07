@@ -13,9 +13,11 @@ import UniformTypeIdentifiers
 final class FilesViewModel: ObservableObject {
     
     private let listFilesUseCase = ListFilesUseCase()
+    private let createFolderUseCase = CreateFolderUseCase()
     
     var loading : Bool = true
     var fileExplorerResult: FileExplorerResultModel? = nil
+    var showCreateFolderAlert = false
     
     private let adbHelper = AdbHelper()
     
@@ -23,7 +25,7 @@ final class FilesViewModel: ObservableObject {
     
     var currentPath : String? = nil
     
-    var showCreateFolderAlert = false
+    
     var createFolderAlertName = ""
     
     var showExporter = false
@@ -56,17 +58,14 @@ final class FilesViewModel: ObservableObject {
     }
     
     
-    
-    func getFiles(deviceId: String, parent : FolderItem) {
+    func createFolder(deviceId : String){
+        self.loading = true
         DispatchQueue.global(qos: .userInitiated).async { [self] in
-            
-            // It's folder so get childrens
-            let result = self.adbHelper.getFiles(deviceId: deviceId, parent: parent)
-
-//            DispatchQueue.main.async {
-//                self.currentPath = nil
-//                self.currentFolder = result
-//            }
+            self.createFolderUseCase.execute(deviceId: deviceId, path: fileExplorerResult!.fullPath, name: createFolderAlertName)
+            self.getFiles(deviceId: deviceId, path: fileExplorerResult!.fullPath)
+            DispatchQueue.main.async {
+                self.loading = false
+            }
         }
     }
     
@@ -119,21 +118,7 @@ final class FilesViewModel: ObservableObject {
 //        }
     }
     
-    func createFolder(deviceId : String){
-//        if loading { return }
-//        loading = true
-//        
-//        DispatchQueue.global(qos: .userInitiated).async {
-//            self.adbHelper.createFolder(deviceId: deviceId, path: self.currentFolder?.fullPath ?? "/", name: self.createFolderAlertName)
-//            
-//            self.refreshList(deviceId: deviceId)
-//            
-//            DispatchQueue.main.async {
-//                self.currentPath = self.currentFolder?.fullPath ?? "/" + self.createFolderAlertName
-//                self.loading = false
-//            }
-//        }
-    }
+
     
     func prepareExport(deviceId : String, path: String) {
         let path = adbHelper.saveFileInTemporaryDirectory(deviceId: deviceId, filePath: path)

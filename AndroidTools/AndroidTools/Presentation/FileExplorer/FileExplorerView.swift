@@ -42,7 +42,19 @@ struct FilesView: View {
                     viewModel.getFiles(deviceId: deviceId, path: path)
                 }
             }
-
+        }
+        .alert("Create folder", isPresented: $viewModel.showCreateFolderAlert){
+            TextField("Folder name", text: $viewModel.createFolderAlertName)
+            HStack {
+                Button("Create",action: {
+                    viewModel.createFolder(deviceId: deviceId)
+                })
+                .disabled(viewModel.createFolderAlertName.isEmpty)
+                
+                Button("Cancel",action: {})
+            }
+        } message: {
+            Text("The folder will be created at : \n \(viewModel.fileExplorerResult?.fullPath ?? "/")")
         }
         .onAppear {
             viewModel.getFiles(deviceId: deviceId)
@@ -57,7 +69,14 @@ struct FilesView: View {
                 }
                 .disabled(viewModel.loading || viewModel.fileExplorerResult?.name == "")
             }
+            
+            ToolbarItemGroup {
+                Button { viewModel.showCreateFolderAlert.toggle() } label: {
+                    Label("Create folder", systemImage: "folder.badge.plus")
+                }
+            }
         }
+        .navigationTitle(viewModel.fileExplorerResult?.name ?? "")
     }
 
 }
