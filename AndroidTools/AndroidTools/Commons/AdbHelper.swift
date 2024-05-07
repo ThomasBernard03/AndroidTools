@@ -29,40 +29,6 @@ class AdbHelper {
     }
 
     
-    func getFiles(deviceId : String, path : String) -> FolderItem {
-        let finalPath = "/storage/emulated/0" + path
-        let result = runAdbCommand("-s \(deviceId) shell ls \(finalPath) -l")
-        
-        
-        
-        let parent = FolderItem(
-            name: path.isEmpty ? "/" : path.substringAfterLast("/"))
-        
-//        let childrens = result.toFileItem(parent:parent)
-        
-//        parent.childrens = childrens
-        
-        return parent
-    }
-    
-    func getFiles(deviceId : String, parent : FolderItem) -> FolderItem {
-//        let finalPath = "/storage/emulated/0" + parent.fullPath
-//        let result = runAdbCommand("-s \(deviceId) shell ls \(finalPath) -l")
-//        
-//        
-//        let childrens = result.toFileItem(path:"")
-//        
-//        parent.childrens = childrens
-        
-        return parent
-    }
-    
-    func deleteFileExplorerItem(deviceId: String, fullPath: String) -> String {
-        let deleteCommand = "shell 'rm -r \"/storage/emulated/0\(fullPath)\"'"
-        let result = runAdbCommand("-s \(deviceId) \(deleteCommand)")
-        return result
-    }
-    
    private func getDeviceName(deviceId: String) -> String {
         let command = "-s " + deviceId + " shell getprop ro.product.model"
         let deviceName = runAdbCommand(command)

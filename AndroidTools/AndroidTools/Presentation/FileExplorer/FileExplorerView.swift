@@ -36,12 +36,27 @@ struct FilesView: View {
             return items.first { $0.id == selection }?.item
         }
         
-        ZStack {
+        ZStack(alignment:.bottom) {
             if let safeFileExplorerResult = viewModel.fileExplorerResult {
                 TableView(selection: $selection, items: items, fileExplorerResult: safeFileExplorerResult) { path in
+                    selection = nil
                     viewModel.getFiles(deviceId: deviceId, path: path)
                 }
             }
+            
+            if viewModel.loading {
+                ProgressView()
+                    .progressViewStyle(.linear)
+                    .offset(y:8)
+            }
+        }
+        .confirmationDialog("Delete this item ?",
+                            isPresented: $viewModel.showDeleteItemAlert) {
+          Button("Delete", role: .destructive) {
+              let path = "\(viewModel.fileExplorerResult!.fullPath)/\(currentItem!.name)"
+              selection = nil
+              viewModel.deleteItem(deviceId: deviceId, path: path)
+          }
         }
         .alert("Create folder", isPresented: $viewModel.showCreateFolderAlert){
             TextField("Folder name", text: $viewModel.createFolderAlertName)
@@ -67,15 +82,23 @@ struct FilesView: View {
                 Button { viewModel.getFiles(deviceId: deviceId, path: viewModel.fileExplorerResult?.path ?? "/") } label: {
                     Label("Go back", systemImage: "chevron.left")
                 }
-                .disabled(viewModel.loading || viewModel.fileExplorerResult?.name == "")
+                .disabled(viewModel.fileExplorerResult?.name == "")
             }
             
             ToolbarItemGroup {
                 Button { viewModel.showCreateFolderAlert.toggle() } label: {
                     Label("Create folder", systemImage: "folder.badge.plus")
                 }
+                
+                Button { viewModel.showDeleteItemAlert.toggle() } label: {
+                    Label("Delete", systemImage: "trash")
+                }
+                .disabled(selection == nil)
+
+            
             }
         }
+        .disabled(viewModel.loading)
         .navigationTitle(viewModel.fileExplorerResult?.name ?? "")
     }
 

@@ -24,7 +24,17 @@ protocol FileRepository {
      - Parameters:
         - deviceId: The unique identifier of the device
         - path: The location of files
-        - path: The name of the folder
+        - name: The name of the folder
      */
     func createFolder(deviceId : String, path : String, name : String)
+    
+    
+    /**
+        Delete a file item
+     
+     - Parameters:
+        - deviceId: The unique identifier of the device
+        - path: The location of files
+     */
+    func deleteFileItem(deviceId : String, path : String)
 }

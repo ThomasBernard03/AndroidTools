@@ -9,6 +9,8 @@ import Foundation
 
 class FileRepositoryImpl : FileRepository {
 
+    
+
     private let adbHelper = AdbHelper()
     let basePath = "/storage/emulated/0/"
     
@@ -17,6 +19,11 @@ class FileRepositoryImpl : FileRepository {
         let directoryPath = "\(basePath)\(path)/\(name)"
         let createDirCommand = "-s \(deviceId) shell mkdir -p \"\(directoryPath)\""
         _ = adbHelper.runAdbCommand(createDirCommand)
+    }
+    
+    func deleteFileItem(deviceId: String, path: String) {
+        let deleteCommand = "shell 'rm -r \"\(basePath)\(path)\"'"
+        _ = adbHelper.runAdbCommand("-s \(deviceId) \(deleteCommand)")
     }
     
     

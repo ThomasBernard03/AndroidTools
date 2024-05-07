@@ -59,6 +59,7 @@
 		81E982392BDD3B480004B154 /* CheckForUpdateView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 81E982382BDD3B480004B154 /* CheckForUpdateView.swift */; };
 		81F41C5B2BEA4DF4005F1730 /* TableView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 81F41C5A2BEA4DF4005F1730 /* TableView.swift */; };
 		81F41C5D2BEA7B3D005F1730 /* CreateFolderUseCase.swift in Sources */ = {isa = PBXBuildFile; fileRef = 81F41C5C2BEA7B3D005F1730 /* CreateFolderUseCase.swift */; };
+		81F41C5F2BEA95FB005F1730 /* DeleteFileItemUseCase.swift in Sources */ = {isa = PBXBuildFile; fileRef = 81F41C5E2BEA95FB005F1730 /* DeleteFileItemUseCase.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
@@ -116,6 +117,7 @@
 		81E982382BDD3B480004B154 /* CheckForUpdateView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CheckForUpdateView.swift; sourceTree = "<group>"; };
 		81F41C5A2BEA4DF4005F1730 /* TableView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TableView.swift; sourceTree = "<group>"; };
 		81F41C5C2BEA7B3D005F1730 /* CreateFolderUseCase.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CreateFolderUseCase.swift; sourceTree = "<group>"; };
+		81F41C5E2BEA95FB005F1730 /* DeleteFileItemUseCase.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DeleteFileItemUseCase.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -354,6 +356,7 @@
 				810E8E192BE9196500ED561A /* GetConnectedDeviceListUseCase.swift */,
 				810E8E1B2BE92EA800ED561A /* ListFilesUseCase.swift */,
 				81F41C5C2BEA7B3D005F1730 /* CreateFolderUseCase.swift */,
+				81F41C5E2BEA95FB005F1730 /* DeleteFileItemUseCase.swift */,
 			);
 			path = UseCases;
 			sourceTree = "<group>";
@@ -455,6 +458,7 @@
 				81C3FEE12BD2E76000E18035 /* SettingsView.swift in Sources */,
 				81E6A75D2BC5CDFF0034EBFB /* MenuViewModel.swift in Sources */,
 				814319502BC6715100044934 /* InstallApplicationView.swift in Sources */,
+				81F41C5F2BEA95FB005F1730 /* DeleteFileItemUseCase.swift in Sources */,
 				816A1D472BE8F66100E7DA71 /* DeviceRepositoryImpl.swift in Sources */,
 				810E8E222BE9312B00ED561A /* FileRepository.swift in Sources */,
 				812A62C12BC70C3E00388105 /* IntExtensions.swift in Sources */,

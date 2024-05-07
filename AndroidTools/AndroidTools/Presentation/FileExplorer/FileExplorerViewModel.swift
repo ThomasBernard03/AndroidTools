@@ -14,10 +14,12 @@ final class FilesViewModel: ObservableObject {
     
     private let listFilesUseCase = ListFilesUseCase()
     private let createFolderUseCase = CreateFolderUseCase()
+    private let deleteFileItemUseCase = DeleteFileItemUseCase()
     
     var loading : Bool = true
     var fileExplorerResult: FileExplorerResultModel? = nil
     var showCreateFolderAlert = false
+    var showDeleteItemAlert = false
     
     private let adbHelper = AdbHelper()
     
@@ -45,7 +47,6 @@ final class FilesViewModel: ObservableObject {
         }
     }
     
-    
     func getFiles(deviceId: String, path : String) {
         self.loading = true
         DispatchQueue.global(qos: .userInitiated).async { [self] in
@@ -57,19 +58,27 @@ final class FilesViewModel: ObservableObject {
         }
     }
     
-    
     func createFolder(deviceId : String){
         self.loading = true
         DispatchQueue.global(qos: .userInitiated).async { [self] in
-            self.createFolderUseCase.execute(deviceId: deviceId, path: fileExplorerResult!.fullPath, name: createFolderAlertName)
-            self.getFiles(deviceId: deviceId, path: fileExplorerResult!.fullPath)
+            createFolderUseCase.execute(deviceId: deviceId, path: fileExplorerResult!.fullPath, name: createFolderAlertName)
+            getFiles(deviceId: deviceId, path: fileExplorerResult!.fullPath)
             DispatchQueue.main.async {
                 self.loading = false
             }
         }
     }
     
-
+    func deleteItem(deviceId : String, path : String){
+        self.loading = true
+        DispatchQueue.global(qos: .userInitiated).async { [self] in
+            deleteFileItemUseCase.execute(deviceId: deviceId, path: path)
+            getFiles(deviceId: deviceId, path: fileExplorerResult!.fullPath)
+            DispatchQueue.main.async {
+                self.loading = false
+            }
+        }
+    }
 
     
     func refreshList(deviceId : String){
@@ -81,21 +90,6 @@ final class FilesViewModel: ObservableObject {
 //                    self.currentFolder = result
 //                }
 //            }
-        }
-    }
-    
-    func deleteFileExplorerItem(deviceId : String, fullPath : String){
-        if loading { return }
-        loading = true
-    
-        DispatchQueue.global(qos: .userInitiated).async {
-            let fileDeleted = self.adbHelper.deleteFileExplorerItem(deviceId: deviceId, fullPath: fullPath)
-            self.refreshList(deviceId: deviceId)
-            
-            DispatchQueue.main.async {
-                self.loading = false
-                self.currentPath = nil
-            }
         }
     }
     
