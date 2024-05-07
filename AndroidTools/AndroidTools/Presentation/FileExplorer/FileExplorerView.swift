@@ -99,7 +99,7 @@ struct FilesView: View {
         .fileImporter(isPresented: $viewModel.showImportFileDialog, allowedContentTypes: [UTType.item]) { result in
             switch result {
             case .success(let file):
-                viewModel.importFile(deviceId: deviceId,filePath: file.absoluteString)
+                viewModel.importFile(deviceId: deviceId,filePath: file.absoluteString.removingPercentEncoding ?? file.absoluteString)
             case .failure(let error):
                 print(error.localizedDescription)
             }
@@ -119,6 +119,7 @@ struct FilesView: View {
             }
             
             ToolbarItemGroup {
+                
                 Button { viewModel.showImportFileDialog.toggle() } label: {
                     Label("Upload file", systemImage: "square.and.arrow.up")
                 }
@@ -129,8 +130,12 @@ struct FilesView: View {
                 Button { viewModel.showDeleteItemAlert.toggle() } label: {
                     Label("Delete", systemImage: "trash")
                 }
-                .disabled(selection == nil)
-
+                .disabled(selection == nil)                
+                
+                Button {viewModel.getFiles(deviceId: deviceId, path: viewModel.fileExplorerResult!.fullPath)} label: {
+                    Label("Refresh", systemImage: "arrow.clockwise")
+                }
+                .disabled(viewModel.fileExplorerResult == nil)
             
             }
         }
