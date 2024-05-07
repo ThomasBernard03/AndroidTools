@@ -12,10 +12,13 @@ import UniformTypeIdentifiers
 @Observable
 final class FilesViewModel: ObservableObject {
     
-    var loading : Bool = false
+    private let listFilesUseCase = ListFilesUseCase()
     
-    var currentFolder: FolderItem? = nil
-
+    var loading : Bool = true
+    var fileExplorerResult: FileExplorerResultModel? = nil
+    
+    private let adbHelper = AdbHelper()
+    
     var exportedDocument : UniversalFileDocument? = nil
     
     var currentPath : String? = nil
@@ -25,28 +28,34 @@ final class FilesViewModel: ObservableObject {
     
     var showExporter = false
     
-    private let adbHelper = AdbHelper()
+    var showImportFileDialog : Bool = false
+    var showExportFileDialog : Bool = false
+    var dropTargetted: Bool = false
     
-    func itemDoubleClicked(deviceId : String){
-        let selectedItem = currentFolder?.childrens.first { file in file.fullPath == currentPath }
-        
-        if let folderItem = selectedItem as? FolderItem {
-            currentFolder = folderItem
-            getFiles(deviceId: deviceId, parent: folderItem)
-        }
-    }
-
-    func getFiles(deviceId: String, path : String?) {
+    
+    func getFiles(deviceId: String) {
         DispatchQueue.global(qos: .userInitiated).async { [self] in
-            
-            // It's folder so get childrens
-            let result = self.adbHelper.getFiles(deviceId: deviceId, path: path ?? "/")
-
+            let filesResult = listFilesUseCase.execute(deviceId: deviceId)
             DispatchQueue.main.async {
-                self.currentFolder = result
+                self.loading = false
+                self.fileExplorerResult = filesResult
             }
         }
     }
+    
+    
+    func getFiles(deviceId: String, path : String) {
+        self.loading = true
+        DispatchQueue.global(qos: .userInitiated).async { [self] in
+            let filesResult = listFilesUseCase.execute(deviceId: deviceId, path: path)
+            DispatchQueue.main.async {
+                self.loading = false
+                self.fileExplorerResult = filesResult
+            }
+        }
+    }
+    
+    
     
     func getFiles(deviceId: String, parent : FolderItem) {
         DispatchQueue.global(qos: .userInitiated).async { [self] in
@@ -54,30 +63,25 @@ final class FilesViewModel: ObservableObject {
             // It's folder so get childrens
             let result = self.adbHelper.getFiles(deviceId: deviceId, parent: parent)
 
-            DispatchQueue.main.async {
-                self.currentPath = nil
-                self.currentFolder = result
-            }
+//            DispatchQueue.main.async {
+//                self.currentPath = nil
+//                self.currentFolder = result
+//            }
         }
     }
     
-    func goBack(deviceId : String){
-        if let parent = currentFolder?.parent {
-            currentPath = nil
-            currentFolder = parent
-        }
-    }
+
 
     
     func refreshList(deviceId : String){
         DispatchQueue.global(qos: .userInitiated).async { [self] in
-            if let parent = currentFolder {
-                let result = self.adbHelper.getFiles(deviceId: deviceId, parent: parent)
-
-                DispatchQueue.main.async {
-                    self.currentFolder = result
-                }
-            }
+//            if let parent = currentFolder {
+//                let result = self.adbHelper.getFiles(deviceId: deviceId, parent: parent)
+//
+//                DispatchQueue.main.async {
+//                    self.currentFolder = result
+//                }
+//            }
         }
     }
     
@@ -98,37 +102,37 @@ final class FilesViewModel: ObservableObject {
     
     
     func importFile(deviceId : String, filePath : String) {
-        if loading { return }
-        loading = true
-        
-        DispatchQueue.global(qos: .userInitiated).async {
-            let fileImported = self.adbHelper.importFile(
-                deviceId: deviceId,
-                filePath: filePath,
-                targetPath: self.currentFolder?.fullPath ?? "/")
-            
-            self.refreshList(deviceId: deviceId)
-            
-            DispatchQueue.main.async {
-                self.loading = false
-            }
-        }
+//        if loading { return }
+//        loading = true
+//        
+//        DispatchQueue.global(qos: .userInitiated).async {
+//            let fileImported = self.adbHelper.importFile(
+//                deviceId: deviceId,
+//                filePath: filePath,
+//                targetPath: self.currentFolder?.fullPath ?? "/")
+//            
+//            self.refreshList(deviceId: deviceId)
+//            
+//            DispatchQueue.main.async {
+//                self.loading = false
+//            }
+//        }
     }
     
     func createFolder(deviceId : String){
-        if loading { return }
-        loading = true
-        
-        DispatchQueue.global(qos: .userInitiated).async {
-            self.adbHelper.createFolder(deviceId: deviceId, path: self.currentFolder?.fullPath ?? "/", name: self.createFolderAlertName)
-            
-            self.refreshList(deviceId: deviceId)
-            
-            DispatchQueue.main.async {
-                self.currentPath = self.currentFolder?.fullPath ?? "/" + self.createFolderAlertName
-                self.loading = false
-            }
-        }
+//        if loading { return }
+//        loading = true
+//        
+//        DispatchQueue.global(qos: .userInitiated).async {
+//            self.adbHelper.createFolder(deviceId: deviceId, path: self.currentFolder?.fullPath ?? "/", name: self.createFolderAlertName)
+//            
+//            self.refreshList(deviceId: deviceId)
+//            
+//            DispatchQueue.main.async {
+//                self.currentPath = self.currentFolder?.fullPath ?? "/" + self.createFolderAlertName
+//                self.loading = false
+//            }
+//        }
     }
     
     func prepareExport(deviceId : String, path: String) {

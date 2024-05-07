@@ -15,7 +15,7 @@ struct ToastModifier: ViewModifier {
             mainToastView()
         })
         .animation(.bouncy, value: toast)
-        .onChange(of: toast) { _ in
+        .onChange(of: toast) { _, _ in
             showToast()
         }
     }
@@ -26,8 +26,7 @@ struct ToastModifier: ViewModifier {
                 Spacer()
                 ToastView(
                     style: toast.style,
-                    message: toast.message,
-                    width: toast.width
+                    message: toast.message
                 )
             }
         }

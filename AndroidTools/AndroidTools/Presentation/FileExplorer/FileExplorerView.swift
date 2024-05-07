@@ -8,137 +8,115 @@
 import SwiftUI
 import UniformTypeIdentifiers.UTType
 
+struct IdentifiableFileExplorerItem: Identifiable {
+    let id: String
+    let item: FileExplorerItem
+
+    init(item: FileExplorerItem) {
+        self.id = item.name
+        self.item = item
+    }
+}
+
+
 struct FilesView: View {
     
     let deviceId : String
     
     @State private var viewModel = FilesViewModel()
-    @State private var searchQuery : String = ""
-    @State private var showImportFileDialog : Bool = false
-    @State private var showExportFileDialog : Bool = false
-    @State private var dropTargetted: Bool = false
+    @State private var selection: IdentifiableFileExplorerItem.ID? = nil
+    
+    private var itemDateFormatter: DateFormatter {
+        let formatter = DateFormatter()
+        formatter.dateStyle = .short
+        formatter.timeStyle = .short
+        return formatter
+    }
+
     
     var body: some View {
-        List(viewModel.currentFolder?.childrens ?? [], id: \.fullPath, selection: $viewModel.currentPath) { item in
-            HStack {
-                if let fileItem = item as? FileItem {
+        
+        let items = (viewModel.fileExplorerResult?.childrens ?? []).map { item in
+            IdentifiableFileExplorerItem(item: item)
+        }
+        
+        var currentItem: FileExplorerItem? {
+            return items.first { $0.id == selection }?.item
+        }
+
+
+        
+        Table(of: IdentifiableFileExplorerItem.self, selection: $selection){
+            TableColumn("Name") { wrapper in
+                if let fileItem = wrapper.item as? FileItem {
                     FileRow(name: fileItem.name)
-                } else if let folderItem = item as? FolderItem {
-                    Label(folderItem.name, systemImage: "folder")
+                }
+                else {
+                    Text(wrapper.item.name)
                 }
             }
-        }
-        .onDrop(of: [.item], isTargeted: $dropTargetted) { providers in
-            providers.first?.loadItem(forTypeIdentifier: UTType.item.identifier, options: nil) { (item, error) in
-                if let item = item as? URL {
-                    let fileUrl = item.startAccessingSecurityScopedResource() ? item : URL(fileURLWithPath: item.path)
-                    viewModel.importFile(deviceId: deviceId, filePath: fileUrl.path)
-                    item.stopAccessingSecurityScopedResource()
+            
+            TableColumn("Last Modified") { wrapper in
+                if let fileItem = wrapper.item as? FileItem {
+                    Text("\(fileItem.lastModificationDate, formatter: itemDateFormatter)")
+                    // Text(fileItem.lastModificationDate, style: .date)
+                } else {
+                    EmptyView()
                 }
             }
-            return true
-        }
-        .overlay {
-            if dropTargetted {
-                ZStack {
-                    Color.black.opacity(0.5)
-                    VStack(spacing: 8) {
-                        Image(systemName: "plus.circle.fill")
-                            .font(.system(size: 30))
-                        Text("Drop your file here...")
+            .width(140)
+            
+            TableColumn("Size"){ wrapper in
+                if let fileItem = wrapper.item as? FileItem {
+                    Text(fileItem.size.toSize())
+                }
+                else {
+                    EmptyView()
+                }
+            }
+            .width(80)
+        } rows: {
+            ForEach(items, id: \.id){ wrapper in
+                TableRow(wrapper)
+                    .contextMenu {
+                        Button("Rename") {
+                            // TODO open editor in inspector
+                        }
+                        Divider()
+                        Button("Delete", role: .destructive) {
+                            
+                        }
                     }
-                    .font(.title2)
-                    .foregroundColor(.white)
-                    .multilineTextAlignment(.center)
-                }
+                    
             }
         }
         .contextMenu(forSelectionType: String.self, menu: { _ in }) {_ in
-            viewModel.itemDoubleClicked(deviceId: deviceId)
-        }
-        .alert("Create folder", isPresented: $viewModel.showCreateFolderAlert){
-            TextField("Folder name", text: $viewModel.createFolderAlertName)
-            HStack {
-                Button("Create",action: {
-                    viewModel.createFolder(deviceId: deviceId)
-                })
-                    .disabled(viewModel.createFolderAlertName.isEmpty)
-                
-                Button("Cancel",action: {})
+            let currentItem = currentItem?.name
+            if viewModel.fileExplorerResult?.fullPath.isEmpty ?? false {
+                viewModel.getFiles(deviceId: deviceId, path: currentItem ?? "")
             }
-        } message: {
-            Text("The folder will be created at : \n \(viewModel.currentFolder?.fullPath ?? "/")")
+            else {
+                let path = "\(viewModel.fileExplorerResult?.fullPath ?? "")/\(currentItem ?? "")"
+                viewModel.getFiles(deviceId: deviceId, path: path)
+            }
+
         }
         .onAppear {
-            viewModel.getFiles(deviceId: deviceId, path:nil)
+            viewModel.getFiles(deviceId: deviceId)
         }
-        .onChange(of: deviceId, { oldValue, newValue in
-            viewModel.getFiles(deviceId: newValue, path:nil)
-        })
+        .onChange(of: deviceId) { _, newValue in
+            viewModel.getFiles(deviceId: newValue)
+        }
         .toolbar {
             ToolbarItemGroup(placement: .navigation) {
-                Button { viewModel.goBack(deviceId:deviceId) } label: {
+                Button { viewModel.getFiles(deviceId: deviceId, path: viewModel.fileExplorerResult?.path ?? "/") } label: {
                     Label("Go back", systemImage: "chevron.left")
                 }
-                .disabled(viewModel.currentFolder?.parent == nil)
-            }
-            ToolbarItemGroup {
-                Button { showImportFileDialog.toggle() } label: {
-                    Label("Upload file", systemImage: "square.and.arrow.up")
-                }
-                .disabled(viewModel.loading)
-                
-                Button {
-                    viewModel.prepareExport(deviceId: deviceId, path: viewModel.currentPath!)
-                    showExportFileDialog.toggle()
-                } label: {
-                    Label("Download file", systemImage: "square.and.arrow.down")
-                }
-                .disabled(viewModel.currentPath == nil || viewModel.loading)
-                
-                Button {viewModel.showCreateFolderAlert.toggle()} label: {
-                    Label("Create folder", systemImage: "folder.badge.plus")
-                }
-                
-                Button { viewModel.deleteFileExplorerItem(deviceId: deviceId, fullPath: viewModel.currentPath!) } label: {
-                    Label("Delete", systemImage: "trash")
-                }
-                .disabled(viewModel.currentPath == nil || viewModel.loading)
-                
-                Spacer()
-            }
-            
-            
-            ToolbarItemGroup {
-                Button {viewModel.refreshList(deviceId: deviceId)} label: {
-                    Label("Refresh", systemImage: "arrow.clockwise")
-                }
-                
-                TextField("Search a file", text: $searchQuery)
-                         .textFieldStyle(RoundedBorderTextFieldStyle())
-                         .frame(minWidth: 200)
+                .disabled(viewModel.loading || viewModel.fileExplorerResult?.name == "")
             }
         }
-        .navigationTitle(viewModel.currentFolder?.name ?? "")
-        .fileImporter(isPresented: $showImportFileDialog, allowedContentTypes: [UTType.item]) { result in
-            switch result {
-            case .success(let file):
-                viewModel.importFile(deviceId: deviceId,filePath: file.absoluteString)
-            case .failure(let error):
-                print(error.localizedDescription)
-            }
-        }
-        .fileExporter(isPresented: $showExportFileDialog, document: viewModel.exportedDocument, contentType: UTType.data, defaultFilename: viewModel.exportedDocument?.fileName ?? "") { result in
-             // Handle file save result
-             switch result {
-             case .success:
-                 print("File saved successfully")
-             case .failure(let error):
-                 print("Error saving file: \(error.localizedDescription)")
-             }
-         }
-
     }
+
 }
 
 #Preview {

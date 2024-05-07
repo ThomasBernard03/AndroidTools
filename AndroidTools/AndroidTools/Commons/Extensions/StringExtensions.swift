@@ -25,13 +25,15 @@ extension String {
         return String(self[..<range.lowerBound])
     }
     
-    func toFileItem(parent: FolderItem) -> [any FileExplorerItem] {
-        // Découpe la chaîne de caractères en lignes
+    func toFileItem(path : String) -> [any FileExplorerItem] {
         let lines = self.split(separator: "\n")
-        // Crée des tableaux vides pour les dossiers et fichiers
         var items: [any FileExplorerItem] = []
+        
+        let dateFormatter = DateFormatter()
+        dateFormatter.locale = Locale(identifier: "en_US_POSIX") // set locale to reliable US_POSIX
+        dateFormatter.dateFormat = "yyyy-MM-dd HH:mm"
+        
 
-        // Parcourt chaque ligne
         for line in lines {
             let components = line.split(separator: " ", maxSplits: 8, omittingEmptySubsequences: true)
 
@@ -44,9 +46,10 @@ extension String {
                 let filename = name.joined(separator: " ")
 
                 if permissions.first == "d" {
-                    items.append(FolderItem(parent: parent, name: filename, path: parent.fullPath, childrens: []))
+                    items.append(FolderItem(name: filename))
                 } else {
-                    items.append(FileItem(parent: parent, name: filename, path: parent.fullPath, size: size))
+                    let lastModificationDate = dateFormatter.date(from:"\(date) \(time)")!
+                    items.append(FileItem(name: filename, lastModificationDate: lastModificationDate, size: size))
                 }
             }
         }

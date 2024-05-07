@@ -42,26 +42,23 @@ class AdbHelper {
         
         
         let parent = FolderItem(
-            parent: nil,
-            name: path.isEmpty ? "/" : path.substringAfterLast("/"),
-            path: path.isEmpty ? "/" : "/" + path.substringBeforeLast("/"),
-            childrens: [])
+            name: path.isEmpty ? "/" : path.substringAfterLast("/"))
         
-        let childrens = result.toFileItem(parent:parent)
+//        let childrens = result.toFileItem(parent:parent)
         
-        parent.childrens = childrens
+//        parent.childrens = childrens
         
         return parent
     }
     
     func getFiles(deviceId : String, parent : FolderItem) -> FolderItem {
-        let finalPath = "/storage/emulated/0" + parent.fullPath
-        let result = runAdbCommand("-s \(deviceId) shell ls \(finalPath) -l")
-        
-        
-        let childrens = result.toFileItem(parent:parent)
-        
-        parent.childrens = childrens
+//        let finalPath = "/storage/emulated/0" + parent.fullPath
+//        let result = runAdbCommand("-s \(deviceId) shell ls \(finalPath) -l")
+//        
+//        
+//        let childrens = result.toFileItem(path:"")
+//        
+//        parent.childrens = childrens
         
         return parent
     }

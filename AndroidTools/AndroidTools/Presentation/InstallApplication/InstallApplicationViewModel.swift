@@ -21,7 +21,7 @@ final class InstallApplicationViewModel: ObservableObject {
         
         switch(result){
         case .success: 
-            self.toast = Toast(style: .success, message: "Installation of \(fileName) completed successfully", width: .infinity)
+            self.toast = Toast(style: .success, message: "Installation of \(fileName) completed successfully")
             break
         case .failure(let error):
             manageError(applicationName: fileName, error: error)
@@ -32,10 +32,10 @@ final class InstallApplicationViewModel: ObservableObject {
     private func manageError(applicationName : String, error : InstallApplicationError){
         switch(error){
         case .versionDowngradeError:
-            self.toast = Toast(style: .error, message: "Error during installation of \(applicationName) :\nA newer version is already installed", width: .infinity)
+            self.toast = Toast(style: .error, message: "Error during installation of \(applicationName) :\nA newer version is already installed")
             break
         case .unknownError(let message):
-            self.toast = Toast(style: .error, message: "Error during installation of \(applicationName) :\n\(message)", width: .infinity)
+            self.toast = Toast(style: .error, message: "Error during installation of \(applicationName) :\n\(message)")
             break
         }
     }
