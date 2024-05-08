@@ -11,10 +11,6 @@ class AdbHelper {
     
     let adbPath = "/usr/local/bin/adb"
     
-    init() {
-        // _ = runAdbCommand("root")
-    }
-    
     func getDevices() -> [DeviceListModel] {
         let command = "devices -l | awk 'NR>1 {print $1}'"
         let devicesResult = runAdbCommand(command)
@@ -42,7 +38,7 @@ class AdbHelper {
         let tempUrl = URL(fileURLWithPath: tempDirectory).appendingPathComponent(fileName)
 
         // Construire la commande ADB pour tirer le fichier de l'appareil
-        let pullCommand = "-s \(deviceId) pull '/storage/emulated/0\(filePath)' '\(tempUrl.path)'"
+        let pullCommand = "-s \(deviceId) pull '/storage/emulated/0/\(filePath)' '\(tempUrl.path)'"
         
         // Exécuter la commande ADB
         let result = runAdbCommand(pullCommand)
@@ -51,7 +47,7 @@ class AdbHelper {
     }
     
     func runAdbCommand(_ command: String) -> String {
-        print("Running command: adb \(command)")
+        print("Running command:\n adb \(command)")
         let task = Process()
         let pipe = Pipe()
 
@@ -63,7 +59,7 @@ class AdbHelper {
         
         let data = pipe.fileHandleForReading.readDataToEndOfFile()
         let output = String(data: data, encoding: .utf8)?.trimmingCharacters(in: .whitespacesAndNewlines) ?? ""
-        print("Result: \(output)")
+        print("Result:\n \(output)")
         return output
     }
 }

@@ -12,10 +12,13 @@ import UniformTypeIdentifiers
 @Observable
 final class FilesViewModel: ObservableObject {
     
+    private let adbHelper = AdbHelper()
     private let listFilesUseCase = ListFilesUseCase()
     private let createFolderUseCase = CreateFolderUseCase()
     private let deleteFileItemUseCase = DeleteFileItemUseCase()
     private let importFileUseCase = ImportFileUseCase()
+    
+    private var temporaryFilePath : String = ""
     
     var loading : Bool = true
     var fileExplorerResult: FileExplorerResultModel? = nil
@@ -82,12 +85,29 @@ final class FilesViewModel: ObservableObject {
     }
     
     
-    func prepareExport(deviceId : String, path: String) {
-//        let path = adbHelper.saveFileInTemporaryDirectory(deviceId: deviceId, filePath: path)
-//        if let loadedDocument = loadDocument(from: path) {
-//            exportedDocument = loadedDocument
-//        }
+    func prepareExport(deviceId : String, filePath: String) {
+        loading = true
+        DispatchQueue.global(qos: .userInitiated).async { [self] in
+            temporaryFilePath = adbHelper.saveFileInTemporaryDirectory(deviceId: deviceId, filePath: filePath)
+            if let loadedDocument = loadDocument(from: temporaryFilePath) {
+                DispatchQueue.main.async {
+                    self.exportedDocument = loadedDocument
+                    self.loading = false
+                }
+            }
+        }
      }
+    
+    func fileExported(){
+        do {
+            try FileManager.default.removeItem(at: URL(string: temporaryFilePath)!)
+            print("Temporary file \(temporaryFilePath) deleted")
+            temporaryFilePath = ""
+        }
+        catch {
+            print("Error when deleting temporary file: \(error)")
+        }
+    }
     
     private func loadDocument(from path: String) -> UniversalFileDocument? {
         let url = URL(fileURLWithPath: path)
@@ -96,7 +116,7 @@ final class FilesViewModel: ObservableObject {
             let contentType = UTType(filenameExtension: url.pathExtension) ?? .item
             return UniversalFileDocument(data: data, contentType: contentType, fileName: url.lastPathComponent)
         } catch {
-            print("Erreur lors du chargement du fichier : \(error)")
+            print("Error when loading file : \(error)")
             return nil
         }
     }

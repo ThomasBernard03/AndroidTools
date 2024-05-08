@@ -137,6 +137,7 @@ struct FilesView: View {
             }
         }
         .fileExporter(isPresented: $viewModel.showExportFileDialog, document: viewModel.exportedDocument, contentType: UTType.item, defaultFilename: viewModel.exportedDocument?.fileName) { result in
+            viewModel.fileExported()
              switch result {
              case .success:
                  print("File saved successfully")
@@ -152,53 +153,60 @@ struct FilesView: View {
         }
         .toolbar {
             ToolbarItemGroup(placement: .navigation) {
-                Button { viewModel.getFiles(deviceId: deviceId, path: viewModel.fileExplorerResult?.path ?? "/") } label: {
+                Button {
+                    selection = nil
+                    viewModel.getFiles(deviceId: deviceId, path: viewModel.fileExplorerResult?.path ?? "/")
+                } label: {
                     Label("Go back", systemImage: "chevron.left")
                 }
                 .disabled(viewModel.fileExplorerResult?.name == "")
             }
             
             ToolbarItemGroup {
-                Picker("View Mode", selection: $viewMode) {
-                    Label("Grid", systemImage: "square.grid.3x2")
-                        .tag(ViewMode.grid)
-                    Label("Table", systemImage: "tablecells")
-                        .tag(ViewMode.table)
+                HStack {
+                    Picker("View Mode", selection: $viewMode) {
+                        Label("Grid", systemImage: "square.grid.3x2")
+                            .tag(ViewMode.grid)
+                        Label("Table", systemImage: "tablecells")
+                            .tag(ViewMode.table)
+                    }
+                    .pickerStyle(.segmented)
+                    .help("Switch between Grid and Table")
+                    
+                    Divider()
+                    
+                    HStack {
+                        Button {
+                            let path = "\(viewModel.fileExplorerResult!.fullPath)/\(currentItem!.name)"
+                            viewModel.prepareExport(deviceId: deviceId, filePath: path)
+                            viewModel.showExportFileDialog.toggle()
+                        } label: {
+                            Label("Download file", systemImage: "square.and.arrow.down")
+                        }
+                        .disabled(selection == nil)
+                        
+                        Button { viewModel.showImportFileDialog.toggle() } label: {
+                            Label("Upload file", systemImage: "square.and.arrow.up")
+                        }
+                        Button { viewModel.showCreateFolderAlert.toggle() } label: {
+                            Label("Create folder", systemImage: "folder.badge.plus")
+                        }
+                        
+                        Button { viewModel.showDeleteItemAlert.toggle() } label: {
+                            Label("Delete", systemImage: "trash")
+                        }
+                        .disabled(selection == nil)
+                        
+                        Button {viewModel.getFiles(deviceId: deviceId, path: viewModel.fileExplorerResult!.fullPath)} label: {
+                            Label("Refresh", systemImage: "arrow.clockwise")
+                        }
+                        .disabled(viewModel.fileExplorerResult == nil)
+                    }
+                    .disabled(viewModel.loading)
                 }
-                .pickerStyle(.segmented)
-                .help("Switch between Grid and Table")
-            }
-            
-            ToolbarItemGroup {
-                
-                Button {
-                    //viewModel.prepareExport(deviceId: deviceId, path: viewModel.currentPath!)
-                    viewModel.showExportFileDialog.toggle()
-                } label: {
-                    Label("Download file", systemImage: "square.and.arrow.down")
-                }
-                .disabled(selection == nil)
-                
-                Button { viewModel.showImportFileDialog.toggle() } label: {
-                    Label("Upload file", systemImage: "square.and.arrow.up")
-                }
-                Button { viewModel.showCreateFolderAlert.toggle() } label: {
-                    Label("Create folder", systemImage: "folder.badge.plus")
-                }
-                
-                Button { viewModel.showDeleteItemAlert.toggle() } label: {
-                    Label("Delete", systemImage: "trash")
-                }
-                .disabled(selection == nil)
-                
-                Button {viewModel.getFiles(deviceId: deviceId, path: viewModel.fileExplorerResult!.fullPath)} label: {
-                    Label("Refresh", systemImage: "arrow.clockwise")
-                }
-                .disabled(viewModel.fileExplorerResult == nil)
-            
             }
         }
-        .disabled(viewModel.loading)
+        
         .navigationTitle(viewModel.fileExplorerResult?.name ?? "")
     }
 
