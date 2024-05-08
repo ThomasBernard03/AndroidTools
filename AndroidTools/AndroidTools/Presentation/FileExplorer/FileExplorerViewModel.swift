@@ -22,22 +22,9 @@ final class FilesViewModel: ObservableObject {
     var showCreateFolderAlert = false
     var showDeleteItemAlert = false
     var showExportFileDialog : Bool = false
-    
-    private let adbHelper = AdbHelper()
-    
-    var exportedDocument : UniversalFileDocument? = nil
-    
-    var currentPath : String? = nil
-    
-    
-    var createFolderAlertName = ""
-    
-    var showExporter = false
-    
     var showImportFileDialog : Bool = false
-    
-    var dropTargetted: Bool = false
-    
+    var createFolderAlertName = ""
+    var exportedDocument : UniversalFileDocument? = nil
     
     func getFiles(deviceId: String) {
         loading = true
@@ -93,30 +80,13 @@ final class FilesViewModel: ObservableObject {
             }
         }
     }
-
     
-    func refreshList(deviceId : String){
-        DispatchQueue.global(qos: .userInitiated).async { [self] in
-//            if let parent = currentFolder {
-//                let result = self.adbHelper.getFiles(deviceId: deviceId, parent: parent)
-//
-//                DispatchQueue.main.async {
-//                    self.currentFolder = result
-//                }
-//            }
-        }
-    }
-    
-    
-
-    
-
     
     func prepareExport(deviceId : String, path: String) {
-        let path = adbHelper.saveFileInTemporaryDirectory(deviceId: deviceId, filePath: path)
-        if let loadedDocument = loadDocument(from: path) {
-            exportedDocument = loadedDocument
-        }
+//        let path = adbHelper.saveFileInTemporaryDirectory(deviceId: deviceId, filePath: path)
+//        if let loadedDocument = loadDocument(from: path) {
+//            exportedDocument = loadedDocument
+//        }
      }
     
     private func loadDocument(from path: String) -> UniversalFileDocument? {

@@ -61,6 +61,7 @@
 		81F41C5D2BEA7B3D005F1730 /* CreateFolderUseCase.swift in Sources */ = {isa = PBXBuildFile; fileRef = 81F41C5C2BEA7B3D005F1730 /* CreateFolderUseCase.swift */; };
 		81F41C5F2BEA95FB005F1730 /* DeleteFileItemUseCase.swift in Sources */ = {isa = PBXBuildFile; fileRef = 81F41C5E2BEA95FB005F1730 /* DeleteFileItemUseCase.swift */; };
 		81F41C612BEA995D005F1730 /* ImportFileUseCase.swift in Sources */ = {isa = PBXBuildFile; fileRef = 81F41C602BEA995D005F1730 /* ImportFileUseCase.swift */; };
+		81F41C632BEAA7B0005F1730 /* GridView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 81F41C622BEAA7B0005F1730 /* GridView.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
@@ -120,6 +121,7 @@
 		81F41C5C2BEA7B3D005F1730 /* CreateFolderUseCase.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CreateFolderUseCase.swift; sourceTree = "<group>"; };
 		81F41C5E2BEA95FB005F1730 /* DeleteFileItemUseCase.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DeleteFileItemUseCase.swift; sourceTree = "<group>"; };
 		81F41C602BEA995D005F1730 /* ImportFileUseCase.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ImportFileUseCase.swift; sourceTree = "<group>"; };
+		81F41C622BEAA7B0005F1730 /* GridView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = GridView.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -219,6 +221,7 @@
 				81E6A75A2BC5CDC20034EBFB /* FileExplorerView.swift */,
 				817EE8582BC81D4100740D4A /* FileExplorerViewModel.swift */,
 				81F41C5A2BEA4DF4005F1730 /* TableView.swift */,
+				81F41C622BEAA7B0005F1730 /* GridView.swift */,
 			);
 			path = FileExplorer;
 			sourceTree = "<group>";
@@ -482,6 +485,7 @@
 				817EE8592BC81D4100740D4A /* FileExplorerViewModel.swift in Sources */,
 				81E982372BDD3A740004B154 /* CheckForUpdateViewModel.swift in Sources */,
 				816A1D3C2BE8CAC300E7DA71 /* ApplicationRepositoryImpl.swift in Sources */,
+				81F41C632BEAA7B0005F1730 /* GridView.swift in Sources */,
 				812A62BF2BC708D400388105 /* DeviceInformationModel.swift in Sources */,
 				810E8E1E2BE92EE600ED561A /* FileExplorerResultModel.swift in Sources */,
 				812AB6EB2BD3AFFE00DB60A5 /* HomeView.swift in Sources */,

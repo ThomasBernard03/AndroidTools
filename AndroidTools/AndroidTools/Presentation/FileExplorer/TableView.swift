@@ -11,7 +11,9 @@ struct TableView: View {
     @Binding var selection: IdentifiableFileExplorerItem.ID?
     let items: [IdentifiableFileExplorerItem]
     let fileExplorerResult : FileExplorerResultModel
+    let onDeleteFileItem : () -> Void
     let onFetchFiles: (String) -> Void
+    
     
     private var currentItem: FileExplorerItem? {
         return items.first { $0.id == selection }?.item
@@ -34,7 +36,7 @@ struct TableView: View {
                 }
             }
             
-            TableColumn("Last Modified") { wrapper in
+            TableColumn("Date modified") { wrapper in
                 if let fileItem = wrapper.item as? FileItem {
                     Text("\(fileItem.lastModificationDate, formatter: itemDateFormatter)")
                 } else {
@@ -60,7 +62,8 @@ struct TableView: View {
                         }
                         Divider()
                         Button("Delete", role: .destructive) {
-                            // TODO: handle delete
+                            selection = wrapper.id
+                            onDeleteFileItem()
                         }
                     }
             }

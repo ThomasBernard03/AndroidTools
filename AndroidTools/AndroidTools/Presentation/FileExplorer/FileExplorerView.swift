@@ -18,6 +18,11 @@ struct IdentifiableFileExplorerItem: Identifiable {
     }
 }
 
+enum ViewMode: Int {
+  case grid
+  case table
+}
+
 
 struct FilesView: View {
     
@@ -26,6 +31,8 @@ struct FilesView: View {
     @State private var viewModel = FilesViewModel()
     @State private var selection: IdentifiableFileExplorerItem.ID? = nil
     @State private var dropTargetted: Bool = false
+    
+    @State private var viewMode: ViewMode = .table
     
     var body: some View {
         
@@ -39,9 +46,34 @@ struct FilesView: View {
         
         ZStack(alignment:.bottom) {
             if let safeFileExplorerResult = viewModel.fileExplorerResult {
-                TableView(selection: $selection, items: items, fileExplorerResult: safeFileExplorerResult) { path in
-                    selection = nil
-                    viewModel.getFiles(deviceId: deviceId, path: path)
+                if viewMode == .table {
+                    TableView(
+                        selection: $selection,
+                        items: items,
+                        fileExplorerResult: safeFileExplorerResult,
+                        onDeleteFileItem : {
+                            viewModel.showDeleteItemAlert.toggle()
+                        }
+                    ){ path in
+                        selection = nil
+                        viewModel.getFiles(deviceId: deviceId, path: path)
+                    }
+                }
+                else if viewMode == .grid {
+                    GridView(
+                        selection: $selection,
+                        items: items,
+                        fileExplorerResult: safeFileExplorerResult,
+                        onDeleteFileItem : {
+                            viewModel.showDeleteItemAlert.toggle()
+                        }
+                    ){ path in
+                        selection = nil
+                        viewModel.getFiles(deviceId: deviceId, path: path)
+                    }
+                }
+                else {
+                    EmptyView()
                 }
             }
             
@@ -104,6 +136,14 @@ struct FilesView: View {
                 print(error.localizedDescription)
             }
         }
+        .fileExporter(isPresented: $viewModel.showExportFileDialog, document: viewModel.exportedDocument, contentType: UTType.item, defaultFilename: viewModel.exportedDocument?.fileName) { result in
+             switch result {
+             case .success:
+                 print("File saved successfully")
+             case .failure(let error):
+                 print("Error saving file: \(error.localizedDescription)")
+             }
+         }
         .onAppear {
             viewModel.getFiles(deviceId: deviceId)
         }
@@ -119,6 +159,25 @@ struct FilesView: View {
             }
             
             ToolbarItemGroup {
+                Picker("View Mode", selection: $viewMode) {
+                    Label("Grid", systemImage: "square.grid.3x2")
+                        .tag(ViewMode.grid)
+                    Label("Table", systemImage: "tablecells")
+                        .tag(ViewMode.table)
+                }
+                .pickerStyle(.segmented)
+                .help("Switch between Grid and Table")
+            }
+            
+            ToolbarItemGroup {
+                
+                Button {
+                    //viewModel.prepareExport(deviceId: deviceId, path: viewModel.currentPath!)
+                    viewModel.showExportFileDialog.toggle()
+                } label: {
+                    Label("Download file", systemImage: "square.and.arrow.down")
+                }
+                .disabled(selection == nil)
                 
                 Button { viewModel.showImportFileDialog.toggle() } label: {
                     Label("Upload file", systemImage: "square.and.arrow.up")
@@ -130,7 +189,7 @@ struct FilesView: View {
                 Button { viewModel.showDeleteItemAlert.toggle() } label: {
                     Label("Delete", systemImage: "trash")
                 }
-                .disabled(selection == nil)                
+                .disabled(selection == nil)
                 
                 Button {viewModel.getFiles(deviceId: deviceId, path: viewModel.fileExplorerResult!.fullPath)} label: {
                     Label("Refresh", systemImage: "arrow.clockwise")
