@@ -172,6 +172,7 @@ struct FilesView: View {
                     }
                     .pickerStyle(.segmented)
                     .help("Switch between Grid and Table")
+                    .disabled(true)
                     
                     Divider()
                     
