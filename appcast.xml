@@ -8,7 +8,7 @@
             <sparkle:version>2</sparkle:version>
             <sparkle:shortVersionString>1.1.0</sparkle:shortVersionString>
             <sparkle:minimumSystemVersion>14.0</sparkle:minimumSystemVersion>
-            <enclosure url="https://github.com/ThomasBernard03/AndroidTools/releases/download/1.1.0/AndroidTools.dmg" length="9669689" type="application/octet-stream" sparkle:edSignature="4ucTg64bgMqfGAjXwCnuTh27L6FQVwbj+ylV8+g9FLr+m8U0sDAZs/97IYtrd7+7wUrXqKVzfkVBt3h9ZS60Bg=="/>
+            <enclosure url="https://github.com/ThomasBernard03/AndroidTools/releases/download/1.2.0/AndroidTools.dmg" length="9669689" type="application/octet-stream" sparkle:edSignature="4ucTg64bgMqfGAjXwCnuTh27L6FQVwbj+ylV8+g9FLr+m8U0sDAZs/97IYtrd7+7wUrXqKVzfkVBt3h9ZS60Bg=="/>
         </item>
     </channel>
 </rss>
