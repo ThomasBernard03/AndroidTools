@@ -19,8 +19,33 @@ struct LogcatView: View {
     var body: some View {
         VStack {
             HStack {
+                Menu(viewModel.filterPackage ?? "All packages") {
+                    Button("Display all packages") {
+                        viewModel.filterPackage = nil
+                    }
+                    
+                    Divider()
+                    
+                    ForEach(Array(viewModel.pidToPackageMap.keys), id: \.self) { pid in
+                        // Obtenir le nom du package à partir du dictionnaire en utilisant le PID
+                        if let packageName = viewModel.pidToPackageMap[pid] {
+                            Button("\(packageName) (\(pid))") {
+                                // Mise à jour du filtre pour afficher uniquement les logs de ce package
+                                viewModel.filterPackage = packageName
+                            }
+                        }
+                    }
+                    
+      
+                }
+
+                
                 TextField("Package", text: $viewModel.package)
+                
+                
+
             }
+            .padding()
             
 //            Table(viewModel.logEntries){
 //                TableColumn("Date") { entry in
@@ -42,12 +67,15 @@ struct LogcatView: View {
 //                    Text(entry.message)
 //                }
 //            }
+            
+            List(viewModel.logEntries){
+                LogEntryItem(date: $0.datetime, processId: $0.processID, threadId: $0.threadID, tag: $0.tag, packageName: $0.packageName, level: $0.level, message: $0.message)
+                    .listRowSeparator(.hidden)
+                    .listRowInsets(.init(top: 0, leading: 0, bottom: 0, trailing: 0))
+            }
+            
 
-                List(viewModel.logEntries){
-                    LogEntryItem(date: $0.datetime, processId: $0.processID, threadId: $0.threadID, tag: $0.tag, packageName: $0.packageName, level: $0.level, message: $0.message)
-                        .listRowSeparator(.hidden)
-                        .listRowInsets(.init(top: 0, leading: 0, bottom: 0, trailing: 0))
-                }
+
             
 
         }

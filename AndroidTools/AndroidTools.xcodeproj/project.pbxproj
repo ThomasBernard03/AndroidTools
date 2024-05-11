@@ -41,6 +41,7 @@
 		817854852BC59F6500B5B2EE /* Preview Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 817854842BC59F6500B5B2EE /* Preview Assets.xcassets */; };
 		817EE8592BC81D4100740D4A /* FileExplorerViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 817EE8582BC81D4100740D4A /* FileExplorerViewModel.swift */; };
 		817EE85D2BC8247F00740D4A /* FileItem.swift in Sources */ = {isa = PBXBuildFile; fileRef = 817EE85C2BC8247F00740D4A /* FileItem.swift */; };
+		81A067C72BEEBA0100E83DEF /* GetAdbVersionUseCase.swift in Sources */ = {isa = PBXBuildFile; fileRef = 81A067C62BEEBA0100E83DEF /* GetAdbVersionUseCase.swift */; };
 		81B7900D2BEBA7E5008E7359 /* LogcatViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 81B7900C2BEBA7E5008E7359 /* LogcatViewModel.swift */; };
 		81B7900F2BEBA7F3008E7359 /* LogcatView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 81B7900E2BEBA7F3008E7359 /* LogcatView.swift */; };
 		81B790112BEBA9E8008E7359 /* LogEntryModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 81B790102BEBA9E8008E7359 /* LogEntryModel.swift */; };
@@ -108,6 +109,7 @@
 		817854862BC59F6500B5B2EE /* AndroidTools.entitlements */ = {isa = PBXFileReference; lastKnownFileType = text.plist.entitlements; path = AndroidTools.entitlements; sourceTree = "<group>"; };
 		817EE8582BC81D4100740D4A /* FileExplorerViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FileExplorerViewModel.swift; sourceTree = "<group>"; };
 		817EE85C2BC8247F00740D4A /* FileItem.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FileItem.swift; sourceTree = "<group>"; };
+		81A067C62BEEBA0100E83DEF /* GetAdbVersionUseCase.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = GetAdbVersionUseCase.swift; sourceTree = "<group>"; };
 		81B7900C2BEBA7E5008E7359 /* LogcatViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LogcatViewModel.swift; sourceTree = "<group>"; };
 		81B7900E2BEBA7F3008E7359 /* LogcatView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LogcatView.swift; sourceTree = "<group>"; };
 		81B790102BEBA9E8008E7359 /* LogEntryModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LogEntryModel.swift; sourceTree = "<group>"; };
@@ -389,6 +391,7 @@
 				81F41C5C2BEA7B3D005F1730 /* CreateFolderUseCase.swift */,
 				81F41C5E2BEA95FB005F1730 /* DeleteFileItemUseCase.swift */,
 				81F41C602BEA995D005F1730 /* ImportFileUseCase.swift */,
+				81A067C62BEEBA0100E83DEF /* GetAdbVersionUseCase.swift */,
 			);
 			path = UseCases;
 			sourceTree = "<group>";
@@ -485,6 +488,7 @@
 				81E9822D2BDD06600004B154 /* InstallApplicationUseCase.swift in Sources */,
 				816A1D3A2BE8CAA300E7DA71 /* ApplicationRepository.swift in Sources */,
 				812399C82BDC3CC7004219C9 /* ToastView.swift in Sources */,
+				81A067C72BEEBA0100E83DEF /* GetAdbVersionUseCase.swift in Sources */,
 				81D04F5A2BCA4B3400B04FAB /* FolderItem.swift in Sources */,
 				81F41C5B2BEA4DF4005F1730 /* TableView.swift in Sources */,
 				816A1D402BE8CDE000E7DA71 /* InstallApplicationError.swift in Sources */,

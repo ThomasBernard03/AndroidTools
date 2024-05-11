@@ -6,7 +6,7 @@ struct SettingsView: View {
         case general, advanced
     }
     
-    private let viewModel = SettingsViewModel()
+    @StateObject private var viewModel = SettingsViewModel()
     
     private let appIcons: [String] = ["AppIconDark", "AppIconLight", "AppIconAndroid"]
     private let modes : [String] = ["Automatic", "Dark", "Light"]
@@ -14,17 +14,32 @@ struct SettingsView: View {
     @AppStorage("mode") private var mode = "Automatic"
     @AppStorage("appIconName") private var appIconName = "AppIconDark"
     
+    @AppStorage("adbPath") private var adbPath = "/usr/local/bin/adb"
+    
     
     // State to track the currently selected icon
     @State private var selectedIcon: String = (NSApplication.shared.applicationIconImage.name() ?? "")
     
+    
+    private func openFinderToSelectADB() {
+        let panel = NSOpenPanel()
+        panel.canChooseFiles = true
+        panel.canChooseDirectories = false
+        panel.allowsMultipleSelection = false
+        panel.directoryURL = URL(fileURLWithPath: adbPath)
+        
+        panel.begin { response in
+            if response == .OK, let url = panel.url {
+                self.adbPath = url.path
+                viewModel.getAdbVersion()
+            }
+        }
+    }
+    
     var body: some View {
         Form {
             Group {
-                
-
-
-                Section(header: Text("Apparence").padding(.horizontal)) {
+                Section(header: Text("Apparence")) {
                     VStack {
                         Picker("", selection: $mode) {
                             ForEach(modes, id: \.self) { mode in
@@ -70,6 +85,26 @@ struct SettingsView: View {
                         Text("Check for updates")
                         
                     }.buttonStyle(LargeButtonStyle())
+                    
+                    
+                    TextField("", text: $adbPath)
+                        .disabled(true)
+                    
+
+                    
+                    HStack {
+                        Button("Change location"){
+                            openFinderToSelectADB()
+                        }
+                        
+                        Button("Check installation") {
+                            viewModel.getAdbVersion()
+                        }
+                    }
+                    
+                    Text(viewModel.adbVersion)
+                    
+  
 
                     
                     
@@ -78,11 +113,15 @@ struct SettingsView: View {
             
             Spacer()
         }
+        .onAppear {
+            viewModel.getAdbVersion()
+        }
         
 
 
 
     }
+
 }
 
 struct SettingsView_Previews: PreviewProvider {

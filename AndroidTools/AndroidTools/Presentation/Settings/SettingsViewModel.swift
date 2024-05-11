@@ -8,8 +8,12 @@
 import Foundation
 import Sparkle
 
-class SettingsViewModel {
+@Observable
+class SettingsViewModel : ObservableObject {
     let updaterController : SPUStandardUpdaterController
+    private let getAdbVersionUseCase : GetAdbVersionUseCase = GetAdbVersionUseCase()
+    
+    var adbVersion : String = ""
     
     init(){
         updaterController = SPUStandardUpdaterController(startingUpdater: true, updaterDelegate: nil, userDriverDelegate: nil)
@@ -17,5 +21,10 @@ class SettingsViewModel {
     
     func checkForUpdates(){
         updaterController.updater.checkForUpdates()
+    }
+    
+    func getAdbVersion(){
+        adbVersion = ""
+        adbVersion = getAdbVersionUseCase.execute()
     }
 }

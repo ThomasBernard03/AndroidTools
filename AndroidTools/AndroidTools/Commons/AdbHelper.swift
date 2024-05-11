@@ -9,7 +9,9 @@ import Foundation
 
 class AdbHelper {
     
-    let adbPath = "/usr/local/bin/adb"
+    var adbPath: String {
+         UserDefaults.standard.string(forKey: "adbPath") ?? "/usr/local/bin/adb"
+     }
     
     func getDevices() -> [DeviceListModel] {
         let command = "devices -l | awk 'NR>1 {print $1}'"

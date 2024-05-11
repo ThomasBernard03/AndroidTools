@@ -9,9 +9,10 @@ class LogcatViewModel : ObservableObject {
     @Published var logLevel: LogLevel? = nil
     
     @Published var logEntries: [LogEntryModel] = []
+    @Published var filterPackage : String? = nil
     
     private var buffer: String = ""
-    private var pidToPackageMap: [Int: String] = [:]
+    @Published var pidToPackageMap: [Int: String] = [:]
 
     func getLogcat(deviceId: String) {
         DispatchQueue.global(qos: .userInitiated).async { [self] in
