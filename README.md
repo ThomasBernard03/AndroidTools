@@ -18,15 +18,13 @@ Android tools makes the communication between Macos and Android devices easier. 
 
 You can install application from Github releases, using .dmg file. In app update is available to keep your application up to date.
 
-https://github.com/ThomasBernard03/AndroidTools/assets/67638928/ff896cb9-346e-4c6a-93a1-3faa6c21141d
-
 ## Features
 
 ### 💾 Install Applications 
 
 You can install an application from any .apk file on your Mac. You can drag and drop it into the application, or load it from the finder.
 
-
+https://github.com/ThomasBernard03/AndroidTools/assets/67638928/ff896cb9-346e-4c6a-93a1-3faa6c21141d
 
 ### 📁 File explorer
 
