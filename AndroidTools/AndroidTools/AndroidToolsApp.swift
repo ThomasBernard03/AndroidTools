@@ -11,7 +11,7 @@ import Sparkle
 @main
 struct AndroidToolsApp: App {
     
-    @AppStorage("mode") private var mode = "Automatic"
+    @AppStorage("mode") private var mode = Constants.appearanceModes.first!
     private let updaterController : SPUStandardUpdaterController
     
     init(){
@@ -19,9 +19,6 @@ struct AndroidToolsApp: App {
     }
     
     var body: some Scene {
-        
-        
-    
         
         WindowGroup {
             SideBarView()
@@ -36,6 +33,7 @@ struct AndroidToolsApp: App {
         
         Settings {
             SettingsView()
+                .frame(width: 500, height: 200)
                 .padding()
                 .preferredColorScheme(determineColorScheme(mode))
         }
