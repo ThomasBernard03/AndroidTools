@@ -18,6 +18,7 @@ Android tools makes the communication between Macos and Android devices easier. 
 
 You can install application from Github releases, using .dmg file. In app update is available to keep your application up to date.
 
+https://github.com/ThomasBernard03/AndroidTools/assets/67638928/ff896cb9-346e-4c6a-93a1-3faa6c21141d
 
 ## Features
 
@@ -25,9 +26,6 @@ You can install application from Github releases, using .dmg file. In app update
 
 You can install an application from any .apk file on your Mac. You can drag and drop it into the application, or load it from the finder.
 
-<video width="620" controls>
-  <source src="Documentation/application-installer.mov" type="video/mp4">
-</video>
 
 
 ### 📁 File explorer
@@ -38,10 +36,8 @@ The File Explorer in AndroidTools allows for easy and intuitive file management 
 - Deleting Files and Folders: Easily delete files or folders from your Android device with a simple action in the explorer interface.
 - Downloading Files: Download files from your Android device to your Mac to back up data or for local use.
 
-<video width="620" controls>
-  <source src="Documentation/file-explorer.mov" type="video/mp4">
-</video>
 
+https://github.com/ThomasBernard03/AndroidTools/assets/67638928/73b733b6-b16f-4701-8f4f-6e36daf0ddd4
 
 
 ### 🚀 Road map
