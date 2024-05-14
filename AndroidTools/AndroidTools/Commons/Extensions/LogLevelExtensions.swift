@@ -9,7 +9,7 @@ import Foundation
 import SwiftUI
 
 extension LogLevel {
-    func backgroundColor() -> Color {
+    func color() -> Color {
         switch(self){
         case .verbose:
             Color("VerboseLogLevel")
