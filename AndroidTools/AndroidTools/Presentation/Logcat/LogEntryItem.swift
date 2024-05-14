@@ -25,7 +25,7 @@ struct LogEntryItem: View {
     var body: some View {
         HStack {
             Text("\(date, formatter: dateFormatter)")
-                .frame(width: 160, alignment: .leading)
+                .frame(width: 150, alignment: .leading)
             
             Text("\(processId)-\(threadId)")
                 .frame(width: 90)
@@ -41,9 +41,8 @@ struct LogEntryItem: View {
             
             Text(message)
                 .foregroundColor(level.color())
-                .fixedSize(horizontal: false, vertical:true)
+                .fixedSize(horizontal: true, vertical:true)
         }
-        .lineLimit(1)
     }
 }
 

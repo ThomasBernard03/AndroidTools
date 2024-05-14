@@ -12,8 +12,9 @@ class LogcatViewModel : ObservableObject {
     @Published var logEntries: [LogEntryModel] = []
     @Published var filterPackage : String? = nil
     
+    @Published var stickyList : Bool = false
+    
     private var buffer: String = ""
-    @Published var pidToPackageMap: [Int: String] = [:]
 
     func getLogcat(deviceId: String) {
         loading = true

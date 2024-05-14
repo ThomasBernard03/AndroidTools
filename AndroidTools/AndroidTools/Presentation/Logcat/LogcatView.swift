@@ -13,48 +13,30 @@ struct LogcatView: View {
     @StateObject private var viewModel = LogcatViewModel()
     
 
-    
     var body: some View {
         ZStack(alignment:.bottom) {
             VStack {
-                HStack {
-                    Menu(viewModel.filterPackage ?? "All packages") {
-                        Button("Display all packages") {
-                            viewModel.filterPackage = nil
-                        }
-                        
-                        Divider()
-                        
-                        ForEach(Array(viewModel.pidToPackageMap.keys), id: \.self) { pid in
-                            if let packageName = viewModel.pidToPackageMap[pid] {
-                                Button("\(packageName) (\(pid))") {
-                                    // Mise à jour du filtre pour afficher uniquement les logs de ce package
-                                    viewModel.filterPackage = packageName
-                                }
-                            }
-                        }
-                        
-          
-                    }
-
-                    
-                    TextField("Package", text: $viewModel.package)
-                    
-                    
-
-                }
-                .padding()
-        
                 ScrollViewReader { proxy in
                     List(viewModel.logEntries){
                         LogEntryItem(date: $0.datetime, processId: $0.processID, threadId: $0.threadID, tag: $0.tag, level: $0.level, message: $0.message)
                             .listRowSeparator(.hidden)
                             .listRowInsets(.init(top: 0, leading: 0, bottom: 0, trailing: 0))
                     }
-                    .onChange(of: viewModel.logEntries, { oldValue, newValue in
+                    
+
+                    .onChange(of: viewModel.stickyList, { _, sticky in
                         if let lastId = viewModel.logEntries.last?.id {
                             withAnimation {
                                 proxy.scrollTo(lastId, anchor: .bottom)
+                            }
+                        }
+                    })
+                    .onChange(of: viewModel.logEntries, { _, _ in
+                        if viewModel.stickyList {
+                            if let lastId = viewModel.logEntries.last?.id {
+                                withAnimation {
+                                    proxy.scrollTo(lastId, anchor: .bottom)
+                                }
                             }
                         }
                     })
@@ -71,9 +53,20 @@ struct LogcatView: View {
             viewModel.getLogcat(deviceId: deviceId)
         }
         .toolbar {
-            Button { } label: {
-                Label("Stick", systemImage: "arrow.down")
+            if viewModel.stickyList {
+                Button { viewModel.stickyList.toggle() } label: {
+                    Label("Stick", systemImage: "arrow.down")
+                }
+                .background(.black.opacity(0.1))
+                .cornerRadius(6)
+                
             }
+            else {
+                Button { viewModel.stickyList.toggle() } label: {
+                    Label("Stick", systemImage: "arrow.down")
+                }
+            }
+
             
             Button { } label: {
                 Label("Refresh", systemImage: "arrow.clockwise")
