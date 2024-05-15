@@ -60,6 +60,20 @@ struct SideBarView: View {
                         SideBarItem(label:"Files", systemImage: "folder")
                     }
                     .disabled(viewModel.devices.isEmpty)
+                    
+                    NavigationLink(destination: LogcatView(deviceId: viewModel.selectedDevice?.id ?? "")) {
+                        Label {
+                            Text("Logcat")
+                        } icon: {
+                            Image("logcat")
+                                .resizable()
+                                .scaledToFit()
+                                .frame(width: 16, height: 16)
+                        }
+                        .padding(.vertical, 4)
+
+                    }
+                    .disabled(viewModel.devices.isEmpty)
                 }
                 .listStyle(SidebarListStyle())
                 .safeAreaInset(edge: .bottom, spacing: 0) {

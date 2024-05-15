@@ -56,5 +56,38 @@ extension String {
         
         return items
     }
+    
+    /**
+     Exemples :
+     05-13 17:54:38.765 26819 27857 I okhttp.OkHttpClient:         {
+     05-13 17:54:38.554 26819 27857 I okhttp.OkHttpClient: --> END GET
+     05-13 17:54:37.995  1684  1700 W android.os.Debug: failed to get memory consumption info: -1
+     */
+    func toLogcatEntry() -> LogEntryModel? {
+        let components = self.split(separator: " ", maxSplits: 5)
+        
+        let dateFormatter = DateFormatter()
+        dateFormatter.dateFormat = "MM-dd HH:mm:ss.SSS"
+        guard let date = dateFormatter.date(from: "\(components[0]) \(components[1])") else {
+            return nil
+        }
+        
+        guard let processId = Int(components[2]), let threadId = Int(components[3]) else {
+            return nil
+        }
+        
+        guard let level = LogLevel(rawValue: String(components[4])) else {
+            return nil
+        }
+        
+        let tagAndMessage = components[5].split(separator: ":", maxSplits: 1, omittingEmptySubsequences: false)
+        guard let tag = tagAndMessage.first?.trimmingCharacters(in: .whitespaces),
+              let message = tagAndMessage.last?.trimmingCharacters(in: .whitespaces) else {
+            return nil
+        }
+        
+        
+        return LogEntryModel(datetime: date, processID: processId, threadID: threadId, level: level, tag: tag, message: message)
+    }
 
 }

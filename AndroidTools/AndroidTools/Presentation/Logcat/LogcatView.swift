@@ -12,80 +12,61 @@ struct LogcatView: View {
     
     @StateObject private var viewModel = LogcatViewModel()
     
-    private func dateStyleFormatter() -> Date.FormatStyle {
-        return Date.FormatStyle(date: .numeric, time: .standard)
-    }
-    
+
     var body: some View {
-        VStack {
-            HStack {
-                Menu(viewModel.filterPackage ?? "All packages") {
-                    Button("Display all packages") {
-                        viewModel.filterPackage = nil
+        ZStack(alignment:.bottom) {
+            VStack {
+                ScrollViewReader { proxy in
+                    List(viewModel.logEntries){
+                        LogEntryItem(date: $0.datetime, processId: $0.processID, threadId: $0.threadID, tag: $0.tag, level: $0.level, message: $0.message)
+                            .listRowSeparator(.hidden)
+                            .listRowInsets(.init(top: 0, leading: 0, bottom: 0, trailing: 0))
                     }
                     
-                    Divider()
-                    
-                    ForEach(Array(viewModel.pidToPackageMap.keys), id: \.self) { pid in
-                        // Obtenir le nom du package à partir du dictionnaire en utilisant le PID
-                        if let packageName = viewModel.pidToPackageMap[pid] {
-                            Button("\(packageName) (\(pid))") {
-                                // Mise à jour du filtre pour afficher uniquement les logs de ce package
-                                viewModel.filterPackage = packageName
+
+                    .onChange(of: viewModel.stickyList, { _, sticky in
+                        if let lastId = viewModel.logEntries.last?.id {
+                            withAnimation {
+                                proxy.scrollTo(lastId, anchor: .bottom)
                             }
                         }
-                    }
-                    
-      
+                    })
+                    .onChange(of: viewModel.logEntries, { _, _ in
+                        if viewModel.stickyList {
+                            if let lastId = viewModel.logEntries.last?.id {
+                                withAnimation {
+                                    proxy.scrollTo(lastId, anchor: .bottom)
+                                }
+                            }
+                        }
+                    })
                 }
-
-                
-                TextField("Package", text: $viewModel.package)
-                
-                
-
-            }
-            .padding()
-            
-//            Table(viewModel.logEntries){
-//                TableColumn("Date") { entry in
-//                    Text("\(entry.datetime.ISO8601Format())")
-//                }
-//                TableColumn("ProcessId-ThreadId") { entry in
-//                    Text("\(entry.processID)-\(entry.threadID)")
-//                }
-//                TableColumn("Tag") { entry in
-//                    Text(entry.tag)
-//                }
-//                TableColumn("Package") { entry in
-//                    Text(entry.packageName)
-//                }
-//                TableColumn("Level") { entry in
-//                    Text(entry.level.rawValue)
-//                }
-//                TableColumn("Message") { entry in
-//                    Text(entry.message)
-//                }
-//            }
-            
-            List(viewModel.logEntries){
-                LogEntryItem(date: $0.datetime, processId: $0.processID, threadId: $0.threadID, tag: $0.tag, packageName: $0.packageName, level: $0.level, message: $0.message)
-                    .listRowSeparator(.hidden)
-                    .listRowInsets(.init(top: 0, leading: 0, bottom: 0, trailing: 0))
             }
             
-
-
-            
-
+            if viewModel.loading {
+                ProgressView()
+                    .progressViewStyle(.linear)
+                    .offset(y:8)
+            }
         }
         .onAppear {
             viewModel.getLogcat(deviceId: deviceId)
         }
         .toolbar {
-            Button { } label: {
-                Label("Stick", systemImage: "arrow.down")
+            if viewModel.stickyList {
+                Button { viewModel.stickyList.toggle() } label: {
+                    Label("Stick", systemImage: "arrow.down")
+                }
+                .background(.black.opacity(0.1))
+                .cornerRadius(6)
+                
             }
+            else {
+                Button { viewModel.stickyList.toggle() } label: {
+                    Label("Stick", systemImage: "arrow.down")
+                }
+            }
+
             
             Button { } label: {
                 Label("Refresh", systemImage: "arrow.clockwise")

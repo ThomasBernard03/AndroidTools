@@ -13,57 +13,50 @@ struct LogEntryItem: View {
     let processId : Int
     let threadId : Int
     let tag : String
-    let packageName : String
     let level : LogLevel
     let message : String
     
     private var dateFormatter : DateFormatter {
         let formatter = DateFormatter()
-        formatter.dateStyle = .short
-        formatter.timeStyle = .short
+        formatter.dateFormat = "dd/MM/yy HH:mm:ss.SSS"
         return formatter
     }
     
     var body: some View {
         HStack {
             Text("\(date, formatter: dateFormatter)")
-                .frame(width: 120)
+                .frame(width: 150, alignment: .leading)
             
             Text("\(processId)-\(threadId)")
-                .frame(width: 85)
+                .frame(width: 90)
             
             Text(tag)
-                .frame(width:120)
-            
-            Text(packageName)
-                .frame(width: 200)
+                .frame(width:150)
             
             Text(level.rawValue)
                 .frame(width: 26, height: 26)
-                .background(level.backgroundColor())
-                
-                
+                .background(level.color().opacity(0.3))
+            
             
             
             Text(message)
-                .foregroundColor(level.backgroundColor())
-                .fixedSize(horizontal: false, vertical:true)
+                .foregroundColor(level.color())
+                .fixedSize(horizontal: true, vertical:true)
         }
-        .lineLimit(1)
     }
 }
 
 #Preview {
     VStack(alignment:.leading, spacing:0) {
-        LogEntryItem(date: Date.now, processId: 10755, threadId: 11341, tag: "EGL_emulation", packageName: "fr.thomasbernard03.rickandmorty", level: .debug, message: "Here !!")
+        LogEntryItem(date: Date.now, processId: 10755, threadId: 11341, tag: "EGL_emulation", level: .debug, message: "Here !!")
         
-        LogEntryItem(date: Date.now, processId: 10755, threadId: 11341, tag: "EGL_emulation", packageName: "fr.thomasbernard03.rickandmorty", level: .info, message: "Here !!")
+        LogEntryItem(date: Date.now, processId: 10755, threadId: 11341, tag: "EGL_emulation", level: .info, message: "Here !!")
         
-        LogEntryItem(date: Date.now, processId: 10755, threadId: 11341, tag: "EGL_emulation", packageName: "fr.thomasbernard03.rickandmorty", level: .error, message: "Error")
+        LogEntryItem(date: Date.now, processId: 10755, threadId: 11341, tag: "EGL_emulation", level: .error, message: "Error")
         
-        LogEntryItem(date: Date.now, processId: 10755, threadId: 11341, tag: "EGL_emulation", packageName: "fr.thomasbernard03.rickandmorty", level: .warning, message: "Here !!")
+        LogEntryItem(date: Date.now, processId: 10755, threadId: 11341, tag: "EGL_emulation", level: .warning, message: "Here !!")
         
-        LogEntryItem(date: Date.now, processId: 10755, threadId: 11341, tag: "EGL_emulation", packageName: "fr.thomasbernard03.rickandmorty", level: .verbose, message: "Here !!")
+        LogEntryItem(date: Date.now, processId: 10755, threadId: 11341, tag: "EGL_emulation", level: .verbose, message: "Here !!")
     }
 
 }
