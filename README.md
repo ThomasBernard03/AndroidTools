@@ -38,8 +38,16 @@ The File Explorer in AndroidTools allows for easy and intuitive file management 
 https://github.com/ThomasBernard03/AndroidTools/assets/67638928/73b733b6-b16f-4701-8f4f-6e36daf0ddd4
 
 
+### 🐱 Logcat
+
+You can now view logcat logs into Android Tools !
+
+<img alt="Android tools logo" src= "./Documentation/logcat.png"/>
+
+
 ### 🚀 Road map
 
-- View logcat
-- New setting page
-- Improve existing features
+- Add different features to logcat (Filters etc...)
+- Drag and drop into file manager
+- Use emulators
+- Screen miroring (like Vysor)
