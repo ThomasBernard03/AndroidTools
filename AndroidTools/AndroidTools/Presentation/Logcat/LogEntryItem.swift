@@ -18,20 +18,21 @@ struct LogEntryItem: View {
     
     private var dateFormatter : DateFormatter {
         let formatter = DateFormatter()
-        formatter.dateFormat = "dd/MM/yy HH:mm:ss.SSS"
+        formatter.dateFormat = "HH:mm:ss.SSS"
         return formatter
     }
     
     var body: some View {
         HStack {
             Text("\(date, formatter: dateFormatter)")
-                .frame(width: 150, alignment: .leading)
+                .frame(width: 90, alignment: .leading)
             
             Text("\(processId)-\(threadId)")
                 .frame(width: 90)
             
             Text(tag)
-                .frame(width:150)
+                .frame(width:150, alignment: .leading)
+                
             
             Text(level.rawValue)
                 .frame(width: 26, height: 26)
@@ -42,7 +43,7 @@ struct LogEntryItem: View {
             Text(message)
                 .foregroundColor(level.color())
                 .fixedSize(horizontal: true, vertical:true)
-        }
+        }.lineLimit(1)
     }
 }
 

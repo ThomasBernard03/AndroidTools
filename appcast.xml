@@ -3,12 +3,12 @@
     <channel>
         <title>AndroidTools</title>
         <item>
-            <title>1.3.0</title>
-            <pubDate>Wed, 15 May 2024 16:59:53 +0200</pubDate>
-            <sparkle:version>4</sparkle:version>
-            <sparkle:shortVersionString>1.3.0</sparkle:shortVersionString>
+            <title>1.3.1</title>
+            <pubDate>Thu, 16 May 2024 23:12:54 +0200</pubDate>
+            <sparkle:version>5</sparkle:version>
+            <sparkle:shortVersionString>1.3.1</sparkle:shortVersionString>
             <sparkle:minimumSystemVersion>14.0</sparkle:minimumSystemVersion>
-            <enclosure url="https://github.com/ThomasBernard03/AndroidTools/releases/download/1.3.0/AndroidTools.dmg" length="2429018" type="application/octet-stream" sparkle:edSignature="e9+k4dx4usup3YtE9jU1jMQDXW8ZBfXpAEhUr+Cv2luujQ5p3NGPLCzigNtpqXXZAkc628RzhLrb95ZAUucjBA=="/>
+            <enclosure url="https://github.com/ThomasBernard03/AndroidTools/releases/download/1.3.1/AndroidTools.dmg" length="2470231" type="application/octet-stream" sparkle:edSignature="Eqd83T28Swa1A4AXxG9NUxk01TrA5P2kOLatzn0QNSS13EQj2sL5EAx7KmCWJ9o1N303lUbhSNL7MFbhGZ16AA=="/>
         </item>
     </channel>
 </rss>

@@ -9,9 +9,8 @@ import Foundation
 
 class AdbHelper {
     
-    var adbPath: String {
-         UserDefaults.standard.string(forKey: "adbPath") ?? "/usr/local/bin/adb"
-     }
+    private let adbRepository : AdbRepository = AdbRepositoryImpl()
+    
     
     func getDevices() -> [DeviceListModel] {
         let command = "devices -l | awk 'NR>1 {print $1}'"
@@ -49,41 +48,11 @@ class AdbHelper {
     }
     
     func runAdbCommand(_ command: String) -> String {
-        print("Running command:\nadb \(command)")
-        let task = Process()
-        let pipe = Pipe()
-
-        task.standardOutput = pipe
-        task.standardError = pipe
-        task.arguments = ["-c", "\(adbPath) \(command)"]
-        task.launchPath = "/bin/sh"
-        task.launch()
-        
-        let data = pipe.fileHandleForReading.readDataToEndOfFile()
-        let output = String(data: data, encoding: .utf8)?.trimmingCharacters(in: .whitespacesAndNewlines) ?? ""
-        print("Result:\n\(output)")
-        return output
+        let result = try? adbRepository.runAdbCommand(command)
+        return result ?? ""
     }
     
     func runAdbCommand(_ command: String, outputHandler: @escaping (String) -> Void) {
-        print("Running command:\n adb \(command)")
-        let task = Process()
-        let pipe = Pipe()
-
-        task.standardOutput = pipe
-        task.standardError = pipe
-        task.arguments = ["-c", "\(adbPath) \(command)"]
-        task.launchPath = "/bin/sh"
-
-        pipe.fileHandleForReading.readabilityHandler = { fileHandle in
-            let data = fileHandle.availableData
-            if let output = String(data: data, encoding: .utf8) {
-                outputHandler(output)
-            }
-        }
-
-        task.launch()
-        task.waitUntilExit()
-        pipe.fileHandleForReading.readabilityHandler = nil
+        adbRepository.runAdbCommand(command, outputHandler: outputHandler)
     }
 }

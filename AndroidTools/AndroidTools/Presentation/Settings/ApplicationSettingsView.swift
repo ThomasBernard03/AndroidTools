@@ -11,19 +11,16 @@ struct ApplicationSettingsView: View {
     
     @StateObject private var viewModel = ApplicationSettingsViewModel()
     
-    @AppStorage("adbPath") private var adbPath = "/usr/local/bin/adb"
-    
-    
     private func openFinderToSelectADB() {
         let panel = NSOpenPanel()
         panel.canChooseFiles = true
         panel.canChooseDirectories = false
         panel.allowsMultipleSelection = false
-        panel.directoryURL = URL(fileURLWithPath: adbPath)
+        panel.directoryURL = URL(fileURLWithPath: viewModel.adbPath)
         
         panel.begin { response in
             if response == .OK, let url = panel.url {
-                self.adbPath = url.path
+                viewModel.setAdbPath(path: url.path)
                 viewModel.getAdbVersion()
             }
         }
@@ -51,11 +48,17 @@ struct ApplicationSettingsView: View {
                 }
                 
                 HStack {
-                    TextField("", text:$adbPath)
+                    TextField("", text:$viewModel.adbPath)
                         .disabled(true)
                         .padding(.leading, -10)
                     
-                    Button("Change path"){
+                    Button("Reset adb path"){
+                        viewModel.resetAdbPath()
+                    }
+            
+   
+                    
+                    Button("Change path manualy"){
                         openFinderToSelectADB()
                     }
                 }
@@ -82,6 +85,7 @@ struct ApplicationSettingsView: View {
         }
         .onAppear {
             viewModel.getAdbVersion()
+            viewModel.getAdbPath()
         }
     }
 }
