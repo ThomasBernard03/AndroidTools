@@ -31,4 +31,26 @@ class ShellHelper {
         logger.info("Result:\n\(output)")
         return output
     }
+    
+    func runAdbCommand(_ command: String, outputHandler: @escaping (String) -> Void) {
+        logger.info("Running command:\n\(command)")
+        let task = Process()
+        let pipe = Pipe()
+
+        task.standardOutput = pipe
+        task.standardError = pipe
+        task.arguments = ["-c", command]
+        task.launchPath = "/bin/sh"
+
+        pipe.fileHandleForReading.readabilityHandler = { fileHandle in
+            let data = fileHandle.availableData
+            if let output = String(data: data, encoding: .utf8) {
+                outputHandler(output)
+            }
+        }
+
+        task.launch()
+        task.waitUntilExit()
+        pipe.fileHandleForReading.readabilityHandler = nil
+    }
 }

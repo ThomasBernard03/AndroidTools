@@ -35,6 +35,11 @@ class AdbRepositoryImpl : AdbRepository {
         return shellHelper.runAdbCommand("\(adbPath) \(command)")
     }
     
+    func runAdbCommand(_ command: String, outputHandler: @escaping (String) -> Void) {
+        return shellHelper.runAdbCommand("\(adbPath) \(command)", outputHandler: outputHandler)
+    }
+    
+    
     func getVersion() throws -> String {
         let result = try runAdbCommand("version")
         

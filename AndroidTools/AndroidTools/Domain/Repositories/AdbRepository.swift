@@ -10,6 +10,7 @@ import Foundation
 protocol AdbRepository {
     
     func runAdbCommand(_ command: String) throws -> String
+    func runAdbCommand(_ command: String, outputHandler: @escaping (String) -> Void)
     
     
     func getVersion() throws -> String
