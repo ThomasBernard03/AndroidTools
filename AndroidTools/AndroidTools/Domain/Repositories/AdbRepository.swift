@@ -13,4 +13,12 @@ protocol AdbRepository {
     
     
     func getVersion() throws -> String
+    
+    /**
+     Return the executable path of adb
+     - Returns: Executable path of adb
+     */
+    func getPath() throws -> String
+    
+    func setPath(path : String?) -> String
 }

@@ -9,8 +9,21 @@ import Foundation
 import os
 
 class AdbRepositoryImpl : AdbRepository {
+
+    private var shellHelper : ShellHelper = ShellHelper()
+    
     private var adbPath: String {
-        UserDefaults.standard.string(forKey: "adbPath") ?? "/usr/local/bin/adb"
+        var preferencePath = UserDefaults.standard.string(forKey: "adbPath")
+        
+        if preferencePath == nil {
+            if let path = try? getDefaultPath() {
+                preferencePath = path
+            } else {
+                preferencePath = ""
+            }
+        }
+        
+        return preferencePath!
     }
     
     private let logger = Logger(
@@ -19,20 +32,7 @@ class AdbRepositoryImpl : AdbRepository {
     )
     
     func runAdbCommand(_ command: String) throws -> String {
-        logger.info("Running command:\nadb \(command)")
-        let task = Process()
-        let pipe = Pipe()
-
-        task.standardOutput = pipe
-        task.standardError = pipe
-        task.arguments = ["-c", "\(adbPath) \(command)"]
-        task.launchPath = "/bin/sh"
-        task.launch()
-        
-        let data = pipe.fileHandleForReading.readDataToEndOfFile()
-        let output = String(data: data, encoding: .utf8)?.trimmingCharacters(in: .whitespacesAndNewlines) ?? ""
-        logger.info("Result:\n\(output)")
-        return output
+        return shellHelper.runAdbCommand("\(adbPath) \(command)")
     }
     
     func getVersion() throws -> String {
@@ -51,5 +51,32 @@ class AdbRepositoryImpl : AdbRepository {
         }
         
         return ""
+    }
+    
+    func getPath() throws -> String {
+        return adbPath
+    }
+    
+    private func getDefaultPath() throws -> String {
+        let result = shellHelper.runAdbCommand("which adb")
+        if result.contains("not found"){
+            throw AdbError.notExists
+        }
+        else {
+            return result
+        }
+    }
+    
+    func setPath(path : String?) -> String {
+        
+        if path == nil {
+            let defaultPath = try? getDefaultPath()
+            UserDefaults.standard.set(defaultPath, forKey: "adbPath")
+        }
+        else {
+            UserDefaults.standard.set(path, forKey: "adbPath")
+        }
+        
+        return adbPath
     }
 }

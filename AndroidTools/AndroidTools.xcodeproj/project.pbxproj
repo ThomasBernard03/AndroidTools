@@ -47,6 +47,9 @@
 		819A32E12BF676E300AD10E3 /* GetAdbVersionError.swift in Sources */ = {isa = PBXBuildFile; fileRef = 819A32E02BF676E300AD10E3 /* GetAdbVersionError.swift */; };
 		819A32E32BF6774D00AD10E3 /* AdbRepositoryImpl.swift in Sources */ = {isa = PBXBuildFile; fileRef = 819A32E22BF6774D00AD10E3 /* AdbRepositoryImpl.swift */; };
 		819A32E72BF67C9200AD10E3 /* DisplayableError.swift in Sources */ = {isa = PBXBuildFile; fileRef = 819A32E62BF67C9200AD10E3 /* DisplayableError.swift */; };
+		819A32E92BF69B2F00AD10E3 /* ShellHelper.swift in Sources */ = {isa = PBXBuildFile; fileRef = 819A32E82BF69B2F00AD10E3 /* ShellHelper.swift */; };
+		819A32EB2BF6A23100AD10E3 /* GetAdbPathUseCase.swift in Sources */ = {isa = PBXBuildFile; fileRef = 819A32EA2BF6A23100AD10E3 /* GetAdbPathUseCase.swift */; };
+		819A32ED2BF6A5DC00AD10E3 /* SetAdbPathUseCase.swift in Sources */ = {isa = PBXBuildFile; fileRef = 819A32EC2BF6A5DC00AD10E3 /* SetAdbPathUseCase.swift */; };
 		81A067C72BEEBA0100E83DEF /* GetAdbVersionUseCase.swift in Sources */ = {isa = PBXBuildFile; fileRef = 81A067C62BEEBA0100E83DEF /* GetAdbVersionUseCase.swift */; };
 		81B7900D2BEBA7E5008E7359 /* LogcatViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 81B7900C2BEBA7E5008E7359 /* LogcatViewModel.swift */; };
 		81B7900F2BEBA7F3008E7359 /* LogcatView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 81B7900E2BEBA7F3008E7359 /* LogcatView.swift */; };
@@ -121,6 +124,9 @@
 		819A32E02BF676E300AD10E3 /* GetAdbVersionError.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = GetAdbVersionError.swift; sourceTree = "<group>"; };
 		819A32E22BF6774D00AD10E3 /* AdbRepositoryImpl.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AdbRepositoryImpl.swift; sourceTree = "<group>"; };
 		819A32E62BF67C9200AD10E3 /* DisplayableError.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DisplayableError.swift; sourceTree = "<group>"; };
+		819A32E82BF69B2F00AD10E3 /* ShellHelper.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ShellHelper.swift; sourceTree = "<group>"; };
+		819A32EA2BF6A23100AD10E3 /* GetAdbPathUseCase.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = GetAdbPathUseCase.swift; sourceTree = "<group>"; };
+		819A32EC2BF6A5DC00AD10E3 /* SetAdbPathUseCase.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SetAdbPathUseCase.swift; sourceTree = "<group>"; };
 		81A067C62BEEBA0100E83DEF /* GetAdbVersionUseCase.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = GetAdbVersionUseCase.swift; sourceTree = "<group>"; };
 		81B7900C2BEBA7E5008E7359 /* LogcatViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LogcatViewModel.swift; sourceTree = "<group>"; };
 		81B7900E2BEBA7F3008E7359 /* LogcatView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LogcatView.swift; sourceTree = "<group>"; };
@@ -165,6 +171,7 @@
 		814319532BC6B3AC00044934 /* Commons */ = {
 			isa = PBXGroup;
 			children = (
+				819A32E82BF69B2F00AD10E3 /* ShellHelper.swift */,
 				81E6A7642BC5D7020034EBFB /* AdbHelper.swift */,
 				814319542BC6B3B100044934 /* Extensions */,
 				8109D3632BF128A8001A4B5E /* Constants.swift */,
@@ -410,6 +417,8 @@
 				81F41C5E2BEA95FB005F1730 /* DeleteFileItemUseCase.swift */,
 				81F41C602BEA995D005F1730 /* ImportFileUseCase.swift */,
 				81A067C62BEEBA0100E83DEF /* GetAdbVersionUseCase.swift */,
+				819A32EA2BF6A23100AD10E3 /* GetAdbPathUseCase.swift */,
+				819A32EC2BF6A5DC00AD10E3 /* SetAdbPathUseCase.swift */,
 			);
 			path = UseCases;
 			sourceTree = "<group>";
@@ -493,6 +502,7 @@
 				81B790172BEC17B0008E7359 /* LogEntryItem.swift in Sources */,
 				819A32DF2BF6767A00AD10E3 /* AdbRepository.swift in Sources */,
 				81E6A7592BC5CD9D0034EBFB /* DeviceInformationView.swift in Sources */,
+				819A32ED2BF6A5DC00AD10E3 /* SetAdbPathUseCase.swift in Sources */,
 				81B7900D2BEBA7E5008E7359 /* LogcatViewModel.swift in Sources */,
 				814319522BC6715B00044934 /* InstallApplicationViewModel.swift in Sources */,
 				8109D3662BF141B0001A4B5E /* ApplicationSettingsViewModel.swift in Sources */,
@@ -515,6 +525,7 @@
 				81F41C5B2BEA4DF4005F1730 /* TableView.swift in Sources */,
 				816A1D402BE8CDE000E7DA71 /* InstallApplicationError.swift in Sources */,
 				8109D3602BF12575001A4B5E /* ApplicationSettingsView.swift in Sources */,
+				819A32EB2BF6A23100AD10E3 /* GetAdbPathUseCase.swift in Sources */,
 				81E982392BDD3B480004B154 /* CheckForUpdateView.swift in Sources */,
 				810E8E202BE9311100ED561A /* FileRepositoryImpl.swift in Sources */,
 				81B790112BEBA9E8008E7359 /* LogEntryModel.swift in Sources */,
@@ -542,6 +553,7 @@
 				81E982312BDD0F190004B154 /* RebootDeviceUseCase.swift in Sources */,
 				817EE8592BC81D4100740D4A /* FileExplorerViewModel.swift in Sources */,
 				81E982372BDD3A740004B154 /* CheckForUpdateViewModel.swift in Sources */,
+				819A32E92BF69B2F00AD10E3 /* ShellHelper.swift in Sources */,
 				816A1D3C2BE8CAC300E7DA71 /* ApplicationRepositoryImpl.swift in Sources */,
 				81F41C632BEAA7B0005F1730 /* GridView.swift in Sources */,
 				819A32E32BF6774D00AD10E3 /* AdbRepositoryImpl.swift in Sources */,

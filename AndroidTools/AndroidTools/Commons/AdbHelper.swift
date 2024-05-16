@@ -9,8 +9,10 @@ import Foundation
 
 class AdbHelper {
     
+    private let adbRepository : AdbRepository = AdbRepositoryImpl()
+    
     var adbPath: String {
-         UserDefaults.standard.string(forKey: "adbPath") ?? "/usr/local/bin/adb"
+         UserDefaults.standard.string(forKey: "adbPath") ?? ""
      }
     
     func getDevices() -> [DeviceListModel] {
@@ -49,20 +51,8 @@ class AdbHelper {
     }
     
     func runAdbCommand(_ command: String) -> String {
-        print("Running command:\nadb \(command)")
-        let task = Process()
-        let pipe = Pipe()
-
-        task.standardOutput = pipe
-        task.standardError = pipe
-        task.arguments = ["-c", "\(adbPath) \(command)"]
-        task.launchPath = "/bin/sh"
-        task.launch()
-        
-        let data = pipe.fileHandleForReading.readDataToEndOfFile()
-        let output = String(data: data, encoding: .utf8)?.trimmingCharacters(in: .whitespacesAndNewlines) ?? ""
-        print("Result:\n\(output)")
-        return output
+        let result = try? adbRepository.runAdbCommand(command)
+        return result ?? ""
     }
     
     func runAdbCommand(_ command: String, outputHandler: @escaping (String) -> Void) {

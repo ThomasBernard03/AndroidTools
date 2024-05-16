@@ -9,4 +9,5 @@ import Foundation
 
 enum AdbError : Error {
     case notFound(path : String)
+    case notExists
 }
