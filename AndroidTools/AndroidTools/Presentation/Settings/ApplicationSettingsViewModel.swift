@@ -24,6 +24,15 @@ class ApplicationSettingsViewModel : ObservableObject {
     
     func getAdbVersion(){
         adbVersion = ""
-        adbVersion = getAdbVersionUseCase.execute()
+        let result = getAdbVersionUseCase.execute()
+        
+        switch(result){
+        case .success(let version) : do {
+            self.adbVersion = version
+        }
+        case .failure(let message) : do {
+            // TODO diplay error
+        }
+        }
     }
 }
