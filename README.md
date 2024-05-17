@@ -17,6 +17,7 @@ Android tools makes the communication between Macos and Android devices easier. 
 ## ⚡️ Installation
 
 You can install application from Github releases, using .dmg file. In app update is available to keep your application up to date.
+If your application displays strange command results, don't hesitate to change the path to ADB in the application settings. To find out which path to put in the parameters, type the command `which adb`. I'm currently working on the application to improve error handling.
 
 ## Features
 
@@ -47,6 +48,7 @@ You can now view logcat logs into Android Tools !
 
 ### 🚀 Road map
 
+- Better error handling
 - Add different features to logcat (Filters etc...)
 - Drag and drop into file manager
 - Use emulators
