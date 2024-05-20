@@ -76,7 +76,7 @@ struct LogcatView: View {
                 Label("Pause", systemImage: "pause.fill")
             }
             
-            Button { } label: {
+            Button { viewModel.clearLogcat() } label: {
                 Label("Delete", systemImage: "trash")
             }
         }

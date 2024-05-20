@@ -52,4 +52,8 @@ class LogcatViewModel : ObservableObject {
         }
     }
     
+    func clearLogcat(){
+        logEntries = []
+    }
+    
 }
