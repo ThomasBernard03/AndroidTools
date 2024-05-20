@@ -72,9 +72,9 @@ struct FilesView: View {
                         viewModel.getFiles(deviceId: deviceId, path: path)
                     }
                 }
-                else {
-                    EmptyView()
-                }
+            }
+            else {
+                Color.clear
             }
             
             if viewModel.loading {
@@ -87,6 +87,7 @@ struct FilesView: View {
           Button("Delete", role: .destructive) {
               viewModel.deleteItem(deviceId: deviceId, path: viewModel.fileExplorerResult!.fullPath, name: currentItem!.name)
               selection = nil
+
           }
         }
         .alert("Create folder", isPresented: $viewModel.showCreateFolderAlert){
