@@ -23,27 +23,32 @@ struct LogEntryItem: View {
     }
     
     var body: some View {
-        HStack {
-            Text("\(date, formatter: dateFormatter)")
-                .frame(width: 90, alignment: .leading)
-            
-            Text("\(processId)-\(threadId)")
-                .frame(width: 90)
-            
-            Text(tag)
-                .frame(width:150, alignment: .leading)
+        HStack(alignment:.top) {
+            HStack {
+                Text("\(date, formatter: dateFormatter)")
+                    .frame(width: 90, alignment: .leading)
                 
-            
+                Text("\(processId)-\(threadId)")
+                    .frame(width: 90)
+                
+                Text(tag)
+                    .frame(width:150, alignment: .leading)
+                    .lineLimit(1)
+                    .textSelection(.enabled)
+            }
+            .padding(.vertical, 5)
+
             Text(level.rawValue)
                 .frame(width: 26, height: 26)
                 .background(level.color().opacity(0.3))
             
             
-            
             Text(message)
                 .foregroundColor(level.color())
-                .fixedSize(horizontal: true, vertical:true)
-        }.lineLimit(1)
+                .textSelection(.enabled)
+                .lineSpacing(8)
+                .padding(.vertical, 5)
+        }
     }
 }
 

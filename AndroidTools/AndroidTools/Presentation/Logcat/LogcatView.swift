@@ -53,32 +53,37 @@ struct LogcatView: View {
             viewModel.getLogcat(deviceId: deviceId)
         }
         .toolbar {
-            if viewModel.stickyList {
-                Button { viewModel.stickyList.toggle() } label: {
-                    Label("Stick", systemImage: "arrow.down")
+            HStack {
+                if viewModel.stickyList {
+                    Button { viewModel.stickyList.toggle() } label: {
+                        Label("Stick", systemImage: "arrow.down")
+                    }
+                    .background(.black.opacity(0.1))
+                    .cornerRadius(6)
+                    
                 }
-                .background(.black.opacity(0.1))
-                .cornerRadius(6)
-                
-            }
-            else {
-                Button { viewModel.stickyList.toggle() } label: {
-                    Label("Stick", systemImage: "arrow.down")
+                else {
+                    Button { viewModel.stickyList.toggle() } label: {
+                        Label("Stick", systemImage: "arrow.down")
+                    }
                 }
-            }
 
-            
-            Button { } label: {
-                Label("Refresh", systemImage: "arrow.clockwise")
+                
+                Button { } label: {
+                    Label("Refresh", systemImage: "arrow.clockwise")
+                }
+                .disabled(true)
+                
+                Button { } label: {
+                    Label("Pause", systemImage: "pause.fill")
+                }
+                .disabled(true)
+                
+                Button { viewModel.clearLogcat() } label: {
+                    Label("Delete", systemImage: "trash")
+                }
             }
-            
-            Button { } label: {
-                Label("Pause", systemImage: "pause.fill")
-            }
-            
-            Button { viewModel.clearLogcat() } label: {
-                Label("Delete", systemImage: "trash")
-            }
+            .disabled(viewModel.loading)
         }
         
     }

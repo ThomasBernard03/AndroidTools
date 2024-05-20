@@ -1,9 +1,7 @@
 import Foundation
 
-import Foundation
-
 class LogcatViewModel : ObservableObject {
-    private let adbHelper = AdbHelper()
+    private let getLogcatUseCase : GetLogcatUseCase = GetLogcatUseCase()
     
     @Published var package: String = ""
     @Published var logLevel: LogLevel? = nil
@@ -15,23 +13,20 @@ class LogcatViewModel : ObservableObject {
     @Published var stickyList : Bool = false
     
     private var buffer: String = ""
+    private let bufferMaxSize = 1000
 
     func getLogcat(deviceId: String) {
         loading = true
         DispatchQueue.global(qos: .userInitiated).async { [self] in
-            let command = "-s \(deviceId) logcat -v threadtime"
-            
-            adbHelper.runAdbCommand(command) { [self] result in
-                buffer.append(result)
-                processBuffer()
+            getLogcatUseCase.execute(deviceId: deviceId) { result in
+                self.buffer.append(result)
+                self.processBuffer()
             }
         }
     }
     
     private func processBuffer() {
-        DispatchQueue.main.async {
-            self.loading = true
-        }
+        DispatchQueue.main.async { self.loading = true }
         let lines = buffer.components(separatedBy: "\n")
         for i in 0..<lines.count-1 {
             if let logEntry = lines[i].toLogcatEntry() {
@@ -39,17 +34,15 @@ class LogcatViewModel : ObservableObject {
                     logEntries.append(logEntry)
                 }
                 
-                if logEntries.count > 500 {
+                if logEntries.count > bufferMaxSize {
                     DispatchQueue.main.async { [self] in
-                        logEntries.removeFirst(logEntries.count - 200)
+                        self.logEntries.removeFirst(self.logEntries.count - self.bufferMaxSize)
                     }
                 }
             }
         }
         buffer = lines.last ?? ""
-        DispatchQueue.main.async {
-            self.loading = false
-        }
+        DispatchQueue.main.async { self.loading = false }
     }
     
     func clearLogcat(){
