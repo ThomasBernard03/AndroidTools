@@ -14,7 +14,7 @@ class FileRepositoryImpl : FileRepository {
     
     
     func createFolder(deviceId: String, path: String, name: String) {
-        let directoryPath = "\(basePath)\(path)/\(name)"
+        let directoryPath = "\(basePath)\(path)/'\(name)'"
         let createDirCommand = "-s \(deviceId) shell mkdir -p \"\(directoryPath)\""
         _ = adbHelper.runAdbCommand(createDirCommand)
     }
