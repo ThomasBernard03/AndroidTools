@@ -19,8 +19,9 @@ class FileRepositoryImpl : FileRepository {
         _ = adbHelper.runAdbCommand(createDirCommand)
     }
     
-    func deleteFileItem(deviceId: String, path: String) {
-        let deleteCommand = "shell 'rm -r \"\(basePath)\(path)\"'"
+    func deleteFileItem(deviceId: String, path: String, name : String) {
+        let directoryPath = "\(basePath)\(path)/\(name)"
+        let deleteCommand = "-s \(deviceId) shell rm -r \"\(directoryPath)\""
         _ = adbHelper.runAdbCommand("-s \(deviceId) \(deleteCommand)")
     }
     

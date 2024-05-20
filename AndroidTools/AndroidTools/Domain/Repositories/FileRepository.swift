@@ -36,7 +36,7 @@ protocol FileRepository {
         - deviceId: The unique identifier of the device
         - path: The location of files
      */
-    func deleteFileItem(deviceId : String, path : String)
+    func deleteFileItem(deviceId : String, path : String, name : String)
     
     
     /**
