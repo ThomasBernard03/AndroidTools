@@ -39,12 +39,13 @@ struct LogEntryItem: View {
             .padding(.vertical, 5)
 
             Text(level.rawValue)
+                .foregroundColor(level.iconForegroundColor())
                 .frame(width: 26, height: 26)
-                .background(level.color().opacity(0.3))
+                .background(level.iconBackgroundColor())
             
             
             Text(message)
-                .foregroundColor(level.color())
+                .foregroundColor(level.textColor())
                 .textSelection(.enabled)
                 .lineSpacing(8)
                 .padding(.vertical, 5)
