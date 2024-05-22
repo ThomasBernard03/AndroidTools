@@ -15,6 +15,16 @@ struct LogcatView: View {
     @AppStorage("packageName") private var packageName = ""
     @AppStorage("logcatSticky") private var logcatSticky = true
     
+    
+    var packagesSearch : [String] {
+        if self.packageName.isEmpty {
+            return Array(viewModel.packages.prefix(5))
+        }
+        else {
+            return Array(viewModel.packages.filter { $0.contains(packageName)}.prefix(5))
+        }
+    }
+    
 
     var body: some View {
         ZStack(alignment:.bottom) {
@@ -25,16 +35,15 @@ struct LogcatView: View {
                             .listRowSeparator(.hidden)
                             .listRowInsets(.init(top: 0, leading: 0, bottom: 0, trailing: 0))
                     }
-                    
-
-                    .onChange(of: logcatSticky, { _, sticky in
+                    .onChange(of: logcatSticky){ old, new in
                         if let lastId = viewModel.logEntries.last?.id {
                             withAnimation {
                                 proxy.scrollTo(lastId, anchor: .bottom)
                             }
                         }
-                    })
-                    .onChange(of: viewModel.logEntries, { _, _ in
+                    }
+
+                    .onChange(of: viewModel.logEntries) { _, _ in
                         if logcatSticky {
                             if let lastId = viewModel.logEntries.last?.id {
                                 withAnimation {
@@ -42,7 +51,7 @@ struct LogcatView: View {
                                 }
                             }
                         }
-                    })
+                    }
                 }
             }
             
@@ -50,6 +59,11 @@ struct LogcatView: View {
                 ProgressView()
                     .progressViewStyle(.linear)
                     .offset(y:8)
+            }
+        }
+        .onChange(of: packageName){ oldValue, newValue in
+            if newValue.isEmpty {
+                viewModel.getLogcat(deviceId: deviceId, packageName: "")
             }
         }
         .onAppear {
@@ -75,7 +89,7 @@ struct LogcatView: View {
                 }
                 .disabled(true)
                 
-                Button { viewModel.clearLogcat() } label: {
+                Button { viewModel.clearLogcat(deviceId: deviceId) } label: {
                     Label("Delete", systemImage: "trash")
                 }
             }
@@ -83,14 +97,14 @@ struct LogcatView: View {
         }
         .searchable(text: $packageName, prompt: "Package name")
         .searchSuggestions {
-            List(viewModel.packages.filter { $0.contains(packageName)}, id: \.self){ package in
+            ForEach(packagesSearch, id: \.self){ package in
                 Text(package)
                     .searchCompletion(package)
                     .onTapGesture {
                         packageName = package
                         viewModel.getLogcat(deviceId: deviceId, packageName: package)
                     }
-            }.frame(height:200)
+            }
         }
     }
 }

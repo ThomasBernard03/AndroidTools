@@ -12,7 +12,7 @@ class GetLogcatUseCase {
     
     func execute(deviceId : String, 
                  packageName : String = "",
-                 onResult: @escaping (String) -> Void) {
+                 onResult: @escaping ([LogEntryModel]) -> Void) {
         logcatRepository.getLogcat(deviceId: deviceId, packageName: packageName, onResult: onResult)
     }
 }

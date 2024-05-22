@@ -8,5 +8,7 @@
 import Foundation
 
 protocol LogcatRepository {
-    func getLogcat(deviceId : String, packageName : String, onResult: @escaping (String) -> Void)
+    func getLogcat(deviceId : String, packageName : String, onResult: @escaping ([LogEntryModel]) -> Void)
+    
+    func clearLogcat(deviceId : String)
 }
