@@ -12,14 +12,17 @@ class LogcatRepositoryImpl : LogcatRepository {
     private let shellHelper : ShellHelper = ShellHelper()
     
     func getLogcat(deviceId : String, packageName : String = "", onResult: @escaping (String) -> Void) {
+        // First, clear logcat
+        let _ = shellHelper.runAdbCommand("adb -s \(deviceId) logcat -c")
+        
         var command = ""
-        var pid = shellHelper.runAdbCommand("adb shell pidof '\(packageName)'")
         
         if packageName.isEmpty {
             command = "adb -s \(deviceId) logcat -v threadtime"
         }
         else {
-            command = "adb -s \(deviceId) logcat --pid=\(pid)"
+            let pid = shellHelper.runAdbCommand("adb shell pidof '\(packageName)'")
+            command = "adb -s \(deviceId) logcat -v threadtime --pid=\(pid)"
         }
         
         
