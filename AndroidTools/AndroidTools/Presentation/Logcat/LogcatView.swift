@@ -12,6 +12,9 @@ struct LogcatView: View {
     
     @StateObject private var viewModel = LogcatViewModel()
     
+    @AppStorage("packageName") private var packageName = ""
+    @AppStorage("logcatSticky") private var logcatSticky = true
+    
 
     var body: some View {
         ZStack(alignment:.bottom) {
@@ -24,7 +27,7 @@ struct LogcatView: View {
                     }
                     
 
-                    .onChange(of: viewModel.stickyList, { _, sticky in
+                    .onChange(of: logcatSticky, { _, sticky in
                         if let lastId = viewModel.logEntries.last?.id {
                             withAnimation {
                                 proxy.scrollTo(lastId, anchor: .bottom)
@@ -32,7 +35,7 @@ struct LogcatView: View {
                         }
                     })
                     .onChange(of: viewModel.logEntries, { _, _ in
-                        if viewModel.stickyList {
+                        if logcatSticky {
                             if let lastId = viewModel.logEntries.last?.id {
                                 withAnimation {
                                     proxy.scrollTo(lastId, anchor: .bottom)
@@ -50,23 +53,16 @@ struct LogcatView: View {
             }
         }
         .onAppear {
-            viewModel.getLogcat(deviceId: deviceId)
+            viewModel.getLogcat(deviceId: deviceId, packageName: packageName)
+            viewModel.getPackages(deviceId: deviceId)
         }
         .toolbar {
             HStack {
-                if viewModel.stickyList {
-                    Button { viewModel.stickyList.toggle() } label: {
-                        Label("Stick", systemImage: "arrow.down")
-                    }
-                    .background(.black.opacity(0.1))
-                    .cornerRadius(6)
-                    
+                Button { logcatSticky.toggle() } label: {
+                    Label("Stick", systemImage: "arrow.down")
                 }
-                else {
-                    Button { viewModel.stickyList.toggle() } label: {
-                        Label("Stick", systemImage: "arrow.down")
-                    }
-                }
+                .background(logcatSticky ? .black.opacity(0.1) : .clear)
+                .cornerRadius(6)
 
                 
                 Button { } label: {
@@ -85,7 +81,17 @@ struct LogcatView: View {
             }
             .disabled(viewModel.loading)
         }
-        
+        .searchable(text: $packageName, prompt: "Package name")
+        .searchSuggestions {
+            List(viewModel.packages.filter { $0.contains(packageName)}, id: \.self){ package in
+                Text(package)
+                    .searchCompletion(package)
+                    .onTapGesture {
+                        packageName = package
+                        viewModel.getLogcat(deviceId: deviceId, packageName: package)
+                    }
+            }.frame(height:200)
+        }
     }
 }
 

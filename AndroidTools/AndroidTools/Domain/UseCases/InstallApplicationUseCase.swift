@@ -9,10 +9,10 @@ import Foundation
 
 class InstallApplicationUseCase {
     
-    private let applicationRepository : ApplicationRepository = ApplicationRepositoryImpl()
+    private let packageRepository : PackageRepository = PackageRepositoryImpl()
     
     func execute(deviceId : String, path : String) -> Result<Void, InstallApplicationError> {
-        let result = applicationRepository.installApplication(deviceId: deviceId, path: path)
+        let result = packageRepository.installApplication(deviceId: deviceId, path: path)
         return result
     }
 }

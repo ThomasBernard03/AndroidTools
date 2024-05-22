@@ -32,8 +32,8 @@
 		814319562BC6B3C000044934 /* UTTypeExtensions.swift in Sources */ = {isa = PBXBuildFile; fileRef = 814319552BC6B3C000044934 /* UTTypeExtensions.swift */; };
 		81600C8F2BC98F65008D471C /* FileRow.swift in Sources */ = {isa = PBXBuildFile; fileRef = 81600C8E2BC98F65008D471C /* FileRow.swift */; };
 		8164F8B02BDE40A70097422C /* UniversalFileDocument.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8164F8AF2BDE40A70097422C /* UniversalFileDocument.swift */; };
-		816A1D3A2BE8CAA300E7DA71 /* ApplicationRepository.swift in Sources */ = {isa = PBXBuildFile; fileRef = 816A1D392BE8CAA300E7DA71 /* ApplicationRepository.swift */; };
-		816A1D3C2BE8CAC300E7DA71 /* ApplicationRepositoryImpl.swift in Sources */ = {isa = PBXBuildFile; fileRef = 816A1D3B2BE8CAC300E7DA71 /* ApplicationRepositoryImpl.swift */; };
+		816A1D3A2BE8CAA300E7DA71 /* PackageRepository.swift in Sources */ = {isa = PBXBuildFile; fileRef = 816A1D392BE8CAA300E7DA71 /* PackageRepository.swift */; };
+		816A1D3C2BE8CAC300E7DA71 /* PackageRepositoryImpl.swift in Sources */ = {isa = PBXBuildFile; fileRef = 816A1D3B2BE8CAC300E7DA71 /* PackageRepositoryImpl.swift */; };
 		816A1D402BE8CDE000E7DA71 /* InstallApplicationError.swift in Sources */ = {isa = PBXBuildFile; fileRef = 816A1D3F2BE8CDE000E7DA71 /* InstallApplicationError.swift */; };
 		816A1D452BE8D3A200E7DA71 /* CircleWavesAnimation.swift in Sources */ = {isa = PBXBuildFile; fileRef = 816A1D442BE8D3A200E7DA71 /* CircleWavesAnimation.swift */; };
 		816A1D472BE8F66100E7DA71 /* DeviceRepositoryImpl.swift in Sources */ = {isa = PBXBuildFile; fileRef = 816A1D462BE8F66100E7DA71 /* DeviceRepositoryImpl.swift */; };
@@ -51,6 +51,8 @@
 		819A32EB2BF6A23100AD10E3 /* GetAdbPathUseCase.swift in Sources */ = {isa = PBXBuildFile; fileRef = 819A32EA2BF6A23100AD10E3 /* GetAdbPathUseCase.swift */; };
 		819A32ED2BF6A5DC00AD10E3 /* SetAdbPathUseCase.swift in Sources */ = {isa = PBXBuildFile; fileRef = 819A32EC2BF6A5DC00AD10E3 /* SetAdbPathUseCase.swift */; };
 		81A067C72BEEBA0100E83DEF /* GetAdbVersionUseCase.swift in Sources */ = {isa = PBXBuildFile; fileRef = 81A067C62BEEBA0100E83DEF /* GetAdbVersionUseCase.swift */; };
+		81AAD5E22BFD295C0002406B /* GetPackagesUseCase.swift in Sources */ = {isa = PBXBuildFile; fileRef = 81AAD5E12BFD295C0002406B /* GetPackagesUseCase.swift */; };
+		81AAD5E42BFD29F80002406B /* GetAllPackagesError.swift in Sources */ = {isa = PBXBuildFile; fileRef = 81AAD5E32BFD29F80002406B /* GetAllPackagesError.swift */; };
 		81B7900D2BEBA7E5008E7359 /* LogcatViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 81B7900C2BEBA7E5008E7359 /* LogcatViewModel.swift */; };
 		81B7900F2BEBA7F3008E7359 /* LogcatView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 81B7900E2BEBA7F3008E7359 /* LogcatView.swift */; };
 		81B790112BEBA9E8008E7359 /* LogEntryModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 81B790102BEBA9E8008E7359 /* LogEntryModel.swift */; };
@@ -110,8 +112,8 @@
 		814319572BC6B4D900044934 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist; path = Info.plist; sourceTree = "<group>"; };
 		81600C8E2BC98F65008D471C /* FileRow.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FileRow.swift; sourceTree = "<group>"; };
 		8164F8AF2BDE40A70097422C /* UniversalFileDocument.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = UniversalFileDocument.swift; sourceTree = "<group>"; };
-		816A1D392BE8CAA300E7DA71 /* ApplicationRepository.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ApplicationRepository.swift; sourceTree = "<group>"; };
-		816A1D3B2BE8CAC300E7DA71 /* ApplicationRepositoryImpl.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ApplicationRepositoryImpl.swift; sourceTree = "<group>"; };
+		816A1D392BE8CAA300E7DA71 /* PackageRepository.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PackageRepository.swift; sourceTree = "<group>"; };
+		816A1D3B2BE8CAC300E7DA71 /* PackageRepositoryImpl.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PackageRepositoryImpl.swift; sourceTree = "<group>"; };
 		816A1D3F2BE8CDE000E7DA71 /* InstallApplicationError.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = InstallApplicationError.swift; sourceTree = "<group>"; };
 		816A1D442BE8D3A200E7DA71 /* CircleWavesAnimation.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CircleWavesAnimation.swift; sourceTree = "<group>"; };
 		816A1D462BE8F66100E7DA71 /* DeviceRepositoryImpl.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DeviceRepositoryImpl.swift; sourceTree = "<group>"; };
@@ -131,6 +133,8 @@
 		819A32EA2BF6A23100AD10E3 /* GetAdbPathUseCase.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = GetAdbPathUseCase.swift; sourceTree = "<group>"; };
 		819A32EC2BF6A5DC00AD10E3 /* SetAdbPathUseCase.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SetAdbPathUseCase.swift; sourceTree = "<group>"; };
 		81A067C62BEEBA0100E83DEF /* GetAdbVersionUseCase.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = GetAdbVersionUseCase.swift; sourceTree = "<group>"; };
+		81AAD5E12BFD295C0002406B /* GetPackagesUseCase.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = GetPackagesUseCase.swift; sourceTree = "<group>"; };
+		81AAD5E32BFD29F80002406B /* GetAllPackagesError.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = GetAllPackagesError.swift; sourceTree = "<group>"; };
 		81B7900C2BEBA7E5008E7359 /* LogcatViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LogcatViewModel.swift; sourceTree = "<group>"; };
 		81B7900E2BEBA7F3008E7359 /* LogcatView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LogcatView.swift; sourceTree = "<group>"; };
 		81B790102BEBA9E8008E7359 /* LogEntryModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LogEntryModel.swift; sourceTree = "<group>"; };
@@ -301,7 +305,7 @@
 		816A1D382BE8CA8B00E7DA71 /* Repositories */ = {
 			isa = PBXGroup;
 			children = (
-				816A1D392BE8CAA300E7DA71 /* ApplicationRepository.swift */,
+				816A1D392BE8CAA300E7DA71 /* PackageRepository.swift */,
 				816A1D482BE8F67000E7DA71 /* DeviceRepository.swift */,
 				810E8E212BE9312B00ED561A /* FileRepository.swift */,
 				819A32DE2BF6767A00AD10E3 /* AdbRepository.swift */,
@@ -316,6 +320,7 @@
 				816A1D3F2BE8CDE000E7DA71 /* InstallApplicationError.swift */,
 				819A32E02BF676E300AD10E3 /* GetAdbVersionError.swift */,
 				819A32E62BF67C9200AD10E3 /* DisplayableError.swift */,
+				81AAD5E32BFD29F80002406B /* GetAllPackagesError.swift */,
 			);
 			path = Errors;
 			sourceTree = "<group>";
@@ -323,7 +328,7 @@
 		816A1D412BE8D2BE00E7DA71 /* Repositories */ = {
 			isa = PBXGroup;
 			children = (
-				816A1D3B2BE8CAC300E7DA71 /* ApplicationRepositoryImpl.swift */,
+				816A1D3B2BE8CAC300E7DA71 /* PackageRepositoryImpl.swift */,
 				816A1D462BE8F66100E7DA71 /* DeviceRepositoryImpl.swift */,
 				810E8E1F2BE9311100ED561A /* FileRepositoryImpl.swift */,
 				819A32E22BF6774D00AD10E3 /* AdbRepositoryImpl.swift */,
@@ -428,6 +433,7 @@
 				819A32EA2BF6A23100AD10E3 /* GetAdbPathUseCase.swift */,
 				819A32EC2BF6A5DC00AD10E3 /* SetAdbPathUseCase.swift */,
 				81B917792BFBD74B00373308 /* GetLogcatUseCase.swift */,
+				81AAD5E12BFD295C0002406B /* GetPackagesUseCase.swift */,
 			);
 			path = UseCases;
 			sourceTree = "<group>";
@@ -508,6 +514,7 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				81AAD5E42BFD29F80002406B /* GetAllPackagesError.swift in Sources */,
 				81B790172BEC17B0008E7359 /* LogEntryItem.swift in Sources */,
 				819A32DF2BF6767A00AD10E3 /* AdbRepository.swift in Sources */,
 				81E6A7592BC5CD9D0034EBFB /* DeviceInformationView.swift in Sources */,
@@ -528,7 +535,7 @@
 				81F41C612BEA995D005F1730 /* ImportFileUseCase.swift in Sources */,
 				81B790132BEBAA74008E7359 /* LogLevel.swift in Sources */,
 				81E9822D2BDD06600004B154 /* InstallApplicationUseCase.swift in Sources */,
-				816A1D3A2BE8CAA300E7DA71 /* ApplicationRepository.swift in Sources */,
+				816A1D3A2BE8CAA300E7DA71 /* PackageRepository.swift in Sources */,
 				812399C82BDC3CC7004219C9 /* ToastView.swift in Sources */,
 				81A067C72BEEBA0100E83DEF /* GetAdbVersionUseCase.swift in Sources */,
 				81D04F5A2BCA4B3400B04FAB /* FolderItem.swift in Sources */,
@@ -551,6 +558,7 @@
 				812399C42BDC3C92004219C9 /* Toast.swift in Sources */,
 				812399CA2BDC3CE3004219C9 /* ToastModifier.swift in Sources */,
 				81600C8F2BC98F65008D471C /* FileRow.swift in Sources */,
+				81AAD5E22BFD295C0002406B /* GetPackagesUseCase.swift in Sources */,
 				81B790192BEC1953008E7359 /* LogLevelExtensions.swift in Sources */,
 				810E8E1C2BE92EA800ED561A /* ListFilesUseCase.swift in Sources */,
 				8178547E2BC59F6300B5B2EE /* AndroidToolsApp.swift in Sources */,
@@ -565,7 +573,7 @@
 				817EE8592BC81D4100740D4A /* FileExplorerViewModel.swift in Sources */,
 				81E982372BDD3A740004B154 /* CheckForUpdateViewModel.swift in Sources */,
 				819A32E92BF69B2F00AD10E3 /* ShellHelper.swift in Sources */,
-				816A1D3C2BE8CAC300E7DA71 /* ApplicationRepositoryImpl.swift in Sources */,
+				816A1D3C2BE8CAC300E7DA71 /* PackageRepositoryImpl.swift in Sources */,
 				81F41C632BEAA7B0005F1730 /* GridView.swift in Sources */,
 				819A32E32BF6774D00AD10E3 /* AdbRepositoryImpl.swift in Sources */,
 				812A62BF2BC708D400388105 /* DeviceInformationModel.swift in Sources */,

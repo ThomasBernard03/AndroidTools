@@ -66,8 +66,13 @@ extension String {
     func toLogcatEntry() -> LogEntryModel? {
         let components = self.split(separator: " ", maxSplits: 5)
         
+        guard components.count >= 6 else {
+            return nil
+        }
+        
         let dateFormatter = DateFormatter()
         dateFormatter.dateFormat = "MM-dd HH:mm:ss.SSS"
+        
         guard let date = dateFormatter.date(from: "\(components[0]) \(components[1])") else {
             return nil
         }
@@ -81,13 +86,14 @@ extension String {
         }
         
         let tagAndMessage = components[5].split(separator: ":", maxSplits: 1, omittingEmptySubsequences: false)
+        
         guard let tag = tagAndMessage.first?.trimmingCharacters(in: .whitespaces),
               let message = tagAndMessage.last?.trimmingCharacters(in: .whitespaces) else {
             return nil
         }
         
-        
         return LogEntryModel(datetime: date, processID: processId, threadID: threadId, level: level, tag: tag, message: message)
     }
+
 
 }

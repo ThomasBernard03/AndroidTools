@@ -10,7 +10,9 @@ import Foundation
 class GetLogcatUseCase {
     private let logcatRepository : LogcatRepository = LogcatRepositoryImpl()
     
-    func execute(deviceId : String, onResult: @escaping (String) -> Void) {
-        logcatRepository.getLogcat(deviceId: deviceId, onResult: onResult)
+    func execute(deviceId : String, 
+                 packageName : String = "",
+                 onResult: @escaping (String) -> Void) {
+        logcatRepository.getLogcat(deviceId: deviceId, packageName: packageName, onResult: onResult)
     }
 }
