@@ -62,10 +62,10 @@ final class FilesViewModel: ObservableObject {
         }
     }
     
-    func deleteItem(deviceId : String, path : String){
+    func deleteItem(deviceId : String, path : String, name : String){
         loading = true
         DispatchQueue.global(qos: .userInitiated).async { [self] in
-            deleteFileItemUseCase.execute(deviceId: deviceId, path: path)
+            deleteFileItemUseCase.execute(deviceId: deviceId, path: path, name:name)
             getFiles(deviceId: deviceId, path: fileExplorerResult!.fullPath)
             DispatchQueue.main.async {
                 self.loading = false

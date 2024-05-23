@@ -35,6 +35,10 @@ struct InstallApplicationView: View {
                 .resizable()
                 .scaledToFit()
                 .frame(width: 200)
+                .onTapGesture {
+                    loadApkFile()
+                }
+
             
             VStack {
                 HStack {

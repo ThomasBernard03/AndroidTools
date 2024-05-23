@@ -10,7 +10,7 @@ import Foundation
 class DeleteFileItemUseCase {
     private let fileRepository : FileRepository = FileRepositoryImpl()
     
-    func execute(deviceId : String, path : String) {
-        fileRepository.deleteFileItem(deviceId: deviceId, path: path)
+    func execute(deviceId : String, path : String, name : String) {
+        fileRepository.deleteFileItem(deviceId: deviceId, path: path, name: name)
     }
 }

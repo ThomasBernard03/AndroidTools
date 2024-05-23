@@ -35,7 +35,7 @@ extension Int {
     // Return size in bytes, KB, MB or GB
     func toSize() -> String {
         let formatter = ByteCountFormatter()
-        formatter.allowedUnits = [.useKB, .useMB, .useGB]
+        formatter.allowedUnits = [.useBytes ,.useKB, .useMB, .useGB]
         formatter.countStyle = .file
         return formatter.string(fromByteCount: Int64(self))
     }

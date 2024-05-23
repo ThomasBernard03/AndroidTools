@@ -72,9 +72,9 @@ struct FilesView: View {
                         viewModel.getFiles(deviceId: deviceId, path: path)
                     }
                 }
-                else {
-                    EmptyView()
-                }
+            }
+            else {
+                Color.clear
             }
             
             if viewModel.loading {
@@ -85,9 +85,9 @@ struct FilesView: View {
         }
         .confirmationDialog("Delete this item ?", isPresented: $viewModel.showDeleteItemAlert) {
           Button("Delete", role: .destructive) {
-              let path = "\(viewModel.fileExplorerResult!.fullPath)/\(currentItem!.name)"
+              viewModel.deleteItem(deviceId: deviceId, path: viewModel.fileExplorerResult!.fullPath, name: currentItem!.name)
               selection = nil
-              viewModel.deleteItem(deviceId: deviceId, path: path)
+
           }
         }
         .alert("Create folder", isPresented: $viewModel.showCreateFolderAlert){
@@ -185,23 +185,28 @@ struct FilesView: View {
                             Label("Download file", systemImage: "square.and.arrow.down")
                         }
                         .disabled(selection == nil)
+                        .keyboardShortcut("s")
                         
                         Button { viewModel.showImportFileDialog.toggle() } label: {
                             Label("Upload file", systemImage: "square.and.arrow.up")
                         }
+                        
                         Button { viewModel.showCreateFolderAlert.toggle() } label: {
                             Label("Create folder", systemImage: "folder.badge.plus")
                         }
+                        .keyboardShortcut("n")
                         
                         Button { viewModel.showDeleteItemAlert.toggle() } label: {
                             Label("Delete", systemImage: "trash")
                         }
                         .disabled(selection == nil)
+                        .keyboardShortcut(.delete)
                         
                         Button {viewModel.getFiles(deviceId: deviceId, path: viewModel.fileExplorerResult!.fullPath)} label: {
                             Label("Refresh", systemImage: "arrow.clockwise")
                         }
                         .disabled(viewModel.fileExplorerResult == nil)
+                        .keyboardShortcut("r")
                     }
                     .disabled(viewModel.loading)
                 }

@@ -12,6 +12,19 @@ struct LogcatView: View {
     
     @StateObject private var viewModel = LogcatViewModel()
     
+    @AppStorage("packageName") private var packageName = ""
+    @AppStorage("logcatSticky") private var logcatSticky = true
+    
+    
+    var packagesSearch : [String] {
+        if self.packageName.isEmpty {
+            return Array(viewModel.packages.prefix(5))
+        }
+        else {
+            return Array(viewModel.packages.filter { $0.contains(packageName)}.prefix(5))
+        }
+    }
+    
 
     var body: some View {
         ZStack(alignment:.bottom) {
@@ -22,24 +35,23 @@ struct LogcatView: View {
                             .listRowSeparator(.hidden)
                             .listRowInsets(.init(top: 0, leading: 0, bottom: 0, trailing: 0))
                     }
-                    
-
-                    .onChange(of: viewModel.stickyList, { _, sticky in
+                    .onChange(of: logcatSticky){ old, new in
                         if let lastId = viewModel.logEntries.last?.id {
                             withAnimation {
                                 proxy.scrollTo(lastId, anchor: .bottom)
                             }
                         }
-                    })
-                    .onChange(of: viewModel.logEntries, { _, _ in
-                        if viewModel.stickyList {
+                    }
+
+                    .onChange(of: viewModel.logEntries) { _, _ in
+                        if logcatSticky {
                             if let lastId = viewModel.logEntries.last?.id {
                                 withAnimation {
                                     proxy.scrollTo(lastId, anchor: .bottom)
                                 }
                             }
                         }
-                    })
+                    }
                 }
             }
             
@@ -49,38 +61,52 @@ struct LogcatView: View {
                     .offset(y:8)
             }
         }
+        .onChange(of: packageName){ oldValue, newValue in
+            if newValue.isEmpty {
+                viewModel.getLogcat(deviceId: deviceId, packageName: "")
+            }
+        }
         .onAppear {
-            viewModel.getLogcat(deviceId: deviceId)
+            viewModel.getLogcat(deviceId: deviceId, packageName: packageName)
+            viewModel.getPackages(deviceId: deviceId)
         }
         .toolbar {
-            if viewModel.stickyList {
-                Button { viewModel.stickyList.toggle() } label: {
+            HStack {
+                Button { logcatSticky.toggle() } label: {
                     Label("Stick", systemImage: "arrow.down")
                 }
-                .background(.black.opacity(0.1))
+                .background(logcatSticky ? .black.opacity(0.1) : .clear)
+                .cornerRadius(6)
+
+                
+                Button { viewModel.restartLogcat(deviceId: deviceId, packageName: packageName) } label: {
+                    Label("Refresh", systemImage: "arrow.clockwise")
+                }
+                .disabled(viewModel.paused)
+                
+                Button { viewModel.pauseResumeLogcat(deviceId: deviceId, packageName: packageName) } label: {
+                    Label("Pause", systemImage: "pause.fill")
+                }
+                .background(viewModel.paused ? .black.opacity(0.1) : .clear)
                 .cornerRadius(6)
                 
-            }
-            else {
-                Button { viewModel.stickyList.toggle() } label: {
-                    Label("Stick", systemImage: "arrow.down")
+                Button { viewModel.clearLogcat(deviceId: deviceId) } label: {
+                    Label("Delete", systemImage: "trash")
                 }
             }
-
-            
-            Button { } label: {
-                Label("Refresh", systemImage: "arrow.clockwise")
-            }
-            
-            Button { } label: {
-                Label("Pause", systemImage: "pause.fill")
-            }
-            
-            Button { } label: {
-                Label("Delete", systemImage: "trash")
+            .disabled(viewModel.loading)
+        }
+        .searchable(text: $packageName, prompt: "Package name")
+        .searchSuggestions {
+            ForEach(packagesSearch, id: \.self){ package in
+                Text(package)
+                    .searchCompletion(package)
+                    .onTapGesture {
+                        packageName = package
+                        viewModel.getLogcat(deviceId: deviceId, packageName: package)
+                    }
             }
         }
-        
     }
 }
 

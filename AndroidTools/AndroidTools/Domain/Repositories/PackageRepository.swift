@@ -7,7 +7,7 @@
 
 import Foundation
 
-protocol ApplicationRepository {
+protocol PackageRepository {
     
     /**
      Installs an application on a specified device.
@@ -19,4 +19,6 @@ protocol ApplicationRepository {
      - Returns: A `Result<Void, Error>` indicating the success or failure of the installation process.
      */
     func installApplication(deviceId : String, path : String) -> Result<Void, InstallApplicationError>
+    
+    func getAllPackages(deviceId : String) -> Result<[String], GetAllPackagesError>
 }

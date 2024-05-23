@@ -53,3 +53,5 @@ You can now view logcat logs into Android Tools !
 - Drag and drop into file manager
 - Use emulators
 - Screen miroring (like Vysor)
+- Database viewer
+- New device information screen

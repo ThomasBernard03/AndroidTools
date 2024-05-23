@@ -1,55 +1,69 @@
 import Foundation
+import Combine
 
-import Foundation
-
-class LogcatViewModel : ObservableObject {
-    private let adbHelper = AdbHelper()
+class LogcatViewModel: ObservableObject {
+    private let getLogcatUseCase: GetLogcatUseCase = GetLogcatUseCase()
+    private let getPackagesUseCase: GetPackagesUseCase = GetPackagesUseCase()
+    private let clearLogcatUseCase: ClearLogcatUseCase = ClearLogcatUseCase()
     
-    @Published var package: String = ""
-    @Published var logLevel: LogLevel? = nil
     @Published var loading: Bool = false
-    
     @Published var logEntries: [LogEntryModel] = []
-    @Published var filterPackage : String? = nil
+    @Published var packages: [String] = []
+    @Published var paused : Bool = false
     
-    @Published var stickyList : Bool = false
-    
-    private var buffer: String = ""
+    private let maxLogEntries = 1000
+    private var cancellable: AnyCancellable?
 
-    func getLogcat(deviceId: String) {
-        loading = true
-        DispatchQueue.global(qos: .userInitiated).async { [self] in
-            let command = "-s \(deviceId) logcat -v threadtime"
-            
-            adbHelper.runAdbCommand(command) { [self] result in
-                buffer.append(result)
-                processBuffer()
-            }
-        }
-    }
-    
-    private func processBuffer() {
-        DispatchQueue.main.async {
-            self.loading = true
-        }
-        let lines = buffer.components(separatedBy: "\n")
-        for i in 0..<lines.count-1 {
-            if let logEntry = lines[i].toLogcatEntry() {
-                DispatchQueue.main.async { [self] in
-                    logEntries.append(logEntry)
+    func getLogcat(deviceId: String, packageName: String) {
+        self.logEntries = []
+        cancellable?.cancel()
+        cancellable = getLogcatUseCase.execute(deviceId: deviceId, packageName: packageName)
+            .receive(on: DispatchQueue.main)
+            .sink(){ result in
+                if self.logEntries.count > self.maxLogEntries {
+                    self.logEntries.removeFirst(self.logEntries.count - 200)
                 }
                 
-                if logEntries.count > 500 {
-                    DispatchQueue.main.async { [self] in
-                        logEntries.removeFirst(logEntries.count - 200)
-                    }
-                }
-            }
-        }
-        buffer = lines.last ?? ""
-        DispatchQueue.main.async {
-            self.loading = false
+                self.logEntries += result
         }
     }
     
+    func getPackages(deviceId: String) {
+        DispatchQueue.global(qos: .userInitiated).async { [self] in
+            let result = getPackagesUseCase.execute(deviceId: deviceId)
+            DispatchQueue.main.async {
+                switch(result) {
+                case .success(let packages):
+                    self.packages = packages
+                case .failure(let message):
+                    break
+                }
+            }
+        }
+    }
+    
+    func clearLogcat(deviceId: String) {
+        self.loading = true
+        DispatchQueue.global(qos: .userInitiated).async { [self] in
+            clearLogcatUseCase.execute(deviceId: deviceId)
+            DispatchQueue.main.async {
+                self.logEntries = []
+                self.loading = false
+            }
+        }
+    }
+    
+    func restartLogcat(deviceId : String, packageName : String){
+        getLogcat(deviceId: deviceId, packageName: packageName)
+    }
+    
+    func pauseResumeLogcat(deviceId: String, packageName: String){
+        paused.toggle()
+        if paused {
+            cancellable?.cancel()
+        }
+        else {
+            getLogcat(deviceId: deviceId, packageName: packageName)
+        }
+    }
 }

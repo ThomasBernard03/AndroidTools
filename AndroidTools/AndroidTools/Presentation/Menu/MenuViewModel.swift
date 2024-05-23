@@ -16,13 +16,11 @@ final class SideBarViewModel: ObservableObject {
 
     func getAndroidDevices() {
         DispatchQueue.global(qos: .background).async {
-            let devices = self.adbHelper.getDevices()
+            let resultDevices = self.adbHelper.getDevices()
             
-            DispatchQueue.main.async { [weak self] in
-                self?.devices = devices
-                if !devices.isEmpty && self?.selectedDevice == nil {
-                    self?.selectedDevice = devices.first!
-                }
+            DispatchQueue.main.async { [self] in
+                devices = resultDevices
+                self.selectedDevice = resultDevices.first
             }
         }
     }

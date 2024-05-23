@@ -33,7 +33,6 @@ class AdbHelper {
     }
     
     func saveFileInTemporaryDirectory(deviceId: String, filePath: String) -> String {
-        let fileManager = FileManager.default
         let tempDirectory = NSTemporaryDirectory()
         let fileName = URL(fileURLWithPath: filePath).lastPathComponent
         let tempUrl = URL(fileURLWithPath: tempDirectory).appendingPathComponent(fileName)
