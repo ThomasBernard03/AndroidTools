@@ -84,10 +84,9 @@ struct LogcatView: View {
                 }
                 .disabled(true)
                 
-                Button { } label: {
+                Button { viewModel.pauseLogcat() } label: {
                     Label("Pause", systemImage: "pause.fill")
                 }
-                .disabled(true)
                 
                 Button { viewModel.clearLogcat(deviceId: deviceId) } label: {
                     Label("Delete", systemImage: "trash")

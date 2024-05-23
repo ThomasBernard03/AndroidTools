@@ -6,9 +6,6 @@ class LogcatViewModel: ObservableObject {
     private let getPackagesUseCase: GetPackagesUseCase = GetPackagesUseCase()
     private let clearLogcatUseCase: ClearLogcatUseCase = ClearLogcatUseCase()
     
-    private let adbRepository : AdbRepositoryImpl = AdbRepositoryImpl()
-    private let logcatRepository : LogcatRepositoryImpl = LogcatRepositoryImpl()
-    
     @Published var loading: Bool = false
     @Published var logEntries: [LogEntryModel] = []
     @Published var packages: [String] = []
@@ -17,17 +14,11 @@ class LogcatViewModel: ObservableObject {
     private var cancellable: AnyCancellable?
 
     func getLogcat(deviceId: String, packageName: String) {
-        let pid = try? adbRepository.runAdbCommand("shell pidof '\(packageName)'")
-        let command = "-s \(deviceId) logcat -v threadtime --pid=\(pid ?? "")"
         cancellable?.cancel()
-        cancellable = adbRepository.runAdbCommandCombine(command)
+        cancellable = getLogcatUseCase.execute(deviceId: deviceId, packageName: packageName)
+            .receive(on: DispatchQueue.main)
             .sink(){ result in
-                self.logcatRepository.buffer += result
-                let result = self.logcatRepository.processBuffer()
-                DispatchQueue.main.async {
-                    self.logEntries += result
-                }
-                
+                self.logEntries += result
         }
     }
     
@@ -54,5 +45,9 @@ class LogcatViewModel: ObservableObject {
                 self.loading = false
             }
         }
+    }
+    
+    func pauseLogcat(){
+        cancellable?.cancel()
     }
 }
