@@ -106,5 +106,5 @@ struct DeviceInformationView: View {
 }
 
 #Preview {
-    DeviceInformationView(deviceId: "4dfda047")
+    DeviceInformationView(deviceId: "4dfda048")
 }

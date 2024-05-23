@@ -23,6 +23,7 @@
 		812399C82BDC3CC7004219C9 /* ToastView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 812399C72BDC3CC7004219C9 /* ToastView.swift */; };
 		812399CA2BDC3CE3004219C9 /* ToastModifier.swift in Sources */ = {isa = PBXBuildFile; fileRef = 812399C92BDC3CE3004219C9 /* ToastModifier.swift */; };
 		812399CC2BDC3D22004219C9 /* ViewExtensions.swift in Sources */ = {isa = PBXBuildFile; fileRef = 812399CB2BDC3D22004219C9 /* ViewExtensions.swift */; };
+		812895B92BFFCA3900E61271 /* WaveAnimation.swift in Sources */ = {isa = PBXBuildFile; fileRef = 812895B82BFFCA3900E61271 /* WaveAnimation.swift */; };
 		812A62BB2BC6F2FC00388105 /* StringExtensions.swift in Sources */ = {isa = PBXBuildFile; fileRef = 812A62BA2BC6F2FC00388105 /* StringExtensions.swift */; };
 		812A62BF2BC708D400388105 /* DeviceInformationModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 812A62BE2BC708D400388105 /* DeviceInformationModel.swift */; };
 		812A62C12BC70C3E00388105 /* IntExtensions.swift in Sources */ = {isa = PBXBuildFile; fileRef = 812A62C02BC70C3E00388105 /* IntExtensions.swift */; };
@@ -103,6 +104,7 @@
 		812399C72BDC3CC7004219C9 /* ToastView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ToastView.swift; sourceTree = "<group>"; };
 		812399C92BDC3CE3004219C9 /* ToastModifier.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ToastModifier.swift; sourceTree = "<group>"; };
 		812399CB2BDC3D22004219C9 /* ViewExtensions.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ViewExtensions.swift; sourceTree = "<group>"; };
+		812895B82BFFCA3900E61271 /* WaveAnimation.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = WaveAnimation.swift; sourceTree = "<group>"; };
 		812A62BA2BC6F2FC00388105 /* StringExtensions.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = StringExtensions.swift; sourceTree = "<group>"; };
 		812A62BE2BC708D400388105 /* DeviceInformationModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DeviceInformationModel.swift; sourceTree = "<group>"; };
 		812A62C02BC70C3E00388105 /* IntExtensions.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = IntExtensions.swift; sourceTree = "<group>"; };
@@ -405,6 +407,7 @@
 				81600C8E2BC98F65008D471C /* FileRow.swift */,
 				812DC7872BDC047E009B2E87 /* TerminalWindow.swift */,
 				811E65032BDE8C16003528B7 /* SideBarItem.swift */,
+				812895B82BFFCA3900E61271 /* WaveAnimation.swift */,
 			);
 			path = Components;
 			sourceTree = "<group>";
@@ -547,6 +550,7 @@
 				81B790132BEBAA74008E7359 /* LogLevel.swift in Sources */,
 				81E9822D2BDD06600004B154 /* InstallApplicationUseCase.swift in Sources */,
 				816A1D3A2BE8CAA300E7DA71 /* PackageRepository.swift in Sources */,
+				812895B92BFFCA3900E61271 /* WaveAnimation.swift in Sources */,
 				812399C82BDC3CC7004219C9 /* ToastView.swift in Sources */,
 				81A067C72BEEBA0100E83DEF /* GetAdbVersionUseCase.swift in Sources */,
 				81D04F5A2BCA4B3400B04FAB /* FolderItem.swift in Sources */,
