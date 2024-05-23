@@ -9,27 +9,31 @@ import Foundation
 import os
 import Combine
 
-class LogcatRepositoryImpl : LogcatRepository {
-
-    private let shellHelper : ShellHelper = ShellHelper()
-    private var buffer: String = ""
-    private var lastLogcatPid : String = ""
+class LogcatRepositoryImpl: LogcatRepository {
+    private let shellHelper = ShellHelper()
+    private let adbRepository: AdbRepository = AdbRepositoryImpl()
+    var buffer: String = ""
+    private var lastLogcatPid: String = ""
+    
+    private var cancellables = Set<AnyCancellable>()
     
     private let logger = Logger(
         subsystem: Bundle.main.bundleIdentifier!,
         category: String(describing: AdbRepositoryImpl.self)
     )
     
-    func getLogcat(deviceId : String, packageName : String = "") -> AnyPublisher<[LogEntryModel], Never> {
+    func getLogcat(deviceId: String, packageName: String = "") -> AnyPublisher<[LogEntryModel], Never> {
         let subject = PassthroughSubject<[LogEntryModel], Never>()
         buffer = "" // Reset buffer
 
         if packageName.isEmpty {
             if lastLogcatPid.isEmpty {
                 getAllLogcat(deviceId: deviceId)
-                    .sink { logEntries in
+                    .sink(receiveCompletion: { _ in },
+                          receiveValue: { logEntries in
                         subject.send(logEntries)
-                    }
+                    })
+                    .store(in: &cancellables)
             } else {
                 logger.debug("Already logging all logs")
             }
@@ -37,25 +41,29 @@ class LogcatRepositoryImpl : LogcatRepository {
             let pid = shellHelper.runAdbCommand("adb shell pidof '\(packageName)'")
             if pid.isEmpty {
                 getAllLogcat(deviceId: deviceId)
-                    .sink { logEntries in
+                    .sink(receiveCompletion: { _ in },
+                          receiveValue: { logEntries in
                         subject.send(logEntries)
-                    }
+                    })
+                    .store(in: &cancellables)
             } else {
                 let command = "adb -s \(deviceId) logcat -v threadtime --pid=\(pid)"
-                shellHelper.runAdbCommandCombine(command)
-                    .sink { result in
+                adbRepository.runAdbCommandCombine(command)
+                    .sink(receiveCompletion: { _ in },
+                          receiveValue: { result in
                         self.buffer += result
                         subject.send(self.processBuffer())
-                    }
+                    })
+                    .store(in: &cancellables)
             }
         }
 
         return subject.eraseToAnyPublisher()
     }
     
-    private func getAllLogcat(deviceId : String) -> AnyPublisher<[LogEntryModel], Never> {
+    private func getAllLogcat(deviceId: String) -> AnyPublisher<[LogEntryModel], Never> {
         let command = "adb -s \(deviceId) logcat -v threadtime"
-        return shellHelper.runAdbCommandCombine(command)
+        return adbRepository.runAdbCommandCombine(command)
             .map { result in
                 self.buffer += result
                 return self.processBuffer()
@@ -68,7 +76,7 @@ class LogcatRepositoryImpl : LogcatRepository {
         let _ : String = shellHelper.runAdbCommand("adb -s \(deviceId) logcat -c")
     }
     
-    private func processBuffer() -> [LogEntryModel] {
+    func processBuffer() -> [LogEntryModel] {
         let lines = buffer.components(separatedBy: "\n")
         var logEntries: [LogEntryModel] = []
         
