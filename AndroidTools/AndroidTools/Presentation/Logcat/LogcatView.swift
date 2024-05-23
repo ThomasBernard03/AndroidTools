@@ -68,7 +68,7 @@ struct LogcatView: View {
         }
         .onAppear {
             viewModel.getLogcat(deviceId: deviceId, packageName: packageName)
-            // viewModel.getPackages(deviceId: deviceId)
+            viewModel.getPackages(deviceId: deviceId)
         }
         .toolbar {
             HStack {

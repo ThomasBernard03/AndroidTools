@@ -18,6 +18,10 @@ class LogcatViewModel: ObservableObject {
         cancellable = getLogcatUseCase.execute(deviceId: deviceId, packageName: packageName)
             .receive(on: DispatchQueue.main)
             .sink(){ result in
+                if self.logEntries.count > self.maxLogEntries {
+                    self.logEntries.removeFirst(self.logEntries.count - 200)
+                }
+                
                 self.logEntries += result
         }
     }
