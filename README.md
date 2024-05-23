@@ -48,10 +48,17 @@ You can now view logcat logs into Android Tools !
 
 ### 🚀 Road map
 
-- Better error handling
-- Add different features to logcat (Filters etc...)
-- Drag and drop into file manager
+- General
+  1. Better error handling
+  
+- Device information :
+  1. New design
+  2. Screenshot
+  3. Record vide
+  
+- Logcat
+  1. Clean architecture
+
 - Use emulators
 - Screen miroring (like Vysor)
 - Database viewer
-- New device information screen
