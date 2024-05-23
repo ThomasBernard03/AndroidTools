@@ -6,9 +6,10 @@
 //
 
 import Foundation
+import Combine
 
 protocol LogcatRepository {
-    func getLogcat(deviceId : String, packageName : String, onResult: @escaping ([LogEntryModel]) -> Void)
+    func getLogcat(deviceId : String, packageName : String) -> AnyPublisher<[LogEntryModel], Never>
     
     func clearLogcat(deviceId : String)
 }

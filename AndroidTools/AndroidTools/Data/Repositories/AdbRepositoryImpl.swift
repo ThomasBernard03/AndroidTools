@@ -7,6 +7,7 @@
 
 import Foundation
 import os
+import Combine
 
 class AdbRepositoryImpl : AdbRepository {
 
@@ -37,6 +38,10 @@ class AdbRepositoryImpl : AdbRepository {
     
     func runAdbCommand(_ command: String, outputHandler: @escaping (String) -> Void) {
         return shellHelper.runAdbCommand("\(adbPath) \(command)", outputHandler: outputHandler)
+    }
+    
+    func runAdbCommandCombine(_ command: String) -> AnyPublisher<String, Never>  {
+        return shellHelper.runAdbCommandCombine("\(adbPath) \(command)")
     }
     
     

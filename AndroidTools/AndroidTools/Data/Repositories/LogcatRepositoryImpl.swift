@@ -7,6 +7,7 @@
 
 import Foundation
 import os
+import Combine
 
 class LogcatRepositoryImpl : LogcatRepository {
 
@@ -19,52 +20,57 @@ class LogcatRepositoryImpl : LogcatRepository {
         category: String(describing: AdbRepositoryImpl.self)
     )
     
-    func getLogcat(deviceId : String, packageName : String = "", onResult: @escaping ([LogEntryModel]) -> Void) {
+    func getLogcat(deviceId : String, packageName : String = "") -> AnyPublisher<[LogEntryModel], Never> {
+        let subject = PassthroughSubject<[LogEntryModel], Never>()
         buffer = "" // Reset buffer
-        // First, clear logcat
-        // clearLogcat(deviceId:deviceId)
 
         if packageName.isEmpty {
             if lastLogcatPid.isEmpty {
-                getAllLogcat(deviceId: deviceId, onResult: onResult)
-            }
-            else {
+                getAllLogcat(deviceId: deviceId)
+                    .sink { logEntries in
+                        subject.send(logEntries)
+                    }
+            } else {
                 logger.debug("Already logging all logs")
             }
-            
-        }
-        else {
+        } else {
             let pid = shellHelper.runAdbCommand("adb shell pidof '\(packageName)'")
-            
             if pid.isEmpty {
-                getAllLogcat(deviceId: deviceId, onResult: onResult)
-            }
-            else {
+                getAllLogcat(deviceId: deviceId)
+                    .sink { logEntries in
+                        subject.send(logEntries)
+                    }
+            } else {
                 let command = "adb -s \(deviceId) logcat -v threadtime --pid=\(pid)"
-                shellHelper.runAdbCommand(command){ result in
-                    self.buffer += result
-                    onResult(self.processBuffer())
-                }
+                shellHelper.runAdbCommandCombine(command)
+                    .sink { result in
+                        self.buffer += result
+                        subject.send(self.processBuffer())
+                    }
             }
         }
+
+        return subject.eraseToAnyPublisher()
     }
     
-    private func getAllLogcat(deviceId : String,  onResult: @escaping ([LogEntryModel]) -> Void){
+    private func getAllLogcat(deviceId : String) -> AnyPublisher<[LogEntryModel], Never> {
         let command = "adb -s \(deviceId) logcat -v threadtime"
-        shellHelper.runAdbCommand(command){ result in
-            self.buffer += result
-            onResult(self.processBuffer())
-        }
+        return shellHelper.runAdbCommandCombine(command)
+            .map { result in
+                self.buffer += result
+                return self.processBuffer()
+            }
+            .eraseToAnyPublisher()
     }
     
     func clearLogcat(deviceId: String) {
         buffer = ""
-        let _ = shellHelper.runAdbCommand("adb -s \(deviceId) logcat -c")
+        let _ : String = shellHelper.runAdbCommand("adb -s \(deviceId) logcat -c")
     }
     
     private func processBuffer() -> [LogEntryModel] {
         let lines = buffer.components(separatedBy: "\n")
-        var logEntries : [LogEntryModel] = []
+        var logEntries: [LogEntryModel] = []
         
         for i in 0..<lines.count - 1 {
             if let logEntry = lines[i].toLogcatEntry() {

@@ -1,41 +1,26 @@
 import Foundation
+import Combine
 
 class LogcatViewModel: ObservableObject {
     private let getLogcatUseCase: GetLogcatUseCase = GetLogcatUseCase()
     private let getPackagesUseCase: GetPackagesUseCase = GetPackagesUseCase()
     private let clearLogcatUseCase: ClearLogcatUseCase = ClearLogcatUseCase()
+    private let adbRepository : AdbRepositoryImpl = AdbRepositoryImpl()
     
     @Published var loading: Bool = false
     @Published var logEntries: [LogEntryModel] = []
     @Published var packages: [String] = []
     
     private let maxLogEntries = 1000
-    private var currentLogcatWorkItem: DispatchWorkItem?
+    private var cancellable: AnyCancellable?
 
     func getLogcat(deviceId: String, packageName: String) {
-        currentLogcatWorkItem?.cancel()
-        
-        // Créer une nouvelle DispatchWorkItem
-        currentLogcatWorkItem = DispatchWorkItem { [weak self] in
-            guard let self = self else { return }
-            self.getLogcatUseCase.execute(deviceId: deviceId, packageName: packageName) { result in
-                DispatchQueue.main.async {
-                    if self.logEntries.count > self.maxLogEntries {
-                        self.logEntries = Array(self.logEntries.suffix(self.maxLogEntries))
-                    }
-                    
-                    self.loading = false
-                    self.logEntries += result
-                }
-            }
+        let command = "-s \(deviceId) logcat -v threadtime"
+        cancellable?.cancel()
+        cancellable = adbRepository.runAdbCommandCombine(command)
+            .sink(){ result in
+            print(result)
         }
-        
-
-        loading = true
-        logEntries = []
-        
-        // Lancer la nouvelle tâche
-        DispatchQueue.global(qos: .userInitiated).async(execute: currentLogcatWorkItem!)
     }
     
     func getPackages(deviceId: String) {

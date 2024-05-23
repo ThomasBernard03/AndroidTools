@@ -6,13 +6,13 @@
 //
 
 import Foundation
+import Combine
 
 class GetLogcatUseCase {
     private let logcatRepository : LogcatRepository = LogcatRepositoryImpl()
     
     func execute(deviceId : String, 
-                 packageName : String = "",
-                 onResult: @escaping ([LogEntryModel]) -> Void) {
-        logcatRepository.getLogcat(deviceId: deviceId, packageName: packageName, onResult: onResult)
+                 packageName : String = "") -> AnyPublisher<[LogEntryModel], Never>{
+        return logcatRepository.getLogcat(deviceId: deviceId, packageName: packageName)
     }
 }
