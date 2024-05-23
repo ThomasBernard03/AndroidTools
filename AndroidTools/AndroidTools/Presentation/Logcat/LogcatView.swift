@@ -84,9 +84,11 @@ struct LogcatView: View {
                 }
                 .disabled(true)
                 
-                Button { viewModel.pauseLogcat() } label: {
+                Button { viewModel.pauseResumeLogcat(deviceId: deviceId, packageName: packageName) } label: {
                     Label("Pause", systemImage: "pause.fill")
                 }
+                .background(viewModel.paused ? .black.opacity(0.1) : .clear)
+                .cornerRadius(6)
                 
                 Button { viewModel.clearLogcat(deviceId: deviceId) } label: {
                     Label("Delete", systemImage: "trash")

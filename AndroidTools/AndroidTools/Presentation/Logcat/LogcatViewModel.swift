@@ -9,11 +9,13 @@ class LogcatViewModel: ObservableObject {
     @Published var loading: Bool = false
     @Published var logEntries: [LogEntryModel] = []
     @Published var packages: [String] = []
+    @Published var paused : Bool = false
     
     private let maxLogEntries = 1000
     private var cancellable: AnyCancellable?
 
     func getLogcat(deviceId: String, packageName: String) {
+        self.logEntries = []
         cancellable?.cancel()
         cancellable = getLogcatUseCase.execute(deviceId: deviceId, packageName: packageName)
             .receive(on: DispatchQueue.main)
@@ -51,7 +53,13 @@ class LogcatViewModel: ObservableObject {
         }
     }
     
-    func pauseLogcat(){
-        cancellable?.cancel()
+    func pauseResumeLogcat(deviceId: String, packageName: String){
+        paused.toggle()
+        if paused {
+            cancellable?.cancel()
+        }
+        else {
+            getLogcat(deviceId: deviceId, packageName: packageName)
+        }
     }
 }
