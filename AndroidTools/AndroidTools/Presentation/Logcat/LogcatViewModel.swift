@@ -53,6 +53,10 @@ class LogcatViewModel: ObservableObject {
         }
     }
     
+    func restartLogcat(deviceId : String, packageName : String){
+        getLogcat(deviceId: deviceId, packageName: packageName)
+    }
+    
     func pauseResumeLogcat(deviceId: String, packageName: String){
         paused.toggle()
         if paused {

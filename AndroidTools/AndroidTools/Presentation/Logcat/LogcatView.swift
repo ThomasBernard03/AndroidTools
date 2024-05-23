@@ -79,10 +79,10 @@ struct LogcatView: View {
                 .cornerRadius(6)
 
                 
-                Button { } label: {
+                Button { viewModel.restartLogcat(deviceId: deviceId, packageName: packageName) } label: {
                     Label("Refresh", systemImage: "arrow.clockwise")
                 }
-                .disabled(true)
+                .disabled(viewModel.paused)
                 
                 Button { viewModel.pauseResumeLogcat(deviceId: deviceId, packageName: packageName) } label: {
                     Label("Pause", systemImage: "pause.fill")
