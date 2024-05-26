@@ -41,9 +41,9 @@ https://github.com/ThomasBernard03/AndroidTools/assets/67638928/73b733b6-b16f-47
 
 ### 🐱 Logcat
 
-You can now view logcat logs into Android Tools !
+You can now view logcat logs into Android Tools, you can filter by package name, refresh and clear all logcat.
 
-<img alt="Android tools logo" src= "./Documentation/logcat.png"/>
+https://github.com/ThomasBernard03/AndroidTools/assets/67638928/eb3b4248-d17e-4af3-a73d-57d521303dbc
 
 
 ### 🚀 Road map
