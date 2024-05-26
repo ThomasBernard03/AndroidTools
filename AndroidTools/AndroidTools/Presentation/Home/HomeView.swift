@@ -34,6 +34,16 @@ struct HomeView: View {
                 Text("To reduce the size of the application, we decided not to include ADB in the application (to avoid double installation on the Mac).  It is therefore up to the user to install ADB. ")
                     .font(.subheadline)
                 
+                HStack {
+                    Text("Resolving errors")
+                        .font(.title2)
+                    
+                    Spacer()
+                }
+                
+                Text("If your application displays strange results or does not work properly, check the adb path configured in the settings. You must provide a valid path. To find out where adb is installed on your Mac, open a terminal and enter the command: which adb")
+                    .font(.subheadline)
+                
                 
                 
             }
