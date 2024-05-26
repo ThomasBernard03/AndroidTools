@@ -1,13 +1,14 @@
 name: Build macOS App
 
+
+
 on:
   push:
     branches:
-      - main
 
 jobs:
   build:
-    runs-on: macos-14
+    runs-on: self-hosted
     steps:
     - name: Checkout code
       uses: actions/checkout@v2
