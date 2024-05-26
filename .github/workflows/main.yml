@@ -41,4 +41,3 @@ jobs:
         path: |
           ${{github.workspace}}/build/*.pkg
           ${{github.workspace}}/build/*.app
-

@@ -30,6 +30,7 @@ struct LogcatView: View {
         ZStack(alignment:.bottom) {
             VStack {
                 ScrollViewReader { proxy in
+
                     List(viewModel.logEntries){
                         LogEntryItem(date: $0.datetime, processId: $0.processID, threadId: $0.threadID, tag: $0.tag, level: $0.level, message: $0.message)
                             .listRowSeparator(.hidden)
@@ -99,12 +100,19 @@ struct LogcatView: View {
         .searchable(text: $packageName, prompt: "Package name")
         .searchSuggestions {
             ForEach(packagesSearch, id: \.self){ package in
-                Text(package)
-                    .searchCompletion(package)
-                    .onTapGesture {
-                        packageName = package
-                        viewModel.getLogcat(deviceId: deviceId, packageName: package)
-                    }
+                HStack {
+                    Text(package)
+                        
+                        .padding(.vertical, 4)
+                    
+                    Spacer()
+                }
+                .searchCompletion(package)
+                .contentShape(Rectangle())
+                .onTapGesture {
+                    packageName = package
+                    viewModel.getLogcat(deviceId: deviceId, packageName: package)
+                }
             }
         }
     }
