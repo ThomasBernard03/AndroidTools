@@ -7,7 +7,7 @@
 
 import Foundation
 
-struct DatabaseColumn {
+struct DatabaseColumn : Identifiable {
     let id : UUID = UUID()
     let name : String
     let values : [String]

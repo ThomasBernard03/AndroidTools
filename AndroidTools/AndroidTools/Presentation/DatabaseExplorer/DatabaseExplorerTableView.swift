@@ -16,7 +16,15 @@ struct DatabaseExplorerTableView: View {
     let table : String
     
     var body: some View {
-        Text("")
+        HStack {
+            ForEach(viewModel.columns){ column in
+                VStack {
+                    ForEach(column.values, id: \.self){ value in
+                        Text(value)
+                    }
+                }
+            }
+        }
         .onAppear {
             viewModel.getTable(deviceId: deviceId, packageName: packageName, table: table)
         }

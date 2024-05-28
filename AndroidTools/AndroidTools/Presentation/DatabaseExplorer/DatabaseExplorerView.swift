@@ -16,19 +16,22 @@ struct DatabaseExplorerView: View {
     
     var body: some View {
         ZStack(alignment:.bottom) {
-            if viewModel.selectedPackage == nil {
-                List(viewModel.packages.filter{ packageName.isEmpty || $0.contains(packageName  ) }, id: \.self, selection: $viewModel.selectedPackage){
-                    Text($0)
-                }
-                .contextMenu(forSelectionType: String.self, menu: { _ in }) { selection in
+            VStack {
+                NavigationSplitView(
+                    sidebar: {
+                        if viewModel.selectedPackage == nil {
+                            List(viewModel.packages.filter{ packageName.isEmpty || $0.contains(packageName  ) }, id: \.self, selection: $viewModel.selectedPackage){
+                                Text($0)
+                            }
+                            .contextMenu(forSelectionType: String.self, menu: { _ in }) { selection in
 
-                    
-                }
-            }
-            else {
-                VStack {
-                    NavigationSplitView(
-                        sidebar: {
+                                
+                            }
+                            .onAppear {
+                                viewModel.getPackages(deviceId: deviceId)
+                            }
+                        }
+                        else {
                             List {
                                 NavigationLink(destination: { DatabaseExplorerQueryView() }){
                                     SideBarItem(label: "Query", systemImage: "apple.terminal.fill")
@@ -42,27 +45,25 @@ struct DatabaseExplorerView: View {
                             }
                             .listStyle(SidebarListStyle())
                             .padding(.vertical)
-                        },
-                        detail: {
-                        
+                            .onAppear {
+                                viewModel.getPackageDatabaseTables(deviceId: deviceId, packageName: viewModel.selectedPackage!)
+                            }
                         }
-                    )
-                }
-                .onAppear {
-                    viewModel.getPackageDatabaseTables(deviceId: deviceId, packageName: viewModel.selectedPackage!)
-                }
+                    },
+                    detail: {
+                    
+                    }
+                )
+   
             }
 
-            
             if viewModel.loading {
                 ProgressView()
                     .progressViewStyle(.linear)
                     .offset(y:8)
             }
         }
-        .onAppear {
-            viewModel.getPackages(deviceId: deviceId)
-        }
+
         .toolbar {
             ToolbarItemGroup(placement: .navigation) {
                 Button {
