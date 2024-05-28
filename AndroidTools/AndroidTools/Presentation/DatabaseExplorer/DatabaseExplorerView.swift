@@ -12,11 +12,12 @@ struct DatabaseExplorerView: View {
     let deviceId : String
     
     @StateObject private var viewModel = DatabaseExplorerViewModel()
+    @AppStorage("packageName") private var packageName = ""
     
     var body: some View {
         ZStack(alignment:.bottom) {
             if viewModel.selectedPackage == nil {
-                List(viewModel.packages, id: \.self, selection: $viewModel.selectedPackage){
+                List(viewModel.packages.filter{ packageName.isEmpty || $0.contains(packageName  ) }, id: \.self, selection: $viewModel.selectedPackage){
                     Text($0)
                 }
                 .contextMenu(forSelectionType: String.self, menu: { _ in }) { selection in
@@ -28,12 +29,19 @@ struct DatabaseExplorerView: View {
                 VStack {
                     NavigationSplitView(
                         sidebar: {
-                            List(viewModel.tables, id: \.self){ table in
-                                NavigationLink(table) {
-                                    DatabaseExplorerTableView(deviceId: deviceId, packageName: viewModel.selectedPackage!, table: table)
+                            List {
+                                NavigationLink(destination: { DatabaseExplorerQueryView() }){
+                                    SideBarItem(label: "Query", systemImage: "apple.terminal.fill")
+                                }
+                                Divider()
+                                ForEach(viewModel.tables, id: \.self){ table in
+                                    NavigationLink(destination: { DatabaseExplorerTableView(deviceId: deviceId, packageName: viewModel.selectedPackage!, table: table) }) {
+                                        SideBarItem(label: table, systemImage: "tablecells.fill")
+                                    }
                                 }
                             }
                             .listStyle(SidebarListStyle())
+                            .padding(.vertical)
                         },
                         detail: {
                         
@@ -65,6 +73,7 @@ struct DatabaseExplorerView: View {
                 .disabled(viewModel.selectedPackage == nil)
             }
         }
+        .searchable(text: $packageName, prompt: "Package name")
     }
 }
 

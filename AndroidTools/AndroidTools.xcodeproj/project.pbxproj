@@ -70,6 +70,9 @@
 		81D04F582BCA49C300B04FAB /* FileExplorerItem.swift in Sources */ = {isa = PBXBuildFile; fileRef = 81D04F572BCA49C300B04FAB /* FileExplorerItem.swift */; };
 		81D04F5A2BCA4B3400B04FAB /* FolderItem.swift in Sources */ = {isa = PBXBuildFile; fileRef = 81D04F592BCA4B3400B04FAB /* FolderItem.swift */; };
 		81DB14A32C06321E00CA8856 /* DatabaseExplorerTableView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 81DB14A22C06321E00CA8856 /* DatabaseExplorerTableView.swift */; };
+		81DB14A52C0638E000CA8856 /* DatabaseExplorerTableViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 81DB14A42C0638E000CA8856 /* DatabaseExplorerTableViewModel.swift */; };
+		81DB14A72C063A4200CA8856 /* DatabaseColumn.swift in Sources */ = {isa = PBXBuildFile; fileRef = 81DB14A62C063A4200CA8856 /* DatabaseColumn.swift */; };
+		81DB14A92C06577B00CA8856 /* DatabaseExplorerQueryView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 81DB14A82C06577B00CA8856 /* DatabaseExplorerQueryView.swift */; };
 		81E6A7512BC5CC260034EBFB /* MenuView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 81E6A7502BC5CC260034EBFB /* MenuView.swift */; };
 		81E6A7592BC5CD9D0034EBFB /* DeviceInformationView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 81E6A7582BC5CD9D0034EBFB /* DeviceInformationView.swift */; };
 		81E6A75B2BC5CDC20034EBFB /* FileExplorerView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 81E6A75A2BC5CDC20034EBFB /* FileExplorerView.swift */; };
@@ -157,6 +160,9 @@
 		81D04F572BCA49C300B04FAB /* FileExplorerItem.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FileExplorerItem.swift; sourceTree = "<group>"; };
 		81D04F592BCA4B3400B04FAB /* FolderItem.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FolderItem.swift; sourceTree = "<group>"; };
 		81DB14A22C06321E00CA8856 /* DatabaseExplorerTableView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DatabaseExplorerTableView.swift; sourceTree = "<group>"; };
+		81DB14A42C0638E000CA8856 /* DatabaseExplorerTableViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DatabaseExplorerTableViewModel.swift; sourceTree = "<group>"; };
+		81DB14A62C063A4200CA8856 /* DatabaseColumn.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DatabaseColumn.swift; sourceTree = "<group>"; };
+		81DB14A82C06577B00CA8856 /* DatabaseExplorerQueryView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DatabaseExplorerQueryView.swift; sourceTree = "<group>"; };
 		81E6A7502BC5CC260034EBFB /* MenuView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MenuView.swift; sourceTree = "<group>"; };
 		81E6A7582BC5CD9D0034EBFB /* DeviceInformationView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DeviceInformationView.swift; sourceTree = "<group>"; };
 		81E6A75A2BC5CDC20034EBFB /* FileExplorerView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FileExplorerView.swift; sourceTree = "<group>"; };
@@ -403,6 +409,8 @@
 				81A2BF5E2C05065100C9E16F /* DatabaseExplorerView.swift */,
 				81A2BF602C05065E00C9E16F /* DatabaseExplorerViewModel.swift */,
 				81DB14A22C06321E00CA8856 /* DatabaseExplorerTableView.swift */,
+				81DB14A42C0638E000CA8856 /* DatabaseExplorerTableViewModel.swift */,
+				81DB14A82C06577B00CA8856 /* DatabaseExplorerQueryView.swift */,
 			);
 			path = DatabaseExplorer;
 			sourceTree = "<group>";
@@ -445,6 +453,7 @@
 				810E8E1D2BE92EE600ED561A /* FileExplorerResultModel.swift */,
 				81B790102BEBA9E8008E7359 /* LogEntryModel.swift */,
 				81B790122BEBAA74008E7359 /* LogLevel.swift */,
+				81DB14A62C063A4200CA8856 /* DatabaseColumn.swift */,
 			);
 			path = Models;
 			sourceTree = "<group>";
@@ -547,6 +556,7 @@
 			files = (
 				81AAD5E42BFD29F80002406B /* GetAllPackagesError.swift in Sources */,
 				81B790172BEC17B0008E7359 /* LogEntryItem.swift in Sources */,
+				81DB14A72C063A4200CA8856 /* DatabaseColumn.swift in Sources */,
 				819A32DF2BF6767A00AD10E3 /* AdbRepository.swift in Sources */,
 				81E6A7592BC5CD9D0034EBFB /* DeviceInformationView.swift in Sources */,
 				819A32ED2BF6A5DC00AD10E3 /* SetAdbPathUseCase.swift in Sources */,
@@ -574,6 +584,7 @@
 				81D04F5A2BCA4B3400B04FAB /* FolderItem.swift in Sources */,
 				81F41C5B2BEA4DF4005F1730 /* TableView.swift in Sources */,
 				816A1D402BE8CDE000E7DA71 /* InstallApplicationError.swift in Sources */,
+				81DB14A92C06577B00CA8856 /* DatabaseExplorerQueryView.swift in Sources */,
 				8109D3602BF12575001A4B5E /* ApplicationSettingsView.swift in Sources */,
 				819A32EB2BF6A23100AD10E3 /* GetAdbPathUseCase.swift in Sources */,
 				81E982392BDD3B480004B154 /* CheckForUpdateView.swift in Sources */,
@@ -585,6 +596,7 @@
 				814319502BC6715100044934 /* InstallApplicationView.swift in Sources */,
 				81F41C5F2BEA95FB005F1730 /* DeleteFileItemUseCase.swift in Sources */,
 				819A32E72BF67C9200AD10E3 /* DisplayableError.swift in Sources */,
+				81DB14A52C0638E000CA8856 /* DatabaseExplorerTableViewModel.swift in Sources */,
 				81A2BF612C05065E00C9E16F /* DatabaseExplorerViewModel.swift in Sources */,
 				816A1D472BE8F66100E7DA71 /* DeviceRepositoryImpl.swift in Sources */,
 				810E8E222BE9312B00ED561A /* FileRepository.swift in Sources */,

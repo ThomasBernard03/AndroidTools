@@ -15,17 +15,6 @@ struct LogcatView: View {
     @AppStorage("packageName") private var packageName = ""
     @AppStorage("logcatSticky") private var logcatSticky = true
     
-    
-    var packagesSearch : [String] {
-        if self.packageName.isEmpty {
-            return Array(viewModel.packages.prefix(5))
-        }
-        else {
-            return Array(viewModel.packages.filter { $0.contains(packageName)}.prefix(5))
-        }
-    }
-    
-
     var body: some View {
         ZStack(alignment:.bottom) {
             VStack {
@@ -99,7 +88,7 @@ struct LogcatView: View {
         }
         .searchable(text: $packageName, prompt: "Package name")
         .searchSuggestions {
-            ForEach(packagesSearch, id: \.self){ package in
+            ForEach(viewModel.packages.filter { packageName.isEmpty || $0.contains(packageName) }, id: \.self){ package in
                 HStack {
                     Text(package)
                         
