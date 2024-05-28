@@ -50,8 +50,4 @@ class AdbHelper {
         let result = try? adbRepository.runAdbCommand(command)
         return result ?? ""
     }
-    
-    func runAdbCommand(_ command: String, outputHandler: @escaping (String) -> Void) {
-        adbRepository.runAdbCommand(command, outputHandler: outputHandler)
-    }
 }

@@ -53,6 +53,8 @@
 		819A32EB2BF6A23100AD10E3 /* GetAdbPathUseCase.swift in Sources */ = {isa = PBXBuildFile; fileRef = 819A32EA2BF6A23100AD10E3 /* GetAdbPathUseCase.swift */; };
 		819A32ED2BF6A5DC00AD10E3 /* SetAdbPathUseCase.swift in Sources */ = {isa = PBXBuildFile; fileRef = 819A32EC2BF6A5DC00AD10E3 /* SetAdbPathUseCase.swift */; };
 		81A067C72BEEBA0100E83DEF /* GetAdbVersionUseCase.swift in Sources */ = {isa = PBXBuildFile; fileRef = 81A067C62BEEBA0100E83DEF /* GetAdbVersionUseCase.swift */; };
+		81A2BF5F2C05065100C9E16F /* DatabaseExplorerView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 81A2BF5E2C05065100C9E16F /* DatabaseExplorerView.swift */; };
+		81A2BF612C05065E00C9E16F /* DatabaseExplorerViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 81A2BF602C05065E00C9E16F /* DatabaseExplorerViewModel.swift */; };
 		81AAD5E22BFD295C0002406B /* GetPackagesUseCase.swift in Sources */ = {isa = PBXBuildFile; fileRef = 81AAD5E12BFD295C0002406B /* GetPackagesUseCase.swift */; };
 		81AAD5E42BFD29F80002406B /* GetAllPackagesError.swift in Sources */ = {isa = PBXBuildFile; fileRef = 81AAD5E32BFD29F80002406B /* GetAllPackagesError.swift */; };
 		81B7900D2BEBA7E5008E7359 /* LogcatViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 81B7900C2BEBA7E5008E7359 /* LogcatViewModel.swift */; };
@@ -67,6 +69,7 @@
 		81C3FEE12BD2E76000E18035 /* SettingsView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 81C3FEE02BD2E76000E18035 /* SettingsView.swift */; };
 		81D04F582BCA49C300B04FAB /* FileExplorerItem.swift in Sources */ = {isa = PBXBuildFile; fileRef = 81D04F572BCA49C300B04FAB /* FileExplorerItem.swift */; };
 		81D04F5A2BCA4B3400B04FAB /* FolderItem.swift in Sources */ = {isa = PBXBuildFile; fileRef = 81D04F592BCA4B3400B04FAB /* FolderItem.swift */; };
+		81DB14A32C06321E00CA8856 /* DatabaseExplorerTableView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 81DB14A22C06321E00CA8856 /* DatabaseExplorerTableView.swift */; };
 		81E6A7512BC5CC260034EBFB /* MenuView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 81E6A7502BC5CC260034EBFB /* MenuView.swift */; };
 		81E6A7592BC5CD9D0034EBFB /* DeviceInformationView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 81E6A7582BC5CD9D0034EBFB /* DeviceInformationView.swift */; };
 		81E6A75B2BC5CDC20034EBFB /* FileExplorerView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 81E6A75A2BC5CDC20034EBFB /* FileExplorerView.swift */; };
@@ -137,6 +140,8 @@
 		819A32EA2BF6A23100AD10E3 /* GetAdbPathUseCase.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = GetAdbPathUseCase.swift; sourceTree = "<group>"; };
 		819A32EC2BF6A5DC00AD10E3 /* SetAdbPathUseCase.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SetAdbPathUseCase.swift; sourceTree = "<group>"; };
 		81A067C62BEEBA0100E83DEF /* GetAdbVersionUseCase.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = GetAdbVersionUseCase.swift; sourceTree = "<group>"; };
+		81A2BF5E2C05065100C9E16F /* DatabaseExplorerView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DatabaseExplorerView.swift; sourceTree = "<group>"; };
+		81A2BF602C05065E00C9E16F /* DatabaseExplorerViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DatabaseExplorerViewModel.swift; sourceTree = "<group>"; };
 		81AAD5E12BFD295C0002406B /* GetPackagesUseCase.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = GetPackagesUseCase.swift; sourceTree = "<group>"; };
 		81AAD5E32BFD29F80002406B /* GetAllPackagesError.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = GetAllPackagesError.swift; sourceTree = "<group>"; };
 		81B7900C2BEBA7E5008E7359 /* LogcatViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LogcatViewModel.swift; sourceTree = "<group>"; };
@@ -151,6 +156,7 @@
 		81C3FEE02BD2E76000E18035 /* SettingsView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SettingsView.swift; sourceTree = "<group>"; };
 		81D04F572BCA49C300B04FAB /* FileExplorerItem.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FileExplorerItem.swift; sourceTree = "<group>"; };
 		81D04F592BCA4B3400B04FAB /* FolderItem.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FolderItem.swift; sourceTree = "<group>"; };
+		81DB14A22C06321E00CA8856 /* DatabaseExplorerTableView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DatabaseExplorerTableView.swift; sourceTree = "<group>"; };
 		81E6A7502BC5CC260034EBFB /* MenuView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MenuView.swift; sourceTree = "<group>"; };
 		81E6A7582BC5CD9D0034EBFB /* DeviceInformationView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DeviceInformationView.swift; sourceTree = "<group>"; };
 		81E6A75A2BC5CDC20034EBFB /* FileExplorerView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FileExplorerView.swift; sourceTree = "<group>"; };
@@ -217,6 +223,7 @@
 		816A1D2C2BE8C70300E7DA71 /* Presentation */ = {
 			isa = PBXGroup;
 			children = (
+				81A2BF5D2C0504B100C9E16F /* DatabaseExplorer */,
 				81B7900B2BEBA7D1008E7359 /* Logcat */,
 				816A1D372BE8C7FB00E7DA71 /* Menu */,
 				81E598B42BC6CA4F00FB614B /* Components */,
@@ -390,6 +397,16 @@
 			path = "Preview Content";
 			sourceTree = "<group>";
 		};
+		81A2BF5D2C0504B100C9E16F /* DatabaseExplorer */ = {
+			isa = PBXGroup;
+			children = (
+				81A2BF5E2C05065100C9E16F /* DatabaseExplorerView.swift */,
+				81A2BF602C05065E00C9E16F /* DatabaseExplorerViewModel.swift */,
+				81DB14A22C06321E00CA8856 /* DatabaseExplorerTableView.swift */,
+			);
+			path = DatabaseExplorer;
+			sourceTree = "<group>";
+		};
 		81B7900B2BEBA7D1008E7359 /* Logcat */ = {
 			isa = PBXGroup;
 			children = (
@@ -534,6 +551,7 @@
 				81E6A7592BC5CD9D0034EBFB /* DeviceInformationView.swift in Sources */,
 				819A32ED2BF6A5DC00AD10E3 /* SetAdbPathUseCase.swift in Sources */,
 				81B917762BFBD65D00373308 /* LogcatRepository.swift in Sources */,
+				81A2BF5F2C05065100C9E16F /* DatabaseExplorerView.swift in Sources */,
 				81B7900D2BEBA7E5008E7359 /* LogcatViewModel.swift in Sources */,
 				814319522BC6715B00044934 /* InstallApplicationViewModel.swift in Sources */,
 				8109D3662BF141B0001A4B5E /* ApplicationSettingsViewModel.swift in Sources */,
@@ -567,6 +585,7 @@
 				814319502BC6715100044934 /* InstallApplicationView.swift in Sources */,
 				81F41C5F2BEA95FB005F1730 /* DeleteFileItemUseCase.swift in Sources */,
 				819A32E72BF67C9200AD10E3 /* DisplayableError.swift in Sources */,
+				81A2BF612C05065E00C9E16F /* DatabaseExplorerViewModel.swift in Sources */,
 				816A1D472BE8F66100E7DA71 /* DeviceRepositoryImpl.swift in Sources */,
 				810E8E222BE9312B00ED561A /* FileRepository.swift in Sources */,
 				812A62C12BC70C3E00388105 /* IntExtensions.swift in Sources */,
@@ -597,6 +616,7 @@
 				81B917782BFBD6BB00373308 /* LogcatRepositoryImpl.swift in Sources */,
 				812AB6EB2BD3AFFE00DB60A5 /* HomeView.swift in Sources */,
 				812A62BB2BC6F2FC00388105 /* StringExtensions.swift in Sources */,
+				81DB14A32C06321E00CA8856 /* DatabaseExplorerTableView.swift in Sources */,
 				812399C62BDC3CA9004219C9 /* ToastStyle.swift in Sources */,
 				812399CC2BDC3D22004219C9 /* ViewExtensions.swift in Sources */,
 				81F41C5D2BEA7B3D005F1730 /* CreateFolderUseCase.swift in Sources */,

@@ -74,6 +74,11 @@ struct SideBarView: View {
 
                     }
                     .disabled(viewModel.devices.isEmpty)
+                    
+                    NavigationLink(destination: DatabaseExplorerView(deviceId: viewModel.selectedDevice?.id ?? "")) {
+                        SideBarItem(label:"Databases explorer", systemImage: "shippingbox")
+                    }
+                    .disabled(viewModel.devices.isEmpty)
                 }
                 .listStyle(SidebarListStyle())
                 .safeAreaInset(edge: .bottom, spacing: 0) {

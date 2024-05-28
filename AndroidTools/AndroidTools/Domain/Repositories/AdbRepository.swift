@@ -11,9 +11,7 @@ import Combine
 protocol AdbRepository {
     
     func runAdbCommand(_ command: String) throws -> String
-    func runAdbCommand(_ command: String, outputHandler: @escaping (String) -> Void)
     func runAdbCommandCombine(_ command: String) -> AnyPublisher<String, Never>
-    
     
     func getVersion() throws -> String
     
