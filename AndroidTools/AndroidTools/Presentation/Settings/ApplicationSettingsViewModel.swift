@@ -6,11 +6,9 @@
 //
 
 import Foundation
-import Sparkle
 
 @Observable
 class ApplicationSettingsViewModel : ObservableObject {
-    let updaterController : SPUStandardUpdaterController
     
     private let getAdbVersionUseCase : GetAdbVersionUseCase = GetAdbVersionUseCase()
     private let getAdbPathUseCase : GetAdbPathUseCase = GetAdbPathUseCase()
@@ -21,12 +19,10 @@ class ApplicationSettingsViewModel : ObservableObject {
     
     var toast : Toast? = nil
     
-    init(){
-        updaterController = SPUStandardUpdaterController(startingUpdater: true, updaterDelegate: nil, userDriverDelegate: nil)
-    }
+
     
     func checkForUpdates(){
-        updaterController.updater.checkForUpdates()
+        // updaterController.updater.checkForUpdates()
     }
     
     func getAdbVersion(){

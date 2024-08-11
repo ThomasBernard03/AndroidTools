@@ -6,17 +6,11 @@
 //
 
 import SwiftUI
-import Sparkle
 
 @main
 struct AndroidToolsApp: App {
     
     @AppStorage("mode") private var mode = Constants.appearanceModes.first!
-    private let updaterController : SPUStandardUpdaterController
-    
-    init(){
-        updaterController = SPUStandardUpdaterController(startingUpdater: true, updaterDelegate: nil, userDriverDelegate: nil)
-    }
     
     var body: some Scene {
         
@@ -27,7 +21,7 @@ struct AndroidToolsApp: App {
         }
         .commands {
             CommandGroup(after: .appInfo) {
-                CheckForUpdateView(updater: updaterController.updater)
+                // CheckForUpdateView(updater: updaterController.updater)
             }
         }
         
