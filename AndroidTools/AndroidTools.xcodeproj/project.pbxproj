@@ -40,6 +40,12 @@
 		816A1D452BE8D3A200E7DA71 /* CircleWavesAnimation.swift in Sources */ = {isa = PBXBuildFile; fileRef = 816A1D442BE8D3A200E7DA71 /* CircleWavesAnimation.swift */; };
 		816A1D472BE8F66100E7DA71 /* DeviceRepositoryImpl.swift in Sources */ = {isa = PBXBuildFile; fileRef = 816A1D462BE8F66100E7DA71 /* DeviceRepositoryImpl.swift */; };
 		816A1D492BE8F67000E7DA71 /* DeviceRepository.swift in Sources */ = {isa = PBXBuildFile; fileRef = 816A1D482BE8F67000E7DA71 /* DeviceRepository.swift */; };
+		817003062C693D64008954B4 /* EmulatorsView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 817003052C693D64008954B4 /* EmulatorsView.swift */; };
+		817003082C693DA0008954B4 /* EmulatorListModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 817003072C693DA0008954B4 /* EmulatorListModel.swift */; };
+		8170030A2C693DFC008954B4 /* GetEmulatorListUseCase.swift in Sources */ = {isa = PBXBuildFile; fileRef = 817003092C693DFC008954B4 /* GetEmulatorListUseCase.swift */; };
+		8170030C2C693E25008954B4 /* EmulatorRepository.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8170030B2C693E25008954B4 /* EmulatorRepository.swift */; };
+		8170030E2C693E83008954B4 /* EmulatorRepositoryImpl.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8170030D2C693E83008954B4 /* EmulatorRepositoryImpl.swift */; };
+		817003102C6945C5008954B4 /* EmulatorView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8170030F2C6945C5008954B4 /* EmulatorView.swift */; };
 		8178547E2BC59F6300B5B2EE /* AndroidToolsApp.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8178547D2BC59F6300B5B2EE /* AndroidToolsApp.swift */; };
 		817854822BC59F6500B5B2EE /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 817854812BC59F6500B5B2EE /* Assets.xcassets */; };
 		817854852BC59F6500B5B2EE /* Preview Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 817854842BC59F6500B5B2EE /* Preview Assets.xcassets */; };
@@ -121,6 +127,12 @@
 		816A1D442BE8D3A200E7DA71 /* CircleWavesAnimation.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CircleWavesAnimation.swift; sourceTree = "<group>"; };
 		816A1D462BE8F66100E7DA71 /* DeviceRepositoryImpl.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DeviceRepositoryImpl.swift; sourceTree = "<group>"; };
 		816A1D482BE8F67000E7DA71 /* DeviceRepository.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DeviceRepository.swift; sourceTree = "<group>"; };
+		817003052C693D64008954B4 /* EmulatorsView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = EmulatorsView.swift; sourceTree = "<group>"; };
+		817003072C693DA0008954B4 /* EmulatorListModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = EmulatorListModel.swift; sourceTree = "<group>"; };
+		817003092C693DFC008954B4 /* GetEmulatorListUseCase.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = GetEmulatorListUseCase.swift; sourceTree = "<group>"; };
+		8170030B2C693E25008954B4 /* EmulatorRepository.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = EmulatorRepository.swift; sourceTree = "<group>"; };
+		8170030D2C693E83008954B4 /* EmulatorRepositoryImpl.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = EmulatorRepositoryImpl.swift; sourceTree = "<group>"; };
+		8170030F2C6945C5008954B4 /* EmulatorView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = EmulatorView.swift; sourceTree = "<group>"; };
 		8178547A2BC59F6300B5B2EE /* AndroidTools.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = AndroidTools.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		8178547D2BC59F6300B5B2EE /* AndroidToolsApp.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AndroidToolsApp.swift; sourceTree = "<group>"; };
 		817854812BC59F6500B5B2EE /* Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Assets.xcassets; sourceTree = "<group>"; };
@@ -215,6 +227,7 @@
 		816A1D2C2BE8C70300E7DA71 /* Presentation */ = {
 			isa = PBXGroup;
 			children = (
+				817003042C693D51008954B4 /* Emulators */,
 				81B7900B2BEBA7D1008E7359 /* Logcat */,
 				816A1D372BE8C7FB00E7DA71 /* Menu */,
 				81E598B42BC6CA4F00FB614B /* Components */,
@@ -321,6 +334,7 @@
 				810E8E212BE9312B00ED561A /* FileRepository.swift */,
 				819A32DE2BF6767A00AD10E3 /* AdbRepository.swift */,
 				81B917752BFBD65D00373308 /* LogcatRepository.swift */,
+				8170030B2C693E25008954B4 /* EmulatorRepository.swift */,
 			);
 			path = Repositories;
 			sourceTree = "<group>";
@@ -344,8 +358,18 @@
 				810E8E1F2BE9311100ED561A /* FileRepositoryImpl.swift */,
 				819A32E22BF6774D00AD10E3 /* AdbRepositoryImpl.swift */,
 				81B917772BFBD6BB00373308 /* LogcatRepositoryImpl.swift */,
+				8170030D2C693E83008954B4 /* EmulatorRepositoryImpl.swift */,
 			);
 			path = Repositories;
+			sourceTree = "<group>";
+		};
+		817003042C693D51008954B4 /* Emulators */ = {
+			isa = PBXGroup;
+			children = (
+				817003052C693D64008954B4 /* EmulatorsView.swift */,
+				8170030F2C6945C5008954B4 /* EmulatorView.swift */,
+			);
+			path = Emulators;
 			sourceTree = "<group>";
 		};
 		817854712BC59F6300B5B2EE = {
@@ -426,6 +450,7 @@
 				810E8E1D2BE92EE600ED561A /* FileExplorerResultModel.swift */,
 				81B790102BEBA9E8008E7359 /* LogEntryModel.swift */,
 				81B790122BEBAA74008E7359 /* LogLevel.swift */,
+				817003072C693DA0008954B4 /* EmulatorListModel.swift */,
 			);
 			path = Models;
 			sourceTree = "<group>";
@@ -446,6 +471,7 @@
 				819A32EA2BF6A23100AD10E3 /* GetAdbPathUseCase.swift */,
 				819A32EC2BF6A5DC00AD10E3 /* SetAdbPathUseCase.swift */,
 				81AAD5E12BFD295C0002406B /* GetPackagesUseCase.swift */,
+				817003092C693DFC008954B4 /* GetEmulatorListUseCase.swift */,
 			);
 			path = UseCases;
 			sourceTree = "<group>";
@@ -542,6 +568,7 @@
 				8109D3642BF128A8001A4B5E /* Constants.swift in Sources */,
 				81E6A7652BC5D7020034EBFB /* AdbHelper.swift in Sources */,
 				812DC7882BDC047E009B2E87 /* TerminalWindow.swift in Sources */,
+				8170030E2C693E83008954B4 /* EmulatorRepositoryImpl.swift in Sources */,
 				81F41C612BEA995D005F1730 /* ImportFileUseCase.swift in Sources */,
 				81B790132BEBAA74008E7359 /* LogLevel.swift in Sources */,
 				81E9822D2BDD06600004B154 /* InstallApplicationUseCase.swift in Sources */,
@@ -581,6 +608,7 @@
 				811E65042BDE8C16003528B7 /* SideBarItem.swift in Sources */,
 				816A1D492BE8F67000E7DA71 /* DeviceRepository.swift in Sources */,
 				81E982312BDD0F190004B154 /* RebootDeviceUseCase.swift in Sources */,
+				817003082C693DA0008954B4 /* EmulatorListModel.swift in Sources */,
 				817EE8592BC81D4100740D4A /* FileExplorerViewModel.swift in Sources */,
 				81E982372BDD3A740004B154 /* CheckForUpdateViewModel.swift in Sources */,
 				819A32E92BF69B2F00AD10E3 /* ShellHelper.swift in Sources */,
@@ -592,7 +620,11 @@
 				810E8E1E2BE92EE600ED561A /* FileExplorerResultModel.swift in Sources */,
 				81B917782BFBD6BB00373308 /* LogcatRepositoryImpl.swift in Sources */,
 				812AB6EB2BD3AFFE00DB60A5 /* HomeView.swift in Sources */,
+				8170030A2C693DFC008954B4 /* GetEmulatorListUseCase.swift in Sources */,
 				812A62BB2BC6F2FC00388105 /* StringExtensions.swift in Sources */,
+				817003102C6945C5008954B4 /* EmulatorView.swift in Sources */,
+				8170030C2C693E25008954B4 /* EmulatorRepository.swift in Sources */,
+				817003062C693D64008954B4 /* EmulatorsView.swift in Sources */,
 				812399C62BDC3CA9004219C9 /* ToastStyle.swift in Sources */,
 				812399CC2BDC3D22004219C9 /* ViewExtensions.swift in Sources */,
 				81F41C5D2BEA7B3D005F1730 /* CreateFolderUseCase.swift in Sources */,
@@ -738,6 +770,7 @@
 				DEVELOPMENT_TEAM = H9DTPYA8RY;
 				ENABLE_HARDENED_RUNTIME = YES;
 				ENABLE_PREVIEWS = YES;
+				ENABLE_USER_SCRIPT_SANDBOXING = NO;
 				ENABLE_USER_SELECTED_FILES = "";
 				GENERATE_INFOPLIST_FILE = YES;
 				INFOPLIST_FILE = AndroidTools/Info.plist;
@@ -770,6 +803,7 @@
 				DEVELOPMENT_TEAM = H9DTPYA8RY;
 				ENABLE_HARDENED_RUNTIME = YES;
 				ENABLE_PREVIEWS = YES;
+				ENABLE_USER_SCRIPT_SANDBOXING = NO;
 				ENABLE_USER_SELECTED_FILES = "";
 				GENERATE_INFOPLIST_FILE = YES;
 				INFOPLIST_FILE = AndroidTools/Info.plist;

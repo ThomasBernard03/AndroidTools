@@ -41,8 +41,13 @@ struct SideBarView: View {
                     }
                     .padding([.bottom], 10)
                     
+                    
                     NavigationLink(destination: HomeView()) {
                         SideBarItem(label:"Home", systemImage: "house.fill")
+                    }
+                    
+                    NavigationLink(destination: EmulatorsView()) {
+                        SideBarItem(label:"Emualors", systemImage: "iphone.rear.camera")
                     }
                     
                     NavigationLink(
@@ -65,7 +70,7 @@ struct SideBarView: View {
                         Label {
                             Text("Logcat")
                         } icon: {
-                            Image("logcat")
+                            Image("Logcat")
                                 .resizable()
                                 .scaledToFit()
                                 .frame(width: 16, height: 16)
@@ -106,9 +111,10 @@ struct SideBarView: View {
             .onAppear {
                 viewModel.getAndroidDevices()
             }
-        } detail: {
+        } content: {
             HomeView()
-        }
+        } detail: {}
+
     }
 }
 
