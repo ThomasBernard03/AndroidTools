@@ -16,7 +16,9 @@ class LogcatViewModel(
         when(event){
             LogcatEvent.OnClear -> {
                 viewModelScope.launch {
+                    updateUiState { copy(loading = true) }
                     clearLogcatUseCase()
+                    updateUiState { copy(loading = false) }
                 }
             }
             LogcatEvent.OnRestart -> TODO()

@@ -4,20 +4,24 @@ import androidtools.composeapp.generated.resources.Res
 import androidtools.composeapp.generated.resources.arrow_up
 import androidtools.composeapp.generated.resources.sticky_list
 import androidtools.composeapp.generated.resources.trash
+import androidx.compose.animation.AnimatedVisibility
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Arrangement
+import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
+import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
 import androidx.compose.foundation.lazy.rememberLazyListState
 import androidx.compose.material3.FloatingActionButton
 import androidx.compose.material3.IconButton
 import androidx.compose.material3.IconButtonDefaults
+import androidx.compose.material3.LinearProgressIndicator
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Scaffold
 import androidx.compose.runtime.Composable
@@ -27,10 +31,12 @@ import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.runtime.setValue
+import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.unit.dp
 import fr.thomasbernard03.androidtools.presentation.logcat.components.LogcatItem
+import fr.thomasbernard03.androidtools.presentation.logcat.components.PackageDropDown
 import kotlinx.coroutines.launch
 import org.jetbrains.compose.resources.painterResource
 
@@ -69,49 +75,67 @@ fun LogcatScreen(uiState: LogcatUiState, onEvent: (LogcatEvent) -> Unit) {
             }
         }
     ) {
-        Column(
+        Box(
             modifier = Modifier.fillMaxSize()
         ) {
-            Row(
-                modifier = Modifier
-                    .fillMaxWidth()
-                    .background(MaterialTheme.colorScheme.surfaceContainer),
-                horizontalArrangement = Arrangement.spacedBy(8.dp)
-            ) {
-                IconButton(
-                    onClick = {
-                        sticky = !sticky
-                    },
-                    colors = IconButtonDefaults.iconButtonColors(
-                        containerColor = if (sticky) MaterialTheme.colorScheme.onBackground.copy(0.2f) else Color.Transparent
-                    )
+            Column {
+                Row(
+                    modifier = Modifier
+                        .fillMaxWidth()
+                        .background(MaterialTheme.colorScheme.surfaceContainer),
+                    horizontalArrangement = Arrangement.spacedBy(8.dp)
                 ) {
-                    Image(
-                        painter = painterResource(Res.drawable.sticky_list),
-                        contentDescription = "clear"
+                    PackageDropDown(
+                        modifier = Modifier.width(200.dp),
+                        selection = "All",
+                        onSelectionChange = {},
+                        items = listOf("All, com.example.app, com.example.app2")
                     )
+
+                    IconButton(
+                        onClick = {
+                            sticky = !sticky
+                        },
+                        colors = IconButtonDefaults.iconButtonColors(
+                            containerColor = if (sticky) MaterialTheme.colorScheme.onBackground.copy(0.2f) else Color.Transparent
+                        )
+                    ) {
+                        Image(
+                            painter = painterResource(Res.drawable.sticky_list),
+                            contentDescription = "clear"
+                        )
+                    }
+
+                    IconButton(
+                        onClick = {
+                            onEvent(LogcatEvent.OnClear)
+                        }
+                    ) {
+                        Image(
+                            painter = painterResource(Res.drawable.trash),
+                            contentDescription = "clear"
+                        )
+                    }
                 }
 
-                IconButton(
-                    onClick = {
-                        onEvent(LogcatEvent.OnClear)
-                    }
+                LazyColumn(
+                    state = listState,
+                    reverseLayout = true,
+                    contentPadding = PaddingValues(horizontal = 16.dp, vertical = 8.dp)
                 ) {
-                    Image(
-                        painter = painterResource(Res.drawable.trash),
-                        contentDescription = "clear"
-                    )
+                    items(uiState.lines) {
+                        LogcatItem(it)
+                    }
                 }
             }
 
-            LazyColumn(
-                state = listState,
-                reverseLayout = true,
-                contentPadding = PaddingValues(horizontal = 16.dp, vertical = 8.dp)
+            AnimatedVisibility(
+                visible = uiState.loading,
+                modifier = Modifier.align(Alignment.BottomStart)
             ) {
-                items(uiState.lines) {
-                    LogcatItem(it)
-                }
+                LinearProgressIndicator(
+                    modifier = Modifier.fillMaxWidth()
+                )
             }
         }
     }

@@ -75,7 +75,7 @@ fun LogcatItem(
             Text(
                 text = parsedLogcatLine.message,
                 maxLines = 1,
-                style = MaterialTheme.typography.bodySmall
+                style = MaterialTheme.typography.bodySmall.copy(color = parsedLogcatLine.level.backgroundColor())
             )
         }
     }
