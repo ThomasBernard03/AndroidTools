@@ -17,53 +17,51 @@ import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.compose.currentBackStackEntryAsState
 import androidx.navigation.compose.rememberNavController
+import fr.thomasbernard03.androidtools.domain.models.Screen
 import fr.thomasbernard03.androidtools.presentation.applicationinstaller.ApplicationInstallerScreen
 import fr.thomasbernard03.androidtools.presentation.applicationinstaller.ApplicationInstallerViewModel
 import org.jetbrains.compose.resources.painterResource
+import org.jetbrains.compose.resources.stringResource
 
 
 @Composable
 fun MainScreen() {
     Row {
         val navController: NavHostController = rememberNavController()
-        val currentRoute = navController.currentBackStackEntryAsState().value?.destination?.route
 
         NavigationRail {
-            NavigationRailItem(
-                selected = currentRoute == "appInstaller",
-                onClick = { navController.navigate("appInstaller") },
-                icon = {
-                    Image(
-                        painter = painterResource(Res.drawable.app_installer),
-                        contentDescription = "App Installer"
-                    )
-                },
-                label = { Text("App Installer") }
+            val currentRoute = navController.currentBackStackEntryAsState().value?.destination?.route
+
+            val items = listOf(
+                Screen.ApplicationInstaller,
+                Screen.Information
             )
 
-            NavigationRailItem(
-                selected = currentRoute == "information",
-                onClick = { navController.navigate("information") },
-                icon = {
-                    Image(
-                        painter = painterResource(Res.drawable.information),
-                        contentDescription = "Information"
-                    )
-                },
-                label = { Text("App Installer") }
-            )
+            items.forEach { item ->
+                NavigationRailItem(
+                    selected = currentRoute == item.route,
+                    onClick = { navController.navigate(item.route) },
+                    icon = {
+                        Image(
+                            painter = painterResource(item.icon),
+                            contentDescription = stringResource(item.title)
+                        )
+                    },
+                    label = { Text(stringResource(item.title)) }
+                )
+            }
         }
 
-        NavHost(navController = navController, startDestination = "appInstaller") {
-            composable("appInstaller") {
+        NavHost(navController = navController, startDestination = Screen.ApplicationInstaller.route) {
+            composable(Screen.ApplicationInstaller.route) {
                 val viewModel = viewModel { ApplicationInstallerViewModel() }
                 val uiState by viewModel.uiState.collectAsStateWithLifecycle()
                 ApplicationInstallerScreen(uiState = uiState, onEvent = viewModel::onEvent)
             }
-            composable("information") {
+
+            composable(Screen.Information.route) {
                 Text("Hello from information")
             }
         }
     }
-
 }
