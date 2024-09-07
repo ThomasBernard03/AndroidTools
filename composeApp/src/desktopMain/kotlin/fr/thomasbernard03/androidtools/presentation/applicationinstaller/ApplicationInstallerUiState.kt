@@ -4,4 +4,6 @@ import fr.thomasbernard03.androidtools.presentation.commons.UiState
 
 data class ApplicationInstallerUiState (
     val loading : Boolean = false,
+
+    val result : String = ""
 ) : UiState
