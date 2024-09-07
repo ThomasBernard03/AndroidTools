@@ -32,6 +32,8 @@ import fr.thomasbernard03.androidtools.presentation.applicationinstaller.Applica
 import fr.thomasbernard03.androidtools.presentation.applicationinstaller.ApplicationInstallerViewModel
 import fr.thomasbernard03.androidtools.presentation.information.InformationScreen
 import fr.thomasbernard03.androidtools.presentation.information.InformationViewModel
+import fr.thomasbernard03.androidtools.presentation.logcat.LogcatScreen
+import fr.thomasbernard03.androidtools.presentation.logcat.LogcatViewModel
 import fr.thomasbernard03.androidtools.presentation.main.components.DeviceDropDown
 import org.jetbrains.compose.resources.painterResource
 import org.jetbrains.compose.resources.stringResource
@@ -49,7 +51,7 @@ fun MainScreen(uiState : MainUiState, onEvent : (MainEvent) -> Unit) {
 
         NavigationRail(
             modifier = Modifier.width(120.dp),
-            containerColor = MaterialTheme.colorScheme.secondary,
+            containerColor = MaterialTheme.colorScheme.surfaceContainer,
             header = {
                 DeviceDropDown(
                     modifier = Modifier.fillMaxWidth(),
@@ -61,16 +63,11 @@ fun MainScreen(uiState : MainUiState, onEvent : (MainEvent) -> Unit) {
         ) {
             val currentRoute = navController.currentBackStackEntryAsState().value?.destination?.route
 
-            val items = listOf(
-                Screen.ApplicationInstaller,
-                Screen.Information
-            )
-
             Column(
                 modifier = Modifier.padding(horizontal = 8.dp),
                 verticalArrangement = Arrangement.spacedBy(8.dp)
             ) {
-                items.forEach { item ->
+                Screen.entries.forEach { item ->
                     NavigationRailItem(
                         selected = currentRoute == item.route,
                         onClick = { navController.navigate(item.route) },
@@ -97,6 +94,12 @@ fun MainScreen(uiState : MainUiState, onEvent : (MainEvent) -> Unit) {
                 val viewModel = viewModel { InformationViewModel() }
                 val uiState by viewModel.uiState.collectAsStateWithLifecycle()
                 InformationScreen(uiState = uiState, onEvent = viewModel::onEvent)
+            }
+
+            composable(Screen.Logcat.route) {
+                val viewModel = viewModel { LogcatViewModel() }
+                val uiState by viewModel.uiState.collectAsStateWithLifecycle()
+                LogcatScreen(uiState = uiState, onEvent = viewModel::onEvent)
             }
         }
     }

@@ -9,13 +9,14 @@ import androidx.lifecycle.viewmodel.compose.viewModel
 import fr.thomasbernard03.androidtools.presentation.information.InformationViewModel
 import fr.thomasbernard03.androidtools.presentation.main.MainScreen
 import fr.thomasbernard03.androidtools.presentation.main.MainViewModel
+import fr.thomasbernard03.androidtools.presentation.theme.AndroidToolsTheme
 
 fun main() = application {
     Window(
         onCloseRequest = ::exitApplication,
         title = "Android Tools",
     ) {
-        MaterialTheme {
+        AndroidToolsTheme {
             val viewModel = viewModel { MainViewModel() }
             val uiState by viewModel.uiState.collectAsStateWithLifecycle()
             MainScreen(uiState = uiState, onEvent = viewModel::onEvent)
