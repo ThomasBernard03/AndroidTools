@@ -70,7 +70,14 @@ fun MainScreen(uiState : MainUiState, onEvent : (MainEvent) -> Unit) {
                 Screen.entries.forEach { item ->
                     NavigationRailItem(
                         selected = currentRoute == item.route,
-                        onClick = { navController.navigate(item.route) },
+                        onClick = {
+                            navController.navigate(item.route){
+                                launchSingleTop = true
+                                popUpTo(navController.graph.startDestinationRoute!!){
+                                    inclusive = true
+                                }
+                            }
+                        },
                         icon = {
                             Image(
                                 painter = painterResource(item.icon),

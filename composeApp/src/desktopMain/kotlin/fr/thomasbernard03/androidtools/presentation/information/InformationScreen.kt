@@ -60,6 +60,18 @@ fun InformationScreen(uiState : InformationUiState, onEvent : (InformationEvent)
                         )
                     }
                 }
+
+                Card(
+                    colors = CardDefaults.cardColors(
+                        containerColor = MaterialTheme.colorScheme.tertiary,
+                    )
+                ){
+                    Text(
+                        text = "${uiState.battery}%",
+                        modifier = Modifier.padding(32.dp),
+                        style = MaterialTheme.typography.titleLarge.copy(color = MaterialTheme.colorScheme.onTertiary),
+                    )
+                }
             }
 
             AnimatedVisibility(

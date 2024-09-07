@@ -8,4 +8,5 @@ data class InformationUiState(
     val androidVersion : Int? = null,
     val manufacturer : String = "",
     val model : String = "",
+    val battery : Int = 0,
 ) : UiState
