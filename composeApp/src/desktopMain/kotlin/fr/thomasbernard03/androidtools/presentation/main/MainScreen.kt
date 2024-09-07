@@ -71,10 +71,12 @@ fun MainScreen(uiState : MainUiState, onEvent : (MainEvent) -> Unit) {
                     NavigationRailItem(
                         selected = currentRoute == item.route,
                         onClick = {
-                            navController.navigate(item.route){
-                                launchSingleTop = true
-                                popUpTo(navController.graph.startDestinationRoute!!){
-                                    inclusive = true
+                            if (currentRoute != item.route){
+                                navController.navigate(item.route){
+                                    launchSingleTop = true
+                                    popUpTo(navController.graph.startDestinationRoute!!){
+                                        inclusive = true
+                                    }
                                 }
                             }
                         },
