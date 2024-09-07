@@ -16,6 +16,7 @@ import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.ui.unit.dp
+import fr.thomasbernard03.androidtools.presentation.logcat.components.LogcatItem
 import kotlinx.coroutines.launch
 import org.jetbrains.compose.resources.painterResource
 
@@ -57,7 +58,7 @@ fun LogcatScreen(uiState: LogcatUiState, onEvent: (LogcatEvent) -> Unit) {
             contentPadding = PaddingValues(horizontal = 16.dp, vertical = 8.dp)
         ) {
             items(uiState.lines) {
-                Text(it)
+                LogcatItem(it)
             }
         }
     }
