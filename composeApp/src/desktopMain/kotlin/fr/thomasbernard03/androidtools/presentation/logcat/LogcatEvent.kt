@@ -7,4 +7,6 @@ sealed class LogcatEvent : Event {
     data object OnStopListening : LogcatEvent()
     data object OnClear : LogcatEvent()
     data object OnRestart : LogcatEvent()
+
+    data class OnPackageSelected(val packageName: String?) : LogcatEvent()
 }

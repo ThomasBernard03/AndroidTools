@@ -2,12 +2,10 @@ package fr.thomasbernard03.androidtools.presentation.applicationinstaller
 
 import androidtools.composeapp.generated.resources.Res
 import androidtools.composeapp.generated.resources.folder
+import androidtools.composeapp.generated.resources.open_file_explorer
 import androidx.compose.animation.AnimatedVisibility
-import androidx.compose.foundation.ExperimentalFoundationApi
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
-import androidx.compose.foundation.gestures.draggable
-import androidx.compose.foundation.gestures.onDrag
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
@@ -24,21 +22,14 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.DragData
 import androidx.compose.ui.ExperimentalComposeUiApi
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.awt.ComposeWindow
 import androidx.compose.ui.onExternalDrag
 import fr.thomasbernard03.androidtools.presentation.applicationinstaller.components.WavesAnimation
 import org.jetbrains.compose.resources.painterResource
+import org.jetbrains.compose.resources.stringResource
 import java.awt.FileDialog
-import java.awt.datatransfer.DataFlavor
-import java.awt.dnd.DnDConstants
-import java.awt.dnd.DropTarget
-import java.awt.dnd.DropTargetAdapter
-import java.awt.dnd.DropTargetDropEvent
-import java.io.File
 import java.io.FilenameFilter
-import javax.swing.JFrame
 
-@OptIn(ExperimentalFoundationApi::class, ExperimentalComposeUiApi::class)
+@OptIn(ExperimentalComposeUiApi::class)
 @Composable
 fun ApplicationInstallerScreen(uiState : ApplicationInstallerUiState, onEvent: (ApplicationInstallerEvent) -> Unit) {
 
@@ -48,12 +39,8 @@ fun ApplicationInstallerScreen(uiState : ApplicationInstallerUiState, onEvent: (
         modifier = Modifier
             .onExternalDrag(
                 enabled = !uiState.loading,
-                onDragStart = {
-                    hoverred = true
-                },
-                onDragExit = {
-                    hoverred = false
-                },
+                onDragStart = { hoverred = true },
+                onDragExit = { hoverred = false },
                 onDrop = { externalDragValue ->
                     hoverred = false
                     if (externalDragValue.dragData is DragData.FilesList) {
@@ -67,7 +54,7 @@ fun ApplicationInstallerScreen(uiState : ApplicationInstallerUiState, onEvent: (
         floatingActionButton = {
             FloatingActionButton(
                 onClick = {
-                    val fileDialog = FileDialog(java.awt.Frame(), "Choose a file", FileDialog.LOAD)
+                    val fileDialog = FileDialog(java.awt.Frame(), "", FileDialog.LOAD)
                     fileDialog.filenameFilter = FilenameFilter { _, name -> name.endsWith(".apk") }
                     fileDialog.isVisible = true
                     val selectedFile = fileDialog.file
@@ -81,7 +68,7 @@ fun ApplicationInstallerScreen(uiState : ApplicationInstallerUiState, onEvent: (
             ){
                 Image(
                     painter = painterResource(Res.drawable.folder),
-                    contentDescription = "load from files"
+                    contentDescription = stringResource(Res.string.open_file_explorer)
                 )
             }
         }
@@ -106,7 +93,6 @@ fun ApplicationInstallerScreen(uiState : ApplicationInstallerUiState, onEvent: (
                     modifier = Modifier.fillMaxWidth()
                 )
             }
-
         }
     }
 }

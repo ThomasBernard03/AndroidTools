@@ -11,9 +11,12 @@ import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import fr.thomasbernard03.androidtools.commons.extensions.backgroundColor
+import fr.thomasbernard03.androidtools.commons.extensions.messageColor
+import fr.thomasbernard03.androidtools.commons.extensions.onBackgroundColor
 import fr.thomasbernard03.androidtools.domain.models.LogcatLevel
 import fr.thomasbernard03.androidtools.domain.models.LogcatLine
 import kotlin.math.max
@@ -67,15 +70,16 @@ fun LogcatItem(
                 Text(
                     text = parsedLogcatLine.level.name,
                     modifier = Modifier.align(Alignment.Center),
-                    style = MaterialTheme.typography.bodySmall
-
+                    style = MaterialTheme.typography.bodySmall,
+                    color = parsedLogcatLine.level.onBackgroundColor(),
+                    fontWeight = FontWeight.SemiBold
                 )
             }
 
             Text(
                 text = parsedLogcatLine.message,
                 maxLines = 1,
-                style = MaterialTheme.typography.bodySmall.copy(color = parsedLogcatLine.level.backgroundColor())
+                style = MaterialTheme.typography.bodySmall.copy(color = parsedLogcatLine.level.messageColor())
             )
         }
     }

@@ -83,38 +83,42 @@ fun LogcatScreen(uiState: LogcatUiState, onEvent: (LogcatEvent) -> Unit) {
                     modifier = Modifier
                         .fillMaxWidth()
                         .background(MaterialTheme.colorScheme.surfaceContainer),
-                    horizontalArrangement = Arrangement.spacedBy(8.dp)
+                    horizontalArrangement = Arrangement.SpaceBetween
                 ) {
                     PackageDropDown(
-                        modifier = Modifier.width(200.dp),
-                        selection = "All",
-                        onSelectionChange = {},
-                        items = listOf("All, com.example.app, com.example.app2")
+                        modifier = Modifier.width(300.dp),
+                        selection = uiState.selectedPackage,
+                        onSelectionChange = { onEvent(LogcatEvent.OnPackageSelected(it)) },
+                        items = uiState.packages
                     )
 
-                    IconButton(
-                        onClick = {
-                            sticky = !sticky
-                        },
-                        colors = IconButtonDefaults.iconButtonColors(
-                            containerColor = if (sticky) MaterialTheme.colorScheme.onBackground.copy(0.2f) else Color.Transparent
-                        )
+                    Row(
+                        horizontalArrangement = Arrangement.spacedBy(4.dp)
                     ) {
-                        Image(
-                            painter = painterResource(Res.drawable.sticky_list),
-                            contentDescription = "clear"
-                        )
-                    }
-
-                    IconButton(
-                        onClick = {
-                            onEvent(LogcatEvent.OnClear)
+                        IconButton(
+                            onClick = {
+                                sticky = !sticky
+                            },
+                            colors = IconButtonDefaults.iconButtonColors(
+                                containerColor = if (sticky) MaterialTheme.colorScheme.onBackground.copy(0.2f) else Color.Transparent
+                            )
+                        ) {
+                            Image(
+                                painter = painterResource(Res.drawable.sticky_list),
+                                contentDescription = "clear"
+                            )
                         }
-                    ) {
-                        Image(
-                            painter = painterResource(Res.drawable.trash),
-                            contentDescription = "clear"
-                        )
+
+                        IconButton(
+                            onClick = {
+                                onEvent(LogcatEvent.OnClear)
+                            }
+                        ) {
+                            Image(
+                                painter = painterResource(Res.drawable.trash),
+                                contentDescription = "clear"
+                            )
+                        }
                     }
                 }
 

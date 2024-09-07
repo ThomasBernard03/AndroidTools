@@ -3,4 +3,8 @@
     <string name="application_installer_rail_title">App Installer</string>
     <string name="information_rail_title">Information</string>
     <string name="logcat_rail_title">Logcat</string>
+
+
+    <!-- Application installer -->
+    <string name="open_file_explorer">Open file explorer</string>
 </resources>
