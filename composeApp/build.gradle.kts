@@ -6,6 +6,12 @@ plugins {
     alias(libs.plugins.compose.compiler)
 }
 
+java {
+    toolchain {
+        languageVersion = JavaLanguageVersion.of(17)
+    }
+}
+
 kotlin {
     jvm("desktop")
     
