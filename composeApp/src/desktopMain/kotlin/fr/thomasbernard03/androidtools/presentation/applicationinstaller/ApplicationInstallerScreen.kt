@@ -19,6 +19,7 @@ import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.LocalWindowInfo
+import fr.thomasbernard03.androidtools.presentation.applicationinstaller.components.WavesAnimation
 import org.jetbrains.compose.resources.painterResource
 import java.awt.FileDialog
 import java.awt.datatransfer.DataFlavor
@@ -63,6 +64,8 @@ fun ApplicationInstallerScreen(uiState : ApplicationInstallerUiState, onEvent: (
         Box(
             modifier = Modifier.fillMaxSize()
         ) {
+            WavesAnimation()
+
             AnimatedVisibility(
                 visible = uiState.loading,
                 modifier = Modifier.align(Alignment.BottomStart)
