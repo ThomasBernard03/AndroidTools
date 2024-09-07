@@ -20,6 +20,8 @@ import androidx.navigation.compose.rememberNavController
 import fr.thomasbernard03.androidtools.domain.models.Screen
 import fr.thomasbernard03.androidtools.presentation.applicationinstaller.ApplicationInstallerScreen
 import fr.thomasbernard03.androidtools.presentation.applicationinstaller.ApplicationInstallerViewModel
+import fr.thomasbernard03.androidtools.presentation.information.InformationScreen
+import fr.thomasbernard03.androidtools.presentation.information.InformationViewModel
 import org.jetbrains.compose.resources.painterResource
 import org.jetbrains.compose.resources.stringResource
 
@@ -60,7 +62,9 @@ fun MainScreen() {
             }
 
             composable(Screen.Information.route) {
-                Text("Hello from information")
+                val viewModel = viewModel { InformationViewModel() }
+                val uiState by viewModel.uiState.collectAsStateWithLifecycle()
+                InformationScreen(uiState = uiState, onEvent = viewModel::onEvent)
             }
         }
     }
