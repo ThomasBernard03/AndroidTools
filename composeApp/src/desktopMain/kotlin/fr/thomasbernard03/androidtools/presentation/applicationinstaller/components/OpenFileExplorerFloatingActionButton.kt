@@ -5,6 +5,8 @@ import androidtools.composeapp.generated.resources.folder
 import androidtools.composeapp.generated.resources.open_file_explorer
 import androidx.compose.foundation.Image
 import androidx.compose.material3.FloatingActionButton
+import androidx.compose.material3.Icon
+import androidx.compose.material3.MaterialTheme
 import androidx.compose.runtime.Composable
 import fr.thomasbernard03.androidtools.presentation.applicationinstaller.ApplicationInstallerEvent
 import org.jetbrains.compose.resources.painterResource
@@ -30,9 +32,10 @@ fun OpenFileExplorerFloatingActionButton(
             }
         }
     ){
-        Image(
+        Icon(
             painter = painterResource(Res.drawable.folder),
-            contentDescription = stringResource(Res.string.open_file_explorer)
+            contentDescription = stringResource(Res.string.open_file_explorer),
+            tint = MaterialTheme.colorScheme.onBackground
         )
     }
 }

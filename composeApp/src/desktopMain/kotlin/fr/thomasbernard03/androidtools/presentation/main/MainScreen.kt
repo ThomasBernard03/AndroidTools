@@ -10,6 +10,7 @@ import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.width
+import androidx.compose.material3.Icon
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.NavigationRail
 import androidx.compose.material3.NavigationRailItem
@@ -96,9 +97,10 @@ fun MainScreen(uiState : MainUiState, onEvent : (MainEvent) -> Unit) {
                             }
                         },
                         icon = {
-                            Image(
+                            Icon(
                                 painter = painterResource(item.icon),
-                                contentDescription = stringResource(item.title)
+                                contentDescription = stringResource(item.title),
+                                tint = MaterialTheme.colorScheme.onBackground
                             )
                         },
                         label = { Text(stringResource(item.title)) }

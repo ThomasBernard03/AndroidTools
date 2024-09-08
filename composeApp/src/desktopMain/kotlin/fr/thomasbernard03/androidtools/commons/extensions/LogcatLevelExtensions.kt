@@ -5,30 +5,35 @@ import androidx.compose.material3.MaterialTheme
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.graphics.Color
 import fr.thomasbernard03.androidtools.domain.models.LogcatLevel
-import fr.thomasbernard03.androidtools.presentation.theme.DebugBackgroundColor
-import fr.thomasbernard03.androidtools.presentation.theme.ErrorBackgroundColor
-import fr.thomasbernard03.androidtools.presentation.theme.InfoBackgroundColor
-import fr.thomasbernard03.androidtools.presentation.theme.VerboseBackgroundColor
-import fr.thomasbernard03.androidtools.presentation.theme.WarningBackgroundColor
+import fr.thomasbernard03.androidtools.presentation.theme.DebugBackgroundColorDark
+import fr.thomasbernard03.androidtools.presentation.theme.DebugBackgroundColorLight
+import fr.thomasbernard03.androidtools.presentation.theme.ErrorBackgroundColorDark
+import fr.thomasbernard03.androidtools.presentation.theme.ErrorBackgroundColorLight
+import fr.thomasbernard03.androidtools.presentation.theme.InfoBackgroundColorDark
+import fr.thomasbernard03.androidtools.presentation.theme.InfoBackgroundColorLight
+import fr.thomasbernard03.androidtools.presentation.theme.VerboseBackgroundColorDark
+import fr.thomasbernard03.androidtools.presentation.theme.VerboseBackgroundColorLight
+import fr.thomasbernard03.androidtools.presentation.theme.WarningBackgroundColorDark
+import fr.thomasbernard03.androidtools.presentation.theme.WarningBackgroundColorLight
 
 @Composable
 fun LogcatLevel.backgroundColor() : Color {
     if (!isSystemInDarkTheme()){
         return when(this){
-            LogcatLevel.V -> VerboseBackgroundColor
-            LogcatLevel.D -> DebugBackgroundColor
-            LogcatLevel.I -> InfoBackgroundColor
-            LogcatLevel.W -> WarningBackgroundColor
-            LogcatLevel.E -> ErrorBackgroundColor
+            LogcatLevel.V -> VerboseBackgroundColorLight
+            LogcatLevel.D -> DebugBackgroundColorLight
+            LogcatLevel.I -> InfoBackgroundColorLight
+            LogcatLevel.W -> WarningBackgroundColorLight
+            LogcatLevel.E -> ErrorBackgroundColorLight
         }
     }
     else {
         return when(this){
-            LogcatLevel.V -> VerboseBackgroundColor
-            LogcatLevel.D -> DebugBackgroundColor
-            LogcatLevel.I -> InfoBackgroundColor
-            LogcatLevel.W -> WarningBackgroundColor
-            LogcatLevel.E -> ErrorBackgroundColor
+            LogcatLevel.V -> VerboseBackgroundColorDark
+            LogcatLevel.D -> DebugBackgroundColorDark
+            LogcatLevel.I -> InfoBackgroundColorDark
+            LogcatLevel.W -> WarningBackgroundColorDark
+            LogcatLevel.E -> ErrorBackgroundColorDark
         }
     }
 }
@@ -53,7 +58,7 @@ fun LogcatLevel.onBackgroundColor() : Color {
 fun LogcatLevel.messageColor() : Color {
     if (!isSystemInDarkTheme()){
         return when(this){
-            LogcatLevel.V -> VerboseBackgroundColor
+            LogcatLevel.V -> VerboseBackgroundColorLight
             LogcatLevel.D -> Color(0xFF39A0D6)
             LogcatLevel.I -> Color(0xFF59A869)
             LogcatLevel.W -> Color(0xFF655708)
@@ -62,11 +67,11 @@ fun LogcatLevel.messageColor() : Color {
     }
     else {
         return when(this){
-            LogcatLevel.V -> VerboseBackgroundColor
-            LogcatLevel.D -> DebugBackgroundColor
-            LogcatLevel.I -> InfoBackgroundColor
-            LogcatLevel.W -> WarningBackgroundColor
-            LogcatLevel.E -> ErrorBackgroundColor
+            LogcatLevel.V -> VerboseBackgroundColorLight
+            LogcatLevel.D -> DebugBackgroundColorLight
+            LogcatLevel.I -> InfoBackgroundColorLight
+            LogcatLevel.W -> WarningBackgroundColorLight
+            LogcatLevel.E -> ErrorBackgroundColorLight
         }
     }
 }

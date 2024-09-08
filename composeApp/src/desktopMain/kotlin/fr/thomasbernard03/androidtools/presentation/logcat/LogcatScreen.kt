@@ -26,6 +26,7 @@ import androidx.compose.foundation.lazy.items
 import androidx.compose.foundation.lazy.rememberLazyListState
 import androidx.compose.foundation.rememberScrollbarAdapter
 import androidx.compose.material3.FloatingActionButton
+import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
 import androidx.compose.material3.IconButtonDefaults
 import androidx.compose.material3.LinearProgressIndicator
@@ -78,9 +79,10 @@ fun LogcatScreen(uiState: LogcatUiState, onEvent: (LogcatEvent) -> Unit) {
                         }
                     }
                 ){
-                    Image(
+                    Icon(
                         painter = painterResource(Res.drawable.arrow_down),
-                        contentDescription = "load from files"
+                        contentDescription = "load from files",
+                        tint = MaterialTheme.colorScheme.onBackground
                     )
                 }
             }
@@ -112,18 +114,20 @@ fun LogcatScreen(uiState: LogcatUiState, onEvent: (LogcatEvent) -> Unit) {
                                 containerColor = if (sticky) MaterialTheme.colorScheme.onBackground.copy(0.2f) else Color.Transparent
                             )
                         ) {
-                            Image(
+                            Icon(
                                 painter = painterResource(Res.drawable.sticky_list),
-                                contentDescription = "sticky"
+                                contentDescription = "sticky",
+                                tint = MaterialTheme.colorScheme.onBackground
                             )
                         }
 
                         IconButton(
                             onClick = { onEvent(LogcatEvent.OnRestart) }
                         ) {
-                            Image(
+                            Icon(
                                 painter = painterResource(Res.drawable.replay),
-                                contentDescription = "restart"
+                                contentDescription = "restart",
+                                tint = MaterialTheme.colorScheme.onBackground
                             )
                         }
 
@@ -135,9 +139,10 @@ fun LogcatScreen(uiState: LogcatUiState, onEvent: (LogcatEvent) -> Unit) {
                                     onEvent(LogcatEvent.OnStopListening)
                             }
                         ) {
-                            Image(
+                            Icon(
                                 painter = painterResource(if(uiState.onPause) Res.drawable.play else Res.drawable.pause),
-                                contentDescription = "play/pause"
+                                contentDescription = "play/pause",
+                                tint = MaterialTheme.colorScheme.onBackground
                             )
                         }
 
@@ -146,9 +151,10 @@ fun LogcatScreen(uiState: LogcatUiState, onEvent: (LogcatEvent) -> Unit) {
                                 onEvent(LogcatEvent.OnClear)
                             }
                         ) {
-                            Image(
+                            Icon(
                                 painter = painterResource(Res.drawable.trash),
-                                contentDescription = "clear"
+                                contentDescription = "clear",
+                                tint = MaterialTheme.colorScheme.onBackground
                             )
                         }
                     }
