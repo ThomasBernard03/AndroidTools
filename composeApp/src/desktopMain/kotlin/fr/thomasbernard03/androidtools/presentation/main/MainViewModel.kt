@@ -16,8 +16,12 @@ class MainViewModel(
             is MainEvent.OnDeviceSelected -> updateUiState { copy(selectedDevice = event.device) }
             MainEvent.OnLoadDevices -> {
                 viewModelScope.launch {
-                    val devices = getConnectedDevicesUseCase()
-                    updateUiState { copy(devices = devices.toList()) }
+                    getConnectedDevicesUseCase().collect { devices ->
+                        updateUiState { copy(devices = devices.toList()) }
+
+                        if (!devices.contains(uiState.value.selectedDevice))
+                            updateUiState { copy(selectedDevice = null) }
+                    }
                 }
             }
         }

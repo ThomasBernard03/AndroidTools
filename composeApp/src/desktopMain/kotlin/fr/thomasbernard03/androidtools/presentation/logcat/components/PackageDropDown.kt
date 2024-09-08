@@ -77,6 +77,7 @@ fun PackageDropDown(
             onDismissRequest = { expanded = false }
         ) {
             DropdownMenuItem(
+                contentPadding = PaddingValues(4.dp),
                 onClick = {
                     onSelectionChange(null)
                     expanded = false
@@ -84,6 +85,7 @@ fun PackageDropDown(
                 text = {
                     Text(
                         text = "Display all packages",
+                        style = MaterialTheme.typography.bodySmall
                     )
                 }
             )
@@ -92,6 +94,7 @@ fun PackageDropDown(
 
             items.forEach { device ->
                 DropdownMenuItem(
+                    contentPadding = PaddingValues(horizontal = 4.dp),
                     onClick = {
                         onSelectionChange(device)
                         expanded = false
@@ -99,6 +102,7 @@ fun PackageDropDown(
                     text = {
                         Text(
                             text = device,
+                            style = MaterialTheme.typography.bodySmall
                         )
                     }
                 )

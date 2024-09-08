@@ -7,4 +7,5 @@
 
     <!-- Application installer -->
     <string name="open_file_explorer">Open file explorer</string>
+    <string name="install_application_file_format_warning">Open file explorer</string>
 </resources>

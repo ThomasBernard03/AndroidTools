@@ -4,6 +4,7 @@ import androidtools.composeapp.generated.resources.Res
 import androidx.lifecycle.viewModelScope
 import fr.thomasbernard03.androidtools.domain.usecases.InstallApplicationUseCase
 import fr.thomasbernard03.androidtools.presentation.commons.BaseViewModel
+import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch
 import org.jetbrains.compose.resources.ExperimentalResourceApi
 import java.io.BufferedReader
@@ -19,9 +20,11 @@ class ApplicationInstallerViewModel(
         when(event){
             is ApplicationInstallerEvent.OnInstallApplication -> {
                 viewModelScope.launch {
-                    updateUiState { copy(loading = true) }
-                    val success = installApplicationUseCase(event.path)
-                    updateUiState { copy(loading = false, result = if (success) "Application installed successfully" else "Error occurred while installing application") }
+                    updateUiState { copy(loading = true, result = null) }
+                    val result = installApplicationUseCase(event.path)
+                    updateUiState { copy(loading = false, result = result) }
+                    delay(3000)
+                    updateUiState { copy(result = null) }
                 }
             }
         }

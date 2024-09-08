@@ -9,10 +9,12 @@ import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
+import androidx.compose.foundation.layout.padding
 import androidx.compose.material3.FloatingActionButton
 import androidx.compose.material3.LinearProgressIndicator
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Scaffold
+import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
@@ -23,6 +25,9 @@ import androidx.compose.ui.DragData
 import androidx.compose.ui.ExperimentalComposeUiApi
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.onExternalDrag
+import androidx.compose.ui.unit.dp
+import fr.thomasbernard03.androidtools.presentation.applicationinstaller.components.InstallApplicationResult
+import fr.thomasbernard03.androidtools.presentation.applicationinstaller.components.OpenFileExplorerFloatingActionButton
 import fr.thomasbernard03.androidtools.presentation.applicationinstaller.components.WavesAnimation
 import org.jetbrains.compose.resources.painterResource
 import org.jetbrains.compose.resources.stringResource
@@ -42,35 +47,21 @@ fun ApplicationInstallerScreen(uiState : ApplicationInstallerUiState, onEvent: (
                 onDragStart = { hoverred = true },
                 onDragExit = { hoverred = false },
                 onDrop = { externalDragValue ->
-                    hoverred = false
-                    if (externalDragValue.dragData is DragData.FilesList) {
-                        val draggedFiles = (externalDragValue.dragData as DragData.FilesList).readFiles().map { it.drop(5) } // Remove file: prefix
-                        draggedFiles.firstOrNull()?.let {
-                            onEvent(ApplicationInstallerEvent.OnInstallApplication(it))
+                    if (hoverred){
+                        hoverred = false
+                        if (externalDragValue.dragData is DragData.FilesList) {
+                            val draggedFiles = (externalDragValue.dragData as DragData.FilesList).readFiles().map { it.drop(5) } // Remove file: prefix
+                            draggedFiles.firstOrNull { it.endsWith(".apk") }?.let {
+                                onEvent(ApplicationInstallerEvent.OnInstallApplication(it))
+                            }
                         }
                     }
                 }
             ),
         floatingActionButton = {
-            FloatingActionButton(
-                onClick = {
-                    val fileDialog = FileDialog(java.awt.Frame(), "", FileDialog.LOAD)
-                    fileDialog.filenameFilter = FilenameFilter { _, name -> name.endsWith(".apk") }
-                    fileDialog.isVisible = true
-                    val selectedFile = fileDialog.file
-                    val directory = fileDialog.directory
-
-                    if (selectedFile != null) {
-                        val apkPath = "$directory$selectedFile"
-                        onEvent(ApplicationInstallerEvent.OnInstallApplication(apkPath))
-                    }
-                }
-            ){
-                Image(
-                    painter = painterResource(Res.drawable.folder),
-                    contentDescription = stringResource(Res.string.open_file_explorer)
-                )
-            }
+            OpenFileExplorerFloatingActionButton(
+                onApkSelected = { onEvent(ApplicationInstallerEvent.OnInstallApplication(it)) }
+            )
         }
     ) {
         Box(
@@ -84,6 +75,13 @@ fun ApplicationInstallerScreen(uiState : ApplicationInstallerUiState, onEvent: (
                 )
         ) {
             WavesAnimation()
+
+            if (uiState.result != null){
+                InstallApplicationResult(
+                    modifier = Modifier.align(Alignment.BottomStart).padding(8.dp),
+                    result = uiState.result
+                )
+            }
 
             AnimatedVisibility(
                 visible = uiState.loading,
