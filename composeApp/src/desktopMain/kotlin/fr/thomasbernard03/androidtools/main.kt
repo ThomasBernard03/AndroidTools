@@ -15,11 +15,10 @@ import fr.thomasbernard03.androidtools.presentation.connectdevice.ConnectDeviceS
 import fr.thomasbernard03.androidtools.presentation.main.MainScreen
 import fr.thomasbernard03.androidtools.presentation.main.MainViewModel
 import fr.thomasbernard03.androidtools.presentation.theme.AndroidToolsTheme
-import io.kanro.compose.jetbrains.expui.window.JBWindow
 import org.jetbrains.compose.resources.stringResource
 
 fun main() = application {
-    JBWindow(
+    Window(
         onCloseRequest = ::exitApplication,
         title = stringResource(Res.string.app_name)
     ){

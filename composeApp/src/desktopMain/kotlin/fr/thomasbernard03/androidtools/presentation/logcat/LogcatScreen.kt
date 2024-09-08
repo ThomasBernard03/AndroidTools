@@ -1,6 +1,7 @@
 package fr.thomasbernard03.androidtools.presentation.logcat
 
 import androidtools.composeapp.generated.resources.Res
+import androidtools.composeapp.generated.resources.arrow_down
 import androidtools.composeapp.generated.resources.arrow_up
 import androidtools.composeapp.generated.resources.pause
 import androidtools.composeapp.generated.resources.play
@@ -67,17 +68,21 @@ fun LogcatScreen(uiState: LogcatUiState, onEvent: (LogcatEvent) -> Unit) {
 
     Scaffold(
         floatingActionButton = {
-            FloatingActionButton(
-                onClick = {
-                    animatedScrollScope.launch {
-                        listState.animateScrollToItem(uiState.lines.size)
+            val isAtBottom = (listState.layoutInfo.visibleItemsInfo.lastOrNull()?.index ?: 0) >= (uiState.lines.size - 20)
+
+            if (!isAtBottom) {
+                FloatingActionButton(
+                    onClick = {
+                        animatedScrollScope.launch {
+                            listState.animateScrollToItem(uiState.lines.size)
+                        }
                     }
+                ){
+                    Image(
+                        painter = painterResource(Res.drawable.arrow_down),
+                        contentDescription = "load from files"
+                    )
                 }
-            ){
-                Image(
-                    painter = painterResource(Res.drawable.arrow_up),
-                    contentDescription = "load from files"
-                )
             }
         }
     ) {

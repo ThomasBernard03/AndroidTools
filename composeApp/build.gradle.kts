@@ -34,7 +34,6 @@ kotlin {
             implementation(compose.desktop.currentOs){
                 exclude("org.jetbrains.compose.material")
             }
-            implementation("com.bybutter.compose:compose-jetbrains-expui-theme:2.0.0")
             implementation(libs.kotlinx.coroutines.swing)
         }
     }
