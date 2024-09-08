@@ -2,6 +2,9 @@ package fr.thomasbernard03.androidtools.presentation.logcat
 
 import androidtools.composeapp.generated.resources.Res
 import androidtools.composeapp.generated.resources.arrow_up
+import androidtools.composeapp.generated.resources.pause
+import androidtools.composeapp.generated.resources.play
+import androidtools.composeapp.generated.resources.replay
 import androidtools.composeapp.generated.resources.sticky_list
 import androidtools.composeapp.generated.resources.trash
 import androidx.compose.animation.AnimatedVisibility
@@ -45,10 +48,10 @@ fun LogcatScreen(uiState: LogcatUiState, onEvent: (LogcatEvent) -> Unit) {
 
     val listState = rememberLazyListState()
     val animatedScrollScope = rememberCoroutineScope()
-    var sticky by remember { mutableStateOf(false) }
+    var sticky by remember { mutableStateOf(true) }
 
     LaunchedEffect(Unit) {
-        onEvent(LogcatEvent.OnStartListening)
+        onEvent(LogcatEvent.OnStartListening())
     }
 
     LaunchedEffect(uiState.lines, sticky) {
@@ -96,16 +99,37 @@ fun LogcatScreen(uiState: LogcatUiState, onEvent: (LogcatEvent) -> Unit) {
                         horizontalArrangement = Arrangement.spacedBy(4.dp)
                     ) {
                         IconButton(
-                            onClick = {
-                                sticky = !sticky
-                            },
+                            onClick = { sticky = !sticky },
                             colors = IconButtonDefaults.iconButtonColors(
                                 containerColor = if (sticky) MaterialTheme.colorScheme.onBackground.copy(0.2f) else Color.Transparent
                             )
                         ) {
                             Image(
                                 painter = painterResource(Res.drawable.sticky_list),
-                                contentDescription = "clear"
+                                contentDescription = "sticky"
+                            )
+                        }
+
+                        IconButton(
+                            onClick = { onEvent(LogcatEvent.OnRestart) }
+                        ) {
+                            Image(
+                                painter = painterResource(Res.drawable.replay),
+                                contentDescription = "restart"
+                            )
+                        }
+
+                        IconButton(
+                            onClick = {
+                                if (uiState.onPause)
+                                    onEvent(LogcatEvent.OnStartListening(uiState.selectedPackage))
+                                else
+                                    onEvent(LogcatEvent.OnStopListening)
+                            }
+                        ) {
+                            Image(
+                                painter = painterResource(if(uiState.onPause) Res.drawable.play else Res.drawable.pause),
+                                contentDescription = "play/pause"
                             )
                         }
 

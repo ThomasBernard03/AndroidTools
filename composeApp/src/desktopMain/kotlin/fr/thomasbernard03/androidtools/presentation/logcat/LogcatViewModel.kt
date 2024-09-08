@@ -5,6 +5,9 @@ import fr.thomasbernard03.androidtools.domain.usecases.ClearLogcatUseCase
 import fr.thomasbernard03.androidtools.domain.usecases.GetAllPackagesUseCase
 import fr.thomasbernard03.androidtools.domain.usecases.GetLogcatUseCase
 import fr.thomasbernard03.androidtools.presentation.commons.BaseViewModel
+import kotlinx.coroutines.Job
+import kotlinx.coroutines.cancel
+import kotlinx.coroutines.cancelAndJoin
 import kotlinx.coroutines.launch
 
 class LogcatViewModel(
@@ -12,6 +15,9 @@ class LogcatViewModel(
     private val clearLogcatUseCase: ClearLogcatUseCase = ClearLogcatUseCase(),
     private val getAllPackagesUseCase: GetAllPackagesUseCase = GetAllPackagesUseCase()
 ) : BaseViewModel<LogcatUiState, LogcatEvent>() {
+
+    private var logcatJob: Job? = null
+
     override fun initializeUiState() = LogcatUiState()
 
     init {
@@ -24,26 +30,46 @@ class LogcatViewModel(
 
     override fun onEvent(event: LogcatEvent) {
         when(event){
-            is LogcatEvent.OnPackageSelected -> updateUiState { copy(selectedPackage = event.packageName) }
-            LogcatEvent.OnClear -> {
+            is LogcatEvent.OnPackageSelected -> {
                 viewModelScope.launch {
-                    updateUiState { copy(loading = true) }
-                    clearLogcatUseCase()
-                    updateUiState { copy(loading = false, lines = emptyList()) }
+                    updateUiState { copy(selectedPackage = event.packageName) }
+                    logcatJob?.cancel()
+                    onEvent(LogcatEvent.OnStartListening(event.packageName))
                 }
             }
-            LogcatEvent.OnRestart -> TODO()
-            LogcatEvent.OnStopListening -> TODO()
-            LogcatEvent.OnStartListening -> {
+            LogcatEvent.OnClear -> {
                 viewModelScope.launch {
-                    getLogcatUseCase.invoke().collect { line ->
-                        updateUiState {
-                            copy(lines = lines + line)
-                        }
+                    updateUiState { copy(loading = true, lines = emptyList()) }
+                    clearLogcatUseCase()
+                    updateUiState { copy(loading = false) }
+                }
+            }
+            LogcatEvent.OnRestart -> {
+                updateUiState { copy(loading = true, lines = emptyList()) }
+                logcatJob?.cancel()
+                updateUiState { copy(loading = false) }
+                logcatJob = viewModelScope.launch {
+                    getLogcatUseCase(uiState.value.selectedPackage).collect { line ->
+                        updateUiState { copy(lines = lines + line) }
                     }
                 }
             }
-
+            LogcatEvent.OnStopListening -> {
+                viewModelScope.launch {
+                    updateUiState { copy(loading = true, onPause = true) }
+                    logcatJob?.cancel()
+                    updateUiState { copy(loading = false) }
+                }
+            }
+            is LogcatEvent.OnStartListening -> {
+                logcatJob?.cancel()
+                logcatJob = viewModelScope.launch {
+                    updateUiState { copy(onPause = false, lines = emptyList()) }
+                    getLogcatUseCase(event.packageName).collect { line ->
+                        updateUiState { copy(lines = lines + line) }
+                    }
+                }
+            }
         }
     }
 }

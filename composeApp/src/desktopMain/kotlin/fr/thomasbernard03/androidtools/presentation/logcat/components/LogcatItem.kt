@@ -46,13 +46,12 @@ fun LogcatItem(
                 maxLines = 1,
                 style = MaterialTheme.typography.bodySmall
             )
-            Text(
-                text = "${parsedLogcatLine.pid}-${parsedLogcatLine.tid}",
-                modifier = Modifier.width(80.dp),
-                maxLines = 1,
-                style = MaterialTheme.typography.bodySmall
-
-            )
+//            Text(
+//                text = "${parsedLogcatLine.pid}-${parsedLogcatLine.tid}",
+//                modifier = Modifier.width(80.dp),
+//                maxLines = 1,
+//                style = MaterialTheme.typography.bodySmall
+//            )
 
             Text(
                 text = parsedLogcatLine.tag,
