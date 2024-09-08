@@ -26,6 +26,7 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import androidx.lifecycle.viewmodel.compose.viewModel
+import androidx.navigation.NavGraph.Companion.findStartDestination
 import androidx.navigation.NavHostController
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
@@ -52,6 +53,7 @@ fun MainScreen(uiState : MainUiState, onEvent : (MainEvent) -> Unit) {
 
     Row {
         val navController = rememberNavController()
+        val currentRoute = navController.currentBackStackEntryAsState().value?.destination?.route
 
         NavigationRail(
             modifier = Modifier.width(120.dp),
@@ -62,18 +64,19 @@ fun MainScreen(uiState : MainUiState, onEvent : (MainEvent) -> Unit) {
                     selection = uiState.selectedDevice ?: "Select a device",
                     devices = uiState.devices,
                     onDeviceSelected = {
-                        onEvent(MainEvent.OnDeviceSelected(it))
-                        navController.navigate(Screen.ApplicationInstaller.route){
-                            launchSingleTop = true
-                            popUpTo(navController.graph.startDestinationRoute!!){
-                                inclusive = true
+                        if (uiState.selectedDevice != it){
+                            onEvent(MainEvent.OnDeviceSelected(it))
+                            navController.navigate(route = navController.graph.startDestinationRoute ?: ""){
+                                popUpTo(currentRoute ?: ""){
+                                    inclusive = true
+                                }
+                                launchSingleTop = true
                             }
                         }
                     }
                 )
             }
         ) {
-            val currentRoute = navController.currentBackStackEntryAsState().value?.destination?.route
 
             Column(
                 modifier = Modifier.padding(horizontal = 8.dp),
@@ -84,11 +87,11 @@ fun MainScreen(uiState : MainUiState, onEvent : (MainEvent) -> Unit) {
                         selected = currentRoute == item.route,
                         onClick = {
                             if (currentRoute != item.route){
-                                navController.navigate(item.route){
-                                    launchSingleTop = true
-                                    popUpTo(navController.graph.startDestinationRoute!!){
+                                navController.navigate(route = item.route){
+                                    popUpTo(currentRoute ?: ""){
                                         inclusive = true
                                     }
+                                    launchSingleTop = true
                                 }
                             }
                         },

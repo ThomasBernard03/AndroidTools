@@ -1,6 +1,7 @@
 package fr.thomasbernard03.androidtools.domain.usecases
 
 import com.russhwolf.settings.Settings
+import fr.thomasbernard03.androidtools.commons.SettingsConstants
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.withContext
 import java.io.BufferedReader
@@ -10,7 +11,7 @@ class GetAllPackagesUseCase(
     private val settings: Settings = Settings()
 ) {
     suspend operator fun invoke() : Collection<String> = withContext(Dispatchers.IO) {
-        val currentDevice = settings.getString(key = "selectedDevice", defaultValue = "")
+        val currentDevice = settings.getString(key = SettingsConstants.SELECTED_DEVICE, defaultValue = "")
         val process = ProcessBuilder("/usr/local/bin/adb", "-s", currentDevice, "shell", "cmd", "package ", "list", "package", "-3").start()
         val reader = BufferedReader(InputStreamReader(process.inputStream))
         val output = StringBuilder()

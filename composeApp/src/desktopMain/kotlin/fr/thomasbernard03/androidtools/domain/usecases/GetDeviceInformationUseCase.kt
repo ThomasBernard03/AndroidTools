@@ -1,6 +1,7 @@
 package fr.thomasbernard03.androidtools.domain.usecases
 
 import com.russhwolf.settings.Settings
+import fr.thomasbernard03.androidtools.commons.SettingsConstants
 import fr.thomasbernard03.androidtools.domain.models.DeviceInformation
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.withContext
@@ -11,7 +12,7 @@ class GetDeviceInformationUseCase(
     private val settings : Settings = Settings()
 ) {
     suspend operator fun invoke() : DeviceInformation = withContext(Dispatchers.IO) {
-        val currentDevice = settings.getString(key = "selectedDevice", defaultValue = "")
+        val currentDevice = settings.getString(key = SettingsConstants.SELECTED_DEVICE, defaultValue = "")
         val process = ProcessBuilder("/usr/local/bin/adb", "-s", currentDevice, "shell", "getprop").start()
         val reader = BufferedReader(InputStreamReader(process.inputStream))
         val output = StringBuilder()
