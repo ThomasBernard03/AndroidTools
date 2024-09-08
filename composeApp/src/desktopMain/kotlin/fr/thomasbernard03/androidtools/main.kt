@@ -1,5 +1,7 @@
 package fr.thomasbernard03.androidtools
 
+import androidtools.composeapp.generated.resources.Res
+import androidtools.composeapp.generated.resources.app_name
 import androidx.compose.runtime.getValue
 import androidx.compose.ui.window.Window
 import androidx.compose.ui.window.application
@@ -13,12 +15,14 @@ import fr.thomasbernard03.androidtools.presentation.connectdevice.ConnectDeviceS
 import fr.thomasbernard03.androidtools.presentation.main.MainScreen
 import fr.thomasbernard03.androidtools.presentation.main.MainViewModel
 import fr.thomasbernard03.androidtools.presentation.theme.AndroidToolsTheme
+import io.kanro.compose.jetbrains.expui.window.JBWindow
+import org.jetbrains.compose.resources.stringResource
 
 fun main() = application {
-    Window(
+    JBWindow(
         onCloseRequest = ::exitApplication,
-        title = "Android Tools",
-    ) {
+        title = stringResource(Res.string.app_name)
+    ){
         val navController: NavHostController = rememberNavController()
 
         AndroidToolsTheme {

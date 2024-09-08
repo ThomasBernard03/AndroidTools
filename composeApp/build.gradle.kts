@@ -30,7 +30,10 @@ kotlin {
             implementation("org.jetbrains.androidx.navigation:navigation-compose:2.7.0-alpha07")
         }
         desktopMain.dependencies {
-            implementation(compose.desktop.currentOs)
+            implementation(compose.desktop.currentOs){
+                exclude("org.jetbrains.compose.material")
+            }
+            implementation("com.bybutter.compose:compose-jetbrains-expui-theme:2.0.0")
             implementation(libs.kotlinx.coroutines.swing)
         }
     }
