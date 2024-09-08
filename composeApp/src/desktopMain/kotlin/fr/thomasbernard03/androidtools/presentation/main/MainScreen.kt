@@ -18,6 +18,10 @@ import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
+import androidx.compose.runtime.key
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.remember
+import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
@@ -47,7 +51,7 @@ fun MainScreen(uiState : MainUiState, onEvent : (MainEvent) -> Unit) {
     }
 
     Row {
-        val navController: NavHostController = rememberNavController()
+        val navController = rememberNavController()
 
         NavigationRail(
             modifier = Modifier.width(120.dp),
@@ -57,7 +61,15 @@ fun MainScreen(uiState : MainUiState, onEvent : (MainEvent) -> Unit) {
                     modifier = Modifier.fillMaxWidth(),
                     selection = uiState.selectedDevice ?: "Select a device",
                     devices = uiState.devices,
-                    onDeviceSelected = { onEvent(MainEvent.OnDeviceSelected(it)) }
+                    onDeviceSelected = {
+                        onEvent(MainEvent.OnDeviceSelected(it))
+                        navController.navigate(Screen.ApplicationInstaller.route){
+                            launchSingleTop = true
+                            popUpTo(navController.graph.startDestinationRoute!!){
+                                inclusive = true
+                            }
+                        }
+                    }
                 )
             }
         ) {
@@ -92,7 +104,10 @@ fun MainScreen(uiState : MainUiState, onEvent : (MainEvent) -> Unit) {
             }
         }
 
-        NavHost(navController = navController, startDestination = Screen.ApplicationInstaller.route) {
+        NavHost(
+            navController = navController,
+            startDestination = Screen.ApplicationInstaller.route,
+        ) {
             composable(Screen.ApplicationInstaller.route) {
                 val viewModel = viewModel { ApplicationInstallerViewModel() }
                 val uiState by viewModel.uiState.collectAsStateWithLifecycle()
