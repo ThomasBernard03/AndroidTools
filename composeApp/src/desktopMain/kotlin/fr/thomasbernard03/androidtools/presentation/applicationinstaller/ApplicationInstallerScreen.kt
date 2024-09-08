@@ -2,6 +2,7 @@ package fr.thomasbernard03.androidtools.presentation.applicationinstaller
 
 import androidtools.composeapp.generated.resources.Res
 import androidtools.composeapp.generated.resources.folder
+import androidtools.composeapp.generated.resources.install_application_card_text
 import androidtools.composeapp.generated.resources.open_file_explorer
 import androidx.compose.animation.AnimatedVisibility
 import androidx.compose.foundation.Image
@@ -10,6 +11,8 @@ import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.widthIn
+import androidx.compose.material3.ElevatedCard
 import androidx.compose.material3.FloatingActionButton
 import androidx.compose.material3.LinearProgressIndicator
 import androidx.compose.material3.MaterialTheme
@@ -75,6 +78,15 @@ fun ApplicationInstallerScreen(uiState : ApplicationInstallerUiState, onEvent: (
                 )
         ) {
             WavesAnimation()
+
+            ElevatedCard(
+                modifier = Modifier.align(Alignment.TopStart).padding(16.dp).widthIn(max = 300.dp),
+            ){
+                Text(
+                    modifier = Modifier.padding(16.dp),
+                    text = stringResource(Res.string.install_application_card_text),
+                )
+            }
 
             if (uiState.result != null){
                 InstallApplicationResult(

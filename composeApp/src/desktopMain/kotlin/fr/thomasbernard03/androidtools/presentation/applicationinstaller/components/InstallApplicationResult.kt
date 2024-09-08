@@ -15,11 +15,11 @@ fun InstallApplicationResult(
         modifier = modifier
     ) {
         when(result){
-            is InstallApplicationResult.Success.Installed -> {
-                Text("Application installed")
+            is InstallApplicationResult.Success -> {
+                Text("Application ${result.apk} installed")
             }
             is InstallApplicationResult.Error -> {
-                Text("Error when installing application")
+                Text("Error when installing application ${result.apk} :\n${result.message}")
             }
         }
     }

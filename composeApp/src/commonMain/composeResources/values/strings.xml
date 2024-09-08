@@ -8,4 +8,5 @@
     <!-- Application installer -->
     <string name="open_file_explorer">Open file explorer</string>
     <string name="install_application_file_format_warning">Open file explorer</string>
+    <string name="install_application_card_text">You can install an application by dragging and dropping an APK file here</string>
 </resources>
