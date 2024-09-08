@@ -40,6 +40,7 @@ import fr.thomasbernard03.androidtools.presentation.information.InformationViewM
 import fr.thomasbernard03.androidtools.presentation.logcat.LogcatScreen
 import fr.thomasbernard03.androidtools.presentation.logcat.LogcatViewModel
 import fr.thomasbernard03.androidtools.presentation.main.components.DeviceDropDown
+import fr.thomasbernard03.androidtools.presentation.main.components.mainNavigationGraph
 import org.jetbrains.compose.resources.painterResource
 import org.jetbrains.compose.resources.stringResource
 
@@ -47,14 +48,23 @@ import org.jetbrains.compose.resources.stringResource
 @Composable
 fun MainScreen(uiState : MainUiState, onEvent : (MainEvent) -> Unit) {
 
+    val navController = rememberNavController()
+    val currentRoute = navController.currentBackStackEntryAsState().value?.destination?.route
+
+    fun navigateTo(route: String){
+        navController.navigate(route = route){
+            popUpTo(currentRoute ?: ""){
+                inclusive = true
+            }
+            launchSingleTop = true
+        }
+    }
+
     LaunchedEffect(Unit){
         onEvent(MainEvent.OnLoadDevices)
     }
 
     Row {
-        val navController = rememberNavController()
-        val currentRoute = navController.currentBackStackEntryAsState().value?.destination?.route
-
         NavigationRail(
             modifier = Modifier.width(120.dp),
             containerColor = MaterialTheme.colorScheme.surfaceContainer,
@@ -66,12 +76,7 @@ fun MainScreen(uiState : MainUiState, onEvent : (MainEvent) -> Unit) {
                     onDeviceSelected = {
                         if (uiState.selectedDevice != it){
                             onEvent(MainEvent.OnDeviceSelected(it))
-                            navController.navigate(route = navController.graph.startDestinationRoute ?: ""){
-                                popUpTo(currentRoute ?: ""){
-                                    inclusive = true
-                                }
-                                launchSingleTop = true
-                            }
+                            navigateTo(Screen.ApplicationInstaller.route)
                         }
                     }
                 )
@@ -87,12 +92,7 @@ fun MainScreen(uiState : MainUiState, onEvent : (MainEvent) -> Unit) {
                         selected = currentRoute == item.route,
                         onClick = {
                             if (currentRoute != item.route){
-                                navController.navigate(route = item.route){
-                                    popUpTo(currentRoute ?: ""){
-                                        inclusive = true
-                                    }
-                                    launchSingleTop = true
-                                }
+                                navigateTo(item.route)
                             }
                         },
                         icon = {
@@ -111,23 +111,7 @@ fun MainScreen(uiState : MainUiState, onEvent : (MainEvent) -> Unit) {
             navController = navController,
             startDestination = Screen.ApplicationInstaller.route,
         ) {
-            composable(Screen.ApplicationInstaller.route) {
-                val viewModel = viewModel { ApplicationInstallerViewModel() }
-                val uiState by viewModel.uiState.collectAsStateWithLifecycle()
-                ApplicationInstallerScreen(uiState = uiState, onEvent = viewModel::onEvent)
-            }
-
-            composable(Screen.Information.route) {
-                val viewModel = viewModel { InformationViewModel() }
-                val uiState by viewModel.uiState.collectAsStateWithLifecycle()
-                InformationScreen(uiState = uiState, onEvent = viewModel::onEvent)
-            }
-
-            composable(Screen.Logcat.route) {
-                val viewModel = viewModel { LogcatViewModel() }
-                val uiState by viewModel.uiState.collectAsStateWithLifecycle()
-                LogcatScreen(uiState = uiState, onEvent = viewModel::onEvent)
-            }
+            mainNavigationGraph()
         }
     }
 }
