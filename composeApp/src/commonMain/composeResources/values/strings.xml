@@ -1,9 +1,11 @@
 <resources>
     <string name="app_name">Android Tools</string>
+
+    <!-- Main -->
     <string name="application_installer_rail_title">App Installer</string>
     <string name="information_rail_title">Information</string>
     <string name="logcat_rail_title">Logcat</string>
-
+    <string name="settings_rail_title">Settings</string>
 
     <!-- Application installer -->
     <string name="open_file_explorer">Open file explorer</string>

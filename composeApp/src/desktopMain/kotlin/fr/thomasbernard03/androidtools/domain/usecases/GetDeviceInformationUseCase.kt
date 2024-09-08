@@ -12,7 +12,7 @@ class GetDeviceInformationUseCase(
     private val settings : Settings = Settings()
 ) {
     suspend operator fun invoke() : DeviceInformation = withContext(Dispatchers.IO) {
-        val currentDevice = settings.getString(key = SettingsConstants.SELECTED_DEVICE, defaultValue = "")
+        val currentDevice = settings.getString(key = SettingsConstants.SELECTED_DEVICE_KEY, defaultValue = "")
         val process = ProcessBuilder("/usr/local/bin/adb", "-s", currentDevice, "shell", "getprop").start()
         val reader = BufferedReader(InputStreamReader(process.inputStream))
         val output = StringBuilder()

@@ -12,6 +12,8 @@ import fr.thomasbernard03.androidtools.presentation.information.InformationScree
 import fr.thomasbernard03.androidtools.presentation.information.InformationViewModel
 import fr.thomasbernard03.androidtools.presentation.logcat.LogcatScreen
 import fr.thomasbernard03.androidtools.presentation.logcat.LogcatViewModel
+import fr.thomasbernard03.androidtools.presentation.settings.SettingsScreen
+import fr.thomasbernard03.androidtools.presentation.settings.SettingsViewModel
 
 fun NavGraphBuilder.mainNavigationGraph(){
     composable(Screen.ApplicationInstaller.route) {
@@ -30,5 +32,11 @@ fun NavGraphBuilder.mainNavigationGraph(){
         val viewModel = viewModel { LogcatViewModel() }
         val uiState by viewModel.uiState.collectAsStateWithLifecycle()
         LogcatScreen(uiState = uiState, onEvent = viewModel::onEvent)
+    }
+
+    composable(Screen.Settings.route){
+        val viewModel = viewModel { SettingsViewModel() }
+        val uiState by viewModel.uiState.collectAsStateWithLifecycle()
+        SettingsScreen(uiState = uiState, onEvent = viewModel::onEvent)
     }
 }

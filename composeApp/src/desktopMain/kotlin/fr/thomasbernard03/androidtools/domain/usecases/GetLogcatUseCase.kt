@@ -6,7 +6,6 @@ import fr.thomasbernard03.androidtools.data.repositories.ShellRepositoryImpl
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.channelFlow
-import kotlinx.coroutines.flow.flow
 import kotlinx.coroutines.withContext
 import java.io.BufferedReader
 import java.io.InputStreamReader
@@ -17,7 +16,7 @@ class GetLogcatUseCase(
 ) {
     operator fun invoke(packageName : String? = null): Flow<String> = channelFlow {
         withContext(Dispatchers.IO) {
-            val currentDevice = settings.getString(key = SettingsConstants.SELECTED_DEVICE, defaultValue = "")
+            val currentDevice = settings.getString(key = SettingsConstants.SELECTED_DEVICE_KEY, defaultValue = "")
 
 
             if (!packageName.isNullOrEmpty()){

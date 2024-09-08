@@ -13,7 +13,7 @@ class ShellRepositoryImpl(
     suspend fun executeAdbCommand(vararg formatArgs: String) : String = withContext(Dispatchers.IO) {
         val arguments = mutableListOf<String>()
 
-        val currentDevice = settings.getStringOrNull(key = SettingsConstants.SELECTED_DEVICE)
+        val currentDevice = settings.getStringOrNull(key = SettingsConstants.SELECTED_DEVICE_KEY)
 
         if(currentDevice != null){
             arguments.add("-s")
