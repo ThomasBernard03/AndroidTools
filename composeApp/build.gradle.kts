@@ -25,10 +25,12 @@ kotlin {
             implementation(compose.ui)
             implementation(compose.components.resources)
             implementation(compose.components.uiToolingPreview)
+            implementation(libs.settings)
+
+            // Navigation and viewmodel lifecycle
             implementation(libs.androidx.lifecycle.viewmodel)
+            implementation(libs.androidx.navigation.compose)
             implementation(libs.androidx.lifecycle.runtime.compose)
-            implementation("org.jetbrains.androidx.navigation:navigation-compose:2.7.0-alpha07")
-            implementation("com.russhwolf:multiplatform-settings-no-arg:1.2.0")
         }
         desktopMain.dependencies {
             implementation(compose.desktop.currentOs){
@@ -48,6 +50,14 @@ compose.desktop {
             targetFormats(TargetFormat.Dmg, TargetFormat.Msi, TargetFormat.Deb)
             packageName = "fr.thomasbernard03.androidtools"
             packageVersion = "1.0.0"
+
+            macOS {
+                iconFile.set(file("icon.icns"))
+            }
+
+            windows {
+                iconFile.set(file("icon.ico"))
+            }
         }
     }
 }
