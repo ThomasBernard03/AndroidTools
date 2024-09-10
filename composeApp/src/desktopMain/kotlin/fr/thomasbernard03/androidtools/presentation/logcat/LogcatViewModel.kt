@@ -5,6 +5,7 @@ import fr.thomasbernard03.androidtools.domain.usecases.ClearLogcatUseCase
 import fr.thomasbernard03.androidtools.domain.usecases.GetAllPackagesUseCase
 import fr.thomasbernard03.androidtools.domain.usecases.GetLogcatUseCase
 import fr.thomasbernard03.androidtools.presentation.commons.BaseViewModel
+import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.Job
 import kotlinx.coroutines.cancel
 import kotlinx.coroutines.cancelAndJoin
@@ -19,14 +20,6 @@ class LogcatViewModel(
     private var logcatJob: Job? = null
 
     override fun initializeUiState() = LogcatUiState()
-
-    init {
-        viewModelScope.launch {
-            getAllPackagesUseCase.invoke().let { packages ->
-                updateUiState { copy(packages = packages.toList()) }
-            }
-        }
-    }
 
     override fun onEvent(event: LogcatEvent) {
         when(event){
@@ -63,10 +56,17 @@ class LogcatViewModel(
             }
             is LogcatEvent.OnStartListening -> {
                 logcatJob?.cancel()
-                logcatJob = viewModelScope.launch {
+                logcatJob = viewModelScope.launch(Dispatchers.IO) {
                     updateUiState { copy(onPause = false, lines = emptyList()) }
                     getLogcatUseCase(event.packageName).collect { line ->
                         updateUiState { copy(lines = lines + line) }
+                    }
+                }
+            }
+            LogcatEvent.OnGetAllPackages -> {
+                viewModelScope.launch {
+                    getAllPackagesUseCase.invoke().let { packages ->
+                        updateUiState { copy(packages = packages.toList()) }
                     }
                 }
             }

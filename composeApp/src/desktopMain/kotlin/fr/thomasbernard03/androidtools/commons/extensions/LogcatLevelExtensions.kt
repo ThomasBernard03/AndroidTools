@@ -50,7 +50,7 @@ fun LogcatLevel.onBackgroundColor() : Color {
     }
     else {
         return when(this){
-            LogcatLevel.E -> MaterialTheme.colorScheme.background
+            LogcatLevel.E, LogcatLevel.V -> MaterialTheme.colorScheme.background
             else -> MaterialTheme.colorScheme.onBackground
         }
     }
@@ -71,9 +71,9 @@ fun LogcatLevel.messageColor() : Color {
     else {
         return when(this){
             LogcatLevel.V -> VerboseBackgroundColorLight
-            LogcatLevel.D -> DebugBackgroundColorLight
-            LogcatLevel.I -> InfoBackgroundColorLight
-            LogcatLevel.W -> WarningBackgroundColorLight
+            LogcatLevel.D -> Color(0xFF46898A)
+            LogcatLevel.I -> Color(0xFFAFBE46)
+            LogcatLevel.W -> Color(0xFFBBB446)
             LogcatLevel.E -> ErrorBackgroundColorLight
             LogcatLevel.F -> ErrorBackgroundColorLight
         }

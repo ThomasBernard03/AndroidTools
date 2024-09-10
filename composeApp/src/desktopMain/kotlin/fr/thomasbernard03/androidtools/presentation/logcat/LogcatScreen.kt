@@ -62,6 +62,7 @@ fun LogcatScreen(uiState: LogcatUiState, onEvent: (LogcatEvent) -> Unit) {
     val horizontalScroll = rememberScrollState()
 
     LaunchedEffect(Unit) {
+        onEvent(LogcatEvent.OnGetAllPackages)
         onEvent(LogcatEvent.OnStartListening())
     }
 

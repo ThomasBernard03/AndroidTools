@@ -1,9 +1,12 @@
 package fr.thomasbernard03.androidtools.presentation.logcat.components
 
+import androidx.compose.foundation.ExperimentalFoundationApi
+import androidx.compose.foundation.TooltipArea
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Row
+import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.width
 import androidx.compose.material3.MaterialTheme
@@ -21,6 +24,7 @@ import fr.thomasbernard03.androidtools.domain.models.LogcatLevel
 import fr.thomasbernard03.androidtools.domain.models.LogcatLine
 import kotlin.math.max
 
+@OptIn(ExperimentalFoundationApi::class)
 @Composable
 fun LogcatItem(
     logcatLine: String
@@ -28,12 +32,16 @@ fun LogcatItem(
     val parsedLogcatLine = parseLogcatLine(logcatLine)
 
     if (parsedLogcatLine == null) {
-        Text(
-            text = logcatLine,
-            maxLines = 1,
-            style = MaterialTheme.typography.bodySmall
-
-        )
+        Row(
+            verticalAlignment = Alignment.CenterVertically
+        ){
+            Text(
+                text = logcatLine,
+                maxLines = 1,
+                style = MaterialTheme.typography.bodySmall,
+                modifier = Modifier.height(30.dp)
+            )
+        }
     }
     else {
         Row(
@@ -46,12 +54,6 @@ fun LogcatItem(
                 maxLines = 1,
                 style = MaterialTheme.typography.bodySmall
             )
-//            Text(
-//                text = "${parsedLogcatLine.pid}-${parsedLogcatLine.tid}",
-//                modifier = Modifier.width(80.dp),
-//                maxLines = 1,
-//                style = MaterialTheme.typography.bodySmall
-//            )
 
             Text(
                 text = parsedLogcatLine.tag,
