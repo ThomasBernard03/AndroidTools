@@ -6,9 +6,13 @@ import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.ExperimentalLayoutApi
 import androidx.compose.foundation.layout.FlowRow
+import androidx.compose.foundation.layout.PaddingValues
+import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.lazy.LazyColumn
+import androidx.compose.foundation.lazy.items
 import androidx.compose.material3.Card
 import androidx.compose.material3.CardDefaults
 import androidx.compose.material3.LinearProgressIndicator
@@ -33,46 +37,70 @@ fun InformationScreen(uiState : InformationUiState, onEvent : (InformationEvent)
     Scaffold {
         Box(modifier = Modifier.fillMaxSize()) {
 
-            FlowRow(
-                modifier = Modifier.padding(16.dp),
-                horizontalArrangement = Arrangement.spacedBy(8.dp),
-                verticalArrangement = Arrangement.spacedBy(8.dp)
-            ) {
-                // Android version
-                AndroidVersionCard(version = uiState.androidVersion)
+            Column {
+                FlowRow(
+                    modifier = Modifier.padding(16.dp),
+                    horizontalArrangement = Arrangement.spacedBy(8.dp),
+                    verticalArrangement = Arrangement.spacedBy(8.dp)
+                ) {
+                    // Android version
+                    AndroidVersionCard(version = uiState.androidVersion)
 
-                Card(
-                    colors = CardDefaults.cardColors(
-                        containerColor = MaterialTheme.colorScheme.secondary,
-                    )
-                ){
-                    Column(
-                        modifier = Modifier.padding(32.dp)
-                    ) {
-                        Text(
-                            text = uiState.model,
-                            style = MaterialTheme.typography.titleLarge.copy(color = MaterialTheme.colorScheme.onSecondary),
+                    Card(
+                        colors = CardDefaults.cardColors(
+                            containerColor = MaterialTheme.colorScheme.secondary,
                         )
+                    ){
+                        Column(
+                            modifier = Modifier.padding(32.dp)
+                        ) {
+                            Text(
+                                text = uiState.model,
+                                style = MaterialTheme.typography.titleLarge.copy(color = MaterialTheme.colorScheme.onSecondary),
+                            )
 
+                            Text(
+                                text = uiState.manufacturer,
+                                style = MaterialTheme.typography.titleMedium.copy(color = MaterialTheme.colorScheme.onSecondary),
+                            )
+                        }
+                    }
+
+                    Card(
+                        colors = CardDefaults.cardColors(
+                            containerColor = MaterialTheme.colorScheme.tertiary,
+                        )
+                    ){
                         Text(
-                            text = uiState.manufacturer,
-                            style = MaterialTheme.typography.titleMedium.copy(color = MaterialTheme.colorScheme.onSecondary),
+                            text = "${uiState.battery}%",
+                            modifier = Modifier.padding(32.dp),
+                            style = MaterialTheme.typography.titleLarge.copy(color = MaterialTheme.colorScheme.onTertiary),
                         )
                     }
                 }
 
-                Card(
-                    colors = CardDefaults.cardColors(
-                        containerColor = MaterialTheme.colorScheme.tertiary,
-                    )
-                ){
-                    Text(
-                        text = "${uiState.battery}%",
-                        modifier = Modifier.padding(32.dp),
-                        style = MaterialTheme.typography.titleLarge.copy(color = MaterialTheme.colorScheme.onTertiary),
-                    )
+                LazyColumn(
+                    contentPadding = PaddingValues(16.dp),
+                ) {
+                    items(uiState.lines.toList()){ item ->
+                        Row(
+                            horizontalArrangement = Arrangement.SpaceBetween,
+                            modifier = Modifier.fillMaxWidth()
+                        ) {
+                            Text(
+                                text = item.first,
+                                style = MaterialTheme.typography.bodyMedium,
+                            )
+                            Text(
+                                text = item.second,
+                                style = MaterialTheme.typography.bodyMedium,
+                            )
+                        }
+                    }
                 }
             }
+
+
 
             AnimatedVisibility(
                 visible = uiState.loading,

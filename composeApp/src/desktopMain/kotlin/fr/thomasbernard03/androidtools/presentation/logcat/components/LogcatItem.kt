@@ -113,6 +113,7 @@ private fun parseLogLevel(level: String): LogcatLevel {
         "I" -> LogcatLevel.I
         "W" -> LogcatLevel.W
         "E" -> LogcatLevel.E
+        "F" -> LogcatLevel.F
         else ->  throw IllegalArgumentException("Unknown log level: $level")
     }
 }

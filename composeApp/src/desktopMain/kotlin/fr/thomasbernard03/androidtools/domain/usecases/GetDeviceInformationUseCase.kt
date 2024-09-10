@@ -35,6 +35,14 @@ class GetDeviceInformationUseCase(
         val model = lines.find { it.contains("ro.product.model") }?.split(":")?.get(1)?.replace("[", "")?.replace("]", "")?.trim() ?: ""
         val version = lines.find { it.contains("ro.build.version.release") }?.split(":")?.get(1)?.replace("[", "")?.replace("]", "")?.trim() ?: ""
         val serial = lines.find { it.contains("ro.serialno") }?.split(":")?.get(1)?.replace("[", "")?.replace("]", "")?.trim() ?: ""
-        return DeviceInformation(manufacturer, model, version.toInt(), serial)
+
+
+        val allLines = lines.filter { it.split(":").size >= 2 }.map {
+            val key = it.split(":").first()
+            val value = it.split(":").last()
+            key to value
+        }.toMap()
+
+        return DeviceInformation(manufacturer, model, version.toInt(), serial, allLines)
     }
 }

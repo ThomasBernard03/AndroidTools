@@ -25,6 +25,7 @@ fun LogcatLevel.backgroundColor() : Color {
             LogcatLevel.I -> InfoBackgroundColorLight
             LogcatLevel.W -> WarningBackgroundColorLight
             LogcatLevel.E -> ErrorBackgroundColorLight
+            LogcatLevel.F -> ErrorBackgroundColorLight
         }
     }
     else {
@@ -34,6 +35,7 @@ fun LogcatLevel.backgroundColor() : Color {
             LogcatLevel.I -> InfoBackgroundColorDark
             LogcatLevel.W -> WarningBackgroundColorDark
             LogcatLevel.E -> ErrorBackgroundColorDark
+            LogcatLevel.F -> ErrorBackgroundColorDark
         }
     }
 }
@@ -63,6 +65,7 @@ fun LogcatLevel.messageColor() : Color {
             LogcatLevel.I -> Color(0xFF59A869)
             LogcatLevel.W -> Color(0xFF655708)
             LogcatLevel.E -> Color(0xFFCD0000)
+            LogcatLevel.F -> Color(0xFFCD0000)
         }
     }
     else {
@@ -72,6 +75,7 @@ fun LogcatLevel.messageColor() : Color {
             LogcatLevel.I -> InfoBackgroundColorLight
             LogcatLevel.W -> WarningBackgroundColorLight
             LogcatLevel.E -> ErrorBackgroundColorLight
+            LogcatLevel.F -> ErrorBackgroundColorLight
         }
     }
 }

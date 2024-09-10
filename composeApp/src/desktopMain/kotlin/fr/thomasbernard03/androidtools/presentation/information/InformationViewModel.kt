@@ -20,7 +20,15 @@ class InformationViewModel(
                 viewModelScope.launch {
                     updateUiState { copy(loading = true) }
                     val deviceInformation = getDeviceInformationUseCase()
-                    updateUiState { copy(loading = false, androidVersion = deviceInformation.version, model = deviceInformation.model, manufacturer = deviceInformation.manufacturer) }
+                    updateUiState {
+                        copy(
+                            loading = false,
+                            androidVersion = deviceInformation.version,
+                            model = deviceInformation.model,
+                            manufacturer = deviceInformation.manufacturer,
+                            lines = deviceInformation.lines
+                        )
+                    }
                 }
             }
         }

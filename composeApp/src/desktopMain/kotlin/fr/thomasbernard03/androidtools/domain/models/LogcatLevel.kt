@@ -5,5 +5,6 @@ enum class LogcatLevel {
     D,
     I,
     W,
-    E
+    E,
+    F
 }

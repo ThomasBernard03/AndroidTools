@@ -9,9 +9,11 @@ import androidtools.composeapp.generated.resources.replay
 import androidtools.composeapp.generated.resources.sticky_list
 import androidtools.composeapp.generated.resources.trash
 import androidx.compose.animation.AnimatedVisibility
+import androidx.compose.foundation.HorizontalScrollbar
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.VerticalScrollbar
 import androidx.compose.foundation.background
+import androidx.compose.foundation.horizontalScroll
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
@@ -20,11 +22,14 @@ import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.fillMaxHeight
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
+import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
 import androidx.compose.foundation.lazy.rememberLazyListState
+import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.rememberScrollbarAdapter
+import androidx.compose.foundation.text.selection.SelectionContainer
 import androidx.compose.material3.FloatingActionButton
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
@@ -54,6 +59,7 @@ fun LogcatScreen(uiState: LogcatUiState, onEvent: (LogcatEvent) -> Unit) {
     val listState = rememberLazyListState()
     val animatedScrollScope = rememberCoroutineScope()
     var sticky by remember { mutableStateOf(true) }
+    val horizontalScroll = rememberScrollState()
 
     LaunchedEffect(Unit) {
         onEvent(LogcatEvent.OnStartListening())
@@ -162,12 +168,14 @@ fun LogcatScreen(uiState: LogcatUiState, onEvent: (LogcatEvent) -> Unit) {
 
                 Box {
                     LazyColumn(
-                        modifier = Modifier.fillMaxWidth(),
+                        modifier = Modifier.fillMaxWidth().horizontalScroll(horizontalScroll),
                         state = listState,
                         contentPadding = PaddingValues(horizontal = 16.dp, vertical = 8.dp)
                     ) {
                         items(uiState.lines) {
-                            LogcatItem(it)
+                            SelectionContainer {
+                                LogcatItem(it)
+                            }
                         }
                     }
 
@@ -175,6 +183,13 @@ fun LogcatScreen(uiState: LogcatUiState, onEvent: (LogcatEvent) -> Unit) {
                         modifier = Modifier.align(Alignment.CenterEnd).fillMaxHeight(),
                         adapter = rememberScrollbarAdapter(
                             scrollState = listState
+                        )
+                    )
+
+                    HorizontalScrollbar(
+                        modifier = Modifier.align(Alignment.BottomStart).fillMaxWidth().padding(end = 12.dp),
+                        adapter = rememberScrollbarAdapter(
+                            scrollState = horizontalScroll
                         )
                     )
                 }
