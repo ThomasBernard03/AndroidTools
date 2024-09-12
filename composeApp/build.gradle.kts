@@ -50,14 +50,6 @@ compose.desktop {
             targetFormats(TargetFormat.Dmg, TargetFormat.Msi, TargetFormat.Deb)
             packageName = "fr.thomasbernard03.androidtools"
             packageVersion = "1.0.0"
-
-            macOS {
-                iconFile.set(file("icon.icns"))
-            }
-
-            windows {
-                iconFile.set(file("icon.ico"))
-            }
         }
     }
 }

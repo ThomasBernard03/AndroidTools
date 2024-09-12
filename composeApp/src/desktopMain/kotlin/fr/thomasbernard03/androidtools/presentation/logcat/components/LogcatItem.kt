@@ -33,13 +33,13 @@ fun LogcatItem(
 
     if (parsedLogcatLine == null) {
         Row(
+            modifier = Modifier.height(30.dp),
             verticalAlignment = Alignment.CenterVertically
         ){
             Text(
                 text = logcatLine,
                 maxLines = 1,
                 style = MaterialTheme.typography.bodySmall,
-                modifier = Modifier.height(30.dp)
             )
         }
     }

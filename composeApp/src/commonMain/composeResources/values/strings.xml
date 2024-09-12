@@ -6,6 +6,7 @@
     <string name="information_rail_title">Information</string>
     <string name="logcat_rail_title">Logcat</string>
     <string name="settings_rail_title">Settings</string>
+    <string name="file_explorer_rail_title">Files</string>
 
     <!-- Application installer -->
     <string name="open_file_explorer">Open file explorer</string>
