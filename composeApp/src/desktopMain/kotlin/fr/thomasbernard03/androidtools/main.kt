@@ -22,19 +22,10 @@ fun main() = application {
         onCloseRequest = ::exitApplication,
         title = stringResource(Res.string.app_name)
     ){
-        val navController: NavHostController = rememberNavController()
-
         AndroidToolsTheme {
-            NavHost(navController, startDestination = "main") {
-                composable("no_device_connected") {
-                    ConnectDeviceScreen()
-                }
-                composable("main"){
-                    val viewModel = viewModel { MainViewModel() }
-                    val uiState by viewModel.uiState.collectAsStateWithLifecycle()
-                    MainScreen(uiState = uiState, onEvent = viewModel::onEvent)
-                }
-            }
+            val viewModel = viewModel { MainViewModel() }
+            val uiState by viewModel.uiState.collectAsStateWithLifecycle()
+            MainScreen(uiState = uiState, onEvent = viewModel::onEvent)
         }
     }
 }

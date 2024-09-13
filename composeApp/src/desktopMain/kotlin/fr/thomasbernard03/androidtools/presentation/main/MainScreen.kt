@@ -7,6 +7,7 @@ import androidx.compose.foundation.Image
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
+import androidx.compose.foundation.layout.fillMaxHeight
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.width
@@ -41,6 +42,7 @@ import fr.thomasbernard03.androidtools.presentation.information.InformationViewM
 import fr.thomasbernard03.androidtools.presentation.logcat.LogcatScreen
 import fr.thomasbernard03.androidtools.presentation.logcat.LogcatViewModel
 import fr.thomasbernard03.androidtools.presentation.main.components.DeviceDropDown
+import fr.thomasbernard03.androidtools.presentation.main.components.MainNavigationRail
 import fr.thomasbernard03.androidtools.presentation.main.components.mainNavigationGraph
 import org.jetbrains.compose.resources.painterResource
 import org.jetbrains.compose.resources.stringResource
@@ -66,12 +68,12 @@ fun MainScreen(uiState : MainUiState, onEvent : (MainEvent) -> Unit) {
     }
 
     Row {
-        NavigationRail(
-            modifier = Modifier.width(120.dp),
-            containerColor = MaterialTheme.colorScheme.surfaceContainer,
+        MainNavigationRail(
+            modifier = Modifier.width(80.dp),
+            currentRoute = currentRoute,
+            navigateTo = { navigateTo(it) },
             header = {
                 DeviceDropDown(
-                    modifier = Modifier.fillMaxWidth(),
                     selection = uiState.selectedDevice ?: "Select a device",
                     devices = uiState.devices,
                     onDeviceSelected = {
@@ -82,31 +84,7 @@ fun MainScreen(uiState : MainUiState, onEvent : (MainEvent) -> Unit) {
                     }
                 )
             }
-        ) {
-            Column(
-                modifier = Modifier.padding(horizontal = 8.dp),
-                verticalArrangement = Arrangement.spacedBy(8.dp)
-            ) {
-                Screen.entries.forEach { item ->
-                    NavigationRailItem(
-                        selected = currentRoute == item.route,
-                        onClick = {
-                            if (currentRoute != item.route){
-                                navigateTo(item.route)
-                            }
-                        },
-                        icon = {
-                            Icon(
-                                painter = painterResource(item.icon),
-                                contentDescription = stringResource(item.title),
-                                tint = MaterialTheme.colorScheme.onBackground
-                            )
-                        },
-                        label = { Text(stringResource(item.title)) }
-                    )
-                }
-            }
-        }
+        )
 
         NavHost(
             navController = navController,

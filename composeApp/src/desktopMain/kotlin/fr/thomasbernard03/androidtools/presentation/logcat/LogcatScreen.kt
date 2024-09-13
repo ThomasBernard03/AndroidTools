@@ -61,6 +61,7 @@ import androidx.compose.ui.input.key.onKeyEvent
 import androidx.compose.ui.input.key.onPreviewKeyEvent
 import androidx.compose.ui.unit.dp
 import fr.thomasbernard03.androidtools.commons.extensions.indexOf
+import fr.thomasbernard03.androidtools.presentation.logcat.components.LogcatFloatingActionButton
 import fr.thomasbernard03.androidtools.presentation.logcat.components.LogcatItem
 import fr.thomasbernard03.androidtools.presentation.logcat.components.PackageDropDown
 import kotlinx.coroutines.launch
@@ -98,21 +99,10 @@ fun LogcatScreen(uiState: LogcatUiState, onEvent: (LogcatEvent) -> Unit) {
     Scaffold(
         floatingActionButton = {
             val isAtBottom = (listState.layoutInfo.visibleItemsInfo.lastOrNull()?.index ?: 0) >= (uiState.lines.size - 20)
-
             if (!isAtBottom) {
-                FloatingActionButton(
-                    onClick = {
-                        animatedScrollScope.launch {
-                            listState.animateScrollToItem(uiState.lines.size)
-                        }
-                    }
-                ){
-                    Icon(
-                        painter = painterResource(Res.drawable.arrow_down),
-                        contentDescription = "load from files",
-                        tint = MaterialTheme.colorScheme.onBackground
-                    )
-                }
+                LogcatFloatingActionButton(
+                    onClick = { scrollToItem(uiState.lines.size) }
+                )
             }
         }
     ) {
@@ -139,7 +129,6 @@ fun LogcatScreen(uiState: LogcatUiState, onEvent: (LogcatEvent) -> Unit) {
                         TextField(
                             singleLine = true,
                             modifier = Modifier
-                                .border(width = 1.dp, color = DarkGray, shape = RoundedCornerShape(8.dp))
                                 .onKeyEvent { event ->
                                     if (event.key == Key.Enter && query.isNotEmpty() && numberOfOccurences > 0){
                                         if (currentOccurence < numberOfOccurences){
@@ -246,14 +235,14 @@ fun LogcatScreen(uiState: LogcatUiState, onEvent: (LogcatEvent) -> Unit) {
                 }
 
                 Box {
-                    LazyColumn(
-                        modifier = Modifier.fillMaxWidth().horizontalScroll(horizontalScroll),
-                        state = listState,
-                        contentPadding = PaddingValues(horizontal = 16.dp, vertical = 8.dp)
-                    ) {
-                        items(uiState.lines) {
-                            SelectionContainer {
-                                LogcatItem(it)
+                    SelectionContainer {
+                        LazyColumn(
+                            modifier = Modifier.fillMaxWidth().horizontalScroll(horizontalScroll),
+                            state = listState,
+                            contentPadding = PaddingValues(horizontal = 16.dp, vertical = 8.dp)
+                        ) {
+                            items(uiState.lines) { line ->
+                                LogcatItem(line)
                             }
                         }
                     }

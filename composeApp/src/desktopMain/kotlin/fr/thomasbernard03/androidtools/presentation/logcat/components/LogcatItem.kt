@@ -14,8 +14,10 @@ import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.text.buildAnnotatedString
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextAlign
+import androidx.compose.ui.text.withStyle
 import androidx.compose.ui.unit.dp
 import fr.thomasbernard03.androidtools.commons.extensions.backgroundColor
 import fr.thomasbernard03.androidtools.commons.extensions.messageColor
@@ -27,7 +29,7 @@ import kotlin.math.max
 @OptIn(ExperimentalFoundationApi::class)
 @Composable
 fun LogcatItem(
-    logcatLine: String
+    logcatLine: String,
 ) {
     val parsedLogcatLine = parseLogcatLine(logcatLine)
 
