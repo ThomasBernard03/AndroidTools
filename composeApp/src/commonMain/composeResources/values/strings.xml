@@ -12,4 +12,9 @@
     <string name="open_file_explorer">Open file explorer</string>
     <string name="install_application_file_format_warning">Open file explorer</string>
     <string name="install_application_card_text">You can install an application by dragging and dropping an APK file here</string>
+
+    <!-- Settings -->
+    <string name="settings_general_title">General</string>
+    <string name="settings_appearance_title">Appearance</string>
+    <string name="settings_accessibility_title">Accessibility</string>
 </resources>

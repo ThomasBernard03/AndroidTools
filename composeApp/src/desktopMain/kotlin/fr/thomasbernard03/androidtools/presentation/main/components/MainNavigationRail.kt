@@ -38,7 +38,7 @@ fun MainNavigationRail(
             Column(
                 verticalArrangement = Arrangement.spacedBy(8.dp)
             ) {
-                Screen.entries.dropLast(1).forEach { item ->
+                Screen.mainScreens.dropLast(1).forEach { item ->
                     NavigationRailItem(
                         selected = currentRoute == item.route,
                         onClick = {
@@ -57,7 +57,7 @@ fun MainNavigationRail(
                 }
             }
 
-            Screen.entries.last().let { item ->
+            Screen.mainScreens.last().let { item ->
                 NavigationRailItem(
                     selected = currentRoute == item.route,
                     onClick = {
