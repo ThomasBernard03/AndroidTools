@@ -3,7 +3,6 @@ package fr.thomasbernard03.androidtools.domain.models
 import androidtools.composeapp.generated.resources.Res
 import androidtools.composeapp.generated.resources.accessibility
 import androidtools.composeapp.generated.resources.app_installer
-import androidtools.composeapp.generated.resources.app_name
 import androidtools.composeapp.generated.resources.application_installer_rail_title
 import androidtools.composeapp.generated.resources.file_explorer_rail_title
 import androidtools.composeapp.generated.resources.filter
@@ -31,10 +30,14 @@ sealed class Screen(open val title: StringResource, open val route : String, ope
         data object General : SettingsScreen(title = Res.string.settings_general_title, route = "general", icon = Res.drawable.gear)
         data object Appearance: SettingsScreen(title = Res.string.settings_appearance_title, route = "appearance", icon = Res.drawable.filter)
         data object Accessibility : SettingsScreen(title = Res.string.settings_accessibility_title, route = "accessibility", icon = Res.drawable.accessibility)
+
+        companion object {
+            val all = listOf(General, Appearance, Accessibility)
+        }
     }
 
 
     companion object {
-        val mainScreens = listOf(ApplicationInstaller, Information, FileExplorer, Logcat, Settings)
+        val all = listOf(ApplicationInstaller, Information, FileExplorer, Logcat, Settings)
     }
 }

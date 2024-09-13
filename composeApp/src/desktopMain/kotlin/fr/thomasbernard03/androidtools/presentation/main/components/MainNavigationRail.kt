@@ -3,9 +3,7 @@ package fr.thomasbernard03.androidtools.presentation.main.components
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.ColumnScope
-import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxHeight
-import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
 import androidx.compose.material3.Icon
 import androidx.compose.material3.MaterialTheme
@@ -15,7 +13,6 @@ import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
 import fr.thomasbernard03.androidtools.domain.models.Screen
-import fr.thomasbernard03.androidtools.presentation.main.MainEvent
 import org.jetbrains.compose.resources.painterResource
 import org.jetbrains.compose.resources.stringResource
 
@@ -38,7 +35,7 @@ fun MainNavigationRail(
             Column(
                 verticalArrangement = Arrangement.spacedBy(8.dp)
             ) {
-                Screen.mainScreens.dropLast(1).forEach { item ->
+                Screen.all.dropLast(1).forEach { item ->
                     NavigationRailItem(
                         selected = currentRoute == item.route,
                         onClick = {
@@ -57,7 +54,7 @@ fun MainNavigationRail(
                 }
             }
 
-            Screen.mainScreens.last().let { item ->
+            Screen.all.last().let { item ->
                 NavigationRailItem(
                     selected = currentRoute == item.route,
                     onClick = {
