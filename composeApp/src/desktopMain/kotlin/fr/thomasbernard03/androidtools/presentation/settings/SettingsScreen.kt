@@ -8,13 +8,18 @@ import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
+import androidx.compose.runtime.getValue
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
+import androidx.lifecycle.compose.collectAsStateWithLifecycle
+import androidx.lifecycle.viewmodel.compose.viewModel
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.compose.currentBackStackEntryAsState
 import androidx.navigation.compose.rememberNavController
 import fr.thomasbernard03.androidtools.domain.models.Screen
+import fr.thomasbernard03.androidtools.presentation.settings.appearance.AppearanceScreen
+import fr.thomasbernard03.androidtools.presentation.settings.appearance.AppearanceViewModel
 import fr.thomasbernard03.androidtools.presentation.settings.components.SettingsNavigationRail
 
 @Composable
@@ -55,9 +60,9 @@ fun SettingsScreen(
                     }
                 }
                 composable(Screen.SettingsScreen.Appearance.route) {
-                    Column(modifier = Modifier.fillMaxSize()) {
-                        Text("Appearance")
-                    }
+                    val viewModel = viewModel { AppearanceViewModel() }
+                    val uiState by viewModel.uiState.collectAsStateWithLifecycle()
+                    AppearanceScreen(uiState = uiState, onEvent = viewModel::onEvent)
                 }
                 composable(Screen.SettingsScreen.Accessibility.route) {
                     Column(modifier = Modifier.fillMaxSize()) {

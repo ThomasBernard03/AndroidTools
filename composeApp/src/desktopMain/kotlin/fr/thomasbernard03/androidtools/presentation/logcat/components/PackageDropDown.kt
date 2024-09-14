@@ -15,6 +15,7 @@ import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material3.Button
 import androidx.compose.material3.ButtonDefaults
 import androidx.compose.material3.Divider
+import androidx.compose.material3.DropdownMenu
 import androidx.compose.material3.DropdownMenuItem
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.ExposedDropdownMenuBox
@@ -39,60 +40,53 @@ fun PackageDropDown(
     selection : String?,
     onSelectionChange: (String?) -> Unit,
     items: List<String>
-) {
+) { 
     var expanded by rememberSaveable { mutableStateOf(false) }
 
-    ExposedDropdownMenuBox(
-        modifier = modifier,
-        expanded = expanded,
-        onExpandedChange = { expanded = it },
+    IconButton(
+        modifier = Modifier,
+        onClick = { expanded = true },
     ) {
-        IconButton(
-            modifier = Modifier.menuAnchor(),
-            onClick = { expanded = true },
-        ) {
-            Icon(
-                painter = painterResource(Res.drawable.filter),
-                contentDescription = "choose a package",
-                tint = MaterialTheme.colorScheme.onBackground
-            )
-        }
+        Icon(
+            painter = painterResource(Res.drawable.filter),
+            contentDescription = "choose a package",
+            tint = MaterialTheme.colorScheme.onBackground
+        )
+    }
 
-        ExposedDropdownMenu(
-            expanded = expanded,
-            onDismissRequest = { expanded = false }
-        ) {
+    DropdownMenu(
+        expanded = expanded,
+        onDismissRequest = { expanded = false }
+    ) {
+        DropdownMenuItem(
+            onClick = {
+                expanded = false
+                onSelectionChange(null)
+            },
+            text = {
+                Text(
+                    text = "Display all packages",
+                    style = MaterialTheme.typography.bodySmall
+                )
+            }
+        )
+
+        HorizontalDivider()
+
+        items.sortedBy { it }.forEach { device ->
             DropdownMenuItem(
-                contentPadding = PaddingValues(4.dp),
+                contentPadding = PaddingValues(horizontal = 4.dp),
                 onClick = {
-                    onSelectionChange(null)
+                    onSelectionChange(device)
                     expanded = false
                 },
                 text = {
                     Text(
-                        text = "Display all packages",
+                        text = device,
                         style = MaterialTheme.typography.bodySmall
                     )
                 }
             )
-
-            HorizontalDivider()
-
-            items.sortedBy { it }.forEach { device ->
-                DropdownMenuItem(
-                    contentPadding = PaddingValues(horizontal = 4.dp),
-                    onClick = {
-                        onSelectionChange(device)
-                        expanded = false
-                    },
-                    text = {
-                        Text(
-                            text = device,
-                            style = MaterialTheme.typography.bodySmall
-                        )
-                    }
-                )
-            }
         }
     }
 }
