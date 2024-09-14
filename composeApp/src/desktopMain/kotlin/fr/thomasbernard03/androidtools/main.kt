@@ -16,12 +16,14 @@ import fr.thomasbernard03.androidtools.presentation.main.MainScreen
 import fr.thomasbernard03.androidtools.presentation.main.MainViewModel
 import fr.thomasbernard03.androidtools.presentation.theme.AndroidToolsTheme
 import org.jetbrains.compose.resources.stringResource
+import javax.swing.plaf.basic.BasicMenuBarUI
 
 fun main() = application {
     Window(
         onCloseRequest = ::exitApplication,
         title = stringResource(Res.string.app_name)
     ){
+
         AndroidToolsTheme {
             val viewModel = viewModel { MainViewModel() }
             val uiState by viewModel.uiState.collectAsStateWithLifecycle()

@@ -40,7 +40,7 @@ fun PackageDropDown(
     selection : String?,
     onSelectionChange: (String?) -> Unit,
     items: List<String>
-) { 
+) {
     var expanded by rememberSaveable { mutableStateOf(false) }
 
     IconButton(
