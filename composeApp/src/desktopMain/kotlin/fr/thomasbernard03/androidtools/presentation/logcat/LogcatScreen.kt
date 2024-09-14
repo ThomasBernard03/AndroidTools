@@ -6,6 +6,7 @@ import androidtools.composeapp.generated.resources.arrow_up
 import androidtools.composeapp.generated.resources.pause
 import androidtools.composeapp.generated.resources.play
 import androidtools.composeapp.generated.resources.replay
+import androidtools.composeapp.generated.resources.search
 import androidtools.composeapp.generated.resources.sticky_list
 import androidtools.composeapp.generated.resources.trash
 import androidx.compose.animation.AnimatedVisibility
@@ -20,6 +21,7 @@ import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.Row
+import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxHeight
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
@@ -33,6 +35,7 @@ import androidx.compose.foundation.rememberScrollbarAdapter
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.foundation.text.selection.SelectionContainer
 import androidx.compose.material3.FloatingActionButton
+import androidx.compose.material3.HorizontalDivider
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
 import androidx.compose.material3.IconButtonDefaults
@@ -51,6 +54,7 @@ import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.Color.Companion.DarkGray
 import androidx.compose.ui.input.key.Key
@@ -113,94 +117,95 @@ fun LogcatScreen(uiState: LogcatUiState, onEvent: (LogcatEvent) -> Unit) {
                 Row(
                     modifier = Modifier
                         .fillMaxWidth()
-                        .background(MaterialTheme.colorScheme.surfaceContainer),
-                    horizontalArrangement = Arrangement.SpaceBetween
+                        .horizontalScroll(rememberScrollState())
+                        .padding(vertical = 8.dp, horizontal = 16.dp),
                 ) {
+                    TextField(
+                        modifier = Modifier
+                            .weight(0.6f)
+                            .clip(shape = RoundedCornerShape(28.dp))
+                            .onKeyEvent { event ->
+                                if (event.key == Key.Enter && query.isNotEmpty() && numberOfOccurences > 0){
+                                    if (currentOccurence < numberOfOccurences){
+                                        currentOccurence++
+                                        scrollToItem(uiState.lines.indexOf( { line -> line.contains(query, ignoreCase = true) }, currentOccurence))
+                                    }
+                                    else {
+                                        currentOccurence = 1
+                                        scrollToItem(uiState.lines.indexOf( { line -> line.contains(query, ignoreCase = true) }, currentOccurence))
+                                    }
+                                }
+                                false
+                            },
+                        singleLine = true,
+                        placeholder = {
+                            Text(
+                                text = "Keyword, tag, logcat level etc...",
+                                style = MaterialTheme.typography.bodyMedium
+                            )
+                        },
+
+                        colors = TextFieldDefaults.colors(
+                            focusedContainerColor = MaterialTheme.colorScheme.secondaryContainer,
+                            unfocusedContainerColor = MaterialTheme.colorScheme.secondaryContainer,
+                            disabledContainerColor = Color.Transparent,
+                            focusedIndicatorColor = Color.Transparent,
+                            unfocusedIndicatorColor = Color.Transparent,
+                            disabledIndicatorColor = Color.Transparent,
+                            focusedLabelColor = DarkGray,
+                            disabledLabelColor = DarkGray,
+                            unfocusedLabelColor = DarkGray
+                        ),
+                        value = query,
+                        onValueChange = {
+                            query = it
+                            if (query.isNotEmpty()){
+                                sticky = false
+                                numberOfOccurences = uiState.lines.count { line -> line.contains(query, ignoreCase = true) }
+                                if (numberOfOccurences > 0){
+                                    currentOccurence = 1
+                                    scrollToItem(uiState.lines.indexOfFirst { line -> line.contains(query, ignoreCase = true) })
+                                }
+                            }
+                        },
+                        suffix = {
+                            if (query.isNotEmpty()) {
+                                Text(
+                                    text = "$currentOccurence/$numberOfOccurences",
+                                    style = MaterialTheme.typography.bodyMedium,
+                                    color = DarkGray
+                                )
+                            }
+                        },
+                        prefix = {
+                            Icon(
+                                modifier = Modifier.padding(end = 8.dp),
+                                painter = painterResource(Res.drawable.search),
+                                contentDescription = "search",
+                                tint = MaterialTheme.colorScheme.onSecondaryContainer
+                            )
+                        }
+                    )
+
                     Row(
-                        horizontalArrangement = Arrangement.spacedBy(8.dp)
+                        modifier = Modifier.weight(0.4f),
+                        horizontalArrangement = Arrangement.End
                     ) {
                         PackageDropDown(
-                            modifier = Modifier.width(300.dp),
                             selection = uiState.selectedPackage,
-                            onSelectionChange = { onEvent(LogcatEvent.OnPackageSelected(it)) },
+                            onSelectionChange = { onEvent(LogcatEvent.OnStartListening(it)) },
                             items = uiState.packages
                         )
 
-                        TextField(
-                            singleLine = true,
-                            modifier = Modifier
-                                .onKeyEvent { event ->
-                                    if (event.key == Key.Enter && query.isNotEmpty() && numberOfOccurences > 0){
-                                        if (currentOccurence < numberOfOccurences){
-                                            currentOccurence++
-                                            scrollToItem(uiState.lines.indexOf( { line -> line.contains(query, ignoreCase = true) }, currentOccurence))
-                                        }
-                                        else {
-                                            currentOccurence = 1
-                                            scrollToItem(uiState.lines.indexOf( { line -> line.contains(query, ignoreCase = true) }, currentOccurence))
-                                        }
-                                    }
-                                    false
-                                },
-                            colors = TextFieldDefaults.colors(
-                                disabledTextColor = MaterialTheme.colorScheme.onPrimary,
-                                focusedContainerColor = Color.Transparent,
-                                unfocusedContainerColor = Color.Transparent,
-                                disabledContainerColor = Color.Transparent,
-                                focusedIndicatorColor = Color.Transparent,
-                                unfocusedIndicatorColor = Color.Transparent,
-                                disabledIndicatorColor = Color.Transparent,
-                                focusedLabelColor = DarkGray,
-                                disabledLabelColor = DarkGray,
-                                unfocusedLabelColor = DarkGray
-                            ),
-                            value = query,
-                            onValueChange = {
-                                query = it
-                                if (query.isNotEmpty()){
-                                    sticky = false
-                                    numberOfOccurences = uiState.lines.count { line -> line.contains(query, ignoreCase = true) }
-                                    if (numberOfOccurences > 0){
-                                        currentOccurence = 1
-                                        scrollToItem(uiState.lines.indexOfFirst { line -> line.contains(query, ignoreCase = true) })
-                                    }
-                                }
-                            },
-                            suffix = {
-                                if (query.isNotEmpty()) {
-                                    Text(
-                                        text = "$currentOccurence/$numberOfOccurences",
-                                        style = MaterialTheme.typography.bodyMedium,
-                                        color = DarkGray
-                                    )
-                                }
-                            }
-                        )
-                    }
-
-
-                    Row(
-                        horizontalArrangement = Arrangement.spacedBy(4.dp)
-                    ) {
                         IconButton(
                             onClick = { sticky = !sticky },
                             colors = IconButtonDefaults.iconButtonColors(
                                 containerColor = if (sticky) MaterialTheme.colorScheme.onBackground.copy(0.2f) else Color.Transparent
                             )
-                        ) {
+                        ){
                             Icon(
                                 painter = painterResource(Res.drawable.sticky_list),
                                 contentDescription = "sticky",
-                                tint = MaterialTheme.colorScheme.onBackground
-                            )
-                        }
-
-                        IconButton(
-                            onClick = { onEvent(LogcatEvent.OnRestart) }
-                        ) {
-                            Icon(
-                                painter = painterResource(Res.drawable.replay),
-                                contentDescription = "restart",
                                 tint = MaterialTheme.colorScheme.onBackground
                             )
                         }
@@ -221,6 +226,16 @@ fun LogcatScreen(uiState: LogcatUiState, onEvent: (LogcatEvent) -> Unit) {
                         }
 
                         IconButton(
+                            onClick = { onEvent(LogcatEvent.OnRestart) }
+                        ) {
+                            Icon(
+                                painter = painterResource(Res.drawable.replay),
+                                contentDescription = "restart",
+                                tint = MaterialTheme.colorScheme.onBackground
+                            )
+                        }
+
+                        IconButton(
                             onClick = {
                                 onEvent(LogcatEvent.OnClear)
                             }
@@ -233,6 +248,9 @@ fun LogcatScreen(uiState: LogcatUiState, onEvent: (LogcatEvent) -> Unit) {
                         }
                     }
                 }
+
+                HorizontalDivider()
+
 
                 Box {
                     SelectionContainer {
