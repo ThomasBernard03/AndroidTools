@@ -9,6 +9,7 @@ data class InformationUiState(
     val manufacturer : String = "",
     val model : String = "",
     val battery : Int = 0,
+    val serialNumber : String = "",
 
     val lines : Map<String, String> = emptyMap()
 ) : UiState

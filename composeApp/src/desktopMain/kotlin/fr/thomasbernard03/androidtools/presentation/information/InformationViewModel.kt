@@ -26,7 +26,8 @@ class InformationViewModel(
                             androidVersion = deviceInformation.version,
                             model = deviceInformation.model,
                             manufacturer = deviceInformation.manufacturer,
-                            lines = deviceInformation.lines
+                            lines = deviceInformation.lines,
+                            serialNumber = deviceInformation.serial
                         )
                     }
                 }
