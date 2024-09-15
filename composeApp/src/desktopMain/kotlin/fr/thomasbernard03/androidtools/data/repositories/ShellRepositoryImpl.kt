@@ -4,6 +4,8 @@ import androidtools.composeapp.generated.resources.Res
 import com.russhwolf.settings.Settings
 import fr.thomasbernard03.androidtools.commons.SettingsConstants
 import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.flow.Flow
+import kotlinx.coroutines.flow.channelFlow
 import kotlinx.coroutines.withContext
 import org.jetbrains.compose.resources.ExperimentalResourceApi
 import java.io.BufferedReader
@@ -38,6 +40,36 @@ class ShellRepositoryImpl(
         process.waitFor()
 
         return@withContext output.toString()
+    }
+
+    suspend fun executeAdbCommandFlow(vararg formatArgs: String): Flow<String> = channelFlow {
+        withContext(Dispatchers.IO){
+            val arguments = mutableListOf<String>()
+
+            val currentDevice = settings.getStringOrNull(key = SettingsConstants.SELECTED_DEVICE_KEY)
+
+            if (currentDevice != null) {
+                arguments.add("-s")
+                arguments.add(currentDevice)
+            }
+
+            arguments.addAll(formatArgs)
+            val adb = getAdb()
+
+            val process = ProcessBuilder(listOf(adb.absolutePath) + arguments).start()
+            val reader = BufferedReader(InputStreamReader(process.inputStream))
+
+            try {
+                reader.use { bufferedReader ->
+                    var line: String?
+                    while (bufferedReader.readLine().also { line = it } != null) {
+                        send(line!!)
+                    }
+                }
+            } finally {
+                process.destroy()
+            }
+        }
     }
 
     @OptIn(ExperimentalResourceApi::class)

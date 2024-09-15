@@ -22,7 +22,9 @@ fun DeviceNameCard(name : String){
         ) {
             Text(
                 text = "Device name",
-                style = MaterialTheme.typography.titleMedium.copy(color = MaterialTheme.colorScheme.onSecondaryContainer),
+                style = MaterialTheme.typography.titleMedium.copy(
+                    color = MaterialTheme.colorScheme.onSecondaryContainer.copy(alpha = 0.6f),
+                )
             )
 
             Text(
