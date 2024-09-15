@@ -13,8 +13,6 @@ import java.io.InputStreamReader
 class ShellRepositoryImpl(
     private val settings: Settings = Settings()
 ) {
-    private var adbTempFile: File? = null
-
     suspend fun executeAdbCommand(vararg formatArgs: String): String = withContext(Dispatchers.IO) {
         val arguments = mutableListOf<String>()
 
@@ -27,13 +25,9 @@ class ShellRepositoryImpl(
 
         arguments.addAll(formatArgs)
 
-        if (adbTempFile == null) {
-            adbTempFile = createAdbTempFile()
-        }
+        val adb = getAdb()
 
-        val adbPath = adbTempFile?.absolutePath ?: throw IllegalStateException("ADB temp file not found")
-
-        val process = ProcessBuilder(listOf(adbPath) + arguments).start()
+        val process = ProcessBuilder(listOf(adb.absolutePath) + arguments).start()
         val reader = BufferedReader(InputStreamReader(process.inputStream))
         val output = StringBuilder()
 
@@ -47,7 +41,14 @@ class ShellRepositoryImpl(
     }
 
     @OptIn(ExperimentalResourceApi::class)
-    private suspend fun createAdbTempFile(): File {
+    private suspend fun getAdb(): File {
+        settings.getStringOrNull(key = SettingsConstants.ADB_PATH_KEY)?.let {
+
+            if (File(it).isFile) {
+                return File(it)
+            }
+        }
+
         val adbBytes: ByteArray = Res.readBytes("files/adb")
         val tempFile = withContext(Dispatchers.IO) {
             File.createTempFile("adb-temp", null)
@@ -55,6 +56,8 @@ class ShellRepositoryImpl(
             writeBytes(adbBytes)
             setExecutable(true)
         }
+
+        settings.putString(key = SettingsConstants.ADB_PATH_KEY, value = tempFile.absolutePath)
         return tempFile
     }
 }

@@ -13,7 +13,6 @@ class SettingsViewModel(
     override fun onEvent(event: SettingsEvent) {
         when(event){
             SettingsEvent.OnAppearing -> {
-                updateUiState { copy(adbPath = settings.getString(SettingsConstants.ADB_PATH_KEY, SettingsConstants.ADB_PATH_DEFAULT_VALUE)) }
             }
         }
     }
