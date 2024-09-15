@@ -11,7 +11,6 @@ import androidtools.composeapp.generated.resources.android_5
 import androidtools.composeapp.generated.resources.android_6
 import androidtools.composeapp.generated.resources.android_8
 import androidtools.composeapp.generated.resources.android_9
-import androidtools.composeapp.generated.resources.android_versions
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
