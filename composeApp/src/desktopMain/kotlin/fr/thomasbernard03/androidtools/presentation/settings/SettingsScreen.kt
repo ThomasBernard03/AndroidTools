@@ -1,11 +1,9 @@
 package fr.thomasbernard03.androidtools.presentation.settings
 
-import androidx.compose.foundation.layout.Column
+import androidtools.composeapp.generated.resources.Res
+import androidtools.composeapp.generated.resources.settings_accessibility_title
 import androidx.compose.foundation.layout.Row
-import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.width
-import androidx.compose.material3.Scaffold
-import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
@@ -19,8 +17,11 @@ import androidx.navigation.compose.currentBackStackEntryAsState
 import androidx.navigation.compose.rememberNavController
 import fr.thomasbernard03.androidtools.domain.models.Screen
 import fr.thomasbernard03.androidtools.presentation.settings.appearance.AppearanceScreen
-import fr.thomasbernard03.androidtools.presentation.settings.appearance.AppearanceViewModel
+import fr.thomasbernard03.androidtools.presentation.settings.appearance.AppearanceSettingsViewModel
 import fr.thomasbernard03.androidtools.presentation.settings.components.SettingsNavigationRail
+import fr.thomasbernard03.androidtools.presentation.settings.components.SettingsScaffold
+import fr.thomasbernard03.androidtools.presentation.settings.general.GeneralSettingsScreen
+import fr.thomasbernard03.androidtools.presentation.settings.general.GeneralSettingsViewModel
 
 @Composable
 fun SettingsScreen(
@@ -52,22 +53,22 @@ fun SettingsScreen(
             navigateTo = ::navigateTo
         )
 
-        Scaffold {
-            NavHost(navController = navController, startDestination = Screen.SettingsScreen.General.route) {
-                composable(Screen.SettingsScreen.General.route) {
-                    Column(modifier = Modifier.fillMaxSize()) {
-                        Text("General")
-                    }
-                }
-                composable(Screen.SettingsScreen.Appearance.route) {
-                    val viewModel = viewModel { AppearanceViewModel() }
-                    val uiState by viewModel.uiState.collectAsStateWithLifecycle()
-                    AppearanceScreen(uiState = uiState, onEvent = viewModel::onEvent)
-                }
-                composable(Screen.SettingsScreen.Accessibility.route) {
-                    Column(modifier = Modifier.fillMaxSize()) {
-                        Text("Accessibility")
-                    }
+        NavHost(navController = navController, startDestination = Screen.SettingsScreen.General.route) {
+            composable(Screen.SettingsScreen.General.route) {
+                val viewModel = viewModel { GeneralSettingsViewModel() }
+                val uiState by viewModel.uiState.collectAsStateWithLifecycle()
+                GeneralSettingsScreen(uiState = uiState, onEvent = viewModel::onEvent)
+            }
+            composable(Screen.SettingsScreen.Appearance.route) {
+                val viewModel = viewModel { AppearanceSettingsViewModel() }
+                val uiState by viewModel.uiState.collectAsStateWithLifecycle()
+                AppearanceScreen(uiState = uiState, onEvent = viewModel::onEvent)
+            }
+            composable(Screen.SettingsScreen.Accessibility.route) {
+                SettingsScaffold(
+                    title = Res.string.settings_accessibility_title
+                ){
+
                 }
             }
         }
