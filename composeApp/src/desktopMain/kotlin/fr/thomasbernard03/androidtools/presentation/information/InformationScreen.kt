@@ -10,6 +10,7 @@ import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
+import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
@@ -25,6 +26,7 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
 import fr.thomasbernard03.androidtools.presentation.information.components.AndroidVersionCard
+import fr.thomasbernard03.androidtools.presentation.information.components.DeviceNameCard
 
 @OptIn(ExperimentalLayoutApi::class)
 @Composable
@@ -36,7 +38,6 @@ fun InformationScreen(uiState : InformationUiState, onEvent : (InformationEvent)
 
     Scaffold {
         Box(modifier = Modifier.fillMaxSize()) {
-
             Column {
                 FlowRow(
                     modifier = Modifier.padding(16.dp),
@@ -44,27 +45,32 @@ fun InformationScreen(uiState : InformationUiState, onEvent : (InformationEvent)
                     verticalArrangement = Arrangement.spacedBy(8.dp)
                 ) {
                     // Android version
-                    AndroidVersionCard(version = uiState.androidVersion)
+                    AndroidVersionCard(
+                        modifier = Modifier.height(200.dp),
+                        version = uiState.androidVersion
+                    )
 
-                    Card(
-                        colors = CardDefaults.cardColors(
-                            containerColor = MaterialTheme.colorScheme.secondary,
-                        )
-                    ){
-                        Column(
-                            modifier = Modifier.padding(32.dp)
-                        ) {
-                            Text(
-                                text = uiState.model,
-                                style = MaterialTheme.typography.titleLarge.copy(color = MaterialTheme.colorScheme.onSecondary),
-                            )
+                    DeviceNameCard(name = uiState.model)
 
-                            Text(
-                                text = uiState.manufacturer,
-                                style = MaterialTheme.typography.titleMedium.copy(color = MaterialTheme.colorScheme.onSecondary),
-                            )
-                        }
-                    }
+//                    Card(
+//                        colors = CardDefaults.cardColors(
+//                            containerColor = MaterialTheme.colorScheme.secondary,
+//                        )
+//                    ){
+//                        Column(
+//                            modifier = Modifier.padding(32.dp)
+//                        ) {
+//                            Text(
+//                                text = uiState.model,
+//                                style = MaterialTheme.typography.titleLarge.copy(color = MaterialTheme.colorScheme.onSecondary),
+//                            )
+//
+//                            Text(
+//                                text = uiState.manufacturer,
+//                                style = MaterialTheme.typography.titleMedium.copy(color = MaterialTheme.colorScheme.onSecondary),
+//                            )
+//                        }
+//                    }
 
                     Card(
                         colors = CardDefaults.cardColors(
