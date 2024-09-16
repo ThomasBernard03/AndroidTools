@@ -10,7 +10,10 @@ import kotlinx.coroutines.withContext
 import org.jetbrains.compose.resources.ExperimentalResourceApi
 import java.io.BufferedReader
 import java.io.File
+import java.io.FileOutputStream
+import java.io.InputStream
 import java.io.InputStreamReader
+import java.util.zip.ZipInputStream
 
 class ShellRepositoryImpl(
     private val settings: Settings = Settings()
@@ -27,7 +30,7 @@ class ShellRepositoryImpl(
 
         arguments.addAll(formatArgs)
 
-        val adb = getAdb()
+        val adb = getAdbWindows()
 
         val process = ProcessBuilder(listOf(adb.absolutePath) + arguments).start()
         val reader = BufferedReader(InputStreamReader(process.inputStream))
@@ -54,7 +57,7 @@ class ShellRepositoryImpl(
             }
 
             arguments.addAll(formatArgs)
-            val adb = getAdb()
+            val adb = getAdbWindows()
 
             val process = ProcessBuilder(listOf(adb.absolutePath) + arguments).start()
             val reader = BufferedReader(InputStreamReader(process.inputStream))
@@ -75,21 +78,81 @@ class ShellRepositoryImpl(
     @OptIn(ExperimentalResourceApi::class)
     private suspend fun getAdb(): File {
         settings.getStringOrNull(key = SettingsConstants.ADB_PATH_KEY)?.let {
-
             if (File(it).isFile) {
                 return File(it)
             }
         }
 
-        val adbBytes: ByteArray = Res.readBytes("files/adb")
+        val adbBytes: ByteArray = Res.readBytes("files/adb_darwin")
+
         val tempFile = withContext(Dispatchers.IO) {
-            File.createTempFile("adb-temp", null)
+            File.createTempFile("android_tools_adb_temp", "darwin")
         }.apply {
             writeBytes(adbBytes)
-            setExecutable(true)
+
+            setExecutable(true, false)
+
+            if (!canExecute()) {
+                throw IllegalStateException("ADB temp file is not executable")
+            }
         }
 
         settings.putString(key = SettingsConstants.ADB_PATH_KEY, value = tempFile.absolutePath)
+
         return tempFile
+    }
+
+
+    @OptIn(ExperimentalResourceApi::class)
+    private suspend fun getAdbWindows(): File {
+        settings.getStringOrNull(key = SettingsConstants.ADB_PATH_KEY)?.let {
+            if (File(it).isFile) {
+                return File(it)
+            }
+        }
+
+        val adbZipBytes: ByteArray = Res.readBytes("files/adb_windows.zip")
+
+        val tempDir = withContext(Dispatchers.IO) {
+            File.createTempFile("android_tools_adb_temp", "windows").apply {
+                delete()
+                mkdir()
+            }
+        }
+
+        withContext(Dispatchers.IO) {
+            unzip(adbZipBytes.inputStream(), tempDir)
+        }
+
+        val adbExecutable = File("$tempDir\\platform-tools", "adb.exe")
+
+        if (!adbExecutable.exists() || !adbExecutable.setExecutable(true)) {
+            throw IllegalStateException("Failed to extract and set adb executable.")
+        }
+
+        settings.putString(key = SettingsConstants.ADB_PATH_KEY, value = adbExecutable.absolutePath)
+
+        return adbExecutable
+    }
+
+    private fun unzip(zipInputStream: InputStream, targetDirectory: File) {
+        ZipInputStream(zipInputStream).use { zis ->
+            var entry = zis.nextEntry
+            while (entry != null) {
+                val file = File(targetDirectory, entry.name)
+
+                if (entry.isDirectory) {
+                    file.mkdirs()
+                } else {
+                    file.parentFile?.mkdirs()
+                    FileOutputStream(file).use { fos ->
+                        zis.copyTo(fos)
+                    }
+                }
+
+                zis.closeEntry()
+                entry = zis.nextEntry
+            }
+        }
     }
 }
