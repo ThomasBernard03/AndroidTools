@@ -1,7 +1,6 @@
 package fr.thomasbernard03.androidtools.presentation.logcat.components
 
 import androidx.compose.foundation.ExperimentalFoundationApi
-import androidx.compose.foundation.TooltipArea
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
@@ -14,17 +13,13 @@ import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.text.buildAnnotatedString
 import androidx.compose.ui.text.font.FontWeight
-import androidx.compose.ui.text.style.TextAlign
-import androidx.compose.ui.text.withStyle
 import androidx.compose.ui.unit.dp
 import fr.thomasbernard03.androidtools.commons.extensions.backgroundColor
 import fr.thomasbernard03.androidtools.commons.extensions.messageColor
 import fr.thomasbernard03.androidtools.commons.extensions.onBackgroundColor
 import fr.thomasbernard03.androidtools.domain.models.LogcatLevel
 import fr.thomasbernard03.androidtools.domain.models.LogcatLine
-import kotlin.math.max
 
 @OptIn(ExperimentalFoundationApi::class)
 @Composable

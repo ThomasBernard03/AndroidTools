@@ -1,8 +1,6 @@
 package fr.thomasbernard03.androidtools.presentation.logcat
 
 import androidtools.composeapp.generated.resources.Res
-import androidtools.composeapp.generated.resources.arrow_down
-import androidtools.composeapp.generated.resources.arrow_up
 import androidtools.composeapp.generated.resources.pause
 import androidtools.composeapp.generated.resources.play
 import androidtools.composeapp.generated.resources.replay
@@ -11,22 +9,17 @@ import androidtools.composeapp.generated.resources.sticky_list
 import androidtools.composeapp.generated.resources.trash
 import androidx.compose.animation.AnimatedVisibility
 import androidx.compose.foundation.HorizontalScrollbar
-import androidx.compose.foundation.Image
 import androidx.compose.foundation.VerticalScrollbar
-import androidx.compose.foundation.background
-import androidx.compose.foundation.border
 import androidx.compose.foundation.horizontalScroll
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.Row
-import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxHeight
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
-import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
 import androidx.compose.foundation.lazy.rememberLazyListState
@@ -34,7 +27,6 @@ import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.rememberScrollbarAdapter
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.foundation.text.selection.SelectionContainer
-import androidx.compose.material3.FloatingActionButton
 import androidx.compose.material3.HorizontalDivider
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
@@ -58,11 +50,8 @@ import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.Color.Companion.DarkGray
 import androidx.compose.ui.input.key.Key
-import androidx.compose.ui.input.key.KeyEventType
-import androidx.compose.ui.input.key.NativeKeyEvent
 import androidx.compose.ui.input.key.key
 import androidx.compose.ui.input.key.onKeyEvent
-import androidx.compose.ui.input.key.onPreviewKeyEvent
 import androidx.compose.ui.unit.dp
 import fr.thomasbernard03.androidtools.commons.extensions.indexOf
 import fr.thomasbernard03.androidtools.presentation.logcat.components.LogcatFloatingActionButton

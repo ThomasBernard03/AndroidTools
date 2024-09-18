@@ -3,12 +3,10 @@ package fr.thomasbernard03.androidtools.presentation.applicationinstaller.compon
 import androidtools.composeapp.generated.resources.Res
 import androidtools.composeapp.generated.resources.folder
 import androidtools.composeapp.generated.resources.open_file_explorer
-import androidx.compose.foundation.Image
 import androidx.compose.material3.FloatingActionButton
 import androidx.compose.material3.Icon
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.runtime.Composable
-import fr.thomasbernard03.androidtools.presentation.applicationinstaller.ApplicationInstallerEvent
 import org.jetbrains.compose.resources.painterResource
 import org.jetbrains.compose.resources.stringResource
 import java.awt.FileDialog

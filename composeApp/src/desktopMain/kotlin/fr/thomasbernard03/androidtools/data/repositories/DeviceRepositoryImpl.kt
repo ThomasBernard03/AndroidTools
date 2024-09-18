@@ -1,6 +1,5 @@
 package fr.thomasbernard03.androidtools.data.repositories
 
-import fr.thomasbernard03.androidtools.commons.SettingsConstants
 import fr.thomasbernard03.androidtools.data.datasources.ShellDataSource
 import fr.thomasbernard03.androidtools.domain.repositories.DeviceRepository
 import kotlinx.coroutines.Dispatchers
@@ -10,8 +9,6 @@ import kotlinx.coroutines.flow.channelFlow
 import kotlinx.coroutines.flow.flow
 import kotlinx.coroutines.withContext
 import org.koin.java.KoinJavaComponent.get
-import java.io.BufferedReader
-import java.io.InputStreamReader
 
 class DeviceRepositoryImpl(
     private val shellDataSource: ShellDataSource = get(ShellDataSource::class.java)

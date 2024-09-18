@@ -1,7 +1,5 @@
 package fr.thomasbernard03.androidtools.presentation.fileexplorer.components
 
-import androidtools.composeapp.generated.resources.Res
-import androidtools.composeapp.generated.resources.file
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.Row

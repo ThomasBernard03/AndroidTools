@@ -1,24 +1,11 @@
 package fr.thomasbernard03.androidtools.presentation.logcat.components
 
 import androidtools.composeapp.generated.resources.Res
-import androidtools.composeapp.generated.resources.arrow_down
 import androidtools.composeapp.generated.resources.filter
-import androidtools.composeapp.generated.resources.pause
-import androidtools.composeapp.generated.resources.play
-import androidx.compose.foundation.Image
-import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.PaddingValues
-import androidx.compose.foundation.layout.Row
-import androidx.compose.foundation.layout.fillMaxWidth
-import androidx.compose.foundation.layout.width
-import androidx.compose.foundation.shape.RoundedCornerShape
-import androidx.compose.material3.Button
-import androidx.compose.material3.ButtonDefaults
-import androidx.compose.material3.Divider
 import androidx.compose.material3.DropdownMenu
 import androidx.compose.material3.DropdownMenuItem
 import androidx.compose.material3.ExperimentalMaterial3Api
-import androidx.compose.material3.ExposedDropdownMenuBox
 import androidx.compose.material3.HorizontalDivider
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton

@@ -1,7 +1,6 @@
 package fr.thomasbernard03.androidtools.presentation.settings
 
 import com.russhwolf.settings.Settings
-import fr.thomasbernard03.androidtools.commons.SettingsConstants
 import fr.thomasbernard03.androidtools.presentation.commons.BaseViewModel
 
 class SettingsViewModel(

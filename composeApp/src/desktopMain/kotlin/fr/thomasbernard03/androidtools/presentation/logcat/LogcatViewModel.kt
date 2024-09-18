@@ -1,8 +1,8 @@
 package fr.thomasbernard03.androidtools.presentation.logcat
 
 import androidx.lifecycle.viewModelScope
-import fr.thomasbernard03.androidtools.domain.usecases.logcat.ClearLogcatUseCase
 import fr.thomasbernard03.androidtools.domain.usecases.application.GetAllPackagesUseCase
+import fr.thomasbernard03.androidtools.domain.usecases.logcat.ClearLogcatUseCase
 import fr.thomasbernard03.androidtools.domain.usecases.logcat.GetLogcatUseCase
 import fr.thomasbernard03.androidtools.presentation.commons.BaseViewModel
 import kotlinx.coroutines.Dispatchers

@@ -1,6 +1,5 @@
 package fr.thomasbernard03.androidtools.presentation.information.components
 
-import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
 import androidx.compose.material3.Card

@@ -7,18 +7,12 @@ import androidx.compose.ui.window.Window
 import androidx.compose.ui.window.application
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import androidx.lifecycle.viewmodel.compose.viewModel
-import androidx.navigation.NavHostController
-import androidx.navigation.compose.NavHost
-import androidx.navigation.compose.composable
-import androidx.navigation.compose.rememberNavController
 import fr.thomasbernard03.androidtools.commons.di.androidToolsModule
-import fr.thomasbernard03.androidtools.presentation.connectdevice.ConnectDeviceScreen
 import fr.thomasbernard03.androidtools.presentation.main.MainScreen
 import fr.thomasbernard03.androidtools.presentation.main.MainViewModel
 import fr.thomasbernard03.androidtools.presentation.theme.AndroidToolsTheme
 import org.jetbrains.compose.resources.stringResource
 import org.koin.core.context.GlobalContext.startKoin
-import javax.swing.plaf.basic.BasicMenuBarUI
 
 fun main() = application {
 
