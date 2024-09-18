@@ -2,7 +2,7 @@ package fr.thomasbernard03.androidtools.presentation.main
 
 import androidx.lifecycle.viewModelScope
 import com.russhwolf.settings.Settings
-import fr.thomasbernard03.androidtools.domain.usecases.GetConnectedDevicesUseCase
+import fr.thomasbernard03.androidtools.domain.usecases.device.GetConnectedDevicesUseCase
 import fr.thomasbernard03.androidtools.presentation.commons.BaseViewModel
 import kotlinx.coroutines.launch
 

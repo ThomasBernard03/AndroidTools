@@ -1,7 +1,7 @@
 package fr.thomasbernard03.androidtools.presentation.information
 
 import androidx.lifecycle.viewModelScope
-import fr.thomasbernard03.androidtools.domain.usecases.GetDeviceBatteryUseCase
+import fr.thomasbernard03.androidtools.domain.usecases.device.GetDeviceBatteryUseCase
 import fr.thomasbernard03.androidtools.domain.usecases.GetDeviceInformationUseCase
 import fr.thomasbernard03.androidtools.presentation.commons.BaseViewModel
 import kotlinx.coroutines.launch

@@ -1,14 +1,12 @@
 package fr.thomasbernard03.androidtools.presentation.logcat
 
 import androidx.lifecycle.viewModelScope
-import fr.thomasbernard03.androidtools.domain.usecases.ClearLogcatUseCase
-import fr.thomasbernard03.androidtools.domain.usecases.GetAllPackagesUseCase
-import fr.thomasbernard03.androidtools.domain.usecases.GetLogcatUseCase
+import fr.thomasbernard03.androidtools.domain.usecases.logcat.ClearLogcatUseCase
+import fr.thomasbernard03.androidtools.domain.usecases.application.GetAllPackagesUseCase
+import fr.thomasbernard03.androidtools.domain.usecases.logcat.GetLogcatUseCase
 import fr.thomasbernard03.androidtools.presentation.commons.BaseViewModel
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.Job
-import kotlinx.coroutines.cancel
-import kotlinx.coroutines.cancelAndJoin
 import kotlinx.coroutines.launch
 
 class LogcatViewModel(

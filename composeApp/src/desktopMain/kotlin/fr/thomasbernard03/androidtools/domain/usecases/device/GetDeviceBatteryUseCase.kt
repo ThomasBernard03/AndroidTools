@@ -1,4 +1,4 @@
-package fr.thomasbernard03.androidtools.domain.usecases
+package fr.thomasbernard03.androidtools.domain.usecases.device
 
 import com.russhwolf.settings.Settings
 import fr.thomasbernard03.androidtools.commons.SettingsConstants

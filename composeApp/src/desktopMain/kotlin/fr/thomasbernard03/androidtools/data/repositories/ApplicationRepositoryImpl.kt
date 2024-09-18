@@ -19,4 +19,9 @@ class ApplicationRepositoryImpl(
             InstallApplicationResult.Finished.Error(apkName, result)
         }
     }
+
+    override suspend fun getAllPackages(): List<String> {
+        val result = shellDataSource.executeAdbCommand("shell", "cmd", "package ", "list", "package", "-3")
+        return result.lines().map { it.replace("package:", "") }.filter { it.isNotEmpty() }
+    }
 }
