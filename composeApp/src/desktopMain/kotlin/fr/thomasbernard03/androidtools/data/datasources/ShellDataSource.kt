@@ -1,4 +1,4 @@
-package fr.thomasbernard03.androidtools.data.repositories
+package fr.thomasbernard03.androidtools.data.datasources
 
 import androidtools.composeapp.generated.resources.Res
 import com.russhwolf.settings.Settings
@@ -15,7 +15,7 @@ import java.io.InputStream
 import java.io.InputStreamReader
 import java.util.zip.ZipInputStream
 
-class ShellRepositoryImpl(
+class ShellDataSource(
     private val settings: Settings = Settings()
 ) {
     suspend fun executeAdbCommand(vararg formatArgs: String): String = withContext(Dispatchers.IO) {

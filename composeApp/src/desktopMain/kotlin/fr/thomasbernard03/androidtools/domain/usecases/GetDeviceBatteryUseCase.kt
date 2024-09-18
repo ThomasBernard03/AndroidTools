@@ -2,7 +2,7 @@ package fr.thomasbernard03.androidtools.domain.usecases
 
 import com.russhwolf.settings.Settings
 import fr.thomasbernard03.androidtools.commons.SettingsConstants
-import fr.thomasbernard03.androidtools.data.repositories.ShellRepositoryImpl
+import fr.thomasbernard03.androidtools.data.datasources.ShellDataSource
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.channelFlow
@@ -12,7 +12,7 @@ import java.io.InputStreamReader
 
 class GetDeviceBatteryUseCase(
     private val settings: Settings = Settings(),
-    private val shellRepositoryImpl: ShellRepositoryImpl = ShellRepositoryImpl()
+    private val shellDataSource: ShellDataSource = ShellDataSource()
 ) {
     fun invoke(): Flow<Int> = channelFlow {
         withContext(Dispatchers.IO) {

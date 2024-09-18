@@ -93,3 +93,4 @@ iOSInjectionProject/
 /.gradle
 /.idea
 /.kotlin
+local.properties

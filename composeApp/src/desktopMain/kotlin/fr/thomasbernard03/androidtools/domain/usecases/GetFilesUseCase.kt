@@ -1,14 +1,14 @@
 package fr.thomasbernard03.androidtools.domain.usecases
 
-import fr.thomasbernard03.androidtools.data.repositories.ShellRepositoryImpl
+import fr.thomasbernard03.androidtools.data.datasources.ShellDataSource
 import fr.thomasbernard03.androidtools.domain.models.File
 import fr.thomasbernard03.androidtools.domain.models.Folder
 
 class GetFilesUseCase(
-    private val shellRepositoryImpl: ShellRepositoryImpl = ShellRepositoryImpl()
+    private val shellDataSource: ShellDataSource = ShellDataSource()
 ) {
     suspend operator fun invoke(path : String) : List<File> {
-        val result = shellRepositoryImpl.executeAdbCommand("shell", "ls", "-l", path)
+        val result = shellDataSource.executeAdbCommand("shell", "ls", "-l", path)
         return parseResult(path, result)
     }
 
