@@ -1,6 +1,8 @@
 package fr.thomasbernard03.androidtools.data.repositories
 
+import fr.thomasbernard03.androidtools.commons.SettingsConstants
 import fr.thomasbernard03.androidtools.data.datasources.ShellDataSource
+import fr.thomasbernard03.androidtools.domain.models.DeviceInformation
 import fr.thomasbernard03.androidtools.domain.repositories.DeviceRepository
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.delay
@@ -9,6 +11,8 @@ import kotlinx.coroutines.flow.channelFlow
 import kotlinx.coroutines.flow.flow
 import kotlinx.coroutines.withContext
 import org.koin.java.KoinJavaComponent.get
+import java.io.BufferedReader
+import java.io.InputStreamReader
 
 class DeviceRepositoryImpl(
     private val shellDataSource: ShellDataSource = get(ShellDataSource::class.java)
@@ -30,6 +34,11 @@ class DeviceRepositoryImpl(
     }
 
     override fun getDeviceBattery(): Flow<Int> = channelFlow {
+        fun parseBatteryLevel(output: String): Int {
+            val levelLine = output.lines().find { it.trim().startsWith("level:") }
+            return levelLine?.split(":")?.get(1)?.trim()?.replace("[","")?.replace("]", "")?.toIntOrNull() ?: 0
+        }
+
         withContext(Dispatchers.IO) {
             while (true) {
                 shellDataSource.executeAdbCommand("shell", "dumpsys", "battery").let { output ->
@@ -41,8 +50,25 @@ class DeviceRepositoryImpl(
         }
     }
 
-    private fun parseBatteryLevel(output: String): Int {
-        val levelLine = output.lines().find { it.trim().startsWith("level:") }
-        return levelLine?.split(":")?.get(1)?.trim()?.replace("[","")?.replace("]", "")?.toIntOrNull() ?: 0
+    override suspend fun getDeviceInformation(): DeviceInformation {
+        val result = shellDataSource.executeAdbCommand("shell", "getprop")
+        return parseDeviceInformation(result)
+    }
+
+    private fun parseDeviceInformation(output : String) : DeviceInformation {
+        val lines = output.split("\n")
+        val manufacturer = lines.find { it.contains("ro.product.manufacturer") }?.split(":")?.get(1)?.replace("[", "")?.replace("]", "")?.trim() ?: ""
+        val model = lines.find { it.contains("ro.product.model") }?.split(":")?.get(1)?.replace("[", "")?.replace("]", "")?.trim() ?: ""
+        val version = lines.find { it.contains("ro.build.version.release") }?.split(":")?.get(1)?.replace("[", "")?.replace("]", "")?.trim() ?: ""
+        val serial = lines.find { it.contains("ro.serialno") }?.split(":")?.get(1)?.replace("[", "")?.replace("]", "")?.trim() ?: ""
+
+
+        val allLines = lines.filter { it.split(":").size >= 2 }.map {
+            val key = it.split(":").first()
+            val value = it.split(":").last()
+            key to value
+        }.toMap()
+
+        return DeviceInformation(manufacturer, model, version.toInt(), serial, allLines)
     }
 }

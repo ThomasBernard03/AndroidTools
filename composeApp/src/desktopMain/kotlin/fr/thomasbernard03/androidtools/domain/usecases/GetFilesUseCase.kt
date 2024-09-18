@@ -3,9 +3,10 @@ package fr.thomasbernard03.androidtools.domain.usecases
 import fr.thomasbernard03.androidtools.data.datasources.ShellDataSource
 import fr.thomasbernard03.androidtools.domain.models.File
 import fr.thomasbernard03.androidtools.domain.models.Folder
+import org.koin.java.KoinJavaComponent.get
 
 class GetFilesUseCase(
-    private val shellDataSource: ShellDataSource = ShellDataSource()
+    private val shellDataSource: ShellDataSource = get(ShellDataSource::class.java)
 ) {
     suspend operator fun invoke(path : String) : List<File> {
         val result = shellDataSource.executeAdbCommand("shell", "ls", "-l", path)

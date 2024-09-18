@@ -15,14 +15,7 @@ import org.jetbrains.compose.resources.stringResource
 import org.koin.core.context.GlobalContext.startKoin
 
 fun main() = application {
-
-//    startKoin {
-//        modules(sharedBase())
-//    }
-
-    startKoin {
-        modules(androidToolsModule)
-    }
+    startKoin { modules(androidToolsModule) }
 
     Window(
         onCloseRequest = ::exitApplication,
