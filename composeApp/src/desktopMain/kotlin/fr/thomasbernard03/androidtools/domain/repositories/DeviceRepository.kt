@@ -5,5 +5,5 @@ import kotlinx.coroutines.flow.Flow
 interface DeviceRepository {
     suspend fun getConnectedDevices() : Flow<List<String>>
 
-    suspend fun getDeviceBattery(): Flow<Int>
+    fun getDeviceBattery(): Flow<Int>
 }

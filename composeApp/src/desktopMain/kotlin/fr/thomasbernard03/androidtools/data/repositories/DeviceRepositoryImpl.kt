@@ -32,7 +32,7 @@ class DeviceRepositoryImpl(
         }
     }
 
-    override suspend fun getDeviceBattery(): Flow<Int> = channelFlow {
+    override fun getDeviceBattery(): Flow<Int> = channelFlow {
         withContext(Dispatchers.IO) {
             while (true) {
                 shellDataSource.executeAdbCommand("shell", "dumpsys", "battery").let { output ->
