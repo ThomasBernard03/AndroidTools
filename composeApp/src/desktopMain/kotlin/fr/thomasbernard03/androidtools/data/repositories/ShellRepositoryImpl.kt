@@ -30,7 +30,7 @@ class ShellRepositoryImpl(
 
         arguments.addAll(formatArgs)
 
-        val adb = getAdbWindows()
+        val adb = getAdb()
 
         val process = ProcessBuilder(listOf(adb.absolutePath) + arguments).start()
         val reader = BufferedReader(InputStreamReader(process.inputStream))
@@ -57,7 +57,7 @@ class ShellRepositoryImpl(
             }
 
             arguments.addAll(formatArgs)
-            val adb = getAdbWindows()
+            val adb = getAdb()
 
             val process = ProcessBuilder(listOf(adb.absolutePath) + arguments).start()
             val reader = BufferedReader(InputStreamReader(process.inputStream))
