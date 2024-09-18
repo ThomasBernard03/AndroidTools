@@ -58,7 +58,7 @@ class GetFilesUseCase(
         val files = mutableListOf<File>()
 
         // Expression régulière pour matcher les lignes du format `ls -l`
-        val regex = Regex("""^([\-dl])([rwxst\-]{9})\s+(\d+)\s+(\w+)\s+(\w+)\s+(\d+)\s+(\d{4}-\d{2}-\d{2})?\s*(\d{2}:\d{2})?\s+(.+)$""")
+        val regex = Regex("""^([\-dl])([rwxst\-]{9})\s+(\d+)\s+(\w+)\s+(\w+)\s+(\d+)\s+(\d{4}-\d{2}-\d{2})?\s*(\d{2}:\d{2})?\s+([^\s]+)(?:\s+->\s+.+)?$""")
 
         for (line in lines) {
             if (line.isNotEmpty()) {
