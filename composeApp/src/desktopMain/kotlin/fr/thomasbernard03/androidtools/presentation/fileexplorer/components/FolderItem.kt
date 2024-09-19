@@ -5,12 +5,14 @@ import androidtools.composeapp.generated.resources.folder
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import fr.thomasbernard03.androidtools.presentation.theme.FolderColor
+import java.time.LocalDateTime
 
 @Composable
 fun FolderItem(
     modifier: Modifier = Modifier,
     name: String,
     size : Long,
+    modifiedAt : LocalDateTime,
     onExpand : () -> Unit
 ) {
     FileExplorerItem(
@@ -19,6 +21,7 @@ fun FolderItem(
         icon = Res.drawable.folder,
         iconTint = FolderColor,
         name = name,
-        size = size
+        size = size,
+        modifiedAt = modifiedAt
     )
 }

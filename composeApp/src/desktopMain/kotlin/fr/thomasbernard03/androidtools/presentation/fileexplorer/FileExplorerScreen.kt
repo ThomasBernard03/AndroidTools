@@ -104,6 +104,7 @@ fun FileExplorerScreen(
                                     modifier = Modifier.fillMaxWidth(),
                                     name = file.name,
                                     size = file.size,
+                                    modifiedAt = file.modifiedAt,
                                     onExpand = {
                                         onEvent(FileExplorerEvent.OnGetFiles(file))
                                     }
@@ -112,7 +113,8 @@ fun FileExplorerScreen(
                                 FileItem(
                                     modifier = Modifier.fillMaxWidth(),
                                     name = file.name,
-                                    size = file.size
+                                    size = file.size,
+                                    modifiedAt = file.modifiedAt,
                                 )
                             }
                         }

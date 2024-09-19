@@ -22,6 +22,9 @@ import fr.thomasbernard03.androidtools.commons.extensions.byteCountToDisplaySize
 import fr.thomasbernard03.androidtools.presentation.theme.FolderColor
 import org.jetbrains.compose.resources.DrawableResource
 import org.jetbrains.compose.resources.painterResource
+import java.time.LocalDate
+import java.time.LocalDateTime
+import java.time.format.DateTimeFormatter
 
 @Composable
 fun FileExplorerItem(
@@ -30,7 +33,8 @@ fun FileExplorerItem(
     icon : DrawableResource,
     iconTint : Color = MaterialTheme.colorScheme.onBackground,
     name: String,
-    size : Long
+    size : Long,
+    modifiedAt : LocalDateTime
 ) {
     Button(
         modifier = modifier,
@@ -67,8 +71,15 @@ fun FileExplorerItem(
                 style = MaterialTheme.typography.bodySmall
             )
 
+//            Text(
+//                text = size.byteCountToDisplaySize(),
+//                style = MaterialTheme.typography.bodySmall
+//            )
+
+            // HH:mm MMM dd, yyyy
+            val outputFormatter = DateTimeFormatter.ofPattern("HH:mm MMM dd, yyyy")
             Text(
-                text = size.byteCountToDisplaySize(),
+                text = modifiedAt.format(outputFormatter),
                 style = MaterialTheme.typography.bodySmall
             )
         }

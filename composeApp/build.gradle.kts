@@ -33,6 +33,8 @@ kotlin {
             implementation(libs.androidx.lifecycle.runtime.compose)
 
             implementation(libs.koin.core)
+
+            implementation(libs.kotlinx.datetime)
         }
         // https://gist.github.com/OysterD3?page=3
         // https://betterprogramming.pub/how-to-create-an-auto-updater-for-desktop-application-jetpack-compose-d118db26d65f

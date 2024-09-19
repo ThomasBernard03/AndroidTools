@@ -4,6 +4,8 @@ import fr.thomasbernard03.androidtools.data.datasources.ShellDataSource
 import fr.thomasbernard03.androidtools.domain.models.File
 import fr.thomasbernard03.androidtools.domain.models.Folder
 import org.koin.java.KoinJavaComponent.get
+import java.time.LocalDateTime
+import java.time.format.DateTimeFormatter
 
 class GetFilesUseCase(
     private val shellDataSource: ShellDataSource = get(ShellDataSource::class.java)
@@ -81,6 +83,7 @@ class GetFilesUseCase(
                                 this.size = size.toLong()
                                 this.permissions = "$type$permissions"
                                 this.path = path
+                                this.modifiedAt = LocalDateTime.parse("$date $time", DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm"))
                             }
                         )
                     } else {
@@ -90,6 +93,7 @@ class GetFilesUseCase(
                                 this.size = size.toLong()
                                 this.permissions = "$type$permissions"
                                 this.path = path
+                                this.modifiedAt = LocalDateTime.parse("$date $time", DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm"))
                             }
                         )
                     }
