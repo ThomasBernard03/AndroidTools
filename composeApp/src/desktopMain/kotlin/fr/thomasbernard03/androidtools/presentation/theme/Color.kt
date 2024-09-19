@@ -13,3 +13,6 @@ val InfoBackgroundColorDark = Color(0xFF6A9759)
 val WarningBackgroundColorDark = Color(0xFFBBB529)
 val ErrorBackgroundColorDark = Color(0xFFCF5B56)
 val VerboseBackgroundColorDark = Color(0xFFE0E0E0)
+
+
+val FolderColor = Color(0xFFEBC86A)
