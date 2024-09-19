@@ -10,4 +10,6 @@ sealed class FileExplorerEvent : Event {
 
     data object OnGoBack : FileExplorerEvent()
     data object OnRefresh : FileExplorerEvent()
+
+    data class OnAddFile(val path : String) : FileExplorerEvent()
 }

@@ -31,34 +31,67 @@ import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
+import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.remember
+import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
+import androidx.compose.ui.DragData
+import androidx.compose.ui.ExperimentalComposeUiApi
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
+import androidx.compose.ui.onExternalDrag
 import androidx.compose.ui.unit.dp
 import fr.thomasbernard03.androidtools.commons.extensions.getParents
 import fr.thomasbernard03.androidtools.domain.models.Folder
+import fr.thomasbernard03.androidtools.presentation.applicationinstaller.ApplicationInstallerEvent
 import fr.thomasbernard03.androidtools.presentation.fileexplorer.components.FileItem
 import fr.thomasbernard03.androidtools.presentation.fileexplorer.components.FolderItem
 import org.jetbrains.compose.resources.painterResource
+import java.net.URLDecoder
 
+@OptIn(ExperimentalComposeUiApi::class)
 @Composable
 fun FileExplorerScreen(
     uiState: FileExplorerUiState,
     onEvent: (FileExplorerEvent) -> Unit
 ) {
     val state = rememberLazyGridState()
+    var hoverred by remember { mutableStateOf(false) }
 
     LaunchedEffect(Unit){
         onEvent(FileExplorerEvent.OnAppearing)
     }
 
     Scaffold(
+        modifier = Modifier
+            .onExternalDrag(
+                enabled = !uiState.loading,
+                onDragStart = { hoverred = true },
+                onDragExit = { hoverred = false },
+                onDrop = { externalDragValue ->
+                    if (hoverred) {
+                        hoverred = false
+                        if (externalDragValue.dragData is DragData.FilesList) {
+                            val draggedFiles = (externalDragValue.dragData as DragData.FilesList).readFiles().map { it.drop(5) } // Remove file: prefix
+                            draggedFiles.firstOrNull()?.let {
+                                onEvent(FileExplorerEvent.OnAddFile(URLDecoder.decode(it, "UTF-8")))
+                            }
+                        }
+                    }
+                },
+            ),
         floatingActionButton = {
 
         }
     ) {
         Box(
-            modifier = Modifier.fillMaxSize()
+            modifier = Modifier.fillMaxSize().then(
+                if (hoverred)
+                    Modifier.background(MaterialTheme.colorScheme.onBackground.copy(0.2f))
+                else
+                    Modifier
+            )
         ) {
             Column {
                 Row(

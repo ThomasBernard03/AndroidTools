@@ -3,11 +3,13 @@ package fr.thomasbernard03.androidtools.presentation.fileexplorer
 import androidx.lifecycle.viewModelScope
 import fr.thomasbernard03.androidtools.domain.models.Folder
 import fr.thomasbernard03.androidtools.domain.usecases.GetFilesUseCase
+import fr.thomasbernard03.androidtools.domain.usecases.file.UploadFileUseCase
 import fr.thomasbernard03.androidtools.presentation.commons.BaseViewModel
 import kotlinx.coroutines.launch
 
 class FileExplorerViewModel(
-    private val getFilesUseCase: GetFilesUseCase = GetFilesUseCase()
+    private val getFilesUseCase: GetFilesUseCase = GetFilesUseCase(),
+    private val uploadFileUseCase: UploadFileUseCase = UploadFileUseCase()
 ) : BaseViewModel<FileExplorerUiState, FileExplorerEvent>() {
 
     override fun initializeUiState() = FileExplorerUiState()
@@ -55,6 +57,18 @@ class FileExplorerViewModel(
                         folder.childens = files
 
                         updateUiState { copy(loading = false, folder = folder) }
+                    }
+                }
+            }
+
+            is FileExplorerEvent.OnAddFile -> {
+                uiState.value.folder?.let { targetFolder ->
+                    viewModelScope.launch {
+                        updateUiState { copy(loading = true) }
+                        uploadFileUseCase(event.path, "${targetFolder.path}/${targetFolder.name}")
+                        val files = getFilesUseCase(path = "${targetFolder.path}/${targetFolder.name}")
+                        targetFolder.childens = files
+                        updateUiState { copy(loading = false, folder = targetFolder) }
                     }
                 }
             }
