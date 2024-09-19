@@ -54,7 +54,7 @@ https://github.com/ThomasBernard03/AndroidTools/assets/67638928/eb3b4248-d17e-4a
 - Device information :
   1. New design
   2. Screenshot
-  3. Record vide
+  3. Record video
   
 - Logcat
   1. Clean architecture

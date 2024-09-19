@@ -32,7 +32,10 @@ kotlin {
             implementation(libs.androidx.navigation.compose)
             implementation(libs.androidx.lifecycle.runtime.compose)
 
+            implementation(libs.koin.core)
         }
+        // https://gist.github.com/OysterD3?page=3
+        // https://betterprogramming.pub/how-to-create-an-auto-updater-for-desktop-application-jetpack-compose-d118db26d65f
         desktopMain.dependencies {
             implementation(compose.desktop.currentOs){
                 exclude("org.jetbrains.compose.material")
