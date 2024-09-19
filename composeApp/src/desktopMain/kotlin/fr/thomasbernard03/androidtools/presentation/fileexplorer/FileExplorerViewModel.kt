@@ -45,6 +45,19 @@ class FileExplorerViewModel(
                     updateUiState { copy(loading = false, folder = parent) }
                 }
             }
+
+            FileExplorerEvent.OnRefresh -> {
+                uiState.value.folder?.let { folder ->
+                    viewModelScope.launch {
+                        updateUiState { copy(loading = true) }
+                        val files = getFilesUseCase(path = "${folder.path}/${folder.name}")
+
+                        folder.childens = files
+
+                        updateUiState { copy(loading = false, folder = folder) }
+                    }
+                }
+            }
         }
     }
 }

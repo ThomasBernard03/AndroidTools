@@ -9,4 +9,5 @@ sealed class FileExplorerEvent : Event {
     data class OnGetFiles(val folder : Folder) : FileExplorerEvent()
 
     data object OnGoBack : FileExplorerEvent()
+    data object OnRefresh : FileExplorerEvent()
 }

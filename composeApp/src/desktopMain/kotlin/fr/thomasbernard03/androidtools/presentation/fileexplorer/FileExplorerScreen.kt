@@ -2,6 +2,7 @@ package fr.thomasbernard03.androidtools.presentation.fileexplorer
 
 import androidtools.composeapp.generated.resources.Res
 import androidtools.composeapp.generated.resources.arrow_back
+import androidtools.composeapp.generated.resources.replay
 import androidx.compose.foundation.VerticalScrollbar
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Arrangement
@@ -17,6 +18,7 @@ import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.grid.GridCells
 import androidx.compose.foundation.lazy.grid.LazyVerticalGrid
 import androidx.compose.foundation.lazy.grid.items
+import androidx.compose.foundation.lazy.grid.rememberLazyGridState
 import androidx.compose.foundation.lazy.items
 import androidx.compose.foundation.lazy.rememberLazyListState
 import androidx.compose.foundation.rememberScrollbarAdapter
@@ -44,13 +46,17 @@ fun FileExplorerScreen(
     uiState: FileExplorerUiState,
     onEvent: (FileExplorerEvent) -> Unit
 ) {
-    val state = rememberLazyListState()
+    val state = rememberLazyGridState()
 
     LaunchedEffect(Unit){
         onEvent(FileExplorerEvent.OnAppearing)
     }
 
-    Scaffold {
+    Scaffold(
+        floatingActionButton = {
+
+        }
+    ) {
         Box(
             modifier = Modifier.fillMaxSize()
         ) {
@@ -64,9 +70,7 @@ fun FileExplorerScreen(
                     horizontalArrangement = Arrangement.spacedBy(8.dp)
                 ) {
                     IconButton(
-                        onClick = {
-                            onEvent(FileExplorerEvent.OnGoBack)
-                        }
+                        onClick = { onEvent(FileExplorerEvent.OnGoBack) }
                     ) {
                         Icon(
                             painter = painterResource(Res.drawable.arrow_back),
@@ -87,12 +91,20 @@ fun FileExplorerScreen(
                     }
 
                     Row {
-
+                        IconButton(
+                            onClick = { onEvent(FileExplorerEvent.OnRefresh) }
+                        ) {
+                            Icon(
+                                painter = painterResource(Res.drawable.replay),
+                                contentDescription = "Refresh",
+                            )
+                        }
                     }
                 }
 
                 Box {
                     LazyVerticalGrid(
+                        state = state,
                         horizontalArrangement = Arrangement.spacedBy(16.dp),
                         verticalArrangement = Arrangement.spacedBy(8.dp),
                         contentPadding = PaddingValues(8.dp),
