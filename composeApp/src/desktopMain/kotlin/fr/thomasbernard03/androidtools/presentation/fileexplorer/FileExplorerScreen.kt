@@ -18,6 +18,7 @@ import androidx.compose.foundation.lazy.rememberLazyListState
 import androidx.compose.foundation.rememberScrollbarAdapter
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material3.Icon
+import androidx.compose.material3.IconButton
 import androidx.compose.material3.LinearProgressIndicator
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Scaffold
@@ -57,10 +58,16 @@ fun FileExplorerScreen(
                     verticalAlignment = Alignment.CenterVertically,
                     horizontalArrangement = Arrangement.spacedBy(8.dp)
                 ) {
-                    Icon(
-                        painter = painterResource(Res.drawable.arrow_back),
-                        contentDescription = "Go back",
-                    )
+                    IconButton(
+                        onClick = {
+                            onEvent(FileExplorerEvent.OnGoBack)
+                        }
+                    ) {
+                        Icon(
+                            painter = painterResource(Res.drawable.arrow_back),
+                            contentDescription = "Go back",
+                        )
+                    }
 
                     Row(
                         modifier = Modifier
@@ -83,14 +90,14 @@ fun FileExplorerScreen(
                     LazyColumn(
                         state = state
                     ) {
-                        items(uiState.files) { file ->
+                        items(uiState.folder?.childens ?: emptyList()) { file ->
                             if (file is Folder) {
                                 FolderItem(
                                     modifier = Modifier.fillMaxWidth(),
                                     name = file.name,
                                     size = file.size,
                                     onExpand = {
-                                        onEvent(FileExplorerEvent.OnGetFiles("${file.path}/${file.name}"))
+                                        onEvent(FileExplorerEvent.OnGetFiles(file))
                                     }
                                 )
                             } else {
