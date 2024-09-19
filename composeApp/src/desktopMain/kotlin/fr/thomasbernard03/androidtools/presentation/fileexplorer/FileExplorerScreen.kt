@@ -29,6 +29,7 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.unit.dp
+import fr.thomasbernard03.androidtools.commons.extensions.getParents
 import fr.thomasbernard03.androidtools.domain.models.Folder
 import fr.thomasbernard03.androidtools.presentation.fileexplorer.components.FileItem
 import fr.thomasbernard03.androidtools.presentation.fileexplorer.components.FolderItem
@@ -76,7 +77,7 @@ fun FileExplorerScreen(
                             .weight(1f),
                     ) {
                         Text(
-                            text = uiState.path,
+                            text = uiState.folder?.getParents()?.joinToString(" -> ") { it.name } ?: "",
                             modifier = Modifier.padding(8.dp),
                         )
                     }

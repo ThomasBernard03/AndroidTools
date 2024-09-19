@@ -28,7 +28,7 @@ class FileExplorerViewModel(
             }
             is FileExplorerEvent.OnGetFiles -> {
                 viewModelScope.launch {
-                    updateUiState { copy(loading = true, path = "${event.folder.path}/${event.folder.name}") }
+                    updateUiState { copy(loading = true) }
                     val files = getFilesUseCase(path = "${event.folder.path}/${event.folder.name}")
 
                     val newFolder = event.folder.apply {
