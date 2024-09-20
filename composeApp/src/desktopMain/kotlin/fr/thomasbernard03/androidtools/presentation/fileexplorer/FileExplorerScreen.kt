@@ -178,7 +178,7 @@ fun FileExplorerScreen(
                 Box {
                     LazyVerticalGrid(
                         state = state,
-                        horizontalArrangement = Arrangement.spacedBy(16.dp),
+                        horizontalArrangement = Arrangement.spacedBy(8.dp),
                         verticalArrangement = Arrangement.spacedBy(8.dp),
                         contentPadding = PaddingValues(8.dp),
                         columns = GridCells.Adaptive(300.dp),

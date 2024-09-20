@@ -2,6 +2,7 @@ package fr.thomasbernard03.androidtools.presentation.fileexplorer.components
 
 import androidx.compose.foundation.BorderStroke
 import androidx.compose.foundation.layout.Arrangement
+import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.fillMaxWidth
@@ -20,6 +21,7 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Brush
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.RectangleShape
+import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import fr.thomasbernard03.androidtools.commons.extensions.byteCountToDisplaySize
@@ -34,8 +36,8 @@ import java.time.format.DateTimeFormatter
 fun FileExplorerItem(
     modifier: Modifier = Modifier,
     onClick : () -> Unit,
-    icon : DrawableResource,
-    iconTint : Color = MaterialTheme.colorScheme.onBackground,
+    leadingIcon : @Composable () -> Unit,
+    subTitle : @Composable () -> Unit = {},
     name: String,
     size : Long,
     modifiedAt : LocalDateTime,
@@ -59,23 +61,25 @@ fun FileExplorerItem(
         border = BorderStroke(0.5.dp, MaterialTheme.colorScheme.onBackground.copy(alpha = 0.2f))
     ){
         Row(
-            horizontalArrangement = Arrangement.spacedBy(4.dp),
+            horizontalArrangement = Arrangement.spacedBy(8.dp),
             verticalAlignment = Alignment.CenterVertically,
             modifier = Modifier.fillMaxWidth(),
         ) {
-            Icon(
-                painter = painterResource(icon),
-                contentDescription = name,
-                modifier = Modifier.size(24.dp),
-                tint = iconTint
-            )
+            leadingIcon()
 
-            Text(
+            Column(
                 modifier = Modifier.weight(1f),
-                textAlign = TextAlign.Start,
-                text = name,
-                style = MaterialTheme.typography.bodySmall
-            )
+            ) {
+                Text(
+                    textAlign = TextAlign.Start,
+                    text = name.substringBeforeLast("."),
+                    style = MaterialTheme.typography.bodySmall,
+                    maxLines = 1
+                )
+                subTitle()
+            }
+
+
 
 //            Text(
 //                text = size.byteCountToDisplaySize(),
@@ -86,7 +90,10 @@ fun FileExplorerItem(
             val outputFormatter = DateTimeFormatter.ofPattern("HH:mm MMM dd, yyyy")
             Text(
                 text = modifiedAt.format(outputFormatter),
-                style = MaterialTheme.typography.bodySmall
+                style = MaterialTheme.typography.bodySmall.copy(
+                    color = MaterialTheme.colorScheme.onBackground.copy(alpha = 0.6f)
+                ),
+                fontWeight = FontWeight.SemiBold
             )
         }
     }

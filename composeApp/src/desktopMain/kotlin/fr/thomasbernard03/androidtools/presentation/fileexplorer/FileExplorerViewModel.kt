@@ -22,11 +22,11 @@ class FileExplorerViewModel(
             FileExplorerEvent.OnAppearing -> {
                 viewModelScope.launch {
                     updateUiState { copy(loading = true) }
-                    val files = getFilesUseCase(path = "")
+                    val files = getFilesUseCase(path = "storage/emulated/0")
                     val folder = Folder().apply {
                         childens = files
-                        name = "/"
-                        path = ""
+                        name = ""
+                        path = "storage/emulated/0"
                     }
                     updateUiState { copy(loading = false, folder = folder) }
                 }
