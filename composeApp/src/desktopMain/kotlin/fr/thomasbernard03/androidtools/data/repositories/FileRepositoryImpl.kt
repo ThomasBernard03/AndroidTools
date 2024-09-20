@@ -12,6 +12,7 @@ class FileRepositoryImpl(
     }
 
     override suspend fun deleteFile(path: String) {
-        shellDataSource.executeAdbCommand("shell", "rm", path)
+        val result = shellDataSource.executeAdbCommand("shell", "rm", "'$path'")
+        result.length
     }
 }

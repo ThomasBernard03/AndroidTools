@@ -18,6 +18,7 @@ class FileExplorerViewModel(
 
     override fun onEvent(event: FileExplorerEvent) {
         when(event){
+            is FileExplorerEvent.OnFileSelected -> updateUiState { copy(selectedFile = event.file) }
             FileExplorerEvent.OnAppearing -> {
                 viewModelScope.launch {
                     updateUiState { copy(loading = true) }
@@ -32,7 +33,7 @@ class FileExplorerViewModel(
             }
             is FileExplorerEvent.OnGetFiles -> {
                 viewModelScope.launch {
-                    updateUiState { copy(loading = true) }
+                    updateUiState { copy(loading = true, selectedFile = null) }
                     val files = getFilesUseCase(path = "${event.folder.path}/${event.folder.name}")
 
                     val newFolder = event.folder.apply {
@@ -43,17 +44,16 @@ class FileExplorerViewModel(
                     updateUiState { copy(loading = false, folder = newFolder) }
                 }
             }
-
             FileExplorerEvent.OnGoBack -> {
                 uiState.value.folder?.parent?.let { parent ->
-                    updateUiState { copy(loading = false, folder = parent) }
+                    updateUiState { copy(folder = parent, selectedFile = null) }
                 }
             }
 
             FileExplorerEvent.OnRefresh -> {
                 uiState.value.folder?.let { folder ->
                     viewModelScope.launch {
-                        updateUiState { copy(loading = true) }
+                        updateUiState { copy(loading = true, selectedFile = null) }
                         val files = getFilesUseCase(path = "${folder.path}/${folder.name}")
 
                         folder.childens = files
@@ -66,7 +66,7 @@ class FileExplorerViewModel(
             is FileExplorerEvent.OnAddFile -> {
                 uiState.value.folder?.let { targetFolder ->
                     viewModelScope.launch {
-                        updateUiState { copy(loading = true) }
+                        updateUiState { copy(loading = true, selectedFile = null) }
                         uploadFileUseCase(event.path, "${targetFolder.path}/${targetFolder.name}")
                         val files = getFilesUseCase(path = "${targetFolder.path}/${targetFolder.name}")
                         targetFolder.childens = files
@@ -77,7 +77,7 @@ class FileExplorerViewModel(
             is FileExplorerEvent.OnDelete -> {
                 viewModelScope.launch {
                     uiState.value.folder?.let { folder ->
-                        updateUiState { copy(loading = true) }
+                        updateUiState { copy(loading = true, selectedFile = null) }
                         deleteFileUseCase(event.path)
                         val files = getFilesUseCase(path = "${folder.path}/${folder.name}")
                         folder.childens = files
@@ -85,6 +85,7 @@ class FileExplorerViewModel(
                     }
                 }
             }
+
         }
     }
 }

@@ -66,7 +66,6 @@ fun FileExplorerScreen(
 ) {
     val state = rememberLazyGridState()
     var hoverred by remember { mutableStateOf(false) }
-    var selectedFile by remember { mutableStateOf<File?>(null) }
 
     LaunchedEffect(Unit){
         onEvent(FileExplorerEvent.OnAppearing)
@@ -165,8 +164,8 @@ fun FileExplorerScreen(
                         }
 
                         IconButton(
-                            enabled = selectedFile != null,
-                            onClick = { selectedFile?.let { onEvent(FileExplorerEvent.OnDelete("${it.path}/${it.name}")) }}
+                            enabled = uiState.selectedFile != null,
+                            onClick = { uiState.selectedFile?.let { onEvent(FileExplorerEvent.OnDelete("${it.path}/${it.name}")) }}
                         ) {
                             Icon(
                                 painter = painterResource(Res.drawable.trash),
@@ -201,10 +200,8 @@ fun FileExplorerScreen(
                                     name = file.name,
                                     size = file.size,
                                     modifiedAt = file.modifiedAt,
-                                    selected = selectedFile?.name == file.name,
-                                    onClick = {
-                                        selectedFile = file
-                                    }
+                                    selected = uiState.selectedFile?.name == file.name,
+                                    onClick = { onEvent(FileExplorerEvent.OnFileSelected(file)) }
                                 )
                             }
                         }

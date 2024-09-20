@@ -7,4 +7,6 @@ import fr.thomasbernard03.androidtools.presentation.commons.UiState
 data class FileExplorerUiState(
     val loading : Boolean = false,
     val folder: Folder? = null,
+
+    val selectedFile : File? = null
 ) : UiState
