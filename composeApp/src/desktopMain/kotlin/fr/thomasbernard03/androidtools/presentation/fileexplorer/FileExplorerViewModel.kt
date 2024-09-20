@@ -3,13 +3,15 @@ package fr.thomasbernard03.androidtools.presentation.fileexplorer
 import androidx.lifecycle.viewModelScope
 import fr.thomasbernard03.androidtools.domain.models.Folder
 import fr.thomasbernard03.androidtools.domain.usecases.GetFilesUseCase
+import fr.thomasbernard03.androidtools.domain.usecases.file.DeleteFileUseCase
 import fr.thomasbernard03.androidtools.domain.usecases.file.UploadFileUseCase
 import fr.thomasbernard03.androidtools.presentation.commons.BaseViewModel
 import kotlinx.coroutines.launch
 
 class FileExplorerViewModel(
     private val getFilesUseCase: GetFilesUseCase = GetFilesUseCase(),
-    private val uploadFileUseCase: UploadFileUseCase = UploadFileUseCase()
+    private val uploadFileUseCase: UploadFileUseCase = UploadFileUseCase(),
+    private val deleteFileUseCase : DeleteFileUseCase = DeleteFileUseCase()
 ) : BaseViewModel<FileExplorerUiState, FileExplorerEvent>() {
 
     override fun initializeUiState() = FileExplorerUiState()
@@ -69,6 +71,17 @@ class FileExplorerViewModel(
                         val files = getFilesUseCase(path = "${targetFolder.path}/${targetFolder.name}")
                         targetFolder.childens = files
                         updateUiState { copy(loading = false, folder = targetFolder) }
+                    }
+                }
+            }
+            is FileExplorerEvent.OnDelete -> {
+                viewModelScope.launch {
+                    uiState.value.folder?.let { folder ->
+                        updateUiState { copy(loading = true) }
+                        deleteFileUseCase(event.path)
+                        val files = getFilesUseCase(path = "${folder.path}/${folder.name}")
+                        folder.childens = files
+                        updateUiState { copy(loading = false, folder = folder) }
                     }
                 }
             }

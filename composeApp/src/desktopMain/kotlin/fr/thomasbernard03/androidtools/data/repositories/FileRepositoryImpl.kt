@@ -10,4 +10,8 @@ class FileRepositoryImpl(
     override suspend fun uploadFile(path: String, targetPath : String) {
         shellDataSource.executeAdbCommand("push", path, targetPath)
     }
+
+    override suspend fun deleteFile(path: String) {
+        shellDataSource.executeAdbCommand("shell", "rm", path)
+    }
 }

@@ -12,4 +12,5 @@ sealed class FileExplorerEvent : Event {
     data object OnRefresh : FileExplorerEvent()
 
     data class OnAddFile(val path : String) : FileExplorerEvent()
+    data class OnDelete(val path : String) : FileExplorerEvent()
 }
