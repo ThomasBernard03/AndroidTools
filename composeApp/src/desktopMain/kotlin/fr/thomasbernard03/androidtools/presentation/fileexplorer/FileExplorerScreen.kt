@@ -3,6 +3,7 @@ package fr.thomasbernard03.androidtools.presentation.fileexplorer
 import androidtools.composeapp.generated.resources.Res
 import androidtools.composeapp.generated.resources.arrow_back
 import androidtools.composeapp.generated.resources.folder
+import androidtools.composeapp.generated.resources.open_file_explorer
 import androidtools.composeapp.generated.resources.replay
 import androidtools.composeapp.generated.resources.trash
 import androidx.compose.foundation.VerticalScrollbar
@@ -18,16 +19,14 @@ import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
-import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.grid.GridCells
 import androidx.compose.foundation.lazy.grid.LazyVerticalGrid
 import androidx.compose.foundation.lazy.grid.items
 import androidx.compose.foundation.lazy.grid.rememberLazyGridState
-import androidx.compose.foundation.lazy.items
-import androidx.compose.foundation.lazy.rememberLazyListState
 import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.rememberScrollbarAdapter
 import androidx.compose.foundation.shape.RoundedCornerShape
+import androidx.compose.material3.FloatingActionButton
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
 import androidx.compose.material3.LinearProgressIndicator
@@ -49,13 +48,14 @@ import androidx.compose.ui.draw.rotate
 import androidx.compose.ui.onExternalDrag
 import androidx.compose.ui.unit.dp
 import fr.thomasbernard03.androidtools.commons.extensions.getParents
-import fr.thomasbernard03.androidtools.domain.models.File
 import fr.thomasbernard03.androidtools.domain.models.Folder
-import fr.thomasbernard03.androidtools.presentation.applicationinstaller.ApplicationInstallerEvent
 import fr.thomasbernard03.androidtools.presentation.fileexplorer.components.FileItem
 import fr.thomasbernard03.androidtools.presentation.fileexplorer.components.FolderItem
 import fr.thomasbernard03.androidtools.presentation.theme.FolderColor
 import org.jetbrains.compose.resources.painterResource
+import org.jetbrains.compose.resources.stringResource
+import java.awt.FileDialog
+import java.awt.Frame
 import java.net.URLDecoder
 
 @OptIn(ExperimentalComposeUiApi::class)
@@ -90,7 +90,25 @@ fun FileExplorerScreen(
                 },
             ),
         floatingActionButton = {
+            FloatingActionButton(
+                onClick = {
+                    val fileDialog = FileDialog(Frame(), "", FileDialog.LOAD)
+                    fileDialog.isVisible = true
+                    val selectedFile = fileDialog.file
+                    val directory = fileDialog.directory
 
+                    selectedFile?.let {
+                        val filePath = "$directory$selectedFile"
+                        onEvent(FileExplorerEvent.OnAddFile(filePath))
+                    }
+                }
+            ){
+                Icon(
+                    painter = painterResource(Res.drawable.folder),
+                    contentDescription = stringResource(Res.string.open_file_explorer),
+                    tint = MaterialTheme.colorScheme.onBackground
+                )
+            }
         }
     ) {
         Box(
