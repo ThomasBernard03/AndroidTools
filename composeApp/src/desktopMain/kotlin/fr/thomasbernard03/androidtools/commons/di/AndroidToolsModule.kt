@@ -13,9 +13,15 @@ import fr.thomasbernard03.androidtools.domain.repositories.ApplicationRepository
 import fr.thomasbernard03.androidtools.domain.repositories.DeviceRepository
 import fr.thomasbernard03.androidtools.domain.repositories.FileRepository
 import fr.thomasbernard03.androidtools.domain.repositories.LogcatRepository
+import io.klogging.Klogger
+import io.klogging.logger
 import org.koin.dsl.module
 
 val androidToolsModule = module {
+    // Logger
+    single<Klogger> { logger("main") }
+
+
     // Datasource
     single { ShellDataSource() }
 

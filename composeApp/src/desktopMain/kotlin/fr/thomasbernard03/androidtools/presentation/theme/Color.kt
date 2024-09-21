@@ -16,3 +16,8 @@ val VerboseBackgroundColorDark = Color(0xFFE0E0E0)
 
 
 val FolderColor = Color(0xFFEBC86A)
+
+val AndroidColor = Color(0xFF3CB04D)
+val VideoColor = Color(0xFFF88336)
+val ImageColor = Color(0xFF9853DC)
+val FileColor = Color(0xFFFB4041)
