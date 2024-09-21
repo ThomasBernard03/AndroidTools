@@ -86,6 +86,17 @@ class FileExplorerViewModel(
                 }
             }
 
+            is FileExplorerEvent.OnDownload -> {
+                viewModelScope.launch {
+                    uiState.value.folder?.let { folder ->
+                        updateUiState { copy(loading = true) }
+                        uploadFileUseCase(event.path, event.targetPath)
+                        val files = getFilesUseCase(path = "${uiState.value.folder?.path}/${uiState.value.folder?.name}")
+                        folder.childens = files
+                        updateUiState { copy(loading = false, folder = folder) }
+                    }
+                }
+            }
         }
     }
 }

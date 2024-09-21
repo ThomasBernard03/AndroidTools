@@ -14,6 +14,7 @@ sealed class FileExplorerEvent : Event {
 
     data class OnAddFile(val path : String) : FileExplorerEvent()
     data class OnDelete(val path : String) : FileExplorerEvent()
+    data class OnDownload(val path : String, val targetPath : String) : FileExplorerEvent()
 
     data class OnFileSelected(val file : File?) : FileExplorerEvent()
 }

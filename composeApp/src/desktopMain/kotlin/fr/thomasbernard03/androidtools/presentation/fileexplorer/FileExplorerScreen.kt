@@ -1,7 +1,9 @@
 package fr.thomasbernard03.androidtools.presentation.fileexplorer
 
 import androidtools.composeapp.generated.resources.Res
+import androidtools.composeapp.generated.resources.app_installer
 import androidtools.composeapp.generated.resources.arrow_back
+import androidtools.composeapp.generated.resources.arrow_down
 import androidtools.composeapp.generated.resources.folder
 import androidtools.composeapp.generated.resources.open_file_explorer
 import androidtools.composeapp.generated.resources.replay
@@ -188,6 +190,25 @@ fun FileExplorerScreen(
                             Icon(
                                 painter = painterResource(Res.drawable.trash),
                                 contentDescription = "Delete",
+                            )
+                        }
+
+                        IconButton(
+                            enabled = uiState.selectedFile != null,
+                            onClick = {
+                                uiState.selectedFile?.let { fileToDownload ->
+                                    // Open file dialog
+                                    val fileDialog = FileDialog(Frame(), "", FileDialog.SAVE)
+                                    fileDialog.isVisible = true
+                                    fileDialog.isModal = true
+                                    val directory = fileDialog.directory
+                                    onEvent(FileExplorerEvent.OnDownload("${fileToDownload.path}/${fileToDownload.name}", directory))
+                                }
+                            }
+                        ) {
+                            Icon(
+                                painter = painterResource(Res.drawable.app_installer),
+                                contentDescription = "Download",
                             )
                         }
                     }
