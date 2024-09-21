@@ -36,7 +36,7 @@ kotlin {
 
             implementation(libs.kotlinx.datetime)
 
-            implementation("io.klogging:klogging-jvm:0.7.2")
+            implementation(libs.klogging)
         }
         // https://gist.github.com/OysterD3?page=3
         // https://betterprogramming.pub/how-to-create-an-auto-updater-for-desktop-application-jetpack-compose-d118db26d65f
