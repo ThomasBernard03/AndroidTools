@@ -12,6 +12,8 @@ koin = "3.4.3"
 
 datetime = "0.6.1"
 
+klogging = "0.7.2"
+
 [libraries]
 kotlin-test = { module = "org.jetbrains.kotlin:kotlin-test", version.ref = "kotlin" }
 kotlin-test-junit = { module = "org.jetbrains.kotlin:kotlin-test-junit", version.ref = "kotlin" }
@@ -27,6 +29,10 @@ settings = { group = "com.russhwolf", name = "multiplatform-settings-no-arg", ve
 koin-core = { module = "io.insert-koin:koin-core", version.ref = "koin" }
 
 kotlinx-datetime = { group = "org.jetbrains.kotlinx", name = "kotlinx-datetime", version.ref = "datetime" }
+
+
+klogging = { module = "io.klogging:klogging-jvm", version.ref = "klogging" }
+
 
 
 [plugins]
