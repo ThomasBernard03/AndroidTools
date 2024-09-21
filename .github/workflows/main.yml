@@ -29,15 +29,20 @@ jobs:
         if: matrix.os == 'windows-latest'
         uses: gradle/gradle-build-action@v2
 
-      - name: Build the app
-        run: ./gradlew createDistributable
+      - name: Build the app (macOS)
+        if: matrix.os == 'macos-latest'
+        run: ./gradlew packageDmg
+
+      - name: Build the app (Windows)
+        if: matrix.os == 'windows-latest'
+        run: ./gradlew packageMsi
 
       - name: Upload build artifacts (macOS)
         if: matrix.os == 'macos-latest'
         uses: actions/upload-artifact@v3
         with:
           name: macos-build
-          path: /Users/runner/work/AndroidTools/AndroidTools/composeApp/build/compose/binaries/main/app
+          path: /Users/runner/work/AndroidTools/AndroidTools/composeApp/build/compose/binaries/main/dmg
 
       - name: Upload build artifacts (Windows)
         if: matrix.os == 'windows-latest'
