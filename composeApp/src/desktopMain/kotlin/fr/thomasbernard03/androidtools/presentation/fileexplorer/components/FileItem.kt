@@ -1,7 +1,5 @@
 package fr.thomasbernard03.androidtools.presentation.fileexplorer.components
 
-import androidtools.composeapp.generated.resources.Res
-import androidtools.composeapp.generated.resources.file
 import androidx.compose.material3.ButtonDefaults
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
@@ -25,7 +23,6 @@ fun FileItem(
         modifier = modifier,
         onClick = onClick,
         name = name,
-        size = size,
         modifiedAt = modifiedAt,
         colors = ButtonDefaults.buttonColors(
             containerColor = if (!selected) MaterialTheme.colorScheme.surface else MaterialTheme.colorScheme.primaryContainer,

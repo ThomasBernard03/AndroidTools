@@ -3,7 +3,6 @@ package fr.thomasbernard03.androidtools.presentation.fileexplorer
 import androidtools.composeapp.generated.resources.Res
 import androidtools.composeapp.generated.resources.app_installer
 import androidtools.composeapp.generated.resources.arrow_back
-import androidtools.composeapp.generated.resources.arrow_down
 import androidtools.composeapp.generated.resources.folder
 import androidtools.composeapp.generated.resources.open_file_explorer
 import androidtools.composeapp.generated.resources.replay

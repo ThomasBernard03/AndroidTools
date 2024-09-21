@@ -25,9 +25,9 @@ fun FolderItem(
 ) {
     FileExplorerItem(
         modifier = modifier,
+        onDoubleClick = onExpand,
         onClick = onExpand,
         name = name,
-        size = size,
         modifiedAt = modifiedAt,
         leadingIcon = {
             Icon(

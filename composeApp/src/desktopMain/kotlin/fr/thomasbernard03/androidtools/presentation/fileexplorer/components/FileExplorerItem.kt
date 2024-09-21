@@ -6,29 +6,18 @@ import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.fillMaxWidth
-import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.shape.RoundedCornerShape
-import androidx.compose.material3.Button
 import androidx.compose.material3.ButtonColors
 import androidx.compose.material3.ButtonDefaults
-import androidx.compose.material3.Icon
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.OutlinedButton
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.graphics.Brush
-import androidx.compose.ui.graphics.Color
-import androidx.compose.ui.graphics.RectangleShape
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
-import fr.thomasbernard03.androidtools.commons.extensions.byteCountToDisplaySize
-import fr.thomasbernard03.androidtools.presentation.theme.FolderColor
-import org.jetbrains.compose.resources.DrawableResource
-import org.jetbrains.compose.resources.painterResource
-import java.time.LocalDate
 import java.time.LocalDateTime
 import java.time.format.DateTimeFormatter
 
@@ -36,10 +25,10 @@ import java.time.format.DateTimeFormatter
 fun FileExplorerItem(
     modifier: Modifier = Modifier,
     onClick : () -> Unit,
+    onDoubleClick : () -> Unit = {},
     leadingIcon : @Composable () -> Unit,
     subTitle : @Composable () -> Unit = {},
     name: String,
-    size : Long,
     modifiedAt : LocalDateTime,
     colors : ButtonColors = ButtonDefaults.buttonColors(
         containerColor = MaterialTheme.colorScheme.surface,
@@ -47,7 +36,7 @@ fun FileExplorerItem(
     )
 ) {
     OutlinedButton(
-        modifier = modifier,
+        modifier =  modifier,
         onClick = onClick,
         shape = RoundedCornerShape(4.dp),
         contentPadding = PaddingValues(16.dp),
@@ -58,7 +47,7 @@ fun FileExplorerItem(
             focusedElevation = 0.dp
         ),
         colors = colors,
-        border = BorderStroke(0.5.dp, MaterialTheme.colorScheme.onBackground.copy(alpha = 0.2f))
+        border = BorderStroke(0.5.dp, MaterialTheme.colorScheme.onBackground.copy(alpha = 0.2f)),
     ){
         Row(
             horizontalArrangement = Arrangement.spacedBy(8.dp),

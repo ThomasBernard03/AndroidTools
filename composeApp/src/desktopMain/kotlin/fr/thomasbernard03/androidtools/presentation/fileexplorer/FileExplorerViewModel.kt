@@ -91,7 +91,7 @@ class FileExplorerViewModel(
             is FileExplorerEvent.OnDownload -> {
                 viewModelScope.launch {
                     uiState.value.folder?.let { folder ->
-                        updateUiState { copy(loading = true) }
+                        updateUiState { copy(loading = true, selectedFile = null) }
                         downloadFileUseCase(event.path, event.targetPath)
                         val files = getFilesUseCase(path = "${uiState.value.folder?.path}/${uiState.value.folder?.name}")
                         folder.childens = files
