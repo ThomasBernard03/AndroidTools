@@ -4,6 +4,8 @@ import androidtools.composeapp.generated.resources.Res
 import com.russhwolf.settings.Settings
 import fr.thomasbernard03.androidtools.commons.SettingsConstants
 import fr.thomasbernard03.androidtools.commons.helpers.AdbProviderHelper
+import io.klogging.Klogger
+import io.klogging.logger
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.channelFlow
@@ -19,9 +21,11 @@ import java.util.zip.ZipInputStream
 
 class ShellDataSource(
     private val settings: Settings = Settings(),
+    private val logger : Klogger = get(Klogger::class.java),
     private val adbProviderHelper: AdbProviderHelper = get(AdbProviderHelper::class.java)
 ) {
     suspend fun executeAdbCommand(vararg formatArgs: String): String = withContext(Dispatchers.IO) {
+        logger.info("*** Start executing adb command ***")
         val arguments = mutableListOf<String>()
 
         val currentDevice = settings.getStringOrNull(key = SettingsConstants.SELECTED_DEVICE_KEY)
@@ -34,6 +38,8 @@ class ShellDataSource(
         arguments.addAll(formatArgs)
 
         val adb = adbProviderHelper.getAdb()
+        logger.debug("Adb path: ${adb.absolutePath}")
+        logger.info("${adb.absolutePath} ${arguments.joinToString(" ")}")
 
         val process = ProcessBuilder(listOf(adb.absolutePath) + arguments).start()
         val reader = BufferedReader(InputStreamReader(process.inputStream))
@@ -44,6 +50,10 @@ class ShellDataSource(
         }
 
         process.waitFor()
+
+        logger.info("$output")
+
+        logger.info("*** End of adb command ***")
 
         return@withContext output.toString()
     }

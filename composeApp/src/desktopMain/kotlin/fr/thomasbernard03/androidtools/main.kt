@@ -11,11 +11,14 @@ import fr.thomasbernard03.androidtools.commons.di.androidToolsModule
 import fr.thomasbernard03.androidtools.presentation.main.MainScreen
 import fr.thomasbernard03.androidtools.presentation.main.MainViewModel
 import fr.thomasbernard03.androidtools.presentation.theme.AndroidToolsTheme
+import io.klogging.config.DEFAULT_CONSOLE
+import io.klogging.config.loggingConfiguration
 import org.jetbrains.compose.resources.stringResource
 import org.koin.core.context.GlobalContext.startKoin
 
 fun main() = application {
     startKoin { modules(androidToolsModule) }
+    loggingConfiguration { DEFAULT_CONSOLE() }
 
     Window(
         onCloseRequest = ::exitApplication,

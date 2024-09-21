@@ -16,6 +16,6 @@ class FileRepositoryImpl(
     }
 
     override suspend fun downloadFile(path: String, targetPath: String) {
-        shellDataSource.executeAdbCommand("pull", "'$path'", "'$targetPath'")
+        shellDataSource.executeAdbCommand("pull", path, targetPath)
     }
 }

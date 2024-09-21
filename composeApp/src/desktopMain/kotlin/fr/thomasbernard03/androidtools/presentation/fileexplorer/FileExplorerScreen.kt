@@ -240,7 +240,13 @@ fun FileExplorerScreen(
                                     size = file.size,
                                     modifiedAt = file.modifiedAt,
                                     selected = uiState.selectedFile?.name == file.name,
-                                    onClick = { onEvent(FileExplorerEvent.OnFileSelected(file)) }
+                                    onClick = {
+                                        if (uiState.selectedFile?.name == file.name) {
+                                            onEvent(FileExplorerEvent.OnFileSelected(null))
+                                        } else {
+                                            onEvent(FileExplorerEvent.OnFileSelected(file))
+                                        }
+                                    }
                                 )
                             }
                         }
