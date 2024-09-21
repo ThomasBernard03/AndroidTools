@@ -37,11 +37,11 @@ jobs:
         uses: actions/upload-artifact@v3
         with:
           name: macos-build
-          path: /Users/runner/work/AndroidTools/AndroidTools/composeApp/build/compose/binaries/main/dmg
+          path: /Users/runner/work/AndroidTools/AndroidTools/composeApp/build/
 
       - name: Upload build artifacts (Windows)
         if: matrix.os == 'windows-latest'
         uses: actions/upload-artifact@v3
         with:
           name: windows-build
-          path: /Users/runner/work/AndroidTools/AndroidTools/composeApp/build/compose/binaries/main/app
+          path: /Users/runner/work/AndroidTools/AndroidTools/composeApp/build/
