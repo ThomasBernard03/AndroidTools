@@ -25,12 +25,12 @@ jobs:
           distribution: 'zulu' 
           java-version: '17'
 
-      - name: Set up Gradle (Windows uniquement)
+      - name: Set up Gradle (Windows)
         if: matrix.os == 'windows-latest'
         uses: gradle/gradle-build-action@v2
 
       - name: Build the app
-        run: ./gradlew packageReleaseDistZip
+        run: ./gradlew createDistributable
 
       - name: Upload build artifacts (macOS)
         if: matrix.os == 'macos-latest'
