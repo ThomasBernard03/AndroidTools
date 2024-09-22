@@ -5,8 +5,10 @@ import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.ColumnScope
 import androidx.compose.foundation.layout.fillMaxHeight
 import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.verticalScroll
+import androidx.compose.material3.HorizontalDivider
 import androidx.compose.material3.Icon
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.NavigationRail
@@ -28,7 +30,12 @@ fun MainNavigationRail(
     NavigationRail(
         modifier = modifier,
         containerColor = MaterialTheme.colorScheme.primaryContainer,
-        header = header
+        header = {
+            header()
+            HorizontalDivider(
+                color = MaterialTheme.colorScheme.onPrimaryContainer,
+            )
+        }
     ) {
         Column(
             modifier = Modifier
@@ -52,7 +59,8 @@ fun MainNavigationRail(
                             Icon(
                                 painter = painterResource(item.icon),
                                 contentDescription = stringResource(item.title),
-                                tint = MaterialTheme.colorScheme.onBackground
+                                tint = MaterialTheme.colorScheme.onBackground,
+                                modifier = Modifier.size(24.dp),
                             )
                         }
                     )
