@@ -24,8 +24,9 @@ import org.jetbrains.compose.resources.stringResource
 fun MainNavigationRail(
     modifier : Modifier = Modifier,
     header : @Composable (ColumnScope.() -> Unit),
+    enabled : Boolean = true,
     currentRoute : String?,
-    navigateTo : (String) -> Unit
+    navigateTo : (Screen) -> Unit
 ) {
     NavigationRail(
         modifier = modifier,
@@ -49,10 +50,11 @@ fun MainNavigationRail(
             ) {
                 Screen.all.dropLast(1).forEach { item ->
                     NavigationRailItem(
+                        enabled = enabled,
                         selected = currentRoute == item.route,
                         onClick = {
                             if (currentRoute != item.route){
-                                navigateTo(item.route)
+                                navigateTo(item)
                             }
                         },
                         icon = {
@@ -72,7 +74,7 @@ fun MainNavigationRail(
                     selected = currentRoute == item.route,
                     onClick = {
                         if (currentRoute != item.route){
-                            navigateTo(item.route)
+                            navigateTo(item)
                         }
                     },
                     icon = {

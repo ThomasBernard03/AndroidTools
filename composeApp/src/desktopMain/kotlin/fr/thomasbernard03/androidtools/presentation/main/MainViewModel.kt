@@ -2,6 +2,7 @@ package fr.thomasbernard03.androidtools.presentation.main
 
 import androidx.lifecycle.viewModelScope
 import com.russhwolf.settings.Settings
+import fr.thomasbernard03.androidtools.commons.SettingsConstants
 import fr.thomasbernard03.androidtools.domain.usecases.device.GetConnectedDevicesUseCase
 import fr.thomasbernard03.androidtools.presentation.commons.BaseViewModel
 import kotlinx.coroutines.launch
@@ -16,7 +17,7 @@ class MainViewModel(
     override fun onEvent(event: MainEvent) {
         when(event){
             is MainEvent.OnDeviceSelected -> {
-                settings.putString("selectedDevice", event.device)
+                settings.putString(SettingsConstants.SELECTED_DEVICE_KEY, event.device)
                 updateUiState { copy(selectedDevice = event.device) }
             }
             MainEvent.OnLoadDevices -> {
