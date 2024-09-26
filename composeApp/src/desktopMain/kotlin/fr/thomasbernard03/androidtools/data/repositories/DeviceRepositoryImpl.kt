@@ -52,6 +52,14 @@ class DeviceRepositoryImpl(
         return parseDeviceInformation(result)
     }
 
+    override suspend fun sendInput(input: String) {
+        shellDataSource.executeAdbCommand("shell", "input", "text", "\"$input\"")
+    }
+
+    override suspend fun deleteText() {
+        shellDataSource.executeAdbCommand("shell", "input", "keyevent", "67")
+    }
+
     private fun parseDeviceInformation(output : String) : DeviceInformation {
         val lines = output.split("\n")
         val manufacturer = lines.find { it.contains("ro.product.manufacturer") }?.split(":")?.get(1)?.replace("[", "")?.replace("]", "")?.trim() ?: ""

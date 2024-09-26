@@ -9,4 +9,7 @@ interface DeviceRepository {
     fun getDeviceBattery(): Flow<Int>
 
     suspend fun getDeviceInformation(): DeviceInformation
+
+    suspend fun sendInput(input : String)
+    suspend fun deleteText()
 }

@@ -11,5 +11,7 @@ data class InformationUiState(
     val battery : Int = 0,
     val serialNumber : String = "",
 
-    val lines : Map<String, String> = emptyMap()
+    val lines : Map<String, String> = emptyMap(),
+
+    val input : String = "",
 ) : UiState
