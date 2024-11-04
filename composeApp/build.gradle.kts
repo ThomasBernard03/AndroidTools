@@ -55,9 +55,13 @@ compose.desktop {
         mainClass = "fr.thomasbernard03.androidtools.MainKt"
 
         nativeDistributions {
-            targetFormats(TargetFormat.Dmg, TargetFormat.Msi, TargetFormat.Deb)
+            targetFormats(TargetFormat.Dmg, TargetFormat.Exe, TargetFormat.Deb)
             packageName = "fr.thomasbernard03.androidtools"
             packageVersion = "1.0.0"
+
+            windows {
+                iconFile.set(project.file("icon.ico"))
+            }
         }
     }
 }

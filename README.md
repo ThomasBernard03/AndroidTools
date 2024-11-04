@@ -68,4 +68,5 @@ https://github.com/ThomasBernard03/AndroidTools/assets/67638928/eb3b4248-d17e-4a
 
 ```shell
 ./gradlew packageDmg
+./gradlew packageExe
 ```
