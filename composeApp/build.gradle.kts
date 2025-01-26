@@ -14,10 +14,10 @@ java {
 
 kotlin {
     jvm("desktop")
-    
+
     sourceSets {
         val desktopMain by getting
-        
+
         commonMain.dependencies {
             implementation(compose.runtime)
             implementation(compose.foundation)
@@ -38,10 +38,8 @@ kotlin {
 
             implementation(libs.klogging)
         }
-        // https://gist.github.com/OysterD3?page=3
-        // https://betterprogramming.pub/how-to-create-an-auto-updater-for-desktop-application-jetpack-compose-d118db26d65f
         desktopMain.dependencies {
-            implementation(compose.desktop.currentOs){
+            implementation(compose.desktop.currentOs) {
                 exclude("org.jetbrains.compose.material")
             }
             implementation(libs.kotlinx.coroutines.swing)
@@ -49,18 +47,30 @@ kotlin {
     }
 }
 
-
 compose.desktop {
     application {
         mainClass = "fr.thomasbernard03.androidtools.MainKt"
 
+        buildTypes {
+            release {
+                proguard {
+                    configurationFiles.from("proguard-rules.pro") // Ajoute un fichier de règles personnalisé si nécessaire
+//                    ignoreWarnings.set(true) // Cette option permet d'ignorer les avertissements
+                }
+            }
+        }
+
         nativeDistributions {
-            targetFormats(TargetFormat.Dmg, TargetFormat.Exe, TargetFormat.Deb)
-            packageName = "fr.thomasbernard03.androidtools"
+            targetFormats(TargetFormat.Pkg, TargetFormat.Exe, TargetFormat.Deb)
+            packageName = "Android Tools"
             packageVersion = "1.0.0"
 
+            macOS {
+                iconFile.set(project.file("src/commonMain/composeResources/drawable/icon.icns"))
+            }
+
             windows {
-                iconFile.set(project.file("icon.ico"))
+                iconFile.set(project.file("src/commonMain/composeResources/drawable/icon.ico"))
             }
         }
     }

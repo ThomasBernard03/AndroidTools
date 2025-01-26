@@ -1,0 +1,3 @@
+-dontwarn androidx.compose.material.**
+-dontwarn META-INF.MANIFEST.MF
+-dontwarn kotlinx.serialization.**
