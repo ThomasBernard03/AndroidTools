@@ -45,7 +45,6 @@
 		81269ED32D46D84000840EB6 = {
 			isa = PBXGroup;
 			children = (
-				81BC54502D4A9B7E006F409E /* New Group */,
 				81269EDD2D46D84000840EB6 /* Products */,
 				81269EDE2D46D84000840EB6 /* AndroidTools */,
 			);
@@ -57,13 +56,6 @@
 				81269EDC2D46D84000840EB6 /* AndroidTools.app */,
 			);
 			name = Products;
-			sourceTree = "<group>";
-		};
-		81BC54502D4A9B7E006F409E /* New Group */ = {
-			isa = PBXGroup;
-			children = (
-			);
-			path = "New Group";
 			sourceTree = "<group>";
 		};
 /* End PBXGroup section */
