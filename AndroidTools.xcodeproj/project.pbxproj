@@ -8,6 +8,8 @@
 
 /* Begin PBXFileReference section */
 		81269EDC2D46D84000840EB6 /* AndroidTools.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = AndroidTools.app; sourceTree = BUILT_PRODUCTS_DIR; };
+		81BC54552D4A9C6E006F409E /* AndroidTools.xcodeproj */ = {isa = PBXFileReference; lastKnownFileType = "wrapper.pb-project"; path = AndroidTools.xcodeproj; sourceTree = "<group>"; };
+		81E1C2D52D4AA2BB00CD33D2 /* AndroidTools.xcodeproj */ = {isa = PBXFileReference; lastKnownFileType = "wrapper.pb-project"; path = AndroidTools.xcodeproj; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFileSystemSynchronizedBuildFileExceptionSet section */
@@ -55,6 +57,16 @@
 			children = (
 				81269EDC2D46D84000840EB6 /* AndroidTools.app */,
 			);
+			name = Products;
+			sourceTree = "<group>";
+		};
+		81BC545A2D4A9C6E006F409E /* Products */ = {
+			isa = PBXGroup;
+			name = Products;
+			sourceTree = "<group>";
+		};
+		81E1C2DA2D4AA2BB00CD33D2 /* Products */ = {
+			isa = PBXGroup;
 			name = Products;
 			sourceTree = "<group>";
 		};
@@ -110,6 +122,16 @@
 			preferredProjectObjectVersion = 77;
 			productRefGroup = 81269EDD2D46D84000840EB6 /* Products */;
 			projectDirPath = "";
+			projectReferences = (
+				{
+					ProductGroup = 81E1C2DA2D4AA2BB00CD33D2 /* Products */;
+					ProjectRef = 81E1C2D52D4AA2BB00CD33D2 /* AndroidTools.xcodeproj */;
+				},
+				{
+					ProductGroup = 81BC545A2D4A9C6E006F409E /* Products */;
+					ProjectRef = 81BC54552D4A9C6E006F409E /* AndroidTools.xcodeproj */;
+				},
+			);
 			projectRoot = "";
 			targets = (
 				81269EDB2D46D84000840EB6 /* AndroidTools */,
