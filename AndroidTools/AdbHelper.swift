@@ -17,7 +17,7 @@ class AdbHelper {
     
     
     func installApk(path : URL) -> String {
-        let command = "install \(path)"
+        let command = "install \(path.path())"
         return runAdbCommand(command)
     }
     
