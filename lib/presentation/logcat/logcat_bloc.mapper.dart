@@ -28,12 +28,25 @@ class LogcatStateMapper extends ClassMapperBase<LogcatState> {
     opt: true,
     def: const [],
   );
+  static bool _$isSticky(LogcatState v) => v.isSticky;
+  static const Field<LogcatState, bool> _f$isSticky = Field(
+    'isSticky',
+    _$isSticky,
+    opt: true,
+    def: true,
+  );
 
   @override
-  final MappableFields<LogcatState> fields = const {#logs: _f$logs};
+  final MappableFields<LogcatState> fields = const {
+    #logs: _f$logs,
+    #isSticky: _f$isSticky,
+  };
 
   static LogcatState _instantiate(DecodingData data) {
-    return LogcatState(logs: data.dec(_f$logs));
+    return LogcatState(
+      logs: data.dec(_f$logs),
+      isSticky: data.dec(_f$isSticky),
+    );
   }
 
   @override
@@ -97,7 +110,7 @@ extension LogcatStateValueCopy<$R, $Out>
 abstract class LogcatStateCopyWith<$R, $In extends LogcatState, $Out>
     implements ClassCopyWith<$R, $In, $Out> {
   ListCopyWith<$R, String, ObjectCopyWith<$R, String, String>> get logs;
-  $R call({List<String>? logs});
+  $R call({List<String>? logs, bool? isSticky});
   LogcatStateCopyWith<$R2, $In, $Out2> $chain<$R2, $Out2>(Then<$Out2, $R2> t);
 }
 
@@ -117,11 +130,17 @@ class _LogcatStateCopyWithImpl<$R, $Out>
         (v) => call(logs: v),
       );
   @override
-  $R call({List<String>? logs}) =>
-      $apply(FieldCopyWithData({if (logs != null) #logs: logs}));
+  $R call({List<String>? logs, bool? isSticky}) => $apply(
+    FieldCopyWithData({
+      if (logs != null) #logs: logs,
+      if (isSticky != null) #isSticky: isSticky,
+    }),
+  );
   @override
-  LogcatState $make(CopyWithData data) =>
-      LogcatState(logs: data.get(#logs, or: $value.logs));
+  LogcatState $make(CopyWithData data) => LogcatState(
+    logs: data.get(#logs, or: $value.logs),
+    isSticky: data.get(#isSticky, or: $value.isSticky),
+  );
 
   @override
   LogcatStateCopyWith<$R2, LogcatState, $Out2> $chain<$R2, $Out2>(

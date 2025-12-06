@@ -14,6 +14,9 @@ class LogcatBloc extends Bloc<LogcatEvent, LogcatState> {
   LogcatBloc() : super(LogcatState()) {
     on<OnStartListeningLogcat>(_onStart);
     on<OnClearLogcat>(_onClear);
+    on<OnToggleIsSticky>((event, emit) {
+      emit(state.copyWith(isSticky: event.isSticky));
+    });
   }
 
   Future<void> _onClear(OnClearLogcat event, Emitter<LogcatState> emit) async {
@@ -54,7 +57,7 @@ class LogcatBloc extends Bloc<LogcatEvent, LogcatState> {
     final devicesResult = await Process.run(adbPath, ['devices']);
     print(devicesResult.stdout); // Devrait montrer les appareils
 
-    final process = await Process.start(adbPath, ['logcat', '*:W']);
+    final process = await Process.start(adbPath, ['logcat', '*:E']);
 
     return process.stdout
         .transform(utf8.decoder)
