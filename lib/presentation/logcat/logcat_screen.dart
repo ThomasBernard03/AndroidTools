@@ -88,7 +88,7 @@ class _LogcatScreenState extends State<LogcatScreen> {
               builder: (context, state) {
                 return PopupMenuButton<LogcatLevel?>(
                   icon: const Icon(Icons.filter_list),
-                  tooltip: "Filtrer par niveau",
+                  tooltip: "Filter by level",
                   initialValue: LogcatLevel.debug,
                   onSelected: (selected) {
                     context.read<LogcatBloc>().add(
@@ -101,7 +101,7 @@ class _LogcatScreenState extends State<LogcatScreen> {
                         value: null,
                         icon: Icons.filter_none,
                         color: Colors.black,
-                        text: "Tous",
+                        text: "All",
                       ),
                       LogcatLevelFilterPopupMenuItem(
                         value: LogcatLevel.debug,

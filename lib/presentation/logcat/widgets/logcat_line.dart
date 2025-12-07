@@ -5,7 +5,11 @@ import 'package:flutter/material.dart';
 
 class LogcatLine extends StatelessWidget {
   static final _regex = RegExp(
-    r'^(\d{2}-\d{2}) (\d{2}:\d{2}:\d{2}\.\d{3})\s+(\d+)\s+(\d+)\s+([VDIWEF])\s+(\S+): (.*)$',
+    r'^(\d{2}-\d{2}) '
+    r'(\d{2}:\d{2}:\d{2}\.\d{3})\s+'
+    r'(\d+)\s+(\d+)\s+'
+    r'([VDIWEF])\s+'
+    r'(\S+)\s*:?\s*(.*)$',
   );
 
   final String line;

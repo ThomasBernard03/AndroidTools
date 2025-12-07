@@ -54,8 +54,12 @@ class _MyAppState extends State<MyApp> {
             },
             destinations: <NavigationRailDestination>[
               NavigationRailDestination(
+                icon: Icon(Icons.info_outline),
+                label: Text('Device information'),
+              ),
+              NavigationRailDestination(
                 icon: SvgPicture.asset(
-                  width: 20,
+                  width: 25,
                   'assets/logcat.svg',
                   semanticsLabel: 'Logcat Logo',
                 ),
@@ -70,7 +74,7 @@ class _MyAppState extends State<MyApp> {
           ),
           Expanded(
             child: switch (_selectedIndex) {
-              0 => LogcatScreen(),
+              1 => LogcatScreen(),
               _ => Placeholder(),
             },
           ),
