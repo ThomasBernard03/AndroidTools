@@ -2,13 +2,20 @@ import 'dart:async';
 import 'dart:convert';
 import 'dart:io';
 
+import 'package:android_tools/data/datasources/shell/shell_datasource.dart';
 import 'package:android_tools/domain/entities/logcat_level.dart';
 import 'package:android_tools/domain/repositories/logcat_repository.dart';
+import 'package:logger/logger.dart';
 
 class LogcatRepositoryImpl implements LogcatRepository {
+  final Logger logger;
+  final ShellDatasource shellDatasource;
+
+  LogcatRepositoryImpl({required this.logger, required this.shellDatasource});
+
   @override
   Stream<List<String>> listenLogcat(LogcatLevel? level) async* {
-    final adbPath = _getAdbPath();
+    final adbPath = shellDatasource.getAdbPath();
     final args = <String>['logcat'];
 
     if (level != null) {
@@ -68,26 +75,19 @@ class LogcatRepositoryImpl implements LogcatRepository {
     }
   }
 
-  String _getAdbPath() {
-    final execDir = Directory(Platform.resolvedExecutable).parent;
-    final contents = execDir.parent;
-    final resources = Directory("${contents.path}/Resources");
-    return "${resources.path}/adb";
-  }
-
   @override
   Future<void> clearLogcat() async {
     try {
-      final adbPath = _getAdbPath();
-      // Execute la commande pour clear le logcat sur l'appareil
+      logger.i("Cleaning logcat");
+      final adbPath = shellDatasource.getAdbPath();
       final process = await Process.run(adbPath, ['logcat', '-c']);
       if (process.exitCode != 0) {
-        print('Erreur lors du clear logcat : ${process.stderr}');
+        logger.w("Error when clearing logcat : ${process.stderr}");
       } else {
-        print('Logcat cleared successfully');
+        logger.i("Logcat cleared successfully");
       }
     } catch (e) {
-      print('Exception clearing logcat: $e');
+      logger.w('Exception clearing logcat: $e');
     }
   }
 }

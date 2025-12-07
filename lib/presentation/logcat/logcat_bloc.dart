@@ -1,6 +1,8 @@
 import 'dart:async';
 
+import 'package:android_tools/domain/entities/device_entity.dart';
 import 'package:android_tools/domain/entities/logcat_level.dart';
+import 'package:android_tools/domain/usecases/device/get_connected_devices_usecase.dart';
 import 'package:android_tools/domain/usecases/logcat/clear_logcat_usecase.dart';
 import 'package:android_tools/domain/usecases/logcat/listen_logcat_usecase.dart';
 import 'package:android_tools/main.dart';
@@ -13,19 +15,20 @@ part 'logcat_state.dart';
 part 'logcat_bloc.mapper.dart';
 
 class LogcatBloc extends Bloc<LogcatEvent, LogcatState> {
-  final ListenLogcatUsecase listenLogcatUsecase = getIt.get();
-  final ClearLogcatUsecase clearLogcatUsecase = getIt.get();
+  final ListenLogcatUsecase _listenLogcatUsecase = getIt.get();
+  final ClearLogcatUsecase _clearLogcatUsecase = getIt.get();
+  final GetConnectedDevicesUsecase _getConnectedDevicesUsecase = getIt.get();
   final Logger logger = getIt.get();
 
   StreamSubscription<List<String>>? _subscription;
 
   LogcatBloc() : super(LogcatState()) {
     on<OnStartListeningLogcat>((event, emit) async {
-      await _subscription?.cancel();
-      final stream = listenLogcatUsecase();
-      _subscription = stream.listen((lines) {
-        add(OnLogReceived(lines: lines));
-      });
+      final devices = await _getConnectedDevicesUsecase();
+      emit(
+        state.copyWith(devices: devices, selectedDevice: devices.firstOrNull),
+      );
+      await _listenLogcat();
     });
 
     on<OnLogReceived>((event, emit) {
@@ -36,40 +39,68 @@ class LogcatBloc extends Bloc<LogcatEvent, LogcatState> {
     });
 
     on<OnClearLogcat>((event, emit) async {
+      logger.i("Start cleaning logcat");
       emit(state.copyWith(logs: []));
-      await clearLogcatUsecase();
+      await _clearLogcatUsecase();
+      logger.i("Logcat cleaned");
     });
 
     on<OnToggleIsSticky>((event, emit) {
+      logger.i("isSticky changed to ${event.isSticky}");
       emit(state.copyWith(isSticky: event.isSticky));
     });
 
     on<OnMinimumLogLevelChanged>((event, emit) async {
-      emit(state.copyWith(minimumLogLevel: event.minimumLogLevel));
-      await _subscription?.cancel();
-      final stream = listenLogcatUsecase(level: event.minimumLogLevel);
-      _subscription = stream.listen((lines) {
-        add(OnLogReceived(lines: lines));
-      });
+      logger.i("Minimum logcat level changed for ${event.minimumLogLevel}");
+      emit(state.copyWith(minimumLogLevel: event.minimumLogLevel, logs: []));
+      await _listenLogcat();
     });
 
     on<OnPauseLogcat>((event, emit) {
+      logger.i("Pausing logcat");
       emit(state.copyWith(isPaused: true));
       _subscription?.pause();
     });
 
     on<OnResumeLogcat>((event, emit) {
+      logger.i("Resuming logcat");
       emit(state.copyWith(isPaused: false));
       _subscription?.resume();
     });
 
     on<OnLogcatMaxLinesChanged>((event, emit) {
+      logger.i("Logcat max lines changed for ${event.maxLines}");
       emit(state.copyWith(maxLogcatLines: event.maxLines));
+    });
+    on<OnSelectedDeviceChanged>((event, emit) {
+      logger.i("Selected device changed for ${event.device.name}");
+      emit(state.copyWith(selectedDevice: event.device));
+    });
+    on<OnRefreshLogcat>((event, emit) async {
+      logger.i("Refreshing logcat");
+      final devices = await _getConnectedDevicesUsecase();
+      emit(
+        state.copyWith(
+          devices: devices,
+          selectedDevice: devices.firstOrNull,
+          logs: [],
+        ),
+      );
+      await _listenLogcat();
+    });
+  }
+
+  Future<void> _listenLogcat() async {
+    await _subscription?.cancel();
+    final stream = _listenLogcatUsecase(level: state.minimumLogLevel);
+    _subscription = stream.listen((lines) {
+      add(OnLogReceived(lines: lines));
     });
   }
 
   @override
   Future<void> close() async {
+    logger.i("Closing logcat bloc");
     await _subscription?.cancel();
     return super.close();
   }

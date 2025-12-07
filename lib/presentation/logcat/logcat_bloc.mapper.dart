@@ -33,7 +33,7 @@ class LogcatStateMapper extends ClassMapperBase<LogcatState> {
     'isSticky',
     _$isSticky,
     opt: true,
-    def: false,
+    def: true,
   );
   static bool _$isPaused(LogcatState v) => v.isPaused;
   static const Field<LogcatState, bool> _f$isPaused = Field(
@@ -42,18 +42,32 @@ class LogcatStateMapper extends ClassMapperBase<LogcatState> {
     opt: true,
     def: false,
   );
-  static LogcatLevel? _$minimumLogLevel(LogcatState v) => v.minimumLogLevel;
+  static LogcatLevel _$minimumLogLevel(LogcatState v) => v.minimumLogLevel;
   static const Field<LogcatState, LogcatLevel> _f$minimumLogLevel = Field(
     'minimumLogLevel',
     _$minimumLogLevel,
     opt: true,
+    def: LogcatLevel.debug,
   );
   static int _$maxLogcatLines(LogcatState v) => v.maxLogcatLines;
   static const Field<LogcatState, int> _f$maxLogcatLines = Field(
     'maxLogcatLines',
     _$maxLogcatLines,
     opt: true,
-    def: 1000,
+    def: 500,
+  );
+  static List<DeviceEntity> _$devices(LogcatState v) => v.devices;
+  static const Field<LogcatState, List<DeviceEntity>> _f$devices = Field(
+    'devices',
+    _$devices,
+    opt: true,
+    def: const [],
+  );
+  static DeviceEntity? _$selectedDevice(LogcatState v) => v.selectedDevice;
+  static const Field<LogcatState, DeviceEntity> _f$selectedDevice = Field(
+    'selectedDevice',
+    _$selectedDevice,
+    opt: true,
   );
 
   @override
@@ -63,6 +77,8 @@ class LogcatStateMapper extends ClassMapperBase<LogcatState> {
     #isPaused: _f$isPaused,
     #minimumLogLevel: _f$minimumLogLevel,
     #maxLogcatLines: _f$maxLogcatLines,
+    #devices: _f$devices,
+    #selectedDevice: _f$selectedDevice,
   };
 
   static LogcatState _instantiate(DecodingData data) {
@@ -72,6 +88,8 @@ class LogcatStateMapper extends ClassMapperBase<LogcatState> {
       isPaused: data.dec(_f$isPaused),
       minimumLogLevel: data.dec(_f$minimumLogLevel),
       maxLogcatLines: data.dec(_f$maxLogcatLines),
+      devices: data.dec(_f$devices),
+      selectedDevice: data.dec(_f$selectedDevice),
     );
   }
 
@@ -136,12 +154,16 @@ extension LogcatStateValueCopy<$R, $Out>
 abstract class LogcatStateCopyWith<$R, $In extends LogcatState, $Out>
     implements ClassCopyWith<$R, $In, $Out> {
   ListCopyWith<$R, String, ObjectCopyWith<$R, String, String>> get logs;
+  ListCopyWith<$R, DeviceEntity, ObjectCopyWith<$R, DeviceEntity, DeviceEntity>>
+  get devices;
   $R call({
     List<String>? logs,
     bool? isSticky,
     bool? isPaused,
     LogcatLevel? minimumLogLevel,
     int? maxLogcatLines,
+    List<DeviceEntity>? devices,
+    DeviceEntity? selectedDevice,
   });
   LogcatStateCopyWith<$R2, $In, $Out2> $chain<$R2, $Out2>(Then<$Out2, $R2> t);
 }
@@ -162,19 +184,30 @@ class _LogcatStateCopyWithImpl<$R, $Out>
         (v) => call(logs: v),
       );
   @override
+  ListCopyWith<$R, DeviceEntity, ObjectCopyWith<$R, DeviceEntity, DeviceEntity>>
+  get devices => ListCopyWith(
+    $value.devices,
+    (v, t) => ObjectCopyWith(v, $identity, t),
+    (v) => call(devices: v),
+  );
+  @override
   $R call({
     List<String>? logs,
     bool? isSticky,
     bool? isPaused,
-    Object? minimumLogLevel = $none,
+    LogcatLevel? minimumLogLevel,
     int? maxLogcatLines,
+    List<DeviceEntity>? devices,
+    Object? selectedDevice = $none,
   }) => $apply(
     FieldCopyWithData({
       if (logs != null) #logs: logs,
       if (isSticky != null) #isSticky: isSticky,
       if (isPaused != null) #isPaused: isPaused,
-      if (minimumLogLevel != $none) #minimumLogLevel: minimumLogLevel,
+      if (minimumLogLevel != null) #minimumLogLevel: minimumLogLevel,
       if (maxLogcatLines != null) #maxLogcatLines: maxLogcatLines,
+      if (devices != null) #devices: devices,
+      if (selectedDevice != $none) #selectedDevice: selectedDevice,
     }),
   );
   @override
@@ -184,6 +217,8 @@ class _LogcatStateCopyWithImpl<$R, $Out>
     isPaused: data.get(#isPaused, or: $value.isPaused),
     minimumLogLevel: data.get(#minimumLogLevel, or: $value.minimumLogLevel),
     maxLogcatLines: data.get(#maxLogcatLines, or: $value.maxLogcatLines),
+    devices: data.get(#devices, or: $value.devices),
+    selectedDevice: data.get(#selectedDevice, or: $value.selectedDevice),
   );
 
   @override

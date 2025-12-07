@@ -22,6 +22,8 @@ class OnPauseLogcat extends LogcatEvent {}
 
 class OnResumeLogcat extends LogcatEvent {}
 
+class OnRefreshLogcat extends LogcatEvent {}
+
 class OnLogReceived extends LogcatEvent {
   final List<String> lines;
   OnLogReceived({required this.lines});
@@ -30,4 +32,9 @@ class OnLogReceived extends LogcatEvent {
 class OnLogcatMaxLinesChanged extends LogcatEvent {
   final int maxLines;
   OnLogcatMaxLinesChanged({required this.maxLines});
+}
+
+class OnSelectedDeviceChanged extends LogcatEvent {
+  final DeviceEntity device;
+  OnSelectedDeviceChanged({required this.device});
 }

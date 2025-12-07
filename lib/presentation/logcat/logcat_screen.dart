@@ -1,7 +1,7 @@
+import 'package:android_tools/domain/entities/device_entity.dart';
 import 'package:android_tools/domain/entities/logcat_level.dart';
-import 'package:android_tools/presentation/logcat/core/logcat_colors.dart';
+import 'package:android_tools/presentation/logcat/core/logcat_level_extensions.dart';
 import 'package:android_tools/presentation/logcat/logcat_bloc.dart';
-import 'package:android_tools/presentation/logcat/widgets/logcat_level_filter_popup_menu_item.dart';
 import 'package:android_tools/presentation/logcat/widgets/logcat_line.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
@@ -43,6 +43,12 @@ class _LogcatScreenState extends State<LogcatScreen> {
   }
 
   final availableLogcatSizes = [500, 1000, 2000, 5000, 10000];
+  final availableLogcatLevels = [
+    LogcatLevel.debug,
+    LogcatLevel.info,
+    LogcatLevel.warning,
+    LogcatLevel.error,
+  ];
 
   @override
   Widget build(BuildContext context) {
@@ -50,36 +56,111 @@ class _LogcatScreenState extends State<LogcatScreen> {
       value: bloc,
       child: Scaffold(
         appBar: AppBar(
-          title: const Text("Logcat"),
+          title: Row(
+            spacing: 16,
+            children: [
+              BlocBuilder<LogcatBloc, LogcatState>(
+                builder: (context, state) {
+                  return DropdownButton<DeviceEntity>(
+                    value: state.selectedDevice,
+                    elevation: 16,
+                    onChanged: (DeviceEntity? value) {
+                      if (value == null) return;
+                      context.read<LogcatBloc>().add(
+                        OnSelectedDeviceChanged(device: value),
+                      );
+                    },
+                    items: state.devices.map<DropdownMenuItem<DeviceEntity>>((
+                      DeviceEntity value,
+                    ) {
+                      return DropdownMenuItem<DeviceEntity>(
+                        value: value,
+                        child: Row(
+                          spacing: 8,
+                          children: [
+                            Icon(Icons.mobile_friendly, size: 16),
+                            Text(value.name),
+                          ],
+                        ),
+                      );
+                    }).toList(),
+                  );
+                },
+              ),
+            ],
+          ),
           actions: [
-            BlocBuilder<LogcatBloc, LogcatState>(
-              builder: (context, state) {
-                return DropdownButton<int>(
-                  value: state.maxLogcatLines,
-                  elevation: 16,
-                  onChanged: (int? value) {
-                    context.read<LogcatBloc>().add(
-                      OnLogcatMaxLinesChanged(
-                        maxLines: value ?? availableLogcatSizes.first,
-                      ),
+            Row(
+              spacing: 8,
+              children: [
+                BlocBuilder<LogcatBloc, LogcatState>(
+                  builder: (context, state) {
+                    return DropdownButton<int>(
+                      value: state.maxLogcatLines,
+                      elevation: 16,
+                      onChanged: (int? value) {
+                        context.read<LogcatBloc>().add(
+                          OnLogcatMaxLinesChanged(
+                            maxLines: value ?? availableLogcatSizes.first,
+                          ),
+                        );
+                      },
+                      items: availableLogcatSizes.map<DropdownMenuItem<int>>((
+                        int value,
+                      ) {
+                        return DropdownMenuItem<int>(
+                          value: value,
+                          child: Text(value.toString()),
+                        );
+                      }).toList(),
                     );
                   },
-                  items: availableLogcatSizes.map<DropdownMenuItem<int>>((
-                    int value,
-                  ) {
-                    return DropdownMenuItem<int>(
-                      value: value,
-                      child: Text(value.toString()),
+                ),
+                BlocBuilder<LogcatBloc, LogcatState>(
+                  builder: (context, state) {
+                    return DropdownButton<LogcatLevel>(
+                      value: state.minimumLogLevel,
+                      elevation: 16,
+                      onChanged: (LogcatLevel? value) {
+                        if (state.minimumLogLevel == value) return;
+                        context.read<LogcatBloc>().add(
+                          OnMinimumLogLevelChanged(minimumLogLevel: value),
+                        );
+                      },
+                      items: availableLogcatLevels
+                          .map<DropdownMenuItem<LogcatLevel>>((
+                            LogcatLevel value,
+                          ) {
+                            return DropdownMenuItem<LogcatLevel>(
+                              value: value,
+                              child: Row(
+                                spacing: 8,
+                                children: [
+                                  Icon(value.icon(), color: value.textColor()),
+                                  Text(value.name.toString()),
+                                ],
+                              ),
+                            );
+                          })
+                          .toList(),
                     );
-                  }).toList(),
-                );
-              },
+                  },
+                ),
+              ],
             ),
+            VerticalDivider(),
             IconButton(
               icon: const Icon(Icons.delete),
               tooltip: "Clear logs",
               onPressed: () {
                 bloc.add(OnClearLogcat());
+              },
+            ),
+            IconButton(
+              icon: const Icon(Icons.refresh),
+              tooltip: "Refresh",
+              onPressed: () {
+                bloc.add(OnRefreshLogcat());
               },
             ),
             BlocBuilder<LogcatBloc, LogcatState>(
@@ -105,54 +186,6 @@ class _LogcatScreenState extends State<LogcatScreen> {
                     context.read<LogcatBloc>().add(
                       OnToggleIsSticky(isSticky: !state.isSticky),
                     );
-                  },
-                );
-              },
-            ),
-            BlocBuilder<LogcatBloc, LogcatState>(
-              builder: (context, state) {
-                return PopupMenuButton<LogcatLevel?>(
-                  icon: const Icon(Icons.filter_list),
-                  tooltip: "Filter by level",
-                  initialValue: LogcatLevel.debug,
-                  onSelected: (selected) {
-                    context.read<LogcatBloc>().add(
-                      OnMinimumLogLevelChanged(minimumLogLevel: selected),
-                    );
-                  },
-                  itemBuilder: (context) {
-                    return [
-                      LogcatLevelFilterPopupMenuItem<LogcatLevel?>(
-                        value: null,
-                        icon: Icons.filter_none,
-                        color: Colors.black,
-                        text: "All",
-                      ),
-                      LogcatLevelFilterPopupMenuItem(
-                        value: LogcatLevel.debug,
-                        icon: Icons.bug_report,
-                        color: LogcatColors.debugTextColor,
-                        text: "Debug",
-                      ),
-                      LogcatLevelFilterPopupMenuItem(
-                        value: LogcatLevel.info,
-                        icon: Icons.info,
-                        color: LogcatColors.infoTextColor,
-                        text: "Info",
-                      ),
-                      LogcatLevelFilterPopupMenuItem(
-                        value: LogcatLevel.warning,
-                        icon: Icons.warning,
-                        color: LogcatColors.warningTextColor,
-                        text: "Warning",
-                      ),
-                      LogcatLevelFilterPopupMenuItem(
-                        value: LogcatLevel.error,
-                        icon: Icons.error,
-                        color: LogcatColors.errorTextColor,
-                        text: "Error",
-                      ),
-                    ];
                   },
                 );
               },

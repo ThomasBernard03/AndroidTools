@@ -1,5 +1,9 @@
+import 'package:android_tools/data/datasources/shell/shell_datasource.dart';
+import 'package:android_tools/data/repositories/device_repository_impl.dart';
 import 'package:android_tools/data/repositories/logcat_repository_impl.dart';
+import 'package:android_tools/domain/repositories/device_repository.dart';
 import 'package:android_tools/domain/repositories/logcat_repository.dart';
+import 'package:android_tools/domain/usecases/device/get_connected_devices_usecase.dart';
 import 'package:android_tools/domain/usecases/logcat/clear_logcat_usecase.dart';
 import 'package:android_tools/domain/usecases/logcat/listen_logcat_usecase.dart';
 import 'package:android_tools/presentation/logcat/logcat_screen.dart';
@@ -11,14 +15,26 @@ import 'package:logger/logger.dart';
 final getIt = GetIt.instance;
 
 void configureDependencies() {
-  getIt.registerSingleton<LogcatRepository>(LogcatRepositoryImpl());
-  getIt.registerSingleton<Logger>(Logger());
+  getIt.registerLazySingleton<Logger>(() => Logger());
+  getIt.registerLazySingleton<ShellDatasource>(() => ShellDatasource());
 
-  getIt.registerSingleton<ListenLogcatUsecase>(
-    ListenLogcatUsecase(logcatRepository: getIt.get()),
+  getIt.registerLazySingleton<LogcatRepository>(
+    () =>
+        LogcatRepositoryImpl(logger: getIt.get(), shellDatasource: getIt.get()),
   );
-  getIt.registerSingleton<ClearLogcatUsecase>(
-    ClearLogcatUsecase(logcatRepository: getIt.get()),
+  getIt.registerLazySingleton<DeviceRepository>(
+    () =>
+        DeviceRepositoryImpl(logger: getIt.get(), shellDatasource: getIt.get()),
+  );
+
+  getIt.registerLazySingleton(
+    () => ListenLogcatUsecase(logcatRepository: getIt.get()),
+  );
+  getIt.registerLazySingleton(
+    () => ClearLogcatUsecase(logcatRepository: getIt.get()),
+  );
+  getIt.registerLazySingleton(
+    () => GetConnectedDevicesUsecase(deviceRepository: getIt.get()),
   );
 }
 
@@ -28,7 +44,7 @@ void main() {
 }
 
 class MyApp extends StatefulWidget {
-  MyApp({super.key});
+  const MyApp({super.key});
 
   @override
   State<MyApp> createState() => _MyAppState();
