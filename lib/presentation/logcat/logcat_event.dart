@@ -17,3 +17,12 @@ class OnMinimumLogLevelChanged extends LogcatEvent {
 
   OnMinimumLogLevelChanged({required this.minimumLogLevel});
 }
+
+class OnPauseLogcat extends LogcatEvent {}
+
+class OnResumeLogcat extends LogcatEvent {}
+
+class OnLogReceived extends LogcatEvent {
+  final String line;
+  OnLogReceived({required this.line});
+}

@@ -35,6 +35,13 @@ class LogcatStateMapper extends ClassMapperBase<LogcatState> {
     opt: true,
     def: true,
   );
+  static bool _$isPaused(LogcatState v) => v.isPaused;
+  static const Field<LogcatState, bool> _f$isPaused = Field(
+    'isPaused',
+    _$isPaused,
+    opt: true,
+    def: false,
+  );
   static LogcatLevel? _$minimumLogLevel(LogcatState v) => v.minimumLogLevel;
   static const Field<LogcatState, LogcatLevel> _f$minimumLogLevel = Field(
     'minimumLogLevel',
@@ -46,6 +53,7 @@ class LogcatStateMapper extends ClassMapperBase<LogcatState> {
   final MappableFields<LogcatState> fields = const {
     #logs: _f$logs,
     #isSticky: _f$isSticky,
+    #isPaused: _f$isPaused,
     #minimumLogLevel: _f$minimumLogLevel,
   };
 
@@ -53,6 +61,7 @@ class LogcatStateMapper extends ClassMapperBase<LogcatState> {
     return LogcatState(
       logs: data.dec(_f$logs),
       isSticky: data.dec(_f$isSticky),
+      isPaused: data.dec(_f$isPaused),
       minimumLogLevel: data.dec(_f$minimumLogLevel),
     );
   }
@@ -118,7 +127,12 @@ extension LogcatStateValueCopy<$R, $Out>
 abstract class LogcatStateCopyWith<$R, $In extends LogcatState, $Out>
     implements ClassCopyWith<$R, $In, $Out> {
   ListCopyWith<$R, String, ObjectCopyWith<$R, String, String>> get logs;
-  $R call({List<String>? logs, bool? isSticky, LogcatLevel? minimumLogLevel});
+  $R call({
+    List<String>? logs,
+    bool? isSticky,
+    bool? isPaused,
+    LogcatLevel? minimumLogLevel,
+  });
   LogcatStateCopyWith<$R2, $In, $Out2> $chain<$R2, $Out2>(Then<$Out2, $R2> t);
 }
 
@@ -141,11 +155,13 @@ class _LogcatStateCopyWithImpl<$R, $Out>
   $R call({
     List<String>? logs,
     bool? isSticky,
+    bool? isPaused,
     Object? minimumLogLevel = $none,
   }) => $apply(
     FieldCopyWithData({
       if (logs != null) #logs: logs,
       if (isSticky != null) #isSticky: isSticky,
+      if (isPaused != null) #isPaused: isPaused,
       if (minimumLogLevel != $none) #minimumLogLevel: minimumLogLevel,
     }),
   );
@@ -153,6 +169,7 @@ class _LogcatStateCopyWithImpl<$R, $Out>
   LogcatState $make(CopyWithData data) => LogcatState(
     logs: data.get(#logs, or: $value.logs),
     isSticky: data.get(#isSticky, or: $value.isSticky),
+    isPaused: data.get(#isPaused, or: $value.isPaused),
     minimumLogLevel: data.get(#minimumLogLevel, or: $value.minimumLogLevel),
   );
 

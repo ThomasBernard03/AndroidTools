@@ -60,6 +60,20 @@ class _LogcatScreenState extends State<LogcatScreen> {
             BlocBuilder<LogcatBloc, LogcatState>(
               builder: (context, state) {
                 return IconButton(
+                  icon: Icon(state.isPaused ? Icons.play_arrow : Icons.pause),
+                  tooltip: "Play / Pause",
+                  onPressed: () {
+                    final event = state.isPaused
+                        ? OnResumeLogcat()
+                        : OnPauseLogcat();
+                    context.read<LogcatBloc>().add(event);
+                  },
+                );
+              },
+            ),
+            BlocBuilder<LogcatBloc, LogcatState>(
+              builder: (context, state) {
+                return IconButton(
                   icon: Icon(state.isSticky ? Icons.lock : Icons.lock_open),
                   tooltip: "Toggle Sticky",
                   onPressed: () {
