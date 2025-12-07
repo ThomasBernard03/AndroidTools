@@ -35,17 +35,25 @@ class LogcatStateMapper extends ClassMapperBase<LogcatState> {
     opt: true,
     def: true,
   );
+  static LogcatLevel? _$minimumLogLevel(LogcatState v) => v.minimumLogLevel;
+  static const Field<LogcatState, LogcatLevel> _f$minimumLogLevel = Field(
+    'minimumLogLevel',
+    _$minimumLogLevel,
+    opt: true,
+  );
 
   @override
   final MappableFields<LogcatState> fields = const {
     #logs: _f$logs,
     #isSticky: _f$isSticky,
+    #minimumLogLevel: _f$minimumLogLevel,
   };
 
   static LogcatState _instantiate(DecodingData data) {
     return LogcatState(
       logs: data.dec(_f$logs),
       isSticky: data.dec(_f$isSticky),
+      minimumLogLevel: data.dec(_f$minimumLogLevel),
     );
   }
 
@@ -110,7 +118,7 @@ extension LogcatStateValueCopy<$R, $Out>
 abstract class LogcatStateCopyWith<$R, $In extends LogcatState, $Out>
     implements ClassCopyWith<$R, $In, $Out> {
   ListCopyWith<$R, String, ObjectCopyWith<$R, String, String>> get logs;
-  $R call({List<String>? logs, bool? isSticky});
+  $R call({List<String>? logs, bool? isSticky, LogcatLevel? minimumLogLevel});
   LogcatStateCopyWith<$R2, $In, $Out2> $chain<$R2, $Out2>(Then<$Out2, $R2> t);
 }
 
@@ -130,16 +138,22 @@ class _LogcatStateCopyWithImpl<$R, $Out>
         (v) => call(logs: v),
       );
   @override
-  $R call({List<String>? logs, bool? isSticky}) => $apply(
+  $R call({
+    List<String>? logs,
+    bool? isSticky,
+    Object? minimumLogLevel = $none,
+  }) => $apply(
     FieldCopyWithData({
       if (logs != null) #logs: logs,
       if (isSticky != null) #isSticky: isSticky,
+      if (minimumLogLevel != $none) #minimumLogLevel: minimumLogLevel,
     }),
   );
   @override
   LogcatState $make(CopyWithData data) => LogcatState(
     logs: data.get(#logs, or: $value.logs),
     isSticky: data.get(#isSticky, or: $value.isSticky),
+    minimumLogLevel: data.get(#minimumLogLevel, or: $value.minimumLogLevel),
   );
 
   @override

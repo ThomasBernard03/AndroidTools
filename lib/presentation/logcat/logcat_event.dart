@@ -11,3 +11,9 @@ class OnToggleIsSticky extends LogcatEvent {
 
   OnToggleIsSticky({required this.isSticky});
 }
+
+class OnMinimumLogLevelChanged extends LogcatEvent {
+  final LogcatLevel? minimumLogLevel;
+
+  OnMinimumLogLevelChanged({required this.minimumLogLevel});
+}

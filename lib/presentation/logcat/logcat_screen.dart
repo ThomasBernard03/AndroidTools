@@ -1,4 +1,7 @@
+import 'package:android_tools/domain/entities/logcat_level.dart';
+import 'package:android_tools/presentation/core/colors.dart';
 import 'package:android_tools/presentation/logcat/logcat_bloc.dart';
+import 'package:android_tools/presentation/logcat/widgets/logcat_level_filter_popup_menu_item.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 
@@ -66,6 +69,59 @@ class _LogcatScreenState extends State<LogcatScreen> {
                 );
               },
             ),
+            BlocBuilder<LogcatBloc, LogcatState>(
+              builder: (context, state) {
+                return PopupMenuButton<LogcatLevel?>(
+                  icon: const Icon(Icons.filter_list),
+                  tooltip: "Filtrer par niveau",
+                  onSelected: (selected) {
+                    context.read<LogcatBloc>().add(
+                      OnMinimumLogLevelChanged(minimumLogLevel: selected),
+                    );
+                  },
+                  itemBuilder: (context) {
+                    return [
+                      LogcatLevelFilterPopupMenuItem<LogcatLevel?>(
+                        value: null,
+                        icon: Icons.filter_none,
+                        color: Colors.black,
+                        text: "Tous",
+                      ),
+                      LogcatLevelFilterPopupMenuItem(
+                        value: LogcatLevel.verbose,
+                        icon: Icons.speaker_notes,
+                        color: Colors.blueGrey,
+                        text: "Verbose",
+                      ),
+                      LogcatLevelFilterPopupMenuItem(
+                        value: LogcatLevel.debug,
+                        icon: Icons.bug_report,
+                        color: LogcatColors.debugTextColor,
+                        text: "Debug",
+                      ),
+                      LogcatLevelFilterPopupMenuItem(
+                        value: LogcatLevel.info,
+                        icon: Icons.info,
+                        color: LogcatColors.infoTextColor,
+                        text: "Info",
+                      ),
+                      LogcatLevelFilterPopupMenuItem(
+                        value: LogcatLevel.warning,
+                        icon: Icons.warning,
+                        color: LogcatColors.warningTextColor,
+                        text: "Warning",
+                      ),
+                      LogcatLevelFilterPopupMenuItem(
+                        value: LogcatLevel.error,
+                        icon: Icons.error,
+                        color: LogcatColors.errorTextColor,
+                        text: "Error",
+                      ),
+                    ];
+                  },
+                );
+              },
+            ),
           ],
         ),
         body: BlocListener<LogcatBloc, LogcatState>(
@@ -80,7 +136,7 @@ class _LogcatScreenState extends State<LogcatScreen> {
                 controller: _scrollController,
                 itemCount: state.logs.length,
                 itemBuilder: (context, index) {
-                  return Text(
+                  return SelectableText(
                     state.logs[index],
                     style: const TextStyle(
                       fontFamily: "monospace",

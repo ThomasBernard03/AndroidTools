@@ -1,6 +1,8 @@
 import 'dart:async';
 import 'dart:convert';
 import 'dart:io';
+import 'package:android_tools/domain/entities/logcat_level.dart';
+import 'package:android_tools/domain/entities/logcat_line_entity.dart';
 import 'package:dart_mappable/dart_mappable.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 
@@ -16,6 +18,9 @@ class LogcatBloc extends Bloc<LogcatEvent, LogcatState> {
     on<OnClearLogcat>(_onClear);
     on<OnToggleIsSticky>((event, emit) {
       emit(state.copyWith(isSticky: event.isSticky));
+    });
+    on<OnMinimumLogLevelChanged>((event, emit) {
+      emit(state.copyWith(minimumLogLevel: event.minimumLogLevel));
     });
   }
 
@@ -75,5 +80,64 @@ class LogcatBloc extends Bloc<LogcatEvent, LogcatState> {
     final contents = execDir.parent;
     final resources = Directory("${contents.path}/Resources");
     return "${resources.path}/adb";
+  }
+
+  LogcatLevel _mapLevel(String c) {
+    switch (c) {
+      case 'V':
+        return LogcatLevel.verbose;
+      case 'D':
+        return LogcatLevel.debug;
+      case 'I':
+        return LogcatLevel.info;
+      case 'W':
+        return LogcatLevel.warning;
+      case 'E':
+        return LogcatLevel.error;
+      case 'F':
+        return LogcatLevel.fatal;
+      default:
+        return LogcatLevel.silent;
+    }
+  }
+
+  final _logRegex = RegExp(r'''^(\d\d)-(\d\d)\s+            # MM-DD
+      (\d\d):(\d\d):(\d\d)\.(\d{3})\s+  # HH:mm:ss.mmm
+      (\d+)\s+                      # PID
+      (\d+)\s+                      # TID
+      ([VDIWEF])\s+                 # Level
+      (\S+):                        # Tag/package
+      (.*)$                         # Message
+    ''', multiLine: false);
+
+  LogcatLineEntity? parseLogcatLine(String line) {
+    final match = _logRegex.firstMatch(line);
+    if (match == null) return null;
+
+    final now = DateTime.now();
+
+    final month = int.parse(match.group(1)!);
+    final day = int.parse(match.group(2)!);
+
+    final hour = int.parse(match.group(3)!);
+    final minute = int.parse(match.group(4)!);
+    final second = int.parse(match.group(5)!);
+    final ms = int.parse(match.group(6)!);
+
+    final pid = int.parse(match.group(7)!);
+    final tid = int.parse(match.group(8)!);
+    final level = _mapLevel(match.group(9)!);
+
+    final package = match.group(10)!;
+
+    final date = DateTime(now.year, month, day, hour, minute, second, ms);
+
+    return LogcatLineEntity(
+      dateTime: date,
+      level: level,
+      processId: pid,
+      threadId: tid,
+      packageName: package,
+    );
   }
 }
