@@ -15,6 +15,7 @@ dependencies:
   dart_mappable: ^4.6.1
   flutter_bloc: ^9.1.1
   get_it: ^9.2.0
+  flutter_svg: ^2.2.3
 
 dev_dependencies:
   flutter_test:
@@ -31,6 +32,7 @@ flutter:
     - assets/adb/windows/adb.exe
     - assets/adb/macos/adb
     - assets/adb/linux/adb
+    - assets/logcat.svg
 
   # An image asset can refer to one or more resolution-specific "variants", see
   # https://flutter.dev/to/resolution-aware-images

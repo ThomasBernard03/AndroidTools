@@ -1,10 +1,11 @@
+import 'package:android_tools/domain/entities/logcat_level.dart';
 import 'package:android_tools/domain/repositories/logcat_repository.dart';
 
 class ListenLogcatUsecase {
   final LogcatRepository logcatRepository;
   const ListenLogcatUsecase({required this.logcatRepository});
 
-  Stream<String> call() {
-    return logcatRepository.listenLogcat();
+  Stream<String> call({LogcatLevel? level}) {
+    return logcatRepository.listenLogcat(level);
   }
 }

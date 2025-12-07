@@ -1,4 +1,6 @@
+import 'package:android_tools/domain/entities/logcat_level.dart';
+
 abstract class LogcatRepository {
-  Stream<String> listenLogcat();
+  Stream<String> listenLogcat(LogcatLevel? level);
   Future<void> clearLogcat();
 }

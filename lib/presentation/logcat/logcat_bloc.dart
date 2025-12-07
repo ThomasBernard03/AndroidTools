@@ -40,8 +40,13 @@ class LogcatBloc extends Bloc<LogcatEvent, LogcatState> {
       emit(state.copyWith(isSticky: event.isSticky));
     });
 
-    on<OnMinimumLogLevelChanged>((event, emit) {
+    on<OnMinimumLogLevelChanged>((event, emit) async {
       emit(state.copyWith(minimumLogLevel: event.minimumLogLevel));
+      await _subscription?.cancel();
+      final stream = listenLogcatUsecase(level: event.minimumLogLevel);
+      _subscription = stream.listen((line) {
+        add(OnLogReceived(line: line));
+      });
     });
 
     on<OnPauseLogcat>((event, emit) {
