@@ -1,7 +1,8 @@
 import 'package:android_tools/domain/entities/logcat_level.dart';
-import 'package:android_tools/presentation/core/colors.dart';
+import 'package:android_tools/presentation/logcat/core/logcat_colors.dart';
 import 'package:android_tools/presentation/logcat/logcat_bloc.dart';
 import 'package:android_tools/presentation/logcat/widgets/logcat_level_filter_popup_menu_item.dart';
+import 'package:android_tools/presentation/logcat/widgets/logcat_line.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 
@@ -133,16 +134,11 @@ class _LogcatScreenState extends State<LogcatScreen> {
           child: BlocBuilder<LogcatBloc, LogcatState>(
             builder: (context, state) {
               return ListView.builder(
+                padding: EdgeInsets.all(8),
                 controller: _scrollController,
                 itemCount: state.logs.length,
                 itemBuilder: (context, index) {
-                  return SelectableText(
-                    state.logs[index],
-                    style: const TextStyle(
-                      fontFamily: "monospace",
-                      fontSize: 12,
-                    ),
-                  );
+                  return LogcatLine(line: state.logs[index]);
                 },
               );
             },
