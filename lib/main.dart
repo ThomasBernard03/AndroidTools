@@ -6,11 +6,13 @@ import 'package:android_tools/presentation/logcat/logcat_screen.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/svg.dart';
 import 'package:get_it/get_it.dart';
+import 'package:logger/logger.dart';
 
 final getIt = GetIt.instance;
 
 void configureDependencies() {
   getIt.registerSingleton<LogcatRepository>(LogcatRepositoryImpl());
+  getIt.registerSingleton<Logger>(Logger());
 
   getIt.registerSingleton<ListenLogcatUsecase>(
     ListenLogcatUsecase(logcatRepository: getIt.get()),

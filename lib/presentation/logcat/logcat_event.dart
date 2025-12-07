@@ -23,6 +23,6 @@ class OnPauseLogcat extends LogcatEvent {}
 class OnResumeLogcat extends LogcatEvent {}
 
 class OnLogReceived extends LogcatEvent {
-  final String line;
-  OnLogReceived({required this.line});
+  final List<String> lines;
+  OnLogReceived({required this.lines});
 }

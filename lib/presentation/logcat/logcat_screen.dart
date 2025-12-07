@@ -34,7 +34,7 @@ class _LogcatScreenState extends State<LogcatScreen> {
     if (_scrollController.hasClients) {
       WidgetsBinding.instance.addPostFrameCallback((_) {
         _scrollController.animateTo(
-          _scrollController.position.maxScrollExtent,
+          0,
           duration: const Duration(milliseconds: 200),
           curve: Curves.easeOut,
         );
@@ -143,11 +143,12 @@ class _LogcatScreenState extends State<LogcatScreen> {
           child: BlocBuilder<LogcatBloc, LogcatState>(
             builder: (context, state) {
               return ListView.builder(
+                reverse: true,
                 padding: EdgeInsets.all(8),
                 controller: _scrollController,
                 itemCount: state.logs.length,
                 itemBuilder: (context, index) {
-                  return LogcatLine(line: state.logs[index]);
+                  return LogcatLine(line: state.logs.reversed.toList()[index]);
                 },
               );
             },

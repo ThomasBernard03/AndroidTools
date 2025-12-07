@@ -5,7 +5,7 @@ class ListenLogcatUsecase {
   final LogcatRepository logcatRepository;
   const ListenLogcatUsecase({required this.logcatRepository});
 
-  Stream<String> call({LogcatLevel? level}) {
+  Stream<List<String>> call({LogcatLevel? level}) {
     return logcatRepository.listenLogcat(level);
   }
 }

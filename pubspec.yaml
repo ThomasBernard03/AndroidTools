@@ -16,6 +16,7 @@ dependencies:
   flutter_bloc: ^9.1.1
   get_it: ^9.2.0
   flutter_svg: ^2.2.3
+  logger: ^2.6.2
 
 dev_dependencies:
   flutter_test:

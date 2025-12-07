@@ -1,3 +1,4 @@
+import 'dart:async';
 import 'dart:convert';
 import 'dart:io';
 
@@ -6,9 +7,8 @@ import 'package:android_tools/domain/repositories/logcat_repository.dart';
 
 class LogcatRepositoryImpl implements LogcatRepository {
   @override
-  Stream<String> listenLogcat(LogcatLevel? level) async* {
+  Stream<List<String>> listenLogcat(LogcatLevel? level) async* {
     final adbPath = _getAdbPath();
-
     final args = <String>['logcat'];
 
     if (level != null) {
@@ -18,9 +18,37 @@ class LogcatRepositoryImpl implements LogcatRepository {
 
     final process = await Process.start(adbPath, args);
 
-    yield* process.stdout
+    final buffer = <String>[];
+    final controller = StreamController<List<String>>();
+
+    Timer? timer;
+
+    process.stdout
         .transform(utf8.decoder)
-        .transform(const LineSplitter());
+        .transform(const LineSplitter())
+        .listen(
+          (line) {
+            buffer.add(line);
+
+            if (timer == null || !timer!.isActive) {
+              timer = Timer.periodic(Duration(milliseconds: 500), (_) {
+                if (buffer.isNotEmpty) {
+                  controller.add(List.from(buffer));
+                  buffer.clear();
+                }
+              });
+            }
+          },
+          onDone: () {
+            timer?.cancel();
+            if (buffer.isNotEmpty) {
+              controller.add(List.from(buffer));
+            }
+            controller.close();
+          },
+        );
+
+    yield* controller.stream;
   }
 
   String _mapLevel(LogcatLevel level) {

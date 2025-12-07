@@ -9,7 +9,7 @@ class LogcatState with LogcatStateMappable {
 
   LogcatState({
     this.logs = const [],
-    this.isSticky = true,
+    this.isSticky = false,
     this.isPaused = false,
     this.minimumLogLevel,
   });
