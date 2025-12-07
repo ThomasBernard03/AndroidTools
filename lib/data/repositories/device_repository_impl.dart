@@ -39,7 +39,8 @@ class DeviceRepositoryImpl implements DeviceRepository {
         if (parts.length < 2 || parts[1] != 'device') continue;
 
         String manufacturer = "Unknown";
-        String name = parts[0]; // default device id
+        String deviceId = parts[0]; // default device id
+        String name = deviceId;
 
         for (var part in parts.skip(2)) {
           if (part.startsWith('model:')) {
@@ -49,7 +50,13 @@ class DeviceRepositoryImpl implements DeviceRepository {
           }
         }
 
-        devices.add(DeviceEntity(manufacturer: manufacturer, name: name));
+        devices.add(
+          DeviceEntity(
+            manufacturer: manufacturer,
+            name: name,
+            deviceId: deviceId,
+          ),
+        );
       }
 
       logger.i("Found ${devices.length} devices");

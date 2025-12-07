@@ -72,17 +72,24 @@ class LogcatBloc extends Bloc<LogcatEvent, LogcatState> {
       logger.i("Logcat max lines changed for ${event.maxLines}");
       emit(state.copyWith(maxLogcatLines: event.maxLines));
     });
-    on<OnSelectedDeviceChanged>((event, emit) {
+    on<OnSelectedDeviceChanged>((event, emit) async {
       logger.i("Selected device changed for ${event.device.name}");
-      emit(state.copyWith(selectedDevice: event.device));
+      await _subscription?.cancel();
+
+      emit(state.copyWith(selectedDevice: event.device, logs: []));
+      await _listenLogcat();
     });
     on<OnRefreshLogcat>((event, emit) async {
       logger.i("Refreshing logcat");
       final devices = await _getConnectedDevicesUsecase();
+      final selectedDevice =
+          devices.any((d) => d.deviceId == state.selectedDevice?.deviceId)
+          ? state.selectedDevice
+          : devices.firstOrNull;
       emit(
         state.copyWith(
           devices: devices,
-          selectedDevice: devices.firstOrNull,
+          selectedDevice: selectedDevice,
           logs: [],
         ),
       );
@@ -91,8 +98,16 @@ class LogcatBloc extends Bloc<LogcatEvent, LogcatState> {
   }
 
   Future<void> _listenLogcat() async {
+    if (state.selectedDevice == null) {
+      logger.w("Can't listen for logcat (No device selcted)");
+      return;
+    }
+
     await _subscription?.cancel();
-    final stream = _listenLogcatUsecase(level: state.minimumLogLevel);
+    final stream = _listenLogcatUsecase(
+      state.selectedDevice!.deviceId,
+      state.minimumLogLevel,
+    );
     _subscription = stream.listen((lines) {
       add(OnLogReceived(lines: lines));
     });

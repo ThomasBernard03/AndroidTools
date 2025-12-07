@@ -14,13 +14,20 @@ class LogcatRepositoryImpl implements LogcatRepository {
   LogcatRepositoryImpl({required this.logger, required this.shellDatasource});
 
   @override
-  Stream<List<String>> listenLogcat(LogcatLevel? level) async* {
+  Stream<List<String>> listenLogcat(
+    String deviceId,
+    LogcatLevel? level,
+  ) async* {
+    if (deviceId.isEmpty) {
+      logger.w("Device id can't be empty, can't listen for logs");
+      return;
+    }
+
     final adbPath = shellDatasource.getAdbPath();
-    final args = <String>['logcat'];
+    final args = <String>['-s', deviceId, 'logcat'];
 
     if (level != null) {
-      final letter = _mapLevel(level);
-      args.add('*:$letter');
+      args.add('*:${_mapLevel(level)}');
     }
 
     final process = await Process.start(adbPath, args);
