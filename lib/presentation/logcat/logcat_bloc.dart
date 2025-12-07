@@ -62,6 +62,10 @@ class LogcatBloc extends Bloc<LogcatEvent, LogcatState> {
       emit(state.copyWith(isPaused: false));
       _subscription?.resume();
     });
+
+    on<OnLogcatMaxLinesChanged>((event, emit) {
+      emit(state.copyWith(maxLogcatLines: event.maxLines));
+    });
   }
 
   @override

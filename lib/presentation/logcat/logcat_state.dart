@@ -5,6 +5,7 @@ class LogcatState with LogcatStateMappable {
   final List<String> logs;
   final bool isSticky;
   final bool isPaused;
+  final int maxLogcatLines;
   final LogcatLevel? minimumLogLevel;
 
   LogcatState({
@@ -12,5 +13,6 @@ class LogcatState with LogcatStateMappable {
     this.isSticky = false,
     this.isPaused = false,
     this.minimumLogLevel,
+    this.maxLogcatLines = 500,
   });
 }

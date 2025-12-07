@@ -33,7 +33,7 @@ class LogcatStateMapper extends ClassMapperBase<LogcatState> {
     'isSticky',
     _$isSticky,
     opt: true,
-    def: true,
+    def: false,
   );
   static bool _$isPaused(LogcatState v) => v.isPaused;
   static const Field<LogcatState, bool> _f$isPaused = Field(
@@ -48,6 +48,13 @@ class LogcatStateMapper extends ClassMapperBase<LogcatState> {
     _$minimumLogLevel,
     opt: true,
   );
+  static int _$maxLogcatLines(LogcatState v) => v.maxLogcatLines;
+  static const Field<LogcatState, int> _f$maxLogcatLines = Field(
+    'maxLogcatLines',
+    _$maxLogcatLines,
+    opt: true,
+    def: 1000,
+  );
 
   @override
   final MappableFields<LogcatState> fields = const {
@@ -55,6 +62,7 @@ class LogcatStateMapper extends ClassMapperBase<LogcatState> {
     #isSticky: _f$isSticky,
     #isPaused: _f$isPaused,
     #minimumLogLevel: _f$minimumLogLevel,
+    #maxLogcatLines: _f$maxLogcatLines,
   };
 
   static LogcatState _instantiate(DecodingData data) {
@@ -63,6 +71,7 @@ class LogcatStateMapper extends ClassMapperBase<LogcatState> {
       isSticky: data.dec(_f$isSticky),
       isPaused: data.dec(_f$isPaused),
       minimumLogLevel: data.dec(_f$minimumLogLevel),
+      maxLogcatLines: data.dec(_f$maxLogcatLines),
     );
   }
 
@@ -132,6 +141,7 @@ abstract class LogcatStateCopyWith<$R, $In extends LogcatState, $Out>
     bool? isSticky,
     bool? isPaused,
     LogcatLevel? minimumLogLevel,
+    int? maxLogcatLines,
   });
   LogcatStateCopyWith<$R2, $In, $Out2> $chain<$R2, $Out2>(Then<$Out2, $R2> t);
 }
@@ -157,12 +167,14 @@ class _LogcatStateCopyWithImpl<$R, $Out>
     bool? isSticky,
     bool? isPaused,
     Object? minimumLogLevel = $none,
+    int? maxLogcatLines,
   }) => $apply(
     FieldCopyWithData({
       if (logs != null) #logs: logs,
       if (isSticky != null) #isSticky: isSticky,
       if (isPaused != null) #isPaused: isPaused,
       if (minimumLogLevel != $none) #minimumLogLevel: minimumLogLevel,
+      if (maxLogcatLines != null) #maxLogcatLines: maxLogcatLines,
     }),
   );
   @override
@@ -171,6 +183,7 @@ class _LogcatStateCopyWithImpl<$R, $Out>
     isSticky: data.get(#isSticky, or: $value.isSticky),
     isPaused: data.get(#isPaused, or: $value.isPaused),
     minimumLogLevel: data.get(#minimumLogLevel, or: $value.minimumLogLevel),
+    maxLogcatLines: data.get(#maxLogcatLines, or: $value.maxLogcatLines),
   );
 
   @override

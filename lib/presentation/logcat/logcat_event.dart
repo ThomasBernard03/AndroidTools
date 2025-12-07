@@ -26,3 +26,8 @@ class OnLogReceived extends LogcatEvent {
   final List<String> lines;
   OnLogReceived({required this.lines});
 }
+
+class OnLogcatMaxLinesChanged extends LogcatEvent {
+  final int maxLines;
+  OnLogcatMaxLinesChanged({required this.maxLines});
+}

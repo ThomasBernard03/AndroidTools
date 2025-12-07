@@ -42,6 +42,8 @@ class _LogcatScreenState extends State<LogcatScreen> {
     }
   }
 
+  final availableLogcatSizes = [500, 1000, 2000, 5000, 10000];
+
   @override
   Widget build(BuildContext context) {
     return BlocProvider.value(
@@ -50,6 +52,29 @@ class _LogcatScreenState extends State<LogcatScreen> {
         appBar: AppBar(
           title: const Text("Logcat"),
           actions: [
+            BlocBuilder<LogcatBloc, LogcatState>(
+              builder: (context, state) {
+                return DropdownButton<int>(
+                  value: state.maxLogcatLines,
+                  elevation: 16,
+                  onChanged: (int? value) {
+                    context.read<LogcatBloc>().add(
+                      OnLogcatMaxLinesChanged(
+                        maxLines: value ?? availableLogcatSizes.first,
+                      ),
+                    );
+                  },
+                  items: availableLogcatSizes.map<DropdownMenuItem<int>>((
+                    int value,
+                  ) {
+                    return DropdownMenuItem<int>(
+                      value: value,
+                      child: Text(value.toString()),
+                    );
+                  }).toList(),
+                );
+              },
+            ),
             IconButton(
               icon: const Icon(Icons.delete),
               tooltip: "Clear logs",
@@ -146,9 +171,13 @@ class _LogcatScreenState extends State<LogcatScreen> {
                 reverse: true,
                 padding: EdgeInsets.all(8),
                 controller: _scrollController,
-                itemCount: state.logs.length,
+                itemCount: state.logs.take(state.maxLogcatLines).length,
                 itemBuilder: (context, index) {
-                  return LogcatLine(line: state.logs.reversed.toList()[index]);
+                  return LogcatLine(
+                    line: state.logs.reversed
+                        .take(state.maxLogcatLines)
+                        .toList()[index],
+                  );
                 },
               );
             },
