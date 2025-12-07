@@ -89,6 +89,7 @@ class _LogcatScreenState extends State<LogcatScreen> {
                 return PopupMenuButton<LogcatLevel?>(
                   icon: const Icon(Icons.filter_list),
                   tooltip: "Filtrer par niveau",
+                  initialValue: LogcatLevel.debug,
                   onSelected: (selected) {
                     context.read<LogcatBloc>().add(
                       OnMinimumLogLevelChanged(minimumLogLevel: selected),
@@ -101,12 +102,6 @@ class _LogcatScreenState extends State<LogcatScreen> {
                         icon: Icons.filter_none,
                         color: Colors.black,
                         text: "Tous",
-                      ),
-                      LogcatLevelFilterPopupMenuItem(
-                        value: LogcatLevel.verbose,
-                        icon: Icons.speaker_notes,
-                        color: Colors.blueGrey,
-                        text: "Verbose",
                       ),
                       LogcatLevelFilterPopupMenuItem(
                         value: LogcatLevel.debug,

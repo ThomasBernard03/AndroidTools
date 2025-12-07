@@ -47,19 +47,33 @@ class _MyAppState extends State<MyApp> {
         children: [
           NavigationRail(
             extended: true,
+            onDestinationSelected: (value) {
+              setState(() {
+                _selectedIndex = value;
+              });
+            },
             destinations: <NavigationRailDestination>[
               NavigationRailDestination(
                 icon: SvgPicture.asset(
                   width: 20,
                   'assets/logcat.svg',
-                  semanticsLabel: 'Dart Logo',
+                  semanticsLabel: 'Logcat Logo',
                 ),
-                label: Text('Logcat', style: TextStyle(color: Colors.black)),
+                label: Text('Logcat'),
+              ),
+              NavigationRailDestination(
+                icon: Icon(Icons.folder_open),
+                label: Text('File explorer'),
               ),
             ],
             selectedIndex: _selectedIndex,
           ),
-          Expanded(child: LogcatScreen()),
+          Expanded(
+            child: switch (_selectedIndex) {
+              0 => LogcatScreen(),
+              _ => Placeholder(),
+            },
+          ),
         ],
       ),
     );
