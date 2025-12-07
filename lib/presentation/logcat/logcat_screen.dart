@@ -61,30 +61,34 @@ class _LogcatScreenState extends State<LogcatScreen> {
             children: [
               BlocBuilder<LogcatBloc, LogcatState>(
                 builder: (context, state) {
-                  return DropdownButton<DeviceEntity>(
-                    value: state.selectedDevice,
-                    elevation: 16,
-                    onChanged: (DeviceEntity? value) {
-                      if (value == null) return;
-                      context.read<LogcatBloc>().add(
-                        OnSelectedDeviceChanged(device: value),
-                      );
-                    },
-                    items: state.devices.map<DropdownMenuItem<DeviceEntity>>((
-                      DeviceEntity value,
-                    ) {
-                      return DropdownMenuItem<DeviceEntity>(
-                        value: value,
-                        child: Row(
-                          spacing: 8,
-                          children: [
-                            Icon(Icons.mobile_friendly, size: 16),
-                            Text(value.name),
-                          ],
-                        ),
-                      );
-                    }).toList(),
-                  );
+                  return state.devices.isNotEmpty
+                      ? DropdownButton<DeviceEntity>(
+                          value: state.selectedDevice,
+                          elevation: 16,
+                          onChanged: (DeviceEntity? value) {
+                            if (value == null) return;
+                            context.read<LogcatBloc>().add(
+                              OnSelectedDeviceChanged(device: value),
+                            );
+                          },
+                          items: state.devices
+                              .map<DropdownMenuItem<DeviceEntity>>((
+                                DeviceEntity value,
+                              ) {
+                                return DropdownMenuItem<DeviceEntity>(
+                                  value: value,
+                                  child: Row(
+                                    spacing: 8,
+                                    children: [
+                                      Icon(Icons.mobile_friendly, size: 16),
+                                      Text(value.name),
+                                    ],
+                                  ),
+                                );
+                              })
+                              .toList(),
+                        )
+                      : SizedBox.shrink();
                 },
               ),
             ],
@@ -200,19 +204,36 @@ class _LogcatScreenState extends State<LogcatScreen> {
           },
           child: BlocBuilder<LogcatBloc, LogcatState>(
             builder: (context, state) {
-              return ListView.builder(
-                reverse: true,
-                padding: EdgeInsets.all(8),
-                controller: _scrollController,
-                itemCount: state.logs.take(state.maxLogcatLines).length,
-                itemBuilder: (context, index) {
-                  return LogcatLine(
-                    line: state.logs.reversed
-                        .take(state.maxLogcatLines)
-                        .toList()[index],
-                  );
-                },
-              );
+              return state.devices.isEmpty
+                  ? Center(
+                      child: Column(
+                        mainAxisAlignment: MainAxisAlignment.center,
+                        children: [
+                          TextButton(
+                            onPressed: () {
+                              context.read<LogcatBloc>().add(
+                                OnRefreshDevices(),
+                              );
+                            },
+                            child: Text("Refresh devices"),
+                          ),
+                          Text("Can't find any android devices"),
+                        ],
+                      ),
+                    )
+                  : ListView.builder(
+                      reverse: true,
+                      padding: EdgeInsets.all(8),
+                      controller: _scrollController,
+                      itemCount: state.logs.take(state.maxLogcatLines).length,
+                      itemBuilder: (context, index) {
+                        return LogcatLine(
+                          line: state.logs.reversed
+                              .take(state.maxLogcatLines)
+                              .toList()[index],
+                        );
+                      },
+                    );
             },
           ),
         ),

@@ -95,6 +95,14 @@ class LogcatBloc extends Bloc<LogcatEvent, LogcatState> {
       );
       await _listenLogcat();
     });
+    on<OnRefreshDevices>((event, emit) async {
+      logger.i("Refreshing devices");
+      final devices = await _getConnectedDevicesUsecase();
+      emit(
+        state.copyWith(devices: devices, selectedDevice: devices.firstOrNull),
+      );
+      await _listenLogcat();
+    });
   }
 
   Future<void> _listenLogcat() async {
