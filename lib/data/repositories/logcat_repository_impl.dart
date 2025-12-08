@@ -83,11 +83,16 @@ class LogcatRepositoryImpl implements LogcatRepository {
   }
 
   @override
-  Future<void> clearLogcat() async {
+  Future<void> clearLogcat(String deviceId) async {
     try {
       logger.i("Cleaning logcat");
       final adbPath = shellDatasource.getAdbPath();
-      final process = await Process.run(adbPath, ['logcat', '-c']);
+      final process = await Process.run(adbPath, [
+        '-s',
+        deviceId,
+        'logcat',
+        '-c',
+      ]);
       if (process.exitCode != 0) {
         logger.w("Error when clearing logcat : ${process.stderr}");
       } else {

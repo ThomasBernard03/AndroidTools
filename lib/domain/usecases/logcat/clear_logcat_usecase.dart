@@ -4,7 +4,7 @@ class ClearLogcatUsecase {
   final LogcatRepository logcatRepository;
   const ClearLogcatUsecase({required this.logcatRepository});
 
-  Future<void> call() {
-    return logcatRepository.clearLogcat();
+  Future<void> call(String deviceId) {
+    return logcatRepository.clearLogcat(deviceId);
   }
 }

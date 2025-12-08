@@ -39,9 +39,13 @@ class LogcatBloc extends Bloc<LogcatEvent, LogcatState> {
     });
 
     on<OnClearLogcat>((event, emit) async {
+      if (state.selectedDevice == null) {
+        return logger.w("Can't clear logcat, no device selected");
+      }
+
       logger.i("Start cleaning logcat");
       emit(state.copyWith(logs: []));
-      await _clearLogcatUsecase();
+      await _clearLogcatUsecase(state.selectedDevice!.deviceId);
       logger.i("Logcat cleaned");
     });
 
