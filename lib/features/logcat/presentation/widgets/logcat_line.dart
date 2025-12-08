@@ -1,6 +1,6 @@
-import 'package:android_tools/domain/entities/logcat_level.dart';
-import 'package:android_tools/domain/entities/logcat_line_entity.dart';
-import 'package:android_tools/presentation/logcat/core/logcat_level_extensions.dart';
+import 'package:android_tools/features/logcat/domain/entities/logcat_level.dart';
+import 'package:android_tools/features/logcat/domain/entities/logcat_line_entity.dart';
+import 'package:android_tools/features/logcat/presentation/core/logcat_level_extensions.dart';
 import 'package:flutter/material.dart';
 
 class LogcatLine extends StatelessWidget {

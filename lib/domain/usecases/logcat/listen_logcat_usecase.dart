@@ -1,5 +1,5 @@
-import 'package:android_tools/domain/entities/logcat_level.dart';
-import 'package:android_tools/domain/repositories/logcat_repository.dart';
+import 'package:android_tools/features/logcat/domain/entities/logcat_level.dart';
+import 'package:android_tools/features/logcat/domain/repositories/logcat_repository.dart';
 
 class ListenLogcatUsecase {
   final LogcatRepository logcatRepository;

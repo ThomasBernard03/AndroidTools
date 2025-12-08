@@ -1,12 +1,12 @@
 import 'package:android_tools/data/datasources/shell/shell_datasource.dart';
 import 'package:android_tools/data/repositories/device_repository_impl.dart';
-import 'package:android_tools/data/repositories/logcat_repository_impl.dart';
+import 'package:android_tools/features/logcat/data/repositories/logcat_repository_impl.dart';
 import 'package:android_tools/domain/repositories/device_repository.dart';
-import 'package:android_tools/domain/repositories/logcat_repository.dart';
+import 'package:android_tools/features/logcat/domain/repositories/logcat_repository.dart';
 import 'package:android_tools/domain/usecases/device/get_connected_devices_usecase.dart';
 import 'package:android_tools/domain/usecases/logcat/clear_logcat_usecase.dart';
 import 'package:android_tools/domain/usecases/logcat/listen_logcat_usecase.dart';
-import 'package:android_tools/presentation/logcat/logcat_screen.dart';
+import 'package:android_tools/features/logcat/presentation/logcat_screen.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/svg.dart';
 import 'package:get_it/get_it.dart';

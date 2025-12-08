@@ -1,8 +1,8 @@
 import 'package:android_tools/domain/entities/device_entity.dart';
-import 'package:android_tools/domain/entities/logcat_level.dart';
-import 'package:android_tools/presentation/logcat/core/logcat_level_extensions.dart';
-import 'package:android_tools/presentation/logcat/logcat_bloc.dart';
-import 'package:android_tools/presentation/logcat/widgets/logcat_line.dart';
+import 'package:android_tools/features/logcat/domain/entities/logcat_level.dart';
+import 'package:android_tools/features/logcat/presentation/core/logcat_level_extensions.dart';
+import 'package:android_tools/features/logcat/presentation/logcat_bloc.dart';
+import 'package:android_tools/features/logcat/presentation/widgets/logcat_line.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 

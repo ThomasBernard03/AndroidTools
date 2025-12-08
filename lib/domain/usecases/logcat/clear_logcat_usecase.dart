@@ -1,4 +1,4 @@
-import 'package:android_tools/domain/repositories/logcat_repository.dart';
+import 'package:android_tools/features/logcat/domain/repositories/logcat_repository.dart';
 
 class ClearLogcatUsecase {
   final LogcatRepository logcatRepository;
