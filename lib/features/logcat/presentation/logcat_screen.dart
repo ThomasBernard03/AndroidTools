@@ -1,4 +1,4 @@
-import 'package:android_tools/domain/entities/device_entity.dart';
+import 'package:android_tools/shared/domain/entities/device_entity.dart';
 import 'package:android_tools/features/logcat/domain/entities/logcat_level.dart';
 import 'package:android_tools/features/logcat/presentation/core/logcat_level_extensions.dart';
 import 'package:android_tools/features/logcat/presentation/logcat_bloc.dart';

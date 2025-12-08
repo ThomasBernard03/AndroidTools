@@ -1,8 +1,8 @@
 import 'dart:io';
 
-import 'package:android_tools/data/datasources/shell/shell_datasource.dart';
-import 'package:android_tools/domain/entities/device_entity.dart';
-import 'package:android_tools/domain/repositories/device_repository.dart';
+import 'package:android_tools/shared/data/datasources/shell/shell_datasource.dart';
+import 'package:android_tools/shared/domain/entities/device_entity.dart';
+import 'package:android_tools/shared/domain/repositories/device_repository.dart';
 import 'package:logger/logger.dart';
 
 class DeviceRepositoryImpl implements DeviceRepository {

@@ -1,10 +1,10 @@
 import 'dart:async';
 
-import 'package:android_tools/domain/entities/device_entity.dart';
+import 'package:android_tools/shared/domain/entities/device_entity.dart';
 import 'package:android_tools/features/logcat/domain/entities/logcat_level.dart';
-import 'package:android_tools/domain/usecases/device/get_connected_devices_usecase.dart';
-import 'package:android_tools/domain/usecases/logcat/clear_logcat_usecase.dart';
-import 'package:android_tools/domain/usecases/logcat/listen_logcat_usecase.dart';
+import 'package:android_tools/shared/domain/usecases/get_connected_devices_usecase.dart';
+import 'package:android_tools/features/logcat/domain/usecases/clear_logcat_usecase.dart';
+import 'package:android_tools/features/logcat/domain/usecases/listen_logcat_usecase.dart';
 import 'package:android_tools/main.dart';
 import 'package:dart_mappable/dart_mappable.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';

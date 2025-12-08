@@ -2,7 +2,7 @@ import 'dart:async';
 import 'dart:convert';
 import 'dart:io';
 
-import 'package:android_tools/data/datasources/shell/shell_datasource.dart';
+import 'package:android_tools/shared/data/datasources/shell/shell_datasource.dart';
 import 'package:android_tools/features/logcat/domain/entities/logcat_level.dart';
 import 'package:android_tools/features/logcat/domain/repositories/logcat_repository.dart';
 import 'package:logger/logger.dart';
