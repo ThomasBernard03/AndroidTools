@@ -2,6 +2,7 @@ import 'package:android_tools/features/logcat/domain/entities/logcat_level.dart'
 import 'package:android_tools/features/logcat/domain/entities/process_entity.dart';
 import 'package:android_tools/features/logcat/presentation/core/logcat_level_extensions.dart';
 import 'package:android_tools/features/logcat/presentation/logcat_bloc.dart';
+import 'package:android_tools/features/logcat/presentation/widgets/logcat_button.dart';
 import 'package:android_tools/shared/domain/entities/device_entity.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
@@ -168,36 +169,7 @@ class _LogcatAppbarState extends State<LogcatAppbar> {
                   },
                 ),
                 const VerticalDivider(),
-                IconButton(
-                  icon: const Icon(Icons.delete),
-                  tooltip: "Clear logs",
-                  onPressed: () {
-                    context.read<LogcatBloc>().add(OnClearLogcat());
-                  },
-                ),
-                IconButton(
-                  icon: const Icon(Icons.refresh),
-                  tooltip: "Refresh",
-                  onPressed: () {
-                    context.read<LogcatBloc>().add(OnRefreshLogcat());
-                  },
-                ),
-                BlocBuilder<LogcatBloc, LogcatState>(
-                  builder: (context, state) {
-                    return IconButton(
-                      icon: Icon(
-                        state.isPaused ? Icons.play_arrow : Icons.pause,
-                      ),
-                      tooltip: "Play / Pause",
-                      onPressed: () {
-                        final event = state.isPaused
-                            ? OnResumeLogcat()
-                            : OnPauseLogcat();
-                        context.read<LogcatBloc>().add(event);
-                      },
-                    );
-                  },
-                ),
+
                 BlocBuilder<LogcatBloc, LogcatState>(
                   builder: (context, state) {
                     return IconButton(
@@ -210,6 +182,53 @@ class _LogcatAppbarState extends State<LogcatAppbar> {
                       },
                     );
                   },
+                ),
+                Card(
+                  clipBehavior: Clip.hardEdge,
+                  shape: RoundedRectangleBorder(
+                    borderRadius: BorderRadius.circular(8),
+                  ),
+                  child: Row(
+                    children: [
+                      BlocBuilder<LogcatBloc, LogcatState>(
+                        builder: (context, state) {
+                          return FilledButton(
+                            style: ButtonStyle(
+                              shape: WidgetStateProperty.all(
+                                BeveledRectangleBorder(),
+                              ),
+                            ),
+                            child: Icon(
+                              state.isPaused ? Icons.play_arrow : Icons.pause,
+                            ),
+                            onPressed: () {
+                              final event = state.isPaused
+                                  ? OnResumeLogcat()
+                                  : OnPauseLogcat();
+                              context.read<LogcatBloc>().add(event);
+                            },
+                          );
+                        },
+                      ),
+                      FilledButton(
+                        style: ButtonStyle(
+                          shape: WidgetStateProperty.all(
+                            BeveledRectangleBorder(),
+                          ),
+                        ),
+                        onPressed: () {
+                          context.read<LogcatBloc>().add(OnRefreshLogcat());
+                        },
+                        child: const Icon(Icons.refresh),
+                      ),
+                    ],
+                  ),
+                ),
+                LogcatButton(
+                  color: Color.fromARGB(255, 213, 36, 54),
+                  icon: Icons.delete_outlined,
+                  onPressed: () =>
+                      context.read<LogcatBloc>().add(OnClearLogcat()),
                 ),
               ],
             ),
