@@ -6,7 +6,14 @@ import 'package:android_tools/shared/domain/entities/device_entity.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 
-class LogcatAppbar extends StatelessWidget {
+class LogcatAppbar extends StatefulWidget {
+  const LogcatAppbar({super.key});
+
+  @override
+  State<LogcatAppbar> createState() => _LogcatAppbarState();
+}
+
+class _LogcatAppbarState extends State<LogcatAppbar> {
   final availableLogcatSizes = [500, 1000, 2000, 5000, 10000];
   final availableLogcatLevels = [
     LogcatLevel.debug,
@@ -15,7 +22,13 @@ class LogcatAppbar extends StatelessWidget {
     LogcatLevel.error,
   ];
 
-  LogcatAppbar({super.key});
+  TextEditingController? autocompleteController;
+
+  @override
+  void dispose() {
+    autocompleteController?.dispose();
+    super.dispose();
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -50,11 +63,10 @@ class LogcatAppbar extends StatelessWidget {
                       );
                     }).toList(),
                   )
-                : SizedBox.shrink();
+                : const SizedBox.shrink();
           },
         ),
         Row(
-          crossAxisAlignment: CrossAxisAlignment.start,
           children: [
             Row(
               spacing: 8,
@@ -66,11 +78,32 @@ class LogcatAppbar extends StatelessWidget {
                       child: Autocomplete<ProcessEntity>(
                         displayStringForOption: (item) =>
                             "${item.packageName} (${item.processId})",
+
                         onSelected: (option) {
                           context.read<LogcatBloc>().add(
                             OnProcessSelected(process: option),
                           );
                         },
+
+                        fieldViewBuilder:
+                            (context, controller, focusNode, onFieldSubmitted) {
+                              return TextFormField(
+                                controller: controller,
+                                onChanged: (value) {
+                                  if (state.selectedProcess != null) {
+                                    context.read<LogcatBloc>().add(
+                                      OnProcessSelected(process: null),
+                                    );
+                                    controller.clear();
+                                  }
+                                },
+                                focusNode: focusNode,
+                                decoration: const InputDecoration(
+                                  hintText: "Rechercher un process...",
+                                ),
+                              );
+                            },
+
                         optionsBuilder: (textEditingValue) {
                           return state.processes.where(
                             (p) =>
@@ -134,7 +167,7 @@ class LogcatAppbar extends StatelessWidget {
                     );
                   },
                 ),
-                VerticalDivider(),
+                const VerticalDivider(),
                 IconButton(
                   icon: const Icon(Icons.delete),
                   tooltip: "Clear logs",
