@@ -69,6 +69,19 @@ class LogcatStateMapper extends ClassMapperBase<LogcatState> {
     _$selectedDevice,
     opt: true,
   );
+  static List<ProcessEntity> _$processes(LogcatState v) => v.processes;
+  static const Field<LogcatState, List<ProcessEntity>> _f$processes = Field(
+    'processes',
+    _$processes,
+    opt: true,
+    def: const [],
+  );
+  static ProcessEntity? _$selectedProcess(LogcatState v) => v.selectedProcess;
+  static const Field<LogcatState, ProcessEntity> _f$selectedProcess = Field(
+    'selectedProcess',
+    _$selectedProcess,
+    opt: true,
+  );
 
   @override
   final MappableFields<LogcatState> fields = const {
@@ -79,6 +92,8 @@ class LogcatStateMapper extends ClassMapperBase<LogcatState> {
     #maxLogcatLines: _f$maxLogcatLines,
     #devices: _f$devices,
     #selectedDevice: _f$selectedDevice,
+    #processes: _f$processes,
+    #selectedProcess: _f$selectedProcess,
   };
 
   static LogcatState _instantiate(DecodingData data) {
@@ -90,6 +105,8 @@ class LogcatStateMapper extends ClassMapperBase<LogcatState> {
       maxLogcatLines: data.dec(_f$maxLogcatLines),
       devices: data.dec(_f$devices),
       selectedDevice: data.dec(_f$selectedDevice),
+      processes: data.dec(_f$processes),
+      selectedProcess: data.dec(_f$selectedProcess),
     );
   }
 
@@ -156,6 +173,12 @@ abstract class LogcatStateCopyWith<$R, $In extends LogcatState, $Out>
   ListCopyWith<$R, String, ObjectCopyWith<$R, String, String>> get logs;
   ListCopyWith<$R, DeviceEntity, ObjectCopyWith<$R, DeviceEntity, DeviceEntity>>
   get devices;
+  ListCopyWith<
+    $R,
+    ProcessEntity,
+    ObjectCopyWith<$R, ProcessEntity, ProcessEntity>
+  >
+  get processes;
   $R call({
     List<String>? logs,
     bool? isSticky,
@@ -164,6 +187,8 @@ abstract class LogcatStateCopyWith<$R, $In extends LogcatState, $Out>
     int? maxLogcatLines,
     List<DeviceEntity>? devices,
     DeviceEntity? selectedDevice,
+    List<ProcessEntity>? processes,
+    ProcessEntity? selectedProcess,
   });
   LogcatStateCopyWith<$R2, $In, $Out2> $chain<$R2, $Out2>(Then<$Out2, $R2> t);
 }
@@ -191,6 +216,17 @@ class _LogcatStateCopyWithImpl<$R, $Out>
     (v) => call(devices: v),
   );
   @override
+  ListCopyWith<
+    $R,
+    ProcessEntity,
+    ObjectCopyWith<$R, ProcessEntity, ProcessEntity>
+  >
+  get processes => ListCopyWith(
+    $value.processes,
+    (v, t) => ObjectCopyWith(v, $identity, t),
+    (v) => call(processes: v),
+  );
+  @override
   $R call({
     List<String>? logs,
     bool? isSticky,
@@ -199,6 +235,8 @@ class _LogcatStateCopyWithImpl<$R, $Out>
     int? maxLogcatLines,
     List<DeviceEntity>? devices,
     Object? selectedDevice = $none,
+    List<ProcessEntity>? processes,
+    Object? selectedProcess = $none,
   }) => $apply(
     FieldCopyWithData({
       if (logs != null) #logs: logs,
@@ -208,6 +246,8 @@ class _LogcatStateCopyWithImpl<$R, $Out>
       if (maxLogcatLines != null) #maxLogcatLines: maxLogcatLines,
       if (devices != null) #devices: devices,
       if (selectedDevice != $none) #selectedDevice: selectedDevice,
+      if (processes != null) #processes: processes,
+      if (selectedProcess != $none) #selectedProcess: selectedProcess,
     }),
   );
   @override
@@ -219,6 +259,8 @@ class _LogcatStateCopyWithImpl<$R, $Out>
     maxLogcatLines: data.get(#maxLogcatLines, or: $value.maxLogcatLines),
     devices: data.get(#devices, or: $value.devices),
     selectedDevice: data.get(#selectedDevice, or: $value.selectedDevice),
+    processes: data.get(#processes, or: $value.processes),
+    selectedProcess: data.get(#selectedProcess, or: $value.selectedProcess),
   );
 
   @override

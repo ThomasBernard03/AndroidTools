@@ -42,3 +42,8 @@ class OnSelectedDeviceChanged extends LogcatEvent {
 class OnRefreshDevices extends LogcatEvent {
   OnRefreshDevices();
 }
+
+class OnProcessSelected extends LogcatEvent {
+  final ProcessEntity? process;
+  OnProcessSelected({required this.process});
+}

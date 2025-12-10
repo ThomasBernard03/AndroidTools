@@ -9,6 +9,8 @@ class LogcatState with LogcatStateMappable {
   final LogcatLevel minimumLogLevel;
   final List<DeviceEntity> devices;
   final DeviceEntity? selectedDevice;
+  final List<ProcessEntity> processes;
+  final ProcessEntity? selectedProcess;
 
   LogcatState({
     this.logs = const [],
@@ -18,5 +20,7 @@ class LogcatState with LogcatStateMappable {
     this.maxLogcatLines = 500,
     this.devices = const [],
     this.selectedDevice,
+    this.processes = const [],
+    this.selectedProcess,
   });
 }

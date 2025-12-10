@@ -7,7 +7,7 @@ import 'package:logger/logger.dart';
 
 class SharedModule {
   static void configureDependencies() {
-    getIt.registerLazySingleton<Logger>(() => Logger());
+    getIt.registerLazySingleton<Logger>(() => Logger(printer: SimplePrinter()));
     getIt.registerLazySingleton(() => ShellDatasource());
 
     _registerRepositories();

@@ -1,5 +1,7 @@
 import 'dart:async';
 
+import 'package:android_tools/features/logcat/domain/entities/process_entity.dart';
+import 'package:android_tools/features/logcat/domain/usecases/get_processes_usecase.dart';
 import 'package:android_tools/shared/domain/entities/device_entity.dart';
 import 'package:android_tools/features/logcat/domain/entities/logcat_level.dart';
 import 'package:android_tools/shared/domain/usecases/get_connected_devices_usecase.dart';
@@ -18,6 +20,7 @@ class LogcatBloc extends Bloc<LogcatEvent, LogcatState> {
   final ListenLogcatUsecase _listenLogcatUsecase = getIt.get();
   final ClearLogcatUsecase _clearLogcatUsecase = getIt.get();
   final GetConnectedDevicesUsecase _getConnectedDevicesUsecase = getIt.get();
+  final GetProcessesUsecase _getProcessesUsecase = getIt.get();
   final Logger logger = getIt.get();
 
   StreamSubscription<List<String>>? _subscription;
@@ -25,9 +28,21 @@ class LogcatBloc extends Bloc<LogcatEvent, LogcatState> {
   LogcatBloc() : super(LogcatState()) {
     on<OnStartListeningLogcat>((event, emit) async {
       final devices = await _getConnectedDevicesUsecase();
+      final defaultDevice = devices.firstOrNull;
+
+      if (defaultDevice == null) {
+        logger.w("No devices connected");
+        return;
+      }
+      final processes = await _getProcessesUsecase(defaultDevice.deviceId);
       emit(
-        state.copyWith(devices: devices, selectedDevice: devices.firstOrNull),
+        state.copyWith(
+          devices: devices,
+          selectedDevice: defaultDevice,
+          processes: processes,
+        ),
       );
+
       await _listenLogcat();
     });
 
@@ -107,6 +122,11 @@ class LogcatBloc extends Bloc<LogcatEvent, LogcatState> {
       );
       await _listenLogcat();
     });
+    on<OnProcessSelected>((event, emit) async {
+      logger.i("Process selected : ${event.process}");
+      emit(state.copyWith(logs: [], selectedProcess: event.process));
+      await _listenLogcat();
+    });
   }
 
   Future<void> _listenLogcat() async {
@@ -119,6 +139,7 @@ class LogcatBloc extends Bloc<LogcatEvent, LogcatState> {
     final stream = _listenLogcatUsecase(
       state.selectedDevice!.deviceId,
       state.minimumLogLevel,
+      state.selectedProcess?.processId,
     );
     _subscription = stream.listen((lines) {
       add(OnLogReceived(lines: lines));

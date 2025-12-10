@@ -2,6 +2,7 @@ import 'dart:async';
 import 'dart:convert';
 import 'dart:io';
 
+import 'package:android_tools/features/logcat/domain/entities/process_entity.dart';
 import 'package:android_tools/shared/data/datasources/shell/shell_datasource.dart';
 import 'package:android_tools/features/logcat/domain/entities/logcat_level.dart';
 import 'package:android_tools/features/logcat/domain/repositories/logcat_repository.dart';
@@ -17,6 +18,7 @@ class LogcatRepositoryImpl implements LogcatRepository {
   Stream<List<String>> listenLogcat(
     String deviceId,
     LogcatLevel? level,
+    int? processId,
   ) async* {
     if (deviceId.isEmpty) {
       logger.w("Device id can't be empty, can't listen for logs");
@@ -24,17 +26,21 @@ class LogcatRepositoryImpl implements LogcatRepository {
     }
 
     final adbPath = shellDatasource.getAdbPath();
+
     final args = <String>['-s', deviceId, 'logcat'];
 
     if (level != null) {
       args.add('*:${_mapLevel(level)}');
     }
 
+    if (processId != null) {
+      args.addAll(['--pid', processId.toString()]);
+    }
+
     final process = await Process.start(adbPath, args);
 
     final buffer = <String>[];
     final controller = StreamController<List<String>>();
-
     Timer? timer;
 
     process.stdout
@@ -45,7 +51,7 @@ class LogcatRepositoryImpl implements LogcatRepository {
             buffer.add(line);
 
             if (timer == null || !timer!.isActive) {
-              timer = Timer.periodic(Duration(milliseconds: 500), (_) {
+              timer = Timer.periodic(const Duration(milliseconds: 500), (_) {
                 if (buffer.isNotEmpty) {
                   controller.add(List.from(buffer));
                   buffer.clear();
@@ -101,5 +107,83 @@ class LogcatRepositoryImpl implements LogcatRepository {
     } catch (e) {
       logger.w('Exception clearing logcat: $e');
     }
+  }
+
+  @override
+  Future<List<ProcessEntity>> getProcesses(String deviceId) async {
+    try {
+      final adbPath = shellDatasource.getAdbPath();
+
+      final result = await Process.run(adbPath, [
+        '-s',
+        deviceId,
+        'shell',
+        'sh',
+        '-c',
+        'ps -A',
+      ]);
+
+      final output = result.stdout.toString().trim();
+      if (output.isEmpty) return [];
+
+      final lines = output.split('\n');
+      final processes = <ProcessEntity>[];
+
+      for (final line in lines) {
+        if (line.trim().isEmpty) continue;
+        if (line.contains('PID') || line.contains('USER')) continue;
+
+        final parts = line.split(RegExp(r'\s+'));
+        if (parts.length < 2) continue;
+
+        // PID
+        final pid = int.tryParse(parts[1]);
+        if (pid == null) continue;
+
+        final processName = parts.last;
+
+        // Filtrer les process inutiles
+        if (_shouldIgnoreProcess(processName)) continue;
+
+        processes.add(ProcessEntity(processId: pid, packageName: processName));
+      }
+
+      return processes;
+    } catch (e) {
+      logger.w('Exception getting processes: $e');
+      return [];
+    }
+  }
+
+  bool _shouldIgnoreProcess(String name) {
+    // 1. Threads noyau
+    if (name.startsWith('[') && name.endsWith(']')) return true;
+
+    // 2. HAL / vendor
+    if (name.startsWith('vendor.')) return true;
+    if (name.startsWith('android.hardware.')) return true;
+
+    // 3. Binaires natifs connus (non exhaustif, mais efficace)
+    const ignoreList = [
+      'init',
+      'logd',
+      'adbd',
+      'ps',
+      'wpa_supplicant',
+      'sh',
+      'ip6tables-restore',
+      'iptables-restore',
+      'thermal',
+      'rild',
+      'artd',
+      'pageboostd',
+    ];
+    if (ignoreList.contains(name)) return true;
+
+    // 4. Ce ne sont PAS des apps → noms sans point
+    // (ex: kworker, netd, system_server…)
+    if (!name.contains('.')) return true;
+
+    return false;
   }
 }

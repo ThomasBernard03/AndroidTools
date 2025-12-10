@@ -5,7 +5,11 @@ class ListenLogcatUsecase {
   final LogcatRepository logcatRepository;
   const ListenLogcatUsecase({required this.logcatRepository});
 
-  Stream<List<String>> call(String deviceId, LogcatLevel? level) {
-    return logcatRepository.listenLogcat(deviceId, level);
+  Stream<List<String>> call(
+    String deviceId,
+    LogcatLevel? level,
+    int? processId,
+  ) {
+    return logcatRepository.listenLogcat(deviceId, level, processId);
   }
 }
