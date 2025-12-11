@@ -33,208 +33,221 @@ class _LogcatAppbarState extends State<LogcatAppbar> {
 
   @override
   Widget build(BuildContext context) {
-    return Row(
-      crossAxisAlignment: CrossAxisAlignment.start,
-      mainAxisAlignment: MainAxisAlignment.spaceBetween,
-      children: [
-        BlocBuilder<LogcatBloc, LogcatState>(
-          builder: (context, state) {
-            return state.devices.isNotEmpty
-                ? DropdownButton<DeviceEntity>(
-                    value: state.selectedDevice,
-                    elevation: 16,
-                    onChanged: (DeviceEntity? value) {
-                      if (value == null) return;
-                      context.read<LogcatBloc>().add(
-                        OnSelectedDeviceChanged(device: value),
-                      );
-                    },
-                    items: state.devices.map<DropdownMenuItem<DeviceEntity>>((
-                      DeviceEntity value,
-                    ) {
-                      return DropdownMenuItem<DeviceEntity>(
-                        value: value,
-                        child: Row(
-                          spacing: 8,
-                          children: [
-                            Icon(Icons.mobile_friendly, size: 16),
-                            Text(value.name),
-                          ],
-                        ),
-                      );
-                    }).toList(),
-                  )
-                : const SizedBox.shrink();
-          },
-        ),
-        Row(
-          children: [
-            Row(
-              spacing: 8,
-              children: [
-                BlocBuilder<LogcatBloc, LogcatState>(
-                  builder: (context, state) {
-                    return SizedBox(
-                      width: 300,
-                      child: Autocomplete<ProcessEntity>(
-                        displayStringForOption: (item) =>
-                            "${item.packageName} (${item.processId})",
-
-                        onSelected: (option) {
-                          context.read<LogcatBloc>().add(
-                            OnProcessSelected(process: option),
-                          );
-                        },
-
-                        fieldViewBuilder:
-                            (context, controller, focusNode, onFieldSubmitted) {
-                              return TextFormField(
-                                controller: controller,
-                                onChanged: (value) {
-                                  if (state.selectedProcess != null) {
-                                    context.read<LogcatBloc>().add(
-                                      OnProcessSelected(process: null),
-                                    );
-                                    controller.clear();
-                                  }
-                                },
-                                focusNode: focusNode,
-                                decoration: const InputDecoration(
-                                  hintText: "Rechercher un process...",
-                                ),
-                              );
-                            },
-
-                        optionsBuilder: (textEditingValue) {
-                          return state.processes.where(
-                            (p) =>
-                                p.packageName.contains(textEditingValue.text),
-                          );
-                        },
-                      ),
-                    );
-                  },
-                ),
-                BlocBuilder<LogcatBloc, LogcatState>(
-                  builder: (context, state) {
-                    return DropdownButton<int>(
-                      value: state.maxLogcatLines,
+    return Padding(
+      padding: const EdgeInsets.symmetric(horizontal: 8.0),
+      child: Row(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        mainAxisAlignment: MainAxisAlignment.spaceBetween,
+        children: [
+          BlocBuilder<LogcatBloc, LogcatState>(
+            builder: (context, state) {
+              return state.devices.isNotEmpty
+                  ? DropdownButton<DeviceEntity>(
+                      value: state.selectedDevice,
                       elevation: 16,
-                      onChanged: (int? value) {
+                      onChanged: (DeviceEntity? value) {
+                        if (value == null) return;
                         context.read<LogcatBloc>().add(
-                          OnLogcatMaxLinesChanged(
-                            maxLines: value ?? availableLogcatSizes.first,
-                          ),
+                          OnSelectedDeviceChanged(device: value),
                         );
                       },
-                      items: availableLogcatSizes.map<DropdownMenuItem<int>>((
-                        int value,
+                      items: state.devices.map<DropdownMenuItem<DeviceEntity>>((
+                        DeviceEntity value,
                       ) {
-                        return DropdownMenuItem<int>(
+                        return DropdownMenuItem<DeviceEntity>(
                           value: value,
-                          child: Text(value.toString()),
+                          child: Row(
+                            spacing: 8,
+                            children: [
+                              Icon(Icons.mobile_friendly, size: 16),
+                              Text(value.name),
+                            ],
+                          ),
                         );
                       }).toList(),
-                    );
-                  },
-                ),
-                BlocBuilder<LogcatBloc, LogcatState>(
-                  builder: (context, state) {
-                    return DropdownButton<LogcatLevel>(
-                      value: state.minimumLogLevel,
-                      elevation: 16,
-                      onChanged: (LogcatLevel? value) {
-                        if (state.minimumLogLevel == value) return;
-                        context.read<LogcatBloc>().add(
-                          OnMinimumLogLevelChanged(minimumLogLevel: value),
-                        );
-                      },
-                      items: availableLogcatLevels
-                          .map<DropdownMenuItem<LogcatLevel>>((
-                            LogcatLevel value,
-                          ) {
-                            return DropdownMenuItem<LogcatLevel>(
-                              value: value,
-                              child: Row(
-                                spacing: 8,
-                                children: [
-                                  Icon(value.icon(), color: value.textColor()),
-                                  Text(value.name.toString()),
-                                ],
-                              ),
-                            );
-                          })
-                          .toList(),
-                    );
-                  },
-                ),
-                const VerticalDivider(),
+                    )
+                  : const SizedBox.shrink();
+            },
+          ),
+          Row(
+            children: [
+              Row(
+                spacing: 8,
+                children: [
+                  BlocBuilder<LogcatBloc, LogcatState>(
+                    builder: (context, state) {
+                      return SizedBox(
+                        width: 300,
+                        child: Autocomplete<ProcessEntity>(
+                          displayStringForOption: (item) =>
+                              "${item.packageName} (${item.processId})",
 
-                BlocBuilder<LogcatBloc, LogcatState>(
-                  builder: (context, state) {
-                    return IconButton(
-                      icon: Icon(state.isSticky ? Icons.lock : Icons.lock_open),
-                      tooltip: "Toggle Sticky",
-                      onPressed: () {
-                        context.read<LogcatBloc>().add(
-                          OnToggleIsSticky(isSticky: !state.isSticky),
-                        );
-                      },
-                    );
-                  },
-                ),
-                Card(
-                  clipBehavior: Clip.hardEdge,
-                  shape: RoundedRectangleBorder(
-                    borderRadius: BorderRadius.circular(8),
+                          onSelected: (option) {
+                            context.read<LogcatBloc>().add(
+                              OnProcessSelected(process: option),
+                            );
+                          },
+
+                          fieldViewBuilder:
+                              (
+                                context,
+                                controller,
+                                focusNode,
+                                onFieldSubmitted,
+                              ) {
+                                return TextFormField(
+                                  controller: controller,
+                                  onChanged: (value) {
+                                    if (state.selectedProcess != null) {
+                                      context.read<LogcatBloc>().add(
+                                        OnProcessSelected(process: null),
+                                      );
+                                      controller.clear();
+                                    }
+                                  },
+                                  focusNode: focusNode,
+                                  decoration: const InputDecoration(
+                                    hintText: "Rechercher un process...",
+                                  ),
+                                );
+                              },
+
+                          optionsBuilder: (textEditingValue) {
+                            return state.processes.where(
+                              (p) =>
+                                  p.packageName.contains(textEditingValue.text),
+                            );
+                          },
+                        ),
+                      );
+                    },
                   ),
-                  child: Row(
-                    children: [
-                      BlocBuilder<LogcatBloc, LogcatState>(
-                        builder: (context, state) {
-                          return FilledButton(
-                            style: ButtonStyle(
-                              shape: WidgetStateProperty.all(
-                                BeveledRectangleBorder(),
-                              ),
+                  BlocBuilder<LogcatBloc, LogcatState>(
+                    builder: (context, state) {
+                      return DropdownButton<int>(
+                        value: state.maxLogcatLines,
+                        elevation: 16,
+                        onChanged: (int? value) {
+                          context.read<LogcatBloc>().add(
+                            OnLogcatMaxLinesChanged(
+                              maxLines: value ?? availableLogcatSizes.first,
                             ),
-                            child: Icon(
-                              state.isPaused ? Icons.play_arrow : Icons.pause,
-                            ),
-                            onPressed: () {
-                              final event = state.isPaused
-                                  ? OnResumeLogcat()
-                                  : OnPauseLogcat();
-                              context.read<LogcatBloc>().add(event);
-                            },
                           );
                         },
-                      ),
-                      FilledButton(
-                        style: ButtonStyle(
-                          shape: WidgetStateProperty.all(
-                            BeveledRectangleBorder(),
-                          ),
-                        ),
-                        onPressed: () {
-                          context.read<LogcatBloc>().add(OnRefreshLogcat());
-                        },
-                        child: const Icon(Icons.refresh),
-                      ),
-                    ],
+                        items: availableLogcatSizes.map<DropdownMenuItem<int>>((
+                          int value,
+                        ) {
+                          return DropdownMenuItem<int>(
+                            value: value,
+                            child: Text(value.toString()),
+                          );
+                        }).toList(),
+                      );
+                    },
                   ),
-                ),
-                LogcatButton(
-                  color: Color.fromARGB(255, 213, 36, 54),
-                  icon: Icons.delete_outlined,
-                  onPressed: () =>
-                      context.read<LogcatBloc>().add(OnClearLogcat()),
-                ),
-              ],
-            ),
-          ],
-        ),
-      ],
+                  BlocBuilder<LogcatBloc, LogcatState>(
+                    builder: (context, state) {
+                      return DropdownButton<LogcatLevel>(
+                        value: state.minimumLogLevel,
+                        elevation: 16,
+                        onChanged: (LogcatLevel? value) {
+                          if (state.minimumLogLevel == value) return;
+                          context.read<LogcatBloc>().add(
+                            OnMinimumLogLevelChanged(minimumLogLevel: value),
+                          );
+                        },
+                        items: availableLogcatLevels
+                            .map<DropdownMenuItem<LogcatLevel>>((
+                              LogcatLevel value,
+                            ) {
+                              return DropdownMenuItem<LogcatLevel>(
+                                value: value,
+                                child: Row(
+                                  spacing: 8,
+                                  children: [
+                                    Icon(
+                                      value.icon(),
+                                      color: value.textColor(),
+                                    ),
+                                    Text(value.name.toString()),
+                                  ],
+                                ),
+                              );
+                            })
+                            .toList(),
+                      );
+                    },
+                  ),
+                  const VerticalDivider(),
+
+                  BlocBuilder<LogcatBloc, LogcatState>(
+                    builder: (context, state) {
+                      return IconButton(
+                        icon: Icon(
+                          state.isSticky ? Icons.lock : Icons.lock_open,
+                        ),
+                        tooltip: "Toggle Sticky",
+                        onPressed: () {
+                          context.read<LogcatBloc>().add(
+                            OnToggleIsSticky(isSticky: !state.isSticky),
+                          );
+                        },
+                      );
+                    },
+                  ),
+                  Card(
+                    clipBehavior: Clip.hardEdge,
+                    shape: RoundedRectangleBorder(
+                      borderRadius: BorderRadius.circular(8),
+                    ),
+                    child: Row(
+                      children: [
+                        BlocBuilder<LogcatBloc, LogcatState>(
+                          builder: (context, state) {
+                            return FilledButton(
+                              style: ButtonStyle(
+                                shape: WidgetStateProperty.all(
+                                  BeveledRectangleBorder(),
+                                ),
+                              ),
+                              child: Icon(
+                                state.isPaused ? Icons.play_arrow : Icons.pause,
+                              ),
+                              onPressed: () {
+                                final event = state.isPaused
+                                    ? OnResumeLogcat()
+                                    : OnPauseLogcat();
+                                context.read<LogcatBloc>().add(event);
+                              },
+                            );
+                          },
+                        ),
+                        FilledButton(
+                          style: ButtonStyle(
+                            shape: WidgetStateProperty.all(
+                              BeveledRectangleBorder(),
+                            ),
+                          ),
+                          onPressed: () {
+                            context.read<LogcatBloc>().add(OnRefreshLogcat());
+                          },
+                          child: const Icon(Icons.refresh),
+                        ),
+                      ],
+                    ),
+                  ),
+                  LogcatButton(
+                    color: Color.fromARGB(255, 213, 36, 54),
+                    icon: Icons.delete_outlined,
+                    onPressed: () =>
+                        context.read<LogcatBloc>().add(OnClearLogcat()),
+                  ),
+                ],
+              ),
+            ],
+          ),
+        ],
+      ),
     );
   }
 }

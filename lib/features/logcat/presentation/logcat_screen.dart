@@ -46,7 +46,7 @@ class _LogcatScreenState extends State<LogcatScreen> {
       value: bloc,
       child: Scaffold(
         appBar: PreferredSize(
-          preferredSize: Size.fromHeight(100),
+          preferredSize: Size.fromHeight(kToolbarHeight),
           child: LogcatAppbar(),
         ),
         body: BlocListener<LogcatBloc, LogcatState>(

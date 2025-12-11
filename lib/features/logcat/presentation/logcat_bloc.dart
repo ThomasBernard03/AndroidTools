@@ -11,6 +11,7 @@ import 'package:android_tools/main.dart';
 import 'package:dart_mappable/dart_mappable.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:logger/logger.dart';
+import 'package:collection/collection.dart';
 
 part 'logcat_event.dart';
 part 'logcat_state.dart';
@@ -54,13 +55,14 @@ class LogcatBloc extends Bloc<LogcatEvent, LogcatState> {
     });
 
     on<OnClearLogcat>((event, emit) async {
-      if (state.selectedDevice == null) {
+      final selectedDevice = state.selectedDevice;
+      if (selectedDevice == null) {
         return logger.w("Can't clear logcat, no device selected");
       }
 
       logger.i("Start cleaning logcat");
       emit(state.copyWith(logs: []));
-      await _clearLogcatUsecase(state.selectedDevice!.deviceId);
+      await _clearLogcatUsecase(selectedDevice.deviceId);
       logger.i("Logcat cleaned");
     });
 
@@ -105,6 +107,24 @@ class LogcatBloc extends Bloc<LogcatEvent, LogcatState> {
           devices.any((d) => d.deviceId == state.selectedDevice?.deviceId)
           ? state.selectedDevice
           : devices.firstOrNull;
+
+      if (selectedDevice != null) {
+        final processes = await _getProcessesUsecase(selectedDevice.deviceId);
+        final oldProcess = state.selectedProcess;
+        // ProcessId can change so we map to update processId
+        final selectedProcess = oldProcess == null
+            ? null
+            : processes.firstWhereOrNull(
+                (p) => p.packageName == oldProcess.packageName,
+              );
+        emit(
+          state.copyWith(
+            processes: processes,
+            selectedProcess: selectedProcess,
+          ),
+        );
+      }
+
       emit(
         state.copyWith(
           devices: devices,
