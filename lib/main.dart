@@ -1,3 +1,4 @@
+import 'package:android_tools/features/fileexplorer/presentation/file_explorer_screen.dart';
 import 'package:android_tools/features/logcat/core/logcat_module.dart';
 import 'package:android_tools/shared/core/shared_module.dart';
 import 'package:android_tools/features/logcat/presentation/logcat_screen.dart';
@@ -65,6 +66,7 @@ class _MyAppState extends State<MyApp> {
           Expanded(
             child: switch (_selectedIndex) {
               1 => LogcatScreen(),
+              2 => FileExplorerScreen(),
               _ => Placeholder(),
             },
           ),
