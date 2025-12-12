@@ -23,14 +23,6 @@ class _LogcatAppbarState extends State<LogcatAppbar> {
     LogcatLevel.error,
   ];
 
-  TextEditingController? autocompleteController;
-
-  @override
-  void dispose() {
-    autocompleteController?.dispose();
-    super.dispose();
-  }
-
   @override
   Widget build(BuildContext context) {
     return Padding(
@@ -46,7 +38,9 @@ class _LogcatAppbarState extends State<LogcatAppbar> {
                       value: state.selectedDevice,
                       elevation: 16,
                       onChanged: (DeviceEntity? value) {
-                        if (value == null) return;
+                        if (value == null || value == state.selectedDevice) {
+                          return;
+                        }
                         context.read<LogcatBloc>().add(
                           OnSelectedDeviceChanged(device: value),
                         );
@@ -95,19 +89,29 @@ class _LogcatAppbarState extends State<LogcatAppbar> {
                                 focusNode,
                                 onFieldSubmitted,
                               ) {
-                                return TextFormField(
-                                  controller: controller,
-                                  onChanged: (value) {
-                                    if (state.selectedProcess != null) {
-                                      context.read<LogcatBloc>().add(
-                                        OnProcessSelected(process: null),
-                                      );
+                                return BlocListener<LogcatBloc, LogcatState>(
+                                  listenWhen: (previous, current) =>
+                                      previous.selectedProcess !=
+                                      current.selectedProcess,
+                                  listener: (context, state) {
+                                    if (state.selectedProcess == null) {
                                       controller.clear();
                                     }
                                   },
-                                  focusNode: focusNode,
-                                  decoration: const InputDecoration(
-                                    hintText: "Rechercher un process...",
+                                  child: TextFormField(
+                                    controller: controller,
+                                    onChanged: (value) {
+                                      if (state.selectedProcess != null) {
+                                        context.read<LogcatBloc>().add(
+                                          OnProcessSelected(process: null),
+                                        );
+                                        controller.clear();
+                                      }
+                                    },
+                                    focusNode: focusNode,
+                                    decoration: const InputDecoration(
+                                      hintText: "Rechercher un process...",
+                                    ),
                                   ),
                                 );
                               },

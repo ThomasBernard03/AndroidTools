@@ -96,8 +96,15 @@ class LogcatBloc extends Bloc<LogcatEvent, LogcatState> {
     on<OnSelectedDeviceChanged>((event, emit) async {
       logger.i("Selected device changed for ${event.device.name}");
       await _subscription?.cancel();
-
-      emit(state.copyWith(selectedDevice: event.device, logs: []));
+      final processes = await _getProcessesUsecase(event.device.deviceId);
+      emit(
+        state.copyWith(
+          selectedDevice: event.device,
+          logs: [],
+          processes: processes,
+          selectedProcess: null,
+        ),
+      );
       await _listenLogcat();
     });
     on<OnRefreshLogcat>((event, emit) async {

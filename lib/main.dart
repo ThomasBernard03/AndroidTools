@@ -1,3 +1,4 @@
+import 'package:android_tools/features/fileexplorer/core/fileexplorer_module.dart';
 import 'package:android_tools/features/fileexplorer/presentation/file_explorer_screen.dart';
 import 'package:android_tools/features/logcat/core/logcat_module.dart';
 import 'package:android_tools/shared/core/shared_module.dart';
@@ -11,6 +12,7 @@ final getIt = GetIt.instance;
 void main() {
   LogcatModule.configureDependencies();
   SharedModule.configureDependencies();
+  FileExplorerModule.configureDependencies();
   runApp(MyApp());
 }
 

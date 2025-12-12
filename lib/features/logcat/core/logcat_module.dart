@@ -13,10 +13,7 @@ class LogcatModule {
 
   static void _registerRepositories() {
     getIt.registerLazySingleton<LogcatRepository>(
-      () => LogcatRepositoryImpl(
-        logger: getIt.get(),
-        shellDatasource: getIt.get(),
-      ),
+      () => LogcatRepositoryImpl(getIt.get(), getIt.get()),
     );
   }
 

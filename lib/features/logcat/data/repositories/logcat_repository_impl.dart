@@ -9,10 +9,10 @@ import 'package:android_tools/features/logcat/domain/repositories/logcat_reposit
 import 'package:logger/logger.dart';
 
 class LogcatRepositoryImpl implements LogcatRepository {
-  final Logger logger;
-  final ShellDatasource shellDatasource;
+  final Logger _logger;
+  final ShellDatasource _shellDatasource;
 
-  LogcatRepositoryImpl({required this.logger, required this.shellDatasource});
+  LogcatRepositoryImpl(this._logger, this._shellDatasource);
 
   @override
   Stream<List<String>> listenLogcat(
@@ -21,11 +21,11 @@ class LogcatRepositoryImpl implements LogcatRepository {
     int? processId,
   ) async* {
     if (deviceId.isEmpty) {
-      logger.w("Device id can't be empty, can't listen for logs");
+      _logger.w("Device id can't be empty, can't listen for logs");
       return;
     }
 
-    final adbPath = shellDatasource.getAdbPath();
+    final adbPath = _shellDatasource.getAdbPath();
 
     final args = <String>['-s', deviceId, 'logcat'];
 
@@ -91,8 +91,8 @@ class LogcatRepositoryImpl implements LogcatRepository {
   @override
   Future<void> clearLogcat(String deviceId) async {
     try {
-      logger.i("Cleaning logcat");
-      final adbPath = shellDatasource.getAdbPath();
+      _logger.i("Cleaning logcat");
+      final adbPath = _shellDatasource.getAdbPath();
       final process = await Process.run(adbPath, [
         '-s',
         deviceId,
@@ -100,19 +100,19 @@ class LogcatRepositoryImpl implements LogcatRepository {
         '-c',
       ]);
       if (process.exitCode != 0) {
-        logger.w("Error when clearing logcat : ${process.stderr}");
+        _logger.w("Error when clearing logcat : ${process.stderr}");
       } else {
-        logger.i("Logcat cleared successfully");
+        _logger.i("Logcat cleared successfully");
       }
     } catch (e) {
-      logger.w('Exception clearing logcat: $e');
+      _logger.w('Exception clearing logcat: $e');
     }
   }
 
   @override
   Future<List<ProcessEntity>> getProcesses(String deviceId) async {
     try {
-      final adbPath = shellDatasource.getAdbPath();
+      final adbPath = _shellDatasource.getAdbPath();
 
       final result = await Process.run(adbPath, [
         '-s',
@@ -150,7 +150,7 @@ class LogcatRepositoryImpl implements LogcatRepository {
 
       return processes;
     } catch (e) {
-      logger.w('Exception getting processes: $e');
+      _logger.w('Exception getting processes: $e');
       return [];
     }
   }
