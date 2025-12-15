@@ -16,6 +16,7 @@ class FileExplorerBloc extends Bloc<FileExplorerEvent, FileExplorerState> {
   FileExplorerBloc() : super(FileExplorerState()) {
     on<OnAppearing>((event, emit) async {
       final files = await _listFilesUsecase("");
+      _logger.i('Fetched ${files.length} file(s) for first route');
       emit(state.copyWith(files: files));
     });
   }

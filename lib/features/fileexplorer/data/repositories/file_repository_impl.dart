@@ -31,7 +31,12 @@ class FileRepositoryImpl implements FileRepository {
         _logger.w('ADB error: $error');
       }
 
-      final lines = output.split('\n').where((line) => line.trim().isNotEmpty);
+      final lines = output
+          .split('\n')
+          .map((l) => l.trim())
+          .where((l) => l.isNotEmpty)
+          .skip(1)
+          .toList();
 
       return lines.map((line) => _parseLine(line)).toList();
     } catch (e, stack) {
@@ -40,47 +45,46 @@ class FileRepositoryImpl implements FileRepository {
     }
   }
 
-  FileEntry _parseLine(String line) {
-    final parts = line.split(RegExp(r'\s+'));
+  final regex = RegExp(
+    r'^(\S+)\s+' // permissions
+    r'(\S+)\s+' // links
+    r'(\S+)\s+' // owner
+    r'(\S+)\s+' // group
+    r'(\S+)\s+' // size
+    r'(\d{4}-\d{2}-\d{2})\s+' // date
+    r'(\d{2}:\d{2})\s+' // time
+    r'(.+)$', // name (with spaces + symlink)
+  );
 
-    if (parts.isEmpty) {
+  FileEntry _parseLine(String line) {
+    final match = regex.firstMatch(line);
+
+    if (match == null) {
       return FileEntry(
-        type: FileType.unknown,
-        permissions: '?????????',
-        name: line,
+        type: line.startsWith('d')
+            ? FileType.directory
+            : line.startsWith('l')
+            ? FileType.symlink
+            : FileType.unknown,
+        permissions: line.split(' ').first,
+        name: line.split(' ').last,
       );
     }
 
-    final perm = parts[0];
+    final perm = match.group(1)!;
+    final namePart = match.group(8)!;
 
     final type = perm.startsWith('d')
         ? FileType.directory
         : perm.startsWith('l')
         ? FileType.symlink
-        : perm.startsWith('-')
-        ? FileType.file
-        : FileType.unknown;
+        : FileType.file;
 
-    int? parseIntSafe(String s) => int.tryParse(s);
-
-    DateTime? date;
-    try {
-      if (parts.length >= 7) {
-        final dateStr = '${parts[5]} ${parts[6]}';
-        date = DateTime.tryParse(dateStr);
-      }
-    } catch (_) {}
-
-    final nameIndex = line.indexOf(parts.length > 7 ? parts[7] : '');
-    String fullName = nameIndex >= 0
-        ? line.substring(nameIndex).trim()
-        : parts.last;
-
-    String name = fullName;
+    String name = namePart;
     String? symlinkTarget;
 
-    if (type == FileType.symlink && fullName.contains('->')) {
-      final split = fullName.split('->');
+    if (type == FileType.symlink && namePart.contains('->')) {
+      final split = namePart.split('->');
       name = split[0].trim();
       symlinkTarget = split[1].trim();
     }
@@ -88,11 +92,11 @@ class FileRepositoryImpl implements FileRepository {
     return FileEntry(
       type: type,
       permissions: perm,
-      links: parts.length > 1 ? parseIntSafe(parts[1]) : null,
-      owner: parts.length > 2 ? parts[2] : null,
-      group: parts.length > 3 ? parts[3] : null,
-      size: parts.length > 4 ? parseIntSafe(parts[4]) : null,
-      date: date,
+      links: int.tryParse(match.group(2)!),
+      owner: match.group(3),
+      group: match.group(4),
+      size: int.tryParse(match.group(5)!),
+      date: DateTime.tryParse('${match.group(6)} ${match.group(7)}'),
       name: name,
       symlinkTarget: symlinkTarget,
     );
