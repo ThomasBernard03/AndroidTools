@@ -3,7 +3,6 @@ import 'package:android_tools/features/logcat/domain/entities/process_entity.dar
 import 'package:android_tools/features/logcat/presentation/core/logcat_level_extensions.dart';
 import 'package:android_tools/features/logcat/presentation/logcat_bloc.dart';
 import 'package:android_tools/features/logcat/presentation/widgets/logcat_button.dart';
-import 'package:android_tools/shared/domain/entities/device_entity.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 
@@ -33,34 +32,54 @@ class _LogcatAppbarState extends State<LogcatAppbar> {
         children: [
           BlocBuilder<LogcatBloc, LogcatState>(
             builder: (context, state) {
-              return state.devices.isNotEmpty
-                  ? DropdownButton<DeviceEntity>(
-                      value: state.selectedDevice,
-                      elevation: 16,
-                      onChanged: (DeviceEntity? value) {
-                        if (value == null || value == state.selectedDevice) {
-                          return;
-                        }
-                        context.read<LogcatBloc>().add(
-                          OnSelectedDeviceChanged(device: value),
-                        );
-                      },
-                      items: state.devices.map<DropdownMenuItem<DeviceEntity>>((
-                        DeviceEntity value,
-                      ) {
-                        return DropdownMenuItem<DeviceEntity>(
-                          value: value,
-                          child: Row(
-                            spacing: 8,
-                            children: [
-                              Icon(Icons.mobile_friendly, size: 16),
-                              Text(value.name),
-                            ],
+              return SizedBox(
+                width: 300,
+                child: Autocomplete<ProcessEntity>(
+                  displayStringForOption: (item) =>
+                      "${item.packageName} (${item.processId})",
+
+                  onSelected: (option) {
+                    context.read<LogcatBloc>().add(
+                      OnProcessSelected(process: option),
+                    );
+                  },
+
+                  fieldViewBuilder:
+                      (context, controller, focusNode, onFieldSubmitted) {
+                        return BlocListener<LogcatBloc, LogcatState>(
+                          listenWhen: (previous, current) =>
+                              previous.selectedProcess !=
+                              current.selectedProcess,
+                          listener: (context, state) {
+                            if (state.selectedProcess == null) {
+                              controller.clear();
+                            }
+                          },
+                          child: TextFormField(
+                            controller: controller,
+                            onChanged: (value) {
+                              if (state.selectedProcess != null) {
+                                context.read<LogcatBloc>().add(
+                                  OnProcessSelected(process: null),
+                                );
+                                controller.clear();
+                              }
+                            },
+                            focusNode: focusNode,
+                            decoration: const InputDecoration(
+                              hintText: "Rechercher un process...",
+                            ),
                           ),
                         );
-                      }).toList(),
-                    )
-                  : const SizedBox.shrink();
+                      },
+
+                  optionsBuilder: (textEditingValue) {
+                    return state.processes.where(
+                      (p) => p.packageName.contains(textEditingValue.text),
+                    );
+                  },
+                ),
+              );
             },
           ),
           Row(
@@ -68,64 +87,6 @@ class _LogcatAppbarState extends State<LogcatAppbar> {
               Row(
                 spacing: 8,
                 children: [
-                  BlocBuilder<LogcatBloc, LogcatState>(
-                    builder: (context, state) {
-                      return SizedBox(
-                        width: 300,
-                        child: Autocomplete<ProcessEntity>(
-                          displayStringForOption: (item) =>
-                              "${item.packageName} (${item.processId})",
-
-                          onSelected: (option) {
-                            context.read<LogcatBloc>().add(
-                              OnProcessSelected(process: option),
-                            );
-                          },
-
-                          fieldViewBuilder:
-                              (
-                                context,
-                                controller,
-                                focusNode,
-                                onFieldSubmitted,
-                              ) {
-                                return BlocListener<LogcatBloc, LogcatState>(
-                                  listenWhen: (previous, current) =>
-                                      previous.selectedProcess !=
-                                      current.selectedProcess,
-                                  listener: (context, state) {
-                                    if (state.selectedProcess == null) {
-                                      controller.clear();
-                                    }
-                                  },
-                                  child: TextFormField(
-                                    controller: controller,
-                                    onChanged: (value) {
-                                      if (state.selectedProcess != null) {
-                                        context.read<LogcatBloc>().add(
-                                          OnProcessSelected(process: null),
-                                        );
-                                        controller.clear();
-                                      }
-                                    },
-                                    focusNode: focusNode,
-                                    decoration: const InputDecoration(
-                                      hintText: "Rechercher un process...",
-                                    ),
-                                  ),
-                                );
-                              },
-
-                          optionsBuilder: (textEditingValue) {
-                            return state.processes.where(
-                              (p) =>
-                                  p.packageName.contains(textEditingValue.text),
-                            );
-                          },
-                        ),
-                      );
-                    },
-                  ),
                   BlocBuilder<LogcatBloc, LogcatState>(
                     builder: (context, state) {
                       return DropdownButton<int>(

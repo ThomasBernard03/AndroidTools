@@ -110,7 +110,7 @@ class LogcatLine extends StatelessWidget {
 
       // Ajouter l'année actuelle pour parser correctement
       final now = DateTime.now();
-      final dateTime = DateTime.parse('${now.year}-${dateStr} $timeStr');
+      final dateTime = DateTime.parse('${now.year}-$dateStr $timeStr');
 
       final level = switch (levelLetter) {
         'V' => LogcatLevel.verbose,

@@ -34,11 +34,6 @@ class OnLogcatMaxLinesChanged extends LogcatEvent {
   OnLogcatMaxLinesChanged({required this.maxLines});
 }
 
-class OnSelectedDeviceChanged extends LogcatEvent {
-  final DeviceEntity device;
-  OnSelectedDeviceChanged({required this.device});
-}
-
 class OnRefreshDevices extends LogcatEvent {
   OnRefreshDevices();
 }

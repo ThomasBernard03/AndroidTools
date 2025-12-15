@@ -57,7 +57,7 @@ class _LogcatScreenState extends State<LogcatScreen> {
           },
           child: BlocBuilder<LogcatBloc, LogcatState>(
             builder: (context, state) {
-              return state.devices.isEmpty
+              return state.selectedDevice == null
                   ? Center(
                       child: Column(
                         mainAxisAlignment: MainAxisAlignment.center,

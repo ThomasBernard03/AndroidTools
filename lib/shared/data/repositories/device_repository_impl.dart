@@ -1,18 +1,47 @@
+import 'dart:async';
 import 'dart:io';
 
 import 'package:android_tools/shared/data/datasources/shell/shell_datasource.dart';
 import 'package:android_tools/shared/domain/entities/device_entity.dart';
 import 'package:android_tools/shared/domain/repositories/device_repository.dart';
 import 'package:logger/logger.dart';
+import 'package:rxdart/rxdart.dart';
 
 class DeviceRepositoryImpl implements DeviceRepository {
   final Logger logger;
   final ShellDatasource shellDatasource;
 
-  DeviceRepositoryImpl({required this.logger, required this.shellDatasource});
+  final BehaviorSubject<DeviceEntity?> _selectedDeviceSubject =
+      BehaviorSubject<DeviceEntity?>();
+
+  final BehaviorSubject<List<DeviceEntity>> _connectedDevicesSubject =
+      BehaviorSubject<List<DeviceEntity>>.seeded(const []);
+
+  DeviceRepositoryImpl(this.logger, this.shellDatasource);
 
   @override
-  Future<List<DeviceEntity>> getConnectedDevices() async {
+  Future<void> setSelectedDevice(DeviceEntity device) async {
+    _selectedDeviceSubject.add(device);
+  }
+
+  @override
+  Stream<DeviceEntity?> listenSelectedDevice() {
+    return _selectedDeviceSubject.stream;
+  }
+
+  @override
+  Stream<List<DeviceEntity>> listenConnectedDevice() {
+    return _connectedDevicesSubject.stream;
+  }
+
+  @override
+  Future<void> refreshConnectedDevices() async {
+    logger.i("Refreshing connected devices");
+    final devices = await _getConnectedDevices();
+    _connectedDevicesSubject.add(devices);
+  }
+
+  Future<List<DeviceEntity>> _getConnectedDevices() async {
     final adbPath = shellDatasource.getAdbPath();
     try {
       logger.i("Searching connected devices");
@@ -31,15 +60,13 @@ class DeviceRepositoryImpl implements DeviceRepository {
 
       for (var line in lines) {
         line = line.trim();
-        if (line.isEmpty || line.startsWith('List of devices')) {
-          continue;
-        }
+        if (line.isEmpty || line.startsWith('List of devices')) continue;
 
         final parts = line.split(RegExp(r'\s+'));
         if (parts.length < 2 || parts[1] != 'device') continue;
 
         String manufacturer = "Unknown";
-        String deviceId = parts[0]; // default device id
+        String deviceId = parts[0];
         String name = deviceId;
 
         for (var part in parts.skip(2)) {

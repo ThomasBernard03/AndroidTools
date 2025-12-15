@@ -1,5 +1,9 @@
 import 'package:android_tools/shared/domain/entities/device_entity.dart';
 
 abstract class DeviceRepository {
-  Future<List<DeviceEntity>> getConnectedDevices();
+  Future<void> setSelectedDevice(DeviceEntity device);
+  Future<void> refreshConnectedDevices();
+
+  Stream<DeviceEntity?> listenSelectedDevice();
+  Stream<List<DeviceEntity>> listenConnectedDevice();
 }

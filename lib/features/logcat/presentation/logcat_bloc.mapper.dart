@@ -56,13 +56,6 @@ class LogcatStateMapper extends ClassMapperBase<LogcatState> {
     opt: true,
     def: 500,
   );
-  static List<DeviceEntity> _$devices(LogcatState v) => v.devices;
-  static const Field<LogcatState, List<DeviceEntity>> _f$devices = Field(
-    'devices',
-    _$devices,
-    opt: true,
-    def: const [],
-  );
   static DeviceEntity? _$selectedDevice(LogcatState v) => v.selectedDevice;
   static const Field<LogcatState, DeviceEntity> _f$selectedDevice = Field(
     'selectedDevice',
@@ -90,7 +83,6 @@ class LogcatStateMapper extends ClassMapperBase<LogcatState> {
     #isPaused: _f$isPaused,
     #minimumLogLevel: _f$minimumLogLevel,
     #maxLogcatLines: _f$maxLogcatLines,
-    #devices: _f$devices,
     #selectedDevice: _f$selectedDevice,
     #processes: _f$processes,
     #selectedProcess: _f$selectedProcess,
@@ -103,7 +95,6 @@ class LogcatStateMapper extends ClassMapperBase<LogcatState> {
       isPaused: data.dec(_f$isPaused),
       minimumLogLevel: data.dec(_f$minimumLogLevel),
       maxLogcatLines: data.dec(_f$maxLogcatLines),
-      devices: data.dec(_f$devices),
       selectedDevice: data.dec(_f$selectedDevice),
       processes: data.dec(_f$processes),
       selectedProcess: data.dec(_f$selectedProcess),
@@ -171,8 +162,6 @@ extension LogcatStateValueCopy<$R, $Out>
 abstract class LogcatStateCopyWith<$R, $In extends LogcatState, $Out>
     implements ClassCopyWith<$R, $In, $Out> {
   ListCopyWith<$R, String, ObjectCopyWith<$R, String, String>> get logs;
-  ListCopyWith<$R, DeviceEntity, ObjectCopyWith<$R, DeviceEntity, DeviceEntity>>
-  get devices;
   ListCopyWith<
     $R,
     ProcessEntity,
@@ -185,7 +174,6 @@ abstract class LogcatStateCopyWith<$R, $In extends LogcatState, $Out>
     bool? isPaused,
     LogcatLevel? minimumLogLevel,
     int? maxLogcatLines,
-    List<DeviceEntity>? devices,
     DeviceEntity? selectedDevice,
     List<ProcessEntity>? processes,
     ProcessEntity? selectedProcess,
@@ -209,13 +197,6 @@ class _LogcatStateCopyWithImpl<$R, $Out>
         (v) => call(logs: v),
       );
   @override
-  ListCopyWith<$R, DeviceEntity, ObjectCopyWith<$R, DeviceEntity, DeviceEntity>>
-  get devices => ListCopyWith(
-    $value.devices,
-    (v, t) => ObjectCopyWith(v, $identity, t),
-    (v) => call(devices: v),
-  );
-  @override
   ListCopyWith<
     $R,
     ProcessEntity,
@@ -233,7 +214,6 @@ class _LogcatStateCopyWithImpl<$R, $Out>
     bool? isPaused,
     LogcatLevel? minimumLogLevel,
     int? maxLogcatLines,
-    List<DeviceEntity>? devices,
     Object? selectedDevice = $none,
     List<ProcessEntity>? processes,
     Object? selectedProcess = $none,
@@ -244,7 +224,6 @@ class _LogcatStateCopyWithImpl<$R, $Out>
       if (isPaused != null) #isPaused: isPaused,
       if (minimumLogLevel != null) #minimumLogLevel: minimumLogLevel,
       if (maxLogcatLines != null) #maxLogcatLines: maxLogcatLines,
-      if (devices != null) #devices: devices,
       if (selectedDevice != $none) #selectedDevice: selectedDevice,
       if (processes != null) #processes: processes,
       if (selectedProcess != $none) #selectedProcess: selectedProcess,
@@ -257,7 +236,6 @@ class _LogcatStateCopyWithImpl<$R, $Out>
     isPaused: data.get(#isPaused, or: $value.isPaused),
     minimumLogLevel: data.get(#minimumLogLevel, or: $value.minimumLogLevel),
     maxLogcatLines: data.get(#maxLogcatLines, or: $value.maxLogcatLines),
-    devices: data.get(#devices, or: $value.devices),
     selectedDevice: data.get(#selectedDevice, or: $value.selectedDevice),
     processes: data.get(#processes, or: $value.processes),
     selectedProcess: data.get(#selectedProcess, or: $value.selectedProcess),
