@@ -28,12 +28,25 @@ class FileExplorerStateMapper extends ClassMapperBase<FileExplorerState> {
     opt: true,
     def: const [],
   );
+  static String _$path(FileExplorerState v) => v.path;
+  static const Field<FileExplorerState, String> _f$path = Field(
+    'path',
+    _$path,
+    opt: true,
+    def: "/",
+  );
 
   @override
-  final MappableFields<FileExplorerState> fields = const {#files: _f$files};
+  final MappableFields<FileExplorerState> fields = const {
+    #files: _f$files,
+    #path: _f$path,
+  };
 
   static FileExplorerState _instantiate(DecodingData data) {
-    return FileExplorerState(files: data.dec(_f$files));
+    return FileExplorerState(
+      files: data.dec(_f$files),
+      path: data.dec(_f$path),
+    );
   }
 
   @override
@@ -109,7 +122,7 @@ abstract class FileExplorerStateCopyWith<
     implements ClassCopyWith<$R, $In, $Out> {
   ListCopyWith<$R, FileEntry, ObjectCopyWith<$R, FileEntry, FileEntry>>
   get files;
-  $R call({List<FileEntry>? files});
+  $R call({List<FileEntry>? files, String? path});
   FileExplorerStateCopyWith<$R2, $In, $Out2> $chain<$R2, $Out2>(
     Then<$Out2, $R2> t,
   );
@@ -131,11 +144,17 @@ class _FileExplorerStateCopyWithImpl<$R, $Out>
     (v) => call(files: v),
   );
   @override
-  $R call({List<FileEntry>? files}) =>
-      $apply(FieldCopyWithData({if (files != null) #files: files}));
+  $R call({List<FileEntry>? files, String? path}) => $apply(
+    FieldCopyWithData({
+      if (files != null) #files: files,
+      if (path != null) #path: path,
+    }),
+  );
   @override
-  FileExplorerState $make(CopyWithData data) =>
-      FileExplorerState(files: data.get(#files, or: $value.files));
+  FileExplorerState $make(CopyWithData data) => FileExplorerState(
+    files: data.get(#files, or: $value.files),
+    path: data.get(#path, or: $value.path),
+  );
 
   @override
   FileExplorerStateCopyWith<$R2, FileExplorerState, $Out2> $chain<$R2, $Out2>(

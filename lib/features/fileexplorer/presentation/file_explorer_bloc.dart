@@ -4,6 +4,7 @@ import 'package:android_tools/main.dart';
 import 'package:dart_mappable/dart_mappable.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:logger/logger.dart';
+import 'package:path/path.dart' as p;
 
 part 'file_explorer_event.dart';
 part 'file_explorer_state.dart';
@@ -15,9 +16,15 @@ class FileExplorerBloc extends Bloc<FileExplorerEvent, FileExplorerState> {
 
   FileExplorerBloc() : super(FileExplorerState()) {
     on<OnAppearing>((event, emit) async {
-      final files = await _listFilesUsecase("");
+      final files = await _listFilesUsecase(state.path);
       _logger.i('Fetched ${files.length} file(s) for first route');
       emit(state.copyWith(files: files));
+    });
+    on<OnGoToFolder>((event, emit) async {
+      final path = p.join(state.path, event.folder.name);
+      final files = await _listFilesUsecase(path);
+      emit(state.copyWith(files: files, path: path));
+      _logger.i('Fetched ${files.length} file(s) for path $path');
     });
   }
 }

@@ -1,4 +1,5 @@
 import 'package:android_tools/features/fileexplorer/core/int_extensions.dart';
+import 'package:android_tools/features/fileexplorer/domain/entities/file_type.dart';
 import 'package:android_tools/features/fileexplorer/presentation/file_explorer_bloc.dart';
 import 'package:android_tools/features/fileexplorer/presentation/file_type_extensions.dart';
 import 'package:flutter/material.dart';
@@ -24,7 +25,13 @@ class FileExplorerScreen extends StatelessWidget {
                   leading: Icon(file.type.icon()),
                   title: Text(file.name),
                   subtitle: Text(file.date.toString()),
-                  onTap: () {},
+                  onTap: () {
+                    if (file.type == FileType.directory) {
+                      context.read<FileExplorerBloc>().add(
+                        OnGoToFolder(folder: file),
+                      );
+                    }
+                  },
                 );
               },
             );
