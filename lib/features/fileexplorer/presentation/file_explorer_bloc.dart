@@ -8,6 +8,7 @@ import 'package:android_tools/main.dart';
 import 'package:android_tools/shared/domain/entities/device_entity.dart';
 import 'package:android_tools/shared/domain/usecases/listen_selected_device_usecase.dart';
 import 'package:dart_mappable/dart_mappable.dart';
+import 'package:file_picker/file_picker.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:logger/logger.dart';
 import 'package:path/path.dart' as p;
@@ -98,7 +99,28 @@ class FileExplorerBloc extends Bloc<FileExplorerEvent, FileExplorerState> {
       final files = await _listFilesUsecase(state.path, device.deviceId);
       emit(state.copyWith(files: files));
     });
-    on<OnDownloadFile>((event, emit) async {});
+    on<OnDownloadFile>((event, emit) async {
+      final device = state.device;
+      if (device == null) {
+        _logger.w("Device is null, can't download file");
+        return;
+      }
+      final filePath = p.join(state.path, event.fileName);
+      final destinationPath = await FilePicker.platform.saveFile(
+        dialogTitle: 'Save file',
+        fileName: event.fileName,
+      );
+
+      if (destinationPath == null) {
+        _logger.i("User cancelled download");
+        return;
+      }
+      _logger.i(
+        "Downloading file $filePath for device ${device.deviceId}, downloading in $destinationPath",
+      );
+      await _downloadFileUsecase(filePath, destinationPath, device.deviceId);
+      add(OnRefreshFiles());
+    });
     on<OnDeleteFile>((event, emit) async {
       final device = state.device;
       if (device == null) {
