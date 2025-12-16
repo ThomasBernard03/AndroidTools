@@ -73,7 +73,7 @@ class FileExplorerBloc extends Bloc<FileExplorerEvent, FileExplorerState> {
 
       _logger.i('Fetched ${files.length} file(s) for path $parentPath');
     });
-    on<OnUploadFile>((event, emit) async {
+    on<OnUploadFiles>((event, emit) async {
       final device = state.device;
       if (device == null) {
         _logger.w("Device is null, can't upload files");
@@ -82,7 +82,15 @@ class FileExplorerBloc extends Bloc<FileExplorerEvent, FileExplorerState> {
 
       _logger.i("Start uploading ${event.files} to ${state.path}");
       await _uploadFilesUsecase(event.files, state.path, device.deviceId);
-      _logger.i("Refreshing files");
+      _logger.i("Files uploaded refreshing files");
+      add(OnRefreshFiles());
+    });
+    on<OnRefreshFiles>((event, emit) async {
+      final device = state.device;
+      if (device == null) {
+        _logger.w("Device is null, can't refresh files");
+        return;
+      }
       final files = await _listFilesUsecase(state.path, device.deviceId);
       emit(state.copyWith(files: files));
     });

@@ -47,6 +47,18 @@ class _FileExplorerScreenState extends State<FileExplorerScreen> {
               );
             },
           ),
+          actions: [
+            BlocBuilder<FileExplorerBloc, FileExplorerState>(
+              builder: (context, state) {
+                return IconButton(
+                  onPressed: () {
+                    context.read<FileExplorerBloc>().add(OnRefreshFiles());
+                  },
+                  icon: Icon(Icons.refresh_rounded),
+                );
+              },
+            ),
+          ],
         ),
         body: BlocBuilder<FileExplorerBloc, FileExplorerState>(
           builder: (context, state) {
@@ -59,7 +71,7 @@ class _FileExplorerScreenState extends State<FileExplorerScreen> {
               },
               onDragDone: (details) {
                 context.read<FileExplorerBloc>().add(
-                  OnUploadFile(files: details.files.map((f) => f.path)),
+                  OnUploadFiles(files: details.files.map((f) => f.path)),
                 );
               },
               child: Stack(

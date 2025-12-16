@@ -12,8 +12,10 @@ class OnGoToFolder extends FileExplorerEvent {
 
 class OnGoBack extends FileExplorerEvent {}
 
-class OnUploadFile extends FileExplorerEvent {
+class OnUploadFiles extends FileExplorerEvent {
   final Iterable<String> files;
 
-  OnUploadFile({required this.files});
+  OnUploadFiles({required this.files});
 }
+
+class OnRefreshFiles extends FileExplorerEvent {}
