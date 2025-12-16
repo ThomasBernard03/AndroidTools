@@ -1,4 +1,4 @@
-import 'package:android_tools/features/fileexplorer/core/int_extensions.dart';
+import 'package:android_tools/features/fileexplorer/core/string_extensions.dart';
 import 'package:android_tools/features/fileexplorer/domain/entities/file_type.dart';
 import 'package:android_tools/features/fileexplorer/presentation/file_explorer_bloc.dart';
 import 'package:android_tools/features/fileexplorer/presentation/file_type_extensions.dart';
@@ -15,6 +15,26 @@ class FileExplorerScreen extends StatelessWidget {
     return BlocProvider.value(
       value: bloc..add(OnAppearing()),
       child: Scaffold(
+        appBar: AppBar(
+          centerTitle: false,
+          title: BlocBuilder<FileExplorerBloc, FileExplorerState>(
+            builder: (context, state) {
+              return Text(state.path);
+            },
+          ),
+          leading: BlocBuilder<FileExplorerBloc, FileExplorerState>(
+            builder: (context, state) {
+              return IconButton(
+                onPressed: state.path.isRootPath()
+                    ? null
+                    : () {
+                        context.read<FileExplorerBloc>().add(OnGoBack());
+                      },
+                icon: Icon(Icons.chevron_left_rounded),
+              );
+            },
+          ),
+        ),
         body: BlocBuilder<FileExplorerBloc, FileExplorerState>(
           builder: (context, state) {
             return ListView.builder(

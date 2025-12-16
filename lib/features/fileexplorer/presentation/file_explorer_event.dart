@@ -9,3 +9,5 @@ class OnGoToFolder extends FileExplorerEvent {
 
   OnGoToFolder({required this.folder});
 }
+
+class OnGoBack extends FileExplorerEvent {}

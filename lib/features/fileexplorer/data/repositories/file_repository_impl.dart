@@ -14,7 +14,7 @@ class FileRepositoryImpl implements FileRepository {
   FileRepositoryImpl(this._logger, this._shellDatasource);
 
   @override
-  Future<List<FileEntry>> listFiles(String path) async {
+  Future<List<FileEntry>> listFiles(String path, String deviceId) async {
     final adbPath = _shellDatasource.getAdbPath();
 
     if (path.isEmpty) {
@@ -22,7 +22,14 @@ class FileRepositoryImpl implements FileRepository {
     }
 
     try {
-      final process = await Process.start(adbPath, ['shell', 'ls', '-l', path]);
+      final process = await Process.start(adbPath, [
+        '-s',
+        deviceId,
+        'shell',
+        'ls',
+        '-l',
+        path,
+      ]);
 
       final output = await process.stdout.transform(utf8.decoder).join();
       final error = await process.stderr.transform(utf8.decoder).join();

@@ -6,7 +6,7 @@ class ListFilesUsecase {
 
   ListFilesUsecase(this._fileRepository);
 
-  Future<List<FileEntry>> call(String path) {
-    return _fileRepository.listFiles(path);
+  Future<List<FileEntry>> call(String path, String deviceId) {
+    return _fileRepository.listFiles(path, deviceId);
   }
 }
