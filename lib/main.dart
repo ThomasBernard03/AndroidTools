@@ -5,6 +5,7 @@ import 'package:android_tools/shared/core/shared_module.dart';
 import 'package:android_tools/features/logcat/presentation/logcat_screen.dart';
 import 'package:android_tools/shared/domain/entities/device_entity.dart';
 import 'package:android_tools/shared/domain/usecases/listen_connected_devices_usecase.dart';
+import 'package:android_tools/shared/domain/usecases/refresh_connected_devices_usecase.dart';
 import 'package:android_tools/shared/domain/usecases/set_selected_device_usecase.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/svg.dart';
@@ -30,9 +31,17 @@ class _MyAppState extends State<MyApp> {
   final ListenConnectedDevicesUsecase _listenConnectedDevicesUsecase = getIt
       .get();
   final SetSelectedDeviceUsecase _setSelectedDeviceUsecase = getIt.get();
+  final RefreshConnectedDevicesUsecase _refreshConnectedDevicesUsecase = getIt
+      .get();
   Iterable<DeviceEntity> devices = const [];
   DeviceEntity? selectedDevice;
   int _selectedIndex = 0;
+
+  @override
+  void initState() {
+    super.initState();
+    _refreshConnectedDevicesUsecase();
+  }
 
   @override
   Widget build(BuildContext context) {

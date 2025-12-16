@@ -2,6 +2,12 @@ import 'package:android_tools/features/fileexplorer/domain/entities/file_entry.d
 
 abstract class FileRepository {
   Future<List<FileEntry>> listFiles(String path, String deviceId);
+  Future<void> deleteFile(String filePath, String deviceId);
+  Future<void> downloadFile(
+    String filePath,
+    String destinationPath,
+    String deviceId,
+  );
   Future<void> uploadFiles(
     Iterable<String> filesPath,
     String destination,

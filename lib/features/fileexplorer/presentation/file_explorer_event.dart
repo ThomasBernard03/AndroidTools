@@ -19,3 +19,15 @@ class OnUploadFiles extends FileExplorerEvent {
 }
 
 class OnRefreshFiles extends FileExplorerEvent {}
+
+class OnDeleteFile extends FileExplorerEvent {
+  final String fileName;
+
+  OnDeleteFile({required this.fileName});
+}
+
+class OnDownloadFile extends FileExplorerEvent {
+  final String fileName;
+
+  OnDownloadFile({required this.fileName});
+}

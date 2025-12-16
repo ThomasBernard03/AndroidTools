@@ -1,5 +1,7 @@
 import 'package:android_tools/features/fileexplorer/core/string_extensions.dart';
 import 'package:android_tools/features/fileexplorer/domain/entities/file_entry.dart';
+import 'package:android_tools/features/fileexplorer/domain/usecases/delete_file_usecase.dart';
+import 'package:android_tools/features/fileexplorer/domain/usecases/download_file_usecase.dart';
 import 'package:android_tools/features/fileexplorer/domain/usecases/list_files_usecase.dart';
 import 'package:android_tools/features/fileexplorer/domain/usecases/upload_files_usecase.dart';
 import 'package:android_tools/main.dart';
@@ -19,6 +21,8 @@ class FileExplorerBloc extends Bloc<FileExplorerEvent, FileExplorerState> {
   final Logger _logger = getIt.get();
   final ListenSelectedDeviceUsecase _listenSelectedDeviceUsecase = getIt.get();
   final UploadFilesUsecase _uploadFilesUsecase = getIt.get();
+  final DownloadFileUsecase _downloadFileUsecase = getIt.get();
+  final DeleteFileUsecase _deleteFileUsecase = getIt.get();
 
   FileExplorerBloc() : super(FileExplorerState()) {
     on<OnAppearing>((event, emit) async {
@@ -93,6 +97,18 @@ class FileExplorerBloc extends Bloc<FileExplorerEvent, FileExplorerState> {
       }
       final files = await _listFilesUsecase(state.path, device.deviceId);
       emit(state.copyWith(files: files));
+    });
+    on<OnDownloadFile>((event, emit) async {});
+    on<OnDeleteFile>((event, emit) async {
+      final device = state.device;
+      if (device == null) {
+        _logger.w("Device is null, can't delete file");
+        return;
+      }
+      final filePath = p.join(state.path, event.fileName);
+      _logger.i("Deleting file at $filePath for device ${device.deviceId}");
+      await _deleteFileUsecase(filePath, device.deviceId);
+      add(OnRefreshFiles());
     });
   }
 }

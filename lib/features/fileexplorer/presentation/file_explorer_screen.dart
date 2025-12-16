@@ -82,17 +82,54 @@ class _FileExplorerScreenState extends State<FileExplorerScreen> {
                         itemCount: state.files.length,
                         itemBuilder: (context, index) {
                           final file = state.files[index];
-                          return ListTile(
-                            leading: Icon(file.type.icon()),
-                            title: Text(file.name),
-                            subtitle: Text(file.date.toString()),
-                            onTap: () {
-                              if (file.type == FileType.directory) {
-                                context.read<FileExplorerBloc>().add(
-                                  OnGoToFolder(folder: file),
-                                );
-                              }
+                          return GestureDetector(
+                            onSecondaryTapDown: (details) {
+                              showMenu(
+                                context: context,
+                                position: RelativeRect.fromLTRB(
+                                  details.globalPosition.dx,
+                                  details.globalPosition.dy,
+                                  details.globalPosition.dx,
+                                  details.globalPosition.dy,
+                                ),
+                                items: [
+                                  const PopupMenuItem(
+                                    value: 'download',
+                                    child: Text('Download'),
+                                  ),
+                                  const PopupMenuItem(
+                                    value: 'delete',
+                                    child: Text('Delete'),
+                                  ),
+                                ],
+                              ).then((value) {
+                                if (value == 'delete') {
+                                  context.read<FileExplorerBloc>().add(
+                                    OnDeleteFile(fileName: file.name),
+                                  );
+                                  return;
+                                }
+                                if (value == 'download') {
+                                  context.read<FileExplorerBloc>().add(
+                                    OnDownloadFile(fileName: file.name),
+                                  );
+                                }
+                              });
                             },
+                            child: ListTile(
+                              title: ListTile(
+                                leading: Icon(file.type.icon()),
+                                title: Text(file.name),
+                                subtitle: Text(file.date.toString()),
+                                onTap: () {
+                                  if (file.type == FileType.directory) {
+                                    context.read<FileExplorerBloc>().add(
+                                      OnGoToFolder(folder: file),
+                                    );
+                                  }
+                                },
+                              ),
+                            ),
                           );
                         },
                       );
@@ -103,7 +140,7 @@ class _FileExplorerScreenState extends State<FileExplorerScreen> {
                     Positioned.fill(
                       child: IgnorePointer(
                         child: Container(
-                          color: Colors.black.withOpacity(0.4),
+                          color: Colors.black.withAlpha(60),
                           child: Center(
                             child: Column(
                               mainAxisSize: MainAxisSize.min,

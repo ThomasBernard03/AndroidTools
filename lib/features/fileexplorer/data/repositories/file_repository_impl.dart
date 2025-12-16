@@ -69,6 +69,98 @@ class FileRepositoryImpl implements FileRepository {
   }
 
   @override
+  Future<void> deleteFile(String filePath, String deviceId) async {
+    final adbPath = _shellDatasource.getAdbPath();
+
+    if (filePath.isEmpty) {
+      _logger.w("Empty filePath. Refusing to delete nothing.");
+      return;
+    }
+
+    // Escape single quotes for POSIX shell
+    final escapedPath = filePath.replaceAll("'", r"'\''");
+
+    try {
+      _logger.i("Deleting $filePath");
+
+      final process = await Process.start(adbPath, [
+        '-s',
+        deviceId,
+        'shell',
+        'rm',
+        '-rf',
+        "'$escapedPath'",
+      ]);
+
+      final stdout = await process.stdout.transform(utf8.decoder).join();
+      final stderr = await process.stderr.transform(utf8.decoder).join();
+      final exitCode = await process.exitCode;
+
+      if (stdout.isNotEmpty) {
+        _logger.d(stdout.trim());
+      }
+
+      if (exitCode != 0) {
+        _logger.e("Failed to delete $filePath (exitCode=$exitCode)\n$stderr");
+      } else {
+        _logger.i("Deleted $filePath");
+      }
+    } catch (e, stack) {
+      _logger.e(
+        "Exception while deleting $filePath",
+        error: e,
+        stackTrace: stack,
+      );
+    }
+  }
+
+  @override
+  Future<void> downloadFile(
+    String filePath,
+    String destinationPath,
+    String deviceId,
+  ) async {
+    final adbPath = _shellDatasource.getAdbPath();
+
+    if (filePath.isEmpty || destinationPath.isEmpty) {
+      _logger.w("filePath or destinationPath is empty. Nothing will happen.");
+      return;
+    }
+
+    try {
+      _logger.i("Downloading $filePath → $destinationPath");
+
+      final process = await Process.start(adbPath, [
+        '-s',
+        deviceId,
+        'pull',
+        filePath,
+        destinationPath,
+      ]);
+
+      final stdout = await process.stdout.transform(utf8.decoder).join();
+      final stderr = await process.stderr.transform(utf8.decoder).join();
+      final exitCode = await process.exitCode;
+
+      if (stdout.isNotEmpty) {
+        _logger.d(stdout.trim());
+      }
+
+      if (exitCode != 0) {
+        _logger.w("Failed to download $filePath (exitCode=$exitCode)\n$stderr");
+      } else {
+        _logger.i("Downloaded ${filePath.split('/').last}\n${stderr.trim()}");
+      }
+    } catch (e, stack) {
+      _logger.w(
+        "Exception while downloading $filePath",
+        error: e,
+        stackTrace: stack,
+      );
+    }
+  }
+
+  @override
   Future<List<FileEntry>> listFiles(String path, String deviceId) async {
     final adbPath = _shellDatasource.getAdbPath();
 
