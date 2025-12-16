@@ -14,6 +14,61 @@ class FileRepositoryImpl implements FileRepository {
   FileRepositoryImpl(this._logger, this._shellDatasource);
 
   @override
+  Future<void> uploadFiles(
+    Iterable<String> filesPath,
+    String destination,
+    String deviceId,
+  ) async {
+    final adbPath = _shellDatasource.getAdbPath();
+
+    if (filesPath.isEmpty) {
+      _logger.w("No files to upload. Doing nothing. Revolutionary.");
+      return;
+    }
+
+    for (final filePath in filesPath) {
+      final file = File(filePath);
+
+      if (!await file.exists()) {
+        _logger.w("File does not exist: $filePath");
+        continue;
+      }
+
+      try {
+        _logger.i("Uploading $filePath → $destination");
+
+        final process = await Process.start(adbPath, [
+          '-s',
+          deviceId,
+          'push',
+          filePath,
+          destination,
+        ]);
+
+        final stdout = await process.stdout.transform(utf8.decoder).join();
+        final stderr = await process.stderr.transform(utf8.decoder).join();
+        final exitCode = await process.exitCode;
+
+        if (stdout.isNotEmpty) {
+          _logger.d(stdout.trim());
+        }
+
+        if (exitCode != 0) {
+          _logger.e("Failed to upload $filePath (exitCode=$exitCode)\n$stderr");
+        } else {
+          _logger.i("Uploaded ${file.uri.pathSegments.last}\n${stderr.trim()}");
+        }
+      } catch (e, stack) {
+        _logger.e(
+          "Exception while uploading $filePath",
+          error: e,
+          stackTrace: stack,
+        );
+      }
+    }
+  }
+
+  @override
   Future<List<FileEntry>> listFiles(String path, String deviceId) async {
     final adbPath = _shellDatasource.getAdbPath();
 

@@ -1,6 +1,7 @@
 import 'package:android_tools/features/fileexplorer/data/repositories/file_repository_impl.dart';
 import 'package:android_tools/features/fileexplorer/domain/repositories/file_repository.dart';
 import 'package:android_tools/features/fileexplorer/domain/usecases/list_files_usecase.dart';
+import 'package:android_tools/features/fileexplorer/domain/usecases/upload_files_usecase.dart';
 import 'package:android_tools/main.dart';
 
 class FileExplorerModule {
@@ -17,5 +18,6 @@ class FileExplorerModule {
 
   static void _registerUseCases() {
     getIt.registerLazySingleton(() => ListFilesUsecase(getIt.get()));
+    getIt.registerLazySingleton(() => UploadFilesUsecase(getIt.get()));
   }
 }

@@ -1,6 +1,7 @@
 import 'package:android_tools/features/fileexplorer/core/string_extensions.dart';
 import 'package:android_tools/features/fileexplorer/domain/entities/file_entry.dart';
 import 'package:android_tools/features/fileexplorer/domain/usecases/list_files_usecase.dart';
+import 'package:android_tools/features/fileexplorer/domain/usecases/upload_files_usecase.dart';
 import 'package:android_tools/main.dart';
 import 'package:android_tools/shared/domain/entities/device_entity.dart';
 import 'package:android_tools/shared/domain/usecases/listen_selected_device_usecase.dart';
@@ -17,6 +18,7 @@ class FileExplorerBloc extends Bloc<FileExplorerEvent, FileExplorerState> {
   final ListFilesUsecase _listFilesUsecase = getIt.get();
   final Logger _logger = getIt.get();
   final ListenSelectedDeviceUsecase _listenSelectedDeviceUsecase = getIt.get();
+  final UploadFilesUsecase _uploadFilesUsecase = getIt.get();
 
   FileExplorerBloc() : super(FileExplorerState()) {
     on<OnAppearing>((event, emit) async {
@@ -49,6 +51,7 @@ class FileExplorerBloc extends Bloc<FileExplorerEvent, FileExplorerState> {
       emit(state.copyWith(files: files, path: path));
       _logger.i('Fetched ${files.length} file(s) for path $path');
     });
+
     on<OnGoBack>((event, emit) async {
       final device = state.device;
 
@@ -69,6 +72,19 @@ class FileExplorerBloc extends Bloc<FileExplorerEvent, FileExplorerState> {
       emit(state.copyWith(files: files, path: parentPath));
 
       _logger.i('Fetched ${files.length} file(s) for path $parentPath');
+    });
+    on<OnUploadFile>((event, emit) async {
+      final device = state.device;
+      if (device == null) {
+        _logger.w("Device is null, can't upload files");
+        return;
+      }
+
+      _logger.i("Start uploading ${event.files} to ${state.path}");
+      await _uploadFilesUsecase(event.files, state.path, device.deviceId);
+      _logger.i("Refreshing files");
+      final files = await _listFilesUsecase(state.path, device.deviceId);
+      emit(state.copyWith(files: files));
     });
   }
 }
