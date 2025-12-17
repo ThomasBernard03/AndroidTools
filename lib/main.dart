@@ -10,14 +10,31 @@ import 'package:android_tools/shared/domain/usecases/set_selected_device_usecase
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/svg.dart';
 import 'package:get_it/get_it.dart';
+import 'package:logger/logger.dart';
+import 'package:sentry_flutter/sentry_flutter.dart';
 
 final getIt = GetIt.instance;
 
-void main() {
+Future<void> main() async {
   LogcatModule.configureDependencies();
   SharedModule.configureDependencies();
   FileExplorerModule.configureDependencies();
-  runApp(MyApp());
+
+  const sentryDsn = String.fromEnvironment('SENTRY_DSN', defaultValue: '');
+
+  if (sentryDsn.isEmpty) {
+    final logger = getIt.get<Logger>();
+    logger.w(
+      "sentryDsn not found from environment, launch project with '--dart-define=SENTRY_DSN=your_sentry_dsn'",
+    );
+  }
+
+  await SentryFlutter.init((options) {
+    options.dsn = sentryDsn;
+    options.enableLogs = true;
+    options.replay.sessionSampleRate = 0.1;
+    options.replay.onErrorSampleRate = 1.0;
+  }, appRunner: () => runApp(SentryWidget(child: MyApp())));
 }
 
 class MyApp extends StatefulWidget {
