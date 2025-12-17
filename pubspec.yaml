@@ -23,6 +23,7 @@ dependencies:
   path: ^1.9.1
   desktop_drop: ^0.7.0
   file_picker: ^10.3.7
+  url_launcher: ^6.3.2
 
 dev_dependencies:
   sentry_dart_plugin: ^3.2.0

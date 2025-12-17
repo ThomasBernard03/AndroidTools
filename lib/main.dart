@@ -1,6 +1,7 @@
 import 'package:android_tools/features/fileexplorer/core/fileexplorer_module.dart';
 import 'package:android_tools/features/fileexplorer/presentation/file_explorer_screen.dart';
 import 'package:android_tools/features/logcat/core/logcat_module.dart';
+import 'package:android_tools/features/settings/presentation/settings_screen.dart';
 import 'package:android_tools/shared/core/shared_module.dart';
 import 'package:android_tools/features/logcat/presentation/logcat_screen.dart';
 import 'package:android_tools/shared/domain/entities/device_entity.dart';
@@ -16,14 +17,16 @@ import 'package:sentry_flutter/sentry_flutter.dart';
 final getIt = GetIt.instance;
 
 Future<void> main() async {
+  WidgetsFlutterBinding.ensureInitialized();
   LogcatModule.configureDependencies();
   SharedModule.configureDependencies();
   FileExplorerModule.configureDependencies();
+  await getIt.allReady();
 
   const sentryDsn = String.fromEnvironment('SENTRY_DSN', defaultValue: '');
 
   if (sentryDsn.isEmpty) {
-    final logger = getIt.get<Logger>();
+    final logger = await getIt.getAsync<Logger>();
     logger.w(
       "sentryDsn not found from environment, launch project with '--dart-define=SENTRY_DSN=your_sentry_dsn'",
     );
@@ -141,6 +144,10 @@ class _MyAppState extends State<MyApp> {
                 icon: Icon(Icons.folder_open),
                 label: Text('File explorer'),
               ),
+              NavigationRailDestination(
+                icon: Icon(Icons.settings),
+                label: Text('Settings'),
+              ),
             ],
             selectedIndex: _selectedIndex,
           ),
@@ -148,6 +155,7 @@ class _MyAppState extends State<MyApp> {
             child: switch (_selectedIndex) {
               1 => LogcatScreen(),
               2 => FileExplorerScreen(),
+              3 => SettingsScreen(),
               _ => Placeholder(),
             },
           ),
