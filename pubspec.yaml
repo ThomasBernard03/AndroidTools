@@ -2,7 +2,7 @@ name: android_tools
 description: "A new Flutter project."
 publish_to: 'none' # Remove this line if you wish to publish to pub.dev
 
-version: 1.0.0+1
+version: 2.0.0+8
 
 environment:
   sdk: ^3.9.2
@@ -24,6 +24,7 @@ dependencies:
   desktop_drop: ^0.7.0
   file_picker: ^10.3.7
   url_launcher: ^6.3.2
+  package_info_plus: ^9.0.0
 
 dev_dependencies:
   sentry_dart_plugin: ^3.2.0

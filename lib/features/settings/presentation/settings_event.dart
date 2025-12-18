@@ -5,3 +5,5 @@ sealed class SettingsEvent {}
 class OnAppearing extends SettingsEvent {}
 
 class OnOpenLogDirectory extends SettingsEvent {}
+
+class OnOpenGithubProject extends SettingsEvent {}

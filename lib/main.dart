@@ -1,20 +1,24 @@
 import 'package:android_tools/features/fileexplorer/core/fileexplorer_module.dart';
-import 'package:android_tools/features/fileexplorer/presentation/file_explorer_screen.dart';
+import 'package:android_tools/features/home/presentation/home_screen.dart';
 import 'package:android_tools/features/logcat/core/logcat_module.dart';
-import 'package:android_tools/features/settings/presentation/settings_screen.dart';
 import 'package:android_tools/shared/core/shared_module.dart';
-import 'package:android_tools/features/logcat/presentation/logcat_screen.dart';
-import 'package:android_tools/shared/domain/entities/device_entity.dart';
-import 'package:android_tools/shared/domain/usecases/listen_connected_devices_usecase.dart';
-import 'package:android_tools/shared/domain/usecases/refresh_connected_devices_usecase.dart';
-import 'package:android_tools/shared/domain/usecases/set_selected_device_usecase.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter_svg/svg.dart';
 import 'package:get_it/get_it.dart';
 import 'package:logger/logger.dart';
 import 'package:sentry_flutter/sentry_flutter.dart';
 
 final getIt = GetIt.instance;
+
+String maskDsn(String dsn) {
+  if (dsn.length <= 6) {
+    return '***';
+  }
+
+  final start = dsn.substring(0, 3);
+  final end = dsn.substring(dsn.length - 3);
+
+  return '$start...$end';
+}
 
 Future<void> main() async {
   WidgetsFlutterBinding.ensureInitialized();
@@ -24,12 +28,16 @@ Future<void> main() async {
   await getIt.allReady();
 
   const sentryDsn = String.fromEnvironment('SENTRY_DSN', defaultValue: '');
+  final logger = await getIt.getAsync<Logger>();
+
+  logger.i("==== Starting application ====");
 
   if (sentryDsn.isEmpty) {
-    final logger = await getIt.getAsync<Logger>();
     logger.w(
       "sentryDsn not found from environment, launch project with '--dart-define=SENTRY_DSN=your_sentry_dsn'",
     );
+  } else {
+    logger.i("sentryDsn found : ${maskDsn(sentryDsn)}");
   }
 
   await SentryFlutter.init((options) {
@@ -40,28 +48,8 @@ Future<void> main() async {
   }, appRunner: () => runApp(SentryWidget(child: MyApp())));
 }
 
-class MyApp extends StatefulWidget {
+class MyApp extends StatelessWidget {
   const MyApp({super.key});
-
-  @override
-  State<MyApp> createState() => _MyAppState();
-}
-
-class _MyAppState extends State<MyApp> {
-  final ListenConnectedDevicesUsecase _listenConnectedDevicesUsecase = getIt
-      .get();
-  final SetSelectedDeviceUsecase _setSelectedDeviceUsecase = getIt.get();
-  final RefreshConnectedDevicesUsecase _refreshConnectedDevicesUsecase = getIt
-      .get();
-  Iterable<DeviceEntity> devices = const [];
-  DeviceEntity? selectedDevice;
-  int _selectedIndex = 0;
-
-  @override
-  void initState() {
-    super.initState();
-    _refreshConnectedDevicesUsecase();
-  }
 
   @override
   Widget build(BuildContext context) {
@@ -73,94 +61,7 @@ class _MyAppState extends State<MyApp> {
           seedColor: Color.fromARGB(255, 19, 82, 210),
         ),
       ),
-      home: Row(
-        children: [
-          NavigationRail(
-            leading: Column(
-              children: [
-                StreamBuilder<List<DeviceEntity>>(
-                  stream: _listenConnectedDevicesUsecase(),
-                  builder: (context, snapshot) {
-                    final devices = snapshot.data ?? [];
-
-                    if (devices.isEmpty) {
-                      return const Padding(
-                        padding: EdgeInsets.all(8),
-                        child: Text("No device connected"),
-                      );
-                    }
-
-                    return DropdownButton<DeviceEntity>(
-                      value: selectedDevice,
-                      elevation: 16,
-                      onChanged: (DeviceEntity? value) {
-                        if (value == null || value == selectedDevice) {
-                          return;
-                        }
-
-                        setState(() {
-                          selectedDevice = value;
-                        });
-
-                        _setSelectedDeviceUsecase(value);
-                      },
-                      items: devices.map((device) {
-                        return DropdownMenuItem<DeviceEntity>(
-                          value: device,
-                          child: Row(
-                            spacing: 8,
-                            children: [
-                              const Icon(Icons.mobile_friendly, size: 16),
-                              Text(device.name),
-                            ],
-                          ),
-                        );
-                      }).toList(),
-                    );
-                  },
-                ),
-              ],
-            ),
-            extended: true,
-            onDestinationSelected: (value) {
-              setState(() {
-                _selectedIndex = value;
-              });
-            },
-            destinations: <NavigationRailDestination>[
-              NavigationRailDestination(
-                icon: Icon(Icons.info_outline),
-                label: Text('Device information'),
-              ),
-              NavigationRailDestination(
-                icon: SvgPicture.asset(
-                  width: 25,
-                  'assets/logcat.svg',
-                  semanticsLabel: 'Logcat Logo',
-                ),
-                label: Text('Logcat'),
-              ),
-              NavigationRailDestination(
-                icon: Icon(Icons.folder_open),
-                label: Text('File explorer'),
-              ),
-              NavigationRailDestination(
-                icon: Icon(Icons.settings),
-                label: Text('Settings'),
-              ),
-            ],
-            selectedIndex: _selectedIndex,
-          ),
-          Expanded(
-            child: switch (_selectedIndex) {
-              1 => LogcatScreen(),
-              2 => FileExplorerScreen(),
-              3 => SettingsScreen(),
-              _ => Placeholder(),
-            },
-          ),
-        ],
-      ),
+      home: HomeScreen(),
     );
   }
 }

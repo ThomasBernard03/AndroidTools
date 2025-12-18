@@ -21,5 +21,9 @@ class SettingsBloc extends Bloc<SettingsEvent, SettingsState> {
       final uri = Uri.file(logDirectory.path);
       await launchUrl(uri);
     });
+    on<OnOpenGithubProject>((event, emit) async {
+      final uri = Uri.parse("https://github.com/ThomasBernard03/AndroidTools");
+      await launchUrl(uri);
+    });
   }
 }

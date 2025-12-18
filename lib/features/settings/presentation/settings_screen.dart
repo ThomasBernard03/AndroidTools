@@ -17,11 +17,21 @@ class SettingsScreen extends StatelessWidget {
           builder: (context, state) {
             return Column(
               children: [
-                TextButton(
-                  onPressed: () {
-                    context.read<SettingsBloc>().add(OnOpenLogDirectory());
-                  },
-                  child: Text("Open log folder"),
+                ListTile(
+                  leading: Icon(Icons.code),
+                  title: Text("Open on github"),
+                  subtitle: Text("Open Browser on Github open source project"),
+                  onTap: () =>
+                      context.read<SettingsBloc>().add(OnOpenGithubProject()),
+                ),
+                ListTile(
+                  leading: Icon(Icons.bug_report),
+                  title: Text("Open log directory"),
+                  subtitle: Text(
+                    "Open application log directory to handle problems",
+                  ),
+                  onTap: () =>
+                      context.read<SettingsBloc>().add(OnOpenLogDirectory()),
                 ),
               ],
             );
