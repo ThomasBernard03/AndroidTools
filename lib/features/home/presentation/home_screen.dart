@@ -21,7 +21,11 @@ class _HomeScreenState extends State<HomeScreen> {
   @override
   Widget build(BuildContext context) {
     return BlocProvider.value(
-      value: _homeBloc..add(OnAppearing()),
+      value: _homeBloc
+        ..add(OnListenConnectedDevices())
+        ..add(OnListenSelectedDevice())
+        ..add(OnRefreshDevices())
+        ..add(OnGetVersion()),
       child: Scaffold(
         body: SafeArea(
           child: Row(
@@ -31,41 +35,50 @@ class _HomeScreenState extends State<HomeScreen> {
                 labelType: NavigationRailLabelType.all,
                 leading: BlocBuilder<HomeBloc, HomeState>(
                   builder: (context, state) {
-                    return Column(
+                    return Row(
                       children: [
-                        state.devices.isEmpty
-                            ? const Padding(
-                                padding: EdgeInsets.all(8),
-                                child: Text("No device connected"),
-                              )
-                            : DropdownButton<DeviceEntity>(
-                                value: state.selectedDevice,
-                                elevation: 16,
-                                onChanged: (DeviceEntity? value) {
-                                  if (value == null ||
-                                      value == state.selectedDevice) {
-                                    return;
-                                  }
-                                  context.read<HomeBloc>().add(
-                                    OnDeviceSelected(device: value),
-                                  );
-                                },
-                                items: state.devices.map((device) {
-                                  return DropdownMenuItem<DeviceEntity>(
-                                    value: device,
-                                    child: Row(
-                                      spacing: 8,
-                                      children: [
-                                        const Icon(
-                                          Icons.mobile_friendly,
-                                          size: 16,
+                        Column(
+                          children: [
+                            state.devices.isEmpty
+                                ? const Padding(
+                                    padding: EdgeInsets.all(8),
+                                    child: Text("No device connected"),
+                                  )
+                                : DropdownButton<DeviceEntity>(
+                                    value: state.selectedDevice,
+                                    elevation: 16,
+                                    onChanged: (DeviceEntity? value) {
+                                      if (value == null ||
+                                          value == state.selectedDevice) {
+                                        return;
+                                      }
+                                      context.read<HomeBloc>().add(
+                                        OnDeviceSelected(device: value),
+                                      );
+                                    },
+                                    items: state.devices.map((device) {
+                                      return DropdownMenuItem<DeviceEntity>(
+                                        value: device,
+                                        child: Row(
+                                          spacing: 8,
+                                          children: [
+                                            const Icon(
+                                              Icons.mobile_friendly,
+                                              size: 16,
+                                            ),
+                                            Text(device.name),
+                                          ],
                                         ),
-                                        Text(device.name),
-                                      ],
-                                    ),
-                                  );
-                                }).toList(),
-                              ),
+                                      );
+                                    }).toList(),
+                                  ),
+                          ],
+                        ),
+                        IconButton(
+                          onPressed: () =>
+                              context.read<HomeBloc>().add(OnRefreshDevices()),
+                          icon: Icon(Icons.refresh),
+                        ),
                       ],
                     );
                   },

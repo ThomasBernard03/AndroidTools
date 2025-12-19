@@ -3,6 +3,7 @@ import 'package:android_tools/features/information/domain/usecases/get_device_in
 import 'package:android_tools/main.dart';
 import 'package:android_tools/shared/domain/entities/device_entity.dart';
 import 'package:android_tools/shared/domain/usecases/listen_selected_device_usecase.dart';
+import 'package:android_tools/shared/domain/usecases/refresh_connected_devices_usecase.dart';
 import 'package:dart_mappable/dart_mappable.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:logger/logger.dart';
@@ -15,6 +16,8 @@ class InformationBloc extends Bloc<InformationEvent, InformationState> {
   final Logger _logger = getIt.get();
   final ListenSelectedDeviceUsecase _listenSelectedDeviceUsecase = getIt.get();
   final GetDeviceInformationUsecase _getDeviceInformationUsecase = getIt.get();
+  final RefreshConnectedDevicesUsecase _refreshConnectedDevicesUsecase = getIt
+      .get();
 
   InformationBloc() : super(InformationState()) {
     on<OnAppearing>((event, emit) async {
@@ -23,6 +26,7 @@ class InformationBloc extends Bloc<InformationEvent, InformationState> {
         onData: (device) async {
           if (device == null) {
             _logger.i("Selected device is null, can't get information");
+            emit(state.copyWith(deviceInformation: null));
             return;
           }
 
@@ -33,6 +37,10 @@ class InformationBloc extends Bloc<InformationEvent, InformationState> {
           emit(state.copyWith(deviceInformation: information));
         },
       );
+    });
+    on<OnRefreshDevices>((event, emit) async {
+      _logger.i("Refresing connected devices");
+      await _refreshConnectedDevicesUsecase();
     });
   }
 }

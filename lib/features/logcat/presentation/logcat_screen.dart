@@ -1,6 +1,7 @@
 import 'package:android_tools/features/logcat/presentation/widgets/logcat_appbar.dart';
 import 'package:android_tools/features/logcat/presentation/logcat_bloc.dart';
 import 'package:android_tools/features/logcat/presentation/widgets/logcat_line.dart';
+import 'package:android_tools/shared/presentation/refresh_device_button.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 
@@ -59,19 +60,9 @@ class _LogcatScreenState extends State<LogcatScreen> {
             builder: (context, state) {
               return state.selectedDevice == null
                   ? Center(
-                      child: Column(
-                        mainAxisAlignment: MainAxisAlignment.center,
-                        children: [
-                          TextButton(
-                            onPressed: () {
-                              context.read<LogcatBloc>().add(
-                                OnRefreshDevices(),
-                              );
-                            },
-                            child: Text("Refresh devices"),
-                          ),
-                          Text("Can't find any android devices"),
-                        ],
+                      child: RefreshDeviceButton(
+                        onPressed: () =>
+                            context.read<LogcatBloc>().add(OnRefreshDevices()),
                       ),
                     )
                   : BlocBuilder<LogcatBloc, LogcatState>(

@@ -25,20 +25,29 @@ class DeviceRepositoryImpl implements DeviceRepository {
   }
 
   @override
-  Stream<DeviceEntity?> listenSelectedDevice() {
-    return _selectedDeviceSubject.stream;
-  }
+  Stream<DeviceEntity?> listenSelectedDevice() => _selectedDeviceSubject.stream;
 
   @override
-  Stream<List<DeviceEntity>> listenConnectedDevice() {
-    return _connectedDevicesSubject.stream;
-  }
+  Stream<List<DeviceEntity>> listenConnectedDevice() =>
+      _connectedDevicesSubject.stream;
 
   @override
   Future<void> refreshConnectedDevices() async {
     logger.i("Refreshing connected devices");
+
     final devices = await _getConnectedDevices();
     _connectedDevicesSubject.add(devices);
+
+    final current = _selectedDeviceSubject.valueOrNull;
+
+    if (devices.isEmpty) {
+      _selectedDeviceSubject.add(null);
+      return;
+    }
+
+    if (current == null || !devices.contains(current)) {
+      _selectedDeviceSubject.add(devices.first);
+    }
   }
 
   Future<List<DeviceEntity>> _getConnectedDevices() async {
