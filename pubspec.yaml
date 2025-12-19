@@ -42,6 +42,7 @@ flutter:
     - assets/adb/windows/adb.exe
     - assets/adb/linux/adb
     - assets/logcat.svg
+    - assets/android_versions/
 
   # An image asset can refer to one or more resolution-specific "variants", see
   # https://flutter.dev/to/resolution-aware-images

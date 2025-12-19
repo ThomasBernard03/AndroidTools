@@ -1,5 +1,9 @@
 # android_tools
 
+## Roadmap
+- Update devices list when usb device is plug/unplug
+- Real time SQL database
+
 ## Install application
 
 ### Macos
@@ -83,6 +87,7 @@ Check signature :
 codesign -dv android_tools.app
 ```
 
+// THIS LINE WORKS !!
 ```shell
 zip -r android_tools.zip android_tools.app
 ```

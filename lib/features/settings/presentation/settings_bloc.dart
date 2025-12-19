@@ -13,15 +13,14 @@ class SettingsBloc extends Bloc<SettingsEvent, SettingsState> {
   final Logger _logger = getIt.get();
 
   SettingsBloc() : super(SettingsState()) {
-    on<SettingsEvent>((event, emit) {
-      _logger.w("On Appearing called");
-    });
     on<OnOpenLogDirectory>((event, emit) async {
+      _logger.i("Opening log directory");
       final logDirectory = await Constants.getApplicationLogsDirectory();
       final uri = Uri.file(logDirectory.path);
       await launchUrl(uri);
     });
     on<OnOpenGithubProject>((event, emit) async {
+      _logger.i("Opening github repository");
       final uri = Uri.parse("https://github.com/ThomasBernard03/AndroidTools");
       await launchUrl(uri);
     });

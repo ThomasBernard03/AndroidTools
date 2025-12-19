@@ -1,7 +1,9 @@
 import 'package:android_tools/features/fileexplorer/core/fileexplorer_module.dart';
 import 'package:android_tools/features/home/presentation/home_screen.dart';
+import 'package:android_tools/features/information/core/information_module.dart';
 import 'package:android_tools/features/logcat/core/logcat_module.dart';
 import 'package:android_tools/shared/core/shared_module.dart';
+import 'package:android_tools/shared/core/string_extensions.dart';
 import 'package:flutter/material.dart';
 import 'package:get_it/get_it.dart';
 import 'package:logger/logger.dart';
@@ -9,21 +11,11 @@ import 'package:sentry_flutter/sentry_flutter.dart';
 
 final getIt = GetIt.instance;
 
-String maskDsn(String dsn) {
-  if (dsn.length <= 6) {
-    return '***';
-  }
-
-  final start = dsn.substring(0, 3);
-  final end = dsn.substring(dsn.length - 3);
-
-  return '$start...$end';
-}
-
 Future<void> main() async {
   WidgetsFlutterBinding.ensureInitialized();
   LogcatModule.configureDependencies();
   SharedModule.configureDependencies();
+  InformationModule.configureDependencies();
   FileExplorerModule.configureDependencies();
   await getIt.allReady();
 
@@ -37,7 +29,7 @@ Future<void> main() async {
       "sentryDsn not found from environment, launch project with '--dart-define=SENTRY_DSN=your_sentry_dsn'",
     );
   } else {
-    logger.i("sentryDsn found : ${maskDsn(sentryDsn)}");
+    logger.i("sentryDsn found : ${sentryDsn.anonymize()}");
   }
 
   await SentryFlutter.init((options) {
