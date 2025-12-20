@@ -1,8 +1,11 @@
+import 'package:android_tools/features/file_explorer/core/int_extensions.dart';
 import 'package:android_tools/features/file_explorer/core/string_extensions.dart';
 import 'package:android_tools/features/file_explorer/domain/entities/file_type.dart';
 import 'package:android_tools/features/file_explorer/presentation/file_explorer_bloc.dart';
-import 'package:android_tools/features/file_explorer/presentation/file_type_extensions.dart';
-import 'package:desktop_drop/desktop_drop.dart';
+import 'package:android_tools/features/file_explorer/presentation/widgets/file_entry_menu_result.dart';
+import 'package:android_tools/features/file_explorer/presentation/widgets/file_explorer_menus.dart';
+import 'package:android_tools/features/file_explorer/presentation/widgets/file_explorer_drop_target.dart';
+import 'package:android_tools/features/file_explorer/presentation/widgets/file_type_extensions.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 
@@ -58,114 +61,82 @@ class _FileExplorerScreenState extends State<FileExplorerScreen> {
                 );
               },
             ),
+            BlocBuilder<FileExplorerBloc, FileExplorerState>(
+              builder: (context, state) {
+                return IconButton(
+                  onPressed: state.selectedFile == null
+                      ? null
+                      : () {
+                          final selectedFile = state.selectedFile;
+                          if (selectedFile == null) return;
+                          context.read<FileExplorerBloc>().add(
+                            OnDeleteFile(fileName: selectedFile.name),
+                          );
+                        },
+                  icon: Icon(Icons.delete),
+                );
+              },
+            ),
           ],
         ),
         body: BlocBuilder<FileExplorerBloc, FileExplorerState>(
           builder: (context, state) {
-            return DropTarget(
-              onDragEntered: (_) {
-                setState(() => isDropping = true);
-              },
-              onDragExited: (_) {
-                setState(() => isDropping = false);
-              },
-              onDragDone: (details) {
+            return FileExplorerDropTarget(
+              onFileDropped: (details) {
                 context.read<FileExplorerBloc>().add(
                   OnUploadFiles(files: details.files.map((f) => f.path)),
                 );
               },
-              child: Stack(
-                children: [
-                  BlocBuilder<FileExplorerBloc, FileExplorerState>(
-                    builder: (context, state) {
-                      return ListView.builder(
-                        itemCount: state.files.length,
-                        itemBuilder: (context, index) {
-                          final file = state.files[index];
-                          return GestureDetector(
-                            onSecondaryTapDown: (details) {
-                              showMenu(
-                                context: context,
-                                position: RelativeRect.fromLTRB(
-                                  details.globalPosition.dx,
-                                  details.globalPosition.dy,
-                                  details.globalPosition.dx,
-                                  details.globalPosition.dy,
-                                ),
-                                items: [
-                                  const PopupMenuItem(
-                                    value: 'download',
-                                    child: Text('Download'),
-                                  ),
-                                  const PopupMenuItem(
-                                    value: 'delete',
-                                    child: Text('Delete'),
-                                  ),
-                                ],
-                              ).then((value) {
-                                if (value == 'delete') {
-                                  context.read<FileExplorerBloc>().add(
-                                    OnDeleteFile(fileName: file.name),
-                                  );
-                                  return;
-                                }
-                                if (value == 'download') {
-                                  context.read<FileExplorerBloc>().add(
-                                    OnDownloadFile(fileName: file.name),
-                                  );
-                                }
-                              });
-                            },
-                            child: ListTile(
-                              title: ListTile(
-                                leading: Icon(file.type.icon()),
-                                title: Text(file.name),
-                                subtitle: Text(file.date.toString()),
-                                onTap: () {
-                                  if (file.type == FileType.directory) {
-                                    context.read<FileExplorerBloc>().add(
-                                      OnGoToFolder(folder: file),
-                                    );
-                                  }
-                                },
-                              ),
-                            ),
-                          );
+              child: BlocBuilder<FileExplorerBloc, FileExplorerState>(
+                builder: (context, state) {
+                  return ListView.builder(
+                    itemCount: state.files.length,
+                    itemBuilder: (context, index) {
+                      final file = state.files[index];
+                      return GestureDetector(
+                        onSecondaryTapDown: (details) {
+                          FileExplorerMenus.showFileEntryMenu(
+                            context,
+                            details,
+                          ).then((value) {
+                            switch (value) {
+                              case FileEntryMenuResult.download:
+                                context.read<FileExplorerBloc>().add(
+                                  OnDownloadFile(fileName: file.name),
+                                );
+                              case FileEntryMenuResult.delete:
+                                context.read<FileExplorerBloc>().add(
+                                  OnDeleteFile(fileName: file.name),
+                                );
+                              case null:
+                            }
+                          });
                         },
+                        child: BlocBuilder<FileExplorerBloc, FileExplorerState>(
+                          builder: (context, state) {
+                            return ListTile(
+                              enabled:
+                                  file.type == FileType.directory ||
+                                  file.type == FileType.file,
+                              selected: state.selectedFile == file,
+                              leading: Icon(file.type.icon()),
+                              title: Text(file.name),
+                              subtitle: Text(
+                                "${file.date?.toIso8601String()}\n${file.size?.toReadableBytes()}",
+                              ),
+                              selectedTileColor: Theme.of(
+                                context,
+                              ).colorScheme.surfaceContainerHigh,
+                              onTap: () => context.read<FileExplorerBloc>().add(
+                                OnFileEntryTapped(fileEntry: file),
+                              ),
+                            );
+                          },
+                        ),
                       );
                     },
-                  ),
-
-                  if (isDropping)
-                    Positioned.fill(
-                      child: IgnorePointer(
-                        child: Container(
-                          color: Colors.black.withAlpha(60),
-                          child: Center(
-                            child: Column(
-                              mainAxisSize: MainAxisSize.min,
-                              children: const [
-                                Icon(
-                                  Icons.file_download_outlined,
-                                  size: 64,
-                                  color: Colors.white,
-                                ),
-                                SizedBox(height: 12),
-                                Text(
-                                  'Drop your files here',
-                                  style: TextStyle(
-                                    color: Colors.white,
-                                    fontSize: 18,
-                                    fontWeight: FontWeight.w500,
-                                  ),
-                                ),
-                              ],
-                            ),
-                          ),
-                        ),
-                      ),
-                    ),
-                ],
+                  );
+                },
               ),
             );
           },

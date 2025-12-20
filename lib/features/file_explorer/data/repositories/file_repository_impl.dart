@@ -115,6 +115,63 @@ class FileRepositoryImpl implements FileRepository {
   }
 
   @override
+  Future<void> createDirectory(
+    String path,
+    String name,
+    String deviceId,
+  ) async {
+    final adbPath = _shellDatasource.getAdbPath();
+
+    if (path.isEmpty || name.isEmpty) {
+      _logger.w(
+        "Empty path or name. Refusing to create a Schrödinger directory.",
+      );
+      return;
+    }
+
+    // Build full directory path
+    final fullPath = path.endsWith('/') ? '$path$name' : '$path/$name';
+
+    // Escape single quotes for POSIX shell
+    final escapedPath = fullPath.replaceAll("'", r"'\''");
+
+    try {
+      _logger.i("Creating directory $fullPath");
+
+      final process = await Process.start(adbPath, [
+        '-s',
+        deviceId,
+        'shell',
+        'mkdir',
+        '-p',
+        "'$escapedPath'",
+      ]);
+
+      final stdout = await process.stdout.transform(utf8.decoder).join();
+      final stderr = await process.stderr.transform(utf8.decoder).join();
+      final exitCode = await process.exitCode;
+
+      if (stdout.isNotEmpty) {
+        _logger.d(stdout.trim());
+      }
+
+      if (exitCode != 0) {
+        _logger.e(
+          "Failed to create directory $fullPath (exitCode=$exitCode)\n$stderr",
+        );
+      } else {
+        _logger.i("Directory created: $fullPath");
+      }
+    } catch (e, stack) {
+      _logger.e(
+        "Exception while creating directory $fullPath",
+        error: e,
+        stackTrace: stack,
+      );
+    }
+  }
+
+  @override
   Future<void> downloadFile(
     String filePath,
     String destinationPath,

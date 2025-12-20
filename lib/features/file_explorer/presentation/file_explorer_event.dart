@@ -4,10 +4,10 @@ sealed class FileExplorerEvent {}
 
 class OnAppearing extends FileExplorerEvent {}
 
-class OnGoToFolder extends FileExplorerEvent {
-  final FileEntry folder;
+class OnFileEntryTapped extends FileExplorerEvent {
+  final FileEntry fileEntry;
 
-  OnGoToFolder({required this.folder});
+  OnFileEntryTapped({required this.fileEntry});
 }
 
 class OnGoBack extends FileExplorerEvent {}

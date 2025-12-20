@@ -41,12 +41,19 @@ class FileExplorerStateMapper extends ClassMapperBase<FileExplorerState> {
     _$device,
     opt: true,
   );
+  static FileEntry? _$selectedFile(FileExplorerState v) => v.selectedFile;
+  static const Field<FileExplorerState, FileEntry> _f$selectedFile = Field(
+    'selectedFile',
+    _$selectedFile,
+    opt: true,
+  );
 
   @override
   final MappableFields<FileExplorerState> fields = const {
     #files: _f$files,
     #path: _f$path,
     #device: _f$device,
+    #selectedFile: _f$selectedFile,
   };
 
   static FileExplorerState _instantiate(DecodingData data) {
@@ -54,6 +61,7 @@ class FileExplorerStateMapper extends ClassMapperBase<FileExplorerState> {
       files: data.dec(_f$files),
       path: data.dec(_f$path),
       device: data.dec(_f$device),
+      selectedFile: data.dec(_f$selectedFile),
     );
   }
 
@@ -130,7 +138,12 @@ abstract class FileExplorerStateCopyWith<
     implements ClassCopyWith<$R, $In, $Out> {
   ListCopyWith<$R, FileEntry, ObjectCopyWith<$R, FileEntry, FileEntry>>
   get files;
-  $R call({List<FileEntry>? files, String? path, DeviceEntity? device});
+  $R call({
+    List<FileEntry>? files,
+    String? path,
+    DeviceEntity? device,
+    FileEntry? selectedFile,
+  });
   FileExplorerStateCopyWith<$R2, $In, $Out2> $chain<$R2, $Out2>(
     Then<$Out2, $R2> t,
   );
@@ -152,19 +165,25 @@ class _FileExplorerStateCopyWithImpl<$R, $Out>
     (v) => call(files: v),
   );
   @override
-  $R call({List<FileEntry>? files, String? path, Object? device = $none}) =>
-      $apply(
-        FieldCopyWithData({
-          if (files != null) #files: files,
-          if (path != null) #path: path,
-          if (device != $none) #device: device,
-        }),
-      );
+  $R call({
+    List<FileEntry>? files,
+    String? path,
+    Object? device = $none,
+    Object? selectedFile = $none,
+  }) => $apply(
+    FieldCopyWithData({
+      if (files != null) #files: files,
+      if (path != null) #path: path,
+      if (device != $none) #device: device,
+      if (selectedFile != $none) #selectedFile: selectedFile,
+    }),
+  );
   @override
   FileExplorerState $make(CopyWithData data) => FileExplorerState(
     files: data.get(#files, or: $value.files),
     path: data.get(#path, or: $value.path),
     device: data.get(#device, or: $value.device),
+    selectedFile: data.get(#selectedFile, or: $value.selectedFile),
   );
 
   @override

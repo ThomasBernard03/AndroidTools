@@ -1,6 +1,7 @@
 import 'package:android_tools/features/file_explorer/domain/entities/file_type.dart';
+import 'package:equatable/equatable.dart';
 
-class FileEntry {
+class FileEntry extends Equatable {
   final FileType type;
   final String permissions;
   final int? links;
@@ -11,7 +12,7 @@ class FileEntry {
   final String name;
   final String? symlinkTarget;
 
-  FileEntry({
+  const FileEntry({
     required this.type,
     required this.permissions,
     required this.name,
@@ -22,4 +23,7 @@ class FileEntry {
     this.date,
     this.symlinkTarget,
   });
+
+  @override
+  List<Object?> get props => [name];
 }

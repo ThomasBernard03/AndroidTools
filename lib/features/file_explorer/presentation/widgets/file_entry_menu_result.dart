@@ -1,0 +1,1 @@
+enum FileEntryMenuResult { download, delete }

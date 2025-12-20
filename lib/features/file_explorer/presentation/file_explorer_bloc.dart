@@ -1,5 +1,6 @@
 import 'package:android_tools/features/file_explorer/core/string_extensions.dart';
 import 'package:android_tools/features/file_explorer/domain/entities/file_entry.dart';
+import 'package:android_tools/features/file_explorer/domain/usecases/create_directory_usecase.dart';
 import 'package:android_tools/features/file_explorer/domain/usecases/delete_file_usecase.dart';
 import 'package:android_tools/features/file_explorer/domain/usecases/download_file_usecase.dart';
 import 'package:android_tools/features/file_explorer/domain/usecases/list_files_usecase.dart';
@@ -8,10 +9,11 @@ import 'package:android_tools/main.dart';
 import 'package:android_tools/shared/domain/entities/device_entity.dart';
 import 'package:android_tools/shared/domain/usecases/listen_selected_device_usecase.dart';
 import 'package:dart_mappable/dart_mappable.dart';
-import 'package:file_picker/file_picker.dart';
+import 'package:file_picker/file_picker.dart' hide FileType;
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:logger/logger.dart';
 import 'package:path/path.dart' as p;
+import 'package:android_tools/features/file_explorer/domain/entities/file_type.dart';
 
 part 'file_explorer_event.dart';
 part 'file_explorer_state.dart';
@@ -24,6 +26,7 @@ class FileExplorerBloc extends Bloc<FileExplorerEvent, FileExplorerState> {
   final UploadFilesUsecase _uploadFilesUsecase = getIt.get();
   final DownloadFileUsecase _downloadFileUsecase = getIt.get();
   final DeleteFileUsecase _deleteFileUsecase = getIt.get();
+  final CreateDirectoryUsecase _createDirectoryUsecase = getIt.get();
 
   FileExplorerBloc() : super(FileExplorerState()) {
     on<OnAppearing>((event, emit) async {
@@ -43,18 +46,30 @@ class FileExplorerBloc extends Bloc<FileExplorerEvent, FileExplorerState> {
         },
       );
     });
-    on<OnGoToFolder>((event, emit) async {
+    on<OnFileEntryTapped>((event, emit) async {
       final device = state.device;
-      final path = p.join(state.path, event.folder.name);
+      final path = p.join(state.path, event.fileEntry.name);
 
       if (device == null) {
-        _logger.w("Device is null, can't get files for $path");
+        _logger.w("Device is null, can't handle OnFileEntryTapped for $path");
         return;
       }
 
-      final files = await _listFilesUsecase(path, device.deviceId);
-      emit(state.copyWith(files: files, path: path));
-      _logger.i('Fetched ${files.length} file(s) for path $path');
+      if (event.fileEntry.type == FileType.directory) {
+        final files = await _listFilesUsecase(path, device.deviceId);
+        emit(state.copyWith(files: files, path: path, selectedFile: null));
+        _logger.i('Fetched ${files.length} file(s) for path $path');
+        return;
+      }
+      if (event.fileEntry.type == FileType.file) {
+        emit(
+          state.copyWith(
+            selectedFile: state.selectedFile == event.fileEntry
+                ? null
+                : event.fileEntry,
+          ),
+        );
+      }
     });
 
     on<OnGoBack>((event, emit) async {
@@ -74,7 +89,7 @@ class FileExplorerBloc extends Bloc<FileExplorerEvent, FileExplorerState> {
       }
 
       final files = await _listFilesUsecase(parentPath, device.deviceId);
-      emit(state.copyWith(files: files, path: parentPath));
+      emit(state.copyWith(files: files, path: parentPath, selectedFile: null));
 
       _logger.i('Fetched ${files.length} file(s) for path $parentPath');
     });
@@ -97,7 +112,7 @@ class FileExplorerBloc extends Bloc<FileExplorerEvent, FileExplorerState> {
         return;
       }
       final files = await _listFilesUsecase(state.path, device.deviceId);
-      emit(state.copyWith(files: files));
+      emit(state.copyWith(files: files, selectedFile: null));
     });
     on<OnDownloadFile>((event, emit) async {
       final device = state.device;
