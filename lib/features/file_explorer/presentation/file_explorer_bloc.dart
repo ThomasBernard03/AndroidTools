@@ -147,5 +147,17 @@ class FileExplorerBloc extends Bloc<FileExplorerEvent, FileExplorerState> {
       await _deleteFileUsecase(filePath, device.deviceId);
       add(OnRefreshFiles());
     });
+    on<OnCreateDirectory>((event, emit) async {
+      final device = state.device;
+      if (device == null) {
+        _logger.w("Device is null, can't create directory");
+        return;
+      }
+      _logger.i(
+        "Creating directory ${event.name} at ${state.path} for device ${device.deviceId}",
+      );
+      await _createDirectoryUsecase(state.path, event.name, device.deviceId);
+      add(OnRefreshFiles());
+    });
   }
 }

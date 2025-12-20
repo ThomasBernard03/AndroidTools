@@ -31,3 +31,9 @@ class OnDownloadFile extends FileExplorerEvent {
 
   OnDownloadFile({required this.fileName});
 }
+
+class OnCreateDirectory extends FileExplorerEvent {
+  final String name;
+
+  OnCreateDirectory({required this.name});
+}

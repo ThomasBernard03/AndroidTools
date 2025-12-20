@@ -1,0 +1,52 @@
+import 'package:android_tools/features/file_explorer/core/int_extensions.dart';
+import 'package:android_tools/features/file_explorer/domain/entities/file_entry.dart';
+import 'package:android_tools/features/file_explorer/domain/entities/file_type.dart';
+import 'package:android_tools/features/file_explorer/presentation/widgets/file_entry_menu_result.dart';
+import 'package:android_tools/features/file_explorer/presentation/widgets/file_explorer_menus.dart';
+import 'package:android_tools/features/file_explorer/presentation/widgets/file_type_extensions.dart';
+import 'package:flutter/material.dart';
+
+class FileExplorerFileEntryItem extends StatelessWidget {
+  final FileEntry file;
+  final bool isSelected;
+  final void Function() onDownloadFile;
+  final void Function() onDeleteFile;
+  final void Function() onTap;
+
+  const FileExplorerFileEntryItem({
+    super.key,
+    required this.file,
+    required this.isSelected,
+    required this.onDownloadFile,
+    required this.onDeleteFile,
+    required this.onTap,
+  });
+
+  @override
+  Widget build(BuildContext context) {
+    return GestureDetector(
+      onSecondaryTapDown: (details) {
+        FileExplorerMenus.showFileEntryMenu(context, details).then((value) {
+          switch (value) {
+            case FileEntryMenuResult.download:
+              onDownloadFile();
+            case FileEntryMenuResult.delete:
+              onDeleteFile();
+            case null:
+          }
+        });
+      },
+      child: ListTile(
+        enabled: file.type == FileType.directory || file.type == FileType.file,
+        selected: isSelected,
+        leading: Icon(file.type.icon()),
+        title: Text(file.name),
+        subtitle: Text(
+          "${file.date?.toIso8601String()}\n${file.size?.toReadableBytes()}",
+        ),
+        selectedTileColor: Theme.of(context).colorScheme.surfaceContainerHigh,
+        onTap: onTap,
+      ),
+    );
+  }
+}

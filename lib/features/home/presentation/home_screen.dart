@@ -120,7 +120,7 @@ class _HomeScreenState extends State<HomeScreen> {
                   ),
                 ),
               ),
-              VerticalDivider(),
+              VerticalDivider(width: 1),
               Expanded(
                 child: switch (_selectedIndex) {
                   0 => InformationScreen(),
