@@ -14,4 +14,8 @@ class Constants {
 
     return logDirectory;
   }
+
+  static const environmentGitRepositoryUrl = "GIT_REPOSITORY_URL";
+  static const environmentSentryDsn = "SENTRY_DSN";
+  static const environmentAppArchiveUrl = "APP_ARCHIVE_URL";
 }

@@ -1,4 +1,4 @@
-import 'package:android_tools/features/fileexplorer/presentation/file_explorer_screen.dart';
+import 'package:android_tools/features/file_explorer/presentation/file_explorer_screen.dart';
 import 'package:android_tools/features/home/presentation/home_bloc.dart';
 import 'package:android_tools/features/information/presentation/information_screen.dart';
 import 'package:android_tools/features/logcat/presentation/logcat_screen.dart';

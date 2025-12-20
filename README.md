@@ -3,6 +3,8 @@
 ## Roadmap
 - Update devices list when usb device is plug/unplug
 - Real time SQL database
+- Stack same logcat lines (like VSCode)
+- In app updates
 
 ## Install application
 

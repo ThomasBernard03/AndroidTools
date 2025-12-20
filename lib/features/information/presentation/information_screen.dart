@@ -1,7 +1,5 @@
 import 'package:android_tools/features/information/presentation/information_bloc.dart';
 import 'package:android_tools/features/information/presentation/widgets/android_version_card.dart';
-import 'package:android_tools/features/logcat/presentation/logcat_bloc.dart'
-    hide OnRefreshDevices;
 import 'package:android_tools/shared/presentation/refresh_device_button.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';

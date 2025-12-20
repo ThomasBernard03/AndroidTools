@@ -1,4 +1,4 @@
-import 'package:android_tools/features/fileexplorer/domain/repositories/file_repository.dart';
+import 'package:android_tools/features/file_explorer/domain/repositories/file_repository.dart';
 
 class UploadFilesUsecase {
   final FileRepository _fileRepository;

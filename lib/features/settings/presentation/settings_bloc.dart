@@ -21,7 +21,19 @@ class SettingsBloc extends Bloc<SettingsEvent, SettingsState> {
     });
     on<OnOpenGithubProject>((event, emit) async {
       _logger.i("Opening github repository");
-      final uri = Uri.parse("https://github.com/ThomasBernard03/AndroidTools");
+      const repositoryUrl = String.fromEnvironment(
+        Constants.environmentGitRepositoryUrl,
+        defaultValue: '',
+      );
+
+      if (repositoryUrl.isEmpty) {
+        _logger.w(
+          "${Constants.environmentGitRepositoryUrl} not found from environment, launch project with '--dart-define=${Constants.environmentGitRepositoryUrl}=your_git_repository'",
+        );
+        return;
+      }
+
+      final uri = Uri.parse(repositoryUrl);
       await launchUrl(uri);
     });
   }

@@ -1,9 +1,9 @@
 import 'dart:convert';
 import 'dart:io';
 
-import 'package:android_tools/features/fileexplorer/domain/entities/file_entry.dart';
-import 'package:android_tools/features/fileexplorer/domain/entities/file_type.dart';
-import 'package:android_tools/features/fileexplorer/domain/repositories/file_repository.dart';
+import 'package:android_tools/features/file_explorer/domain/entities/file_entry.dart';
+import 'package:android_tools/features/file_explorer/domain/entities/file_type.dart';
+import 'package:android_tools/features/file_explorer/domain/repositories/file_repository.dart';
 import 'package:android_tools/shared/data/datasources/shell/shell_datasource.dart';
 import 'package:logger/logger.dart';
 

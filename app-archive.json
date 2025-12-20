@@ -1,0 +1,34 @@
+{
+    "appName": "Android Tools",
+    "description": "A tool to improve communication between MacOs/Windows/Linux and Android. You can easily install applications, view logcat, search files and view various information",
+    "items": [
+        {
+            "version": "2.0.1",
+            "shortVersion": 9,
+            "changes": [
+                {
+                    "type": "chore",
+                    "message": "Test update"
+                }
+            ],
+            "date": "2025-20-12",
+            "mandatory": true,
+            "url": "https://github.com/ThomasBernard03/AndroidTools/releases/download/2.0.1/AndroidTools.dmg",
+            "platform": "windows"
+        },
+        {
+            "version": "2.0.1",
+            "shortVersion": 9,
+            "changes": [
+                {
+                    "type": "chore",
+                    "message": "Test update"
+                }
+            ],
+            "date": "2025-20-12",
+            "mandatory": true,
+            "url": "https://github.com/ThomasBernard03/AndroidTools/releases/download/2.0.1/AndroidTools.dmg",
+            "platform": "macos"
+        }
+    ]
+}

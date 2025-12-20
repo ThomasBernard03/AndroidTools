@@ -1,7 +1,7 @@
-import 'package:android_tools/features/fileexplorer/core/string_extensions.dart';
-import 'package:android_tools/features/fileexplorer/domain/entities/file_type.dart';
-import 'package:android_tools/features/fileexplorer/presentation/file_explorer_bloc.dart';
-import 'package:android_tools/features/fileexplorer/presentation/file_type_extensions.dart';
+import 'package:android_tools/features/file_explorer/core/string_extensions.dart';
+import 'package:android_tools/features/file_explorer/domain/entities/file_type.dart';
+import 'package:android_tools/features/file_explorer/presentation/file_explorer_bloc.dart';
+import 'package:android_tools/features/file_explorer/presentation/file_type_extensions.dart';
 import 'package:desktop_drop/desktop_drop.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';

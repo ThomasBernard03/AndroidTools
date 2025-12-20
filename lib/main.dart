@@ -1,7 +1,8 @@
-import 'package:android_tools/features/fileexplorer/core/fileexplorer_module.dart';
+import 'package:android_tools/features/file_explorer/core/fileexplorer_module.dart';
 import 'package:android_tools/features/home/presentation/home_screen.dart';
 import 'package:android_tools/features/information/core/information_module.dart';
 import 'package:android_tools/features/logcat/core/logcat_module.dart';
+import 'package:android_tools/shared/core/constants.dart';
 import 'package:android_tools/shared/core/shared_module.dart';
 import 'package:android_tools/shared/core/string_extensions.dart';
 import 'package:flutter/material.dart';
@@ -26,10 +27,12 @@ Future<void> main() async {
 
   if (sentryDsn.isEmpty) {
     logger.w(
-      "sentryDsn not found from environment, launch project with '--dart-define=SENTRY_DSN=your_sentry_dsn'",
+      "${Constants.environmentSentryDsn} not found from environment, launch project with '--dart-define=${Constants.environmentSentryDsn}=your_sentry_dsn'",
     );
   } else {
-    logger.i("sentryDsn found : ${sentryDsn.anonymize()}");
+    logger.i(
+      "${Constants.environmentSentryDsn} found : ${sentryDsn.anonymize()}",
+    );
   }
 
   await SentryFlutter.init((options) {

@@ -25,6 +25,7 @@ dependencies:
   file_picker: ^10.3.7
   url_launcher: ^6.3.2
   package_info_plus: ^9.0.0
+  desktop_updater: ^1.0.2
 
 dev_dependencies:
   sentry_dart_plugin: ^3.2.0

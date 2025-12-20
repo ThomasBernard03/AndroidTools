@@ -1,9 +1,9 @@
-import 'package:android_tools/features/fileexplorer/core/string_extensions.dart';
-import 'package:android_tools/features/fileexplorer/domain/entities/file_entry.dart';
-import 'package:android_tools/features/fileexplorer/domain/usecases/delete_file_usecase.dart';
-import 'package:android_tools/features/fileexplorer/domain/usecases/download_file_usecase.dart';
-import 'package:android_tools/features/fileexplorer/domain/usecases/list_files_usecase.dart';
-import 'package:android_tools/features/fileexplorer/domain/usecases/upload_files_usecase.dart';
+import 'package:android_tools/features/file_explorer/core/string_extensions.dart';
+import 'package:android_tools/features/file_explorer/domain/entities/file_entry.dart';
+import 'package:android_tools/features/file_explorer/domain/usecases/delete_file_usecase.dart';
+import 'package:android_tools/features/file_explorer/domain/usecases/download_file_usecase.dart';
+import 'package:android_tools/features/file_explorer/domain/usecases/list_files_usecase.dart';
+import 'package:android_tools/features/file_explorer/domain/usecases/upload_files_usecase.dart';
 import 'package:android_tools/main.dart';
 import 'package:android_tools/shared/domain/entities/device_entity.dart';
 import 'package:android_tools/shared/domain/usecases/listen_selected_device_usecase.dart';
