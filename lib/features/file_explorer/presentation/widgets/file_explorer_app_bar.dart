@@ -1,5 +1,6 @@
 import 'package:android_tools/features/file_explorer/core/string_extensions.dart';
 import 'package:android_tools/features/file_explorer/presentation/file_explorer_bloc.dart';
+import 'package:file_picker/file_picker.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 
@@ -72,6 +73,7 @@ class FileExplorerAppBar extends StatelessWidget {
             );
           },
         ),
+        VerticalDivider(),
         BlocBuilder<FileExplorerBloc, FileExplorerState>(
           builder: (context, state) {
             return IconButton(
@@ -85,6 +87,40 @@ class FileExplorerAppBar extends StatelessWidget {
                       );
                     },
               icon: Icon(Icons.delete),
+            );
+          },
+        ),
+        BlocBuilder<FileExplorerBloc, FileExplorerState>(
+          builder: (context, state) {
+            return IconButton(
+              onPressed: () async {
+                final result = await FilePicker.platform.pickFiles(
+                  dialogTitle: 'Choose files',
+                );
+                if (result == null || result.files.isEmpty) {
+                  return;
+                }
+                context.read<FileExplorerBloc>().add(
+                  OnUploadFiles(files: result.files.map((f) => f.path ?? "")),
+                );
+              },
+              icon: Icon(Icons.upload_rounded),
+            );
+          },
+        ),
+        BlocBuilder<FileExplorerBloc, FileExplorerState>(
+          builder: (context, state) {
+            return IconButton(
+              onPressed: state.selectedFile == null
+                  ? null
+                  : () {
+                      final selectedFile = state.selectedFile;
+                      if (selectedFile == null) return;
+                      context.read<FileExplorerBloc>().add(
+                        OnDownloadFile(fileName: selectedFile.name),
+                      );
+                    },
+              icon: Icon(Icons.download_rounded),
             );
           },
         ),
