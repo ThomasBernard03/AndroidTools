@@ -1,5 +1,6 @@
 import 'package:android_tools/features/information/presentation/information_bloc.dart';
 import 'package:android_tools/features/information/presentation/widgets/android_version_card.dart';
+import 'package:android_tools/features/information/presentation/widgets/apk_installer_drop_target.dart';
 import 'package:android_tools/shared/presentation/refresh_device_button.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
@@ -36,19 +37,17 @@ class InformationScreen extends StatelessWidget {
                               );
                             },
                           ),
-                          Card.filled(
-                            child: Padding(
-                              padding: EdgeInsets.all(16.0),
-                              child: Column(
-                                children: [
-                                  Icon(Icons.add_rounded, size: 200),
-                                  Text(
-                                    "Drag and drop your .apk file here to install app on connected device",
-                                    textAlign: TextAlign.center,
-                                  ),
-                                ],
-                              ),
-                            ),
+                          ApkInstallerDropTarget(
+                            onApkDropped: (details) {
+                              final apkPath = details.files.firstOrNull;
+                              final path = apkPath?.path;
+                              if (path == null) {
+                                return;
+                              }
+                              context.read<InformationBloc>().add(
+                                OnInstallApplication(applicationFilePath: path),
+                              );
+                            },
                           ),
 
                           BlocBuilder<InformationBloc, InformationState>(
@@ -66,9 +65,6 @@ class InformationScreen extends StatelessWidget {
                                       ),
                                       Text(
                                         "Model :${state.deviceInformation?.model}",
-                                      ),
-                                      Text(
-                                        "Version :${state.deviceInformation?.version}",
                                       ),
                                     ],
                                   ),

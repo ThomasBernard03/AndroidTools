@@ -2,6 +2,7 @@ import 'package:android_tools/features/information/domain/entities/device_inform
 import 'package:android_tools/features/information/domain/usecases/get_device_information_usecase.dart';
 import 'package:android_tools/main.dart';
 import 'package:android_tools/shared/domain/entities/device_entity.dart';
+import 'package:android_tools/shared/domain/usecases/install_application_usecase.dart';
 import 'package:android_tools/shared/domain/usecases/listen_selected_device_usecase.dart';
 import 'package:android_tools/shared/domain/usecases/refresh_connected_devices_usecase.dart';
 import 'package:dart_mappable/dart_mappable.dart';
@@ -18,6 +19,7 @@ class InformationBloc extends Bloc<InformationEvent, InformationState> {
   final GetDeviceInformationUsecase _getDeviceInformationUsecase = getIt.get();
   final RefreshConnectedDevicesUsecase _refreshConnectedDevicesUsecase = getIt
       .get();
+  final InstallApplicationUsecase _installApplicationUsecase = getIt.get();
 
   InformationBloc() : super(InformationState()) {
     on<OnAppearing>((event, emit) async {
@@ -25,8 +27,8 @@ class InformationBloc extends Bloc<InformationEvent, InformationState> {
         _listenSelectedDeviceUsecase(),
         onData: (device) async {
           if (device == null) {
-            _logger.i("Selected device is null, can't get information");
-            emit(state.copyWith(deviceInformation: null));
+            _logger.w("Selected device is null, can't get information");
+            emit(state.copyWith(deviceInformation: null, device: null));
             return;
           }
 
@@ -34,13 +36,21 @@ class InformationBloc extends Bloc<InformationEvent, InformationState> {
             device.deviceId,
           );
           _logger.d(information);
-          emit(state.copyWith(deviceInformation: information));
+          emit(state.copyWith(deviceInformation: information, device: device));
         },
       );
     });
     on<OnRefreshDevices>((event, emit) async {
       _logger.i("Refresing connected devices");
       await _refreshConnectedDevicesUsecase();
+    });
+    on<OnInstallApplication>((event, emit) {
+      final device = state.device;
+      if (device == null) {
+        _logger.w("Selected device is null, can't install apk");
+        return;
+      }
+      _installApplicationUsecase(event.applicationFilePath, device.deviceId);
     });
   }
 }

@@ -40,9 +40,6 @@ class DeviceInformationRepositoryImpl implements DeviceInformationRepository {
     }
 
     final output = stdoutBuffer.toString();
-
-    _logger.d('ADB getprop output:\n$output');
-
     return parseDeviceInformation(output);
   }
 

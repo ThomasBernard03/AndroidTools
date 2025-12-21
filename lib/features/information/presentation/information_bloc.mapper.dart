@@ -29,14 +29,24 @@ class InformationStateMapper extends ClassMapperBase<InformationState> {
     _$deviceInformation,
     opt: true,
   );
+  static DeviceEntity? _$device(InformationState v) => v.device;
+  static const Field<InformationState, DeviceEntity> _f$device = Field(
+    'device',
+    _$device,
+    opt: true,
+  );
 
   @override
   final MappableFields<InformationState> fields = const {
     #deviceInformation: _f$deviceInformation,
+    #device: _f$device,
   };
 
   static InformationState _instantiate(DecodingData data) {
-    return InformationState(deviceInformation: data.dec(_f$deviceInformation));
+    return InformationState(
+      deviceInformation: data.dec(_f$deviceInformation),
+      device: data.dec(_f$device),
+    );
   }
 
   @override
@@ -101,7 +111,7 @@ extension InformationStateValueCopy<$R, $Out>
 
 abstract class InformationStateCopyWith<$R, $In extends InformationState, $Out>
     implements ClassCopyWith<$R, $In, $Out> {
-  $R call({DeviceInformationEntity? deviceInformation});
+  $R call({DeviceInformationEntity? deviceInformation, DeviceEntity? device});
   InformationStateCopyWith<$R2, $In, $Out2> $chain<$R2, $Out2>(
     Then<$Out2, $R2> t,
   );
@@ -116,17 +126,20 @@ class _InformationStateCopyWithImpl<$R, $Out>
   late final ClassMapperBase<InformationState> $mapper =
       InformationStateMapper.ensureInitialized();
   @override
-  $R call({Object? deviceInformation = $none}) => $apply(
-    FieldCopyWithData({
-      if (deviceInformation != $none) #deviceInformation: deviceInformation,
-    }),
-  );
+  $R call({Object? deviceInformation = $none, Object? device = $none}) =>
+      $apply(
+        FieldCopyWithData({
+          if (deviceInformation != $none) #deviceInformation: deviceInformation,
+          if (device != $none) #device: device,
+        }),
+      );
   @override
   InformationState $make(CopyWithData data) => InformationState(
     deviceInformation: data.get(
       #deviceInformation,
       or: $value.deviceInformation,
     ),
+    device: data.get(#device, or: $value.device),
   );
 
   @override
