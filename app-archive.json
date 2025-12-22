@@ -11,7 +11,7 @@
                     "message": "Test update"
                 }
             ],
-            "date": "2025-20-12",
+            "date": "2025-22-12",
             "mandatory": true,
             "url": "https://github.com/ThomasBernard03/AndroidTools/releases/download/2.0.1/AndroidTools.dmg",
             "platform": "windows"
@@ -25,9 +25,9 @@
                     "message": "Test update"
                 }
             ],
-            "date": "2025-20-12",
+            "date": "2025-22-12",
             "mandatory": true,
-            "url": "https://github.com/ThomasBernard03/AndroidTools/releases/download/2.0.1/AndroidTools.dmg",
+            "url": "https://drive.google.com/drive/folders/1pbnfMI2qbXvaFJ3-JwSjzH3Wh7DYOFaU?usp=drive_link",
             "platform": "macos"
         }
     ]

@@ -103,7 +103,7 @@ class _HomeScreenState extends State<HomeScreen> {
                         ),
                         NavigationRailItem(
                           selected: _selectedIndex == 1,
-                          icon: Icons.catching_pokemon,
+                          icon: Icons.pets,
                           text: "Logcat",
                           onTap: () => setState(() {
                             _selectedIndex = 1;

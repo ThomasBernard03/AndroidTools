@@ -4,26 +4,27 @@ class Themes {
   static ThemeData lightTheme = ThemeData(
     scaffoldBackgroundColor: Colors.white,
     appBarTheme: AppBarTheme(
-      backgroundColor: Color.fromARGB(255, 18, 80, 205),
+      backgroundColor: Color(0xFF4FAF53),
       foregroundColor: Color(0xFFF9F9F9),
     ),
     colorScheme: ColorScheme.light(
-      primary: Color.fromARGB(255, 18, 80, 205),
+      primary: Color(0xFF4FAF53),
       surfaceContainerLowest: Color(0xFFF9F9FA),
       surfaceContainerLow: Color(0xFFDBDBDC),
       surfaceContainer: Color(0xFFD1D1D2),
       surfaceContainerHighest: Color(0xFF505968),
     ),
     popupMenuTheme: PopupMenuThemeData(color: Colors.white),
+    cardTheme: CardThemeData(color: const Color.fromARGB(255, 227, 227, 227)),
   );
   static ThemeData darkTheme = ThemeData(
     scaffoldBackgroundColor: Color(0xFF10151B),
     appBarTheme: AppBarTheme(
-      backgroundColor: Color.fromARGB(255, 4, 33, 101),
+      backgroundColor: Color.fromARGB(255, 41, 92, 43),
       foregroundColor: Color(0xFFF9F9F9),
     ),
     colorScheme: ColorScheme.dark(
-      primary: Color.fromARGB(255, 18, 80, 205),
+      primary: Color.fromARGB(255, 41, 92, 43),
       surfaceContainerLowest: Color(0xFF090B0E),
       surfaceContainerLow: Color(0xFF27292B),
       surfaceContainer: Color(0xFF313235),

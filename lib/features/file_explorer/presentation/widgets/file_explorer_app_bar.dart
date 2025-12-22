@@ -14,7 +14,7 @@ class FileExplorerAppBar extends StatelessWidget {
       centerTitle: false,
       title: BlocBuilder<FileExplorerBloc, FileExplorerState>(
         builder: (context, state) {
-          return Text(state.path);
+          return Text(state.path, style: Theme.of(context).textTheme.bodyLarge);
         },
       ),
       leading: BlocBuilder<FileExplorerBloc, FileExplorerState>(

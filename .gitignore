@@ -50,3 +50,4 @@ app.*.map.json
 /.vscode
 
 sentry.properties
+/dist
