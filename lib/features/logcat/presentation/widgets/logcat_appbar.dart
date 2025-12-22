@@ -203,7 +203,7 @@ class _LogcatAppbarState extends State<LogcatAppbar> {
                   ),
                   LogcatButton(
                     color: Color.fromARGB(255, 213, 36, 54),
-                    icon: Icons.delete_outlined,
+                    icon: Icons.delete_outline_rounded,
                     onPressed: () =>
                         context.read<LogcatBloc>().add(OnClearLogcat()),
                   ),

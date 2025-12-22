@@ -1,1 +1,1 @@
-enum FileEntryMenuResult { download, delete }
+enum FileEntryMenuResult { download, delete, upload, refresh, newDirectory }

@@ -11,6 +11,9 @@ class FileExplorerFileEntryItem extends StatelessWidget {
   final bool isSelected;
   final void Function() onDownloadFile;
   final void Function() onDeleteFile;
+  final void Function() onUploadFile;
+  final void Function() onRefresh;
+  final void Function() onNewDirectory;
   final void Function() onTap;
 
   const FileExplorerFileEntryItem({
@@ -20,6 +23,9 @@ class FileExplorerFileEntryItem extends StatelessWidget {
     required this.onDownloadFile,
     required this.onDeleteFile,
     required this.onTap,
+    required this.onUploadFile,
+    required this.onRefresh,
+    required this.onNewDirectory,
   });
 
   @override
@@ -32,6 +38,12 @@ class FileExplorerFileEntryItem extends StatelessWidget {
               onDownloadFile();
             case FileEntryMenuResult.delete:
               onDeleteFile();
+            case FileEntryMenuResult.upload:
+              onUploadFile();
+            case FileEntryMenuResult.refresh:
+              onRefresh();
+            case FileEntryMenuResult.newDirectory:
+              onNewDirectory();
             case null:
           }
         });

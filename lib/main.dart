@@ -5,6 +5,8 @@ import 'package:android_tools/features/logcat/core/logcat_module.dart';
 import 'package:android_tools/shared/core/constants.dart';
 import 'package:android_tools/shared/core/shared_module.dart';
 import 'package:android_tools/shared/core/string_extensions.dart';
+import 'package:android_tools/shared/presentation/themes.dart';
+import 'package:bitsdojo_window/bitsdojo_window.dart';
 import 'package:flutter/material.dart';
 import 'package:get_it/get_it.dart';
 import 'package:logger/logger.dart';
@@ -19,7 +21,9 @@ Future<void> main() async {
   InformationModule.configureDependencies();
   FileExplorerModule.configureDependencies();
   await getIt.allReady();
-
+  // await windowManager.ensureInitialized();
+  // final wm = WindowManager.instance;
+  // await wm.setTitleBarStyle(TitleBarStyle.hidden);
   const sentryDsn = String.fromEnvironment('SENTRY_DSN', defaultValue: '');
   final logger = await getIt.getAsync<Logger>();
 
@@ -35,12 +39,22 @@ Future<void> main() async {
     );
   }
 
+  // await Window.initialize();
+  //  await Window.setEffect(effect: WindowEffect.acrylic);
+  // await Window.setToolbarStyle(toolbarStyle: MacOSToolbarStyle.unified);
+
   await SentryFlutter.init((options) {
     options.dsn = sentryDsn;
     options.enableLogs = true;
     options.replay.sessionSampleRate = 0.1;
     options.replay.onErrorSampleRate = 1.0;
   }, appRunner: () => runApp(SentryWidget(child: MyApp())));
+
+  doWhenWindowReady(() {
+    appWindow.minSize = Size(600, 450);
+    appWindow.alignment = Alignment.center;
+    appWindow.show();
+  });
 }
 
 class MyApp extends StatelessWidget {
@@ -51,11 +65,8 @@ class MyApp extends StatelessWidget {
     return MaterialApp(
       debugShowCheckedModeBanner: false,
       title: 'Flutter Demo',
-      theme: ThemeData(
-        colorScheme: ColorScheme.fromSeed(
-          seedColor: Color.fromARGB(255, 19, 82, 210),
-        ),
-      ),
+      theme: Themes.lightTheme,
+      darkTheme: Themes.darkTheme,
       home: HomeScreen(),
     );
   }

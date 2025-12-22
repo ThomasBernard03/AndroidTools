@@ -5,6 +5,7 @@
 import FlutterMacOS
 import Foundation
 
+import bitsdojo_window_macos
 import cryptography_flutter_plus
 import desktop_drop
 import desktop_updater
@@ -15,6 +16,7 @@ import sentry_flutter
 import url_launcher_macos
 
 func RegisterGeneratedPlugins(registry: FlutterPluginRegistry) {
+  BitsdojoWindowPlugin.register(with: registry.registrar(forPlugin: "BitsdojoWindowPlugin"))
   CryptographyFlutterPlugin.register(with: registry.registrar(forPlugin: "CryptographyFlutterPlugin"))
   DesktopDropPlugin.register(with: registry.registrar(forPlugin: "DesktopDropPlugin"))
   DesktopUpdaterPlugin.register(with: registry.registrar(forPlugin: "DesktopUpdaterPlugin"))
