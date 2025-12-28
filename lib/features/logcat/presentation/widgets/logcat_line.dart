@@ -18,7 +18,7 @@ class LogcatLine extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final parsed = parseLogcatLine(line);
+    final parsed = _parseLogcatLine(line);
 
     if (parsed != null) {
       final textSpan = TextSpan(
@@ -86,7 +86,7 @@ class LogcatLine extends StatelessWidget {
         ],
       );
 
-      return SelectableText.rich(textSpan);
+      return SelectableText.rich(textSpan, maxLines: 1);
     } else {
       return SelectableText(
         line,
@@ -95,7 +95,7 @@ class LogcatLine extends StatelessWidget {
     }
   }
 
-  LogcatLineEntity? parseLogcatLine(String line) {
+  LogcatLineEntity? _parseLogcatLine(String line) {
     final match = _regex.firstMatch(line);
     if (match == null) return null;
 
@@ -108,7 +108,6 @@ class LogcatLine extends StatelessWidget {
       final tag = match.group(6)!;
       final message = match.group(7)!;
 
-      // Ajouter l'année actuelle pour parser correctement
       final now = DateTime.now();
       final dateTime = DateTime.parse('${now.year}-$dateStr $timeStr');
 

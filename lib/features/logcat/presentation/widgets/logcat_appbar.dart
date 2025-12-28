@@ -14,7 +14,6 @@ class LogcatAppbar extends StatefulWidget {
 }
 
 class _LogcatAppbarState extends State<LogcatAppbar> {
-  final availableLogcatSizes = [500, 1000, 2000, 5000, 10000];
   final availableLogcatLevels = [
     LogcatLevel.debug,
     LogcatLevel.info,
@@ -30,6 +29,11 @@ class _LogcatAppbarState extends State<LogcatAppbar> {
         crossAxisAlignment: CrossAxisAlignment.start,
         mainAxisAlignment: MainAxisAlignment.spaceBetween,
         children: [
+          BlocBuilder<LogcatBloc, LogcatState>(
+            builder: (context, state) {
+              return Text(state.logs.length.toString());
+            },
+          ),
           BlocBuilder<LogcatBloc, LogcatState>(
             builder: (context, state) {
               return SizedBox(
@@ -87,29 +91,6 @@ class _LogcatAppbarState extends State<LogcatAppbar> {
               Row(
                 spacing: 8,
                 children: [
-                  BlocBuilder<LogcatBloc, LogcatState>(
-                    builder: (context, state) {
-                      return DropdownButton<int>(
-                        value: state.maxLogcatLines,
-                        elevation: 16,
-                        onChanged: (int? value) {
-                          context.read<LogcatBloc>().add(
-                            OnLogcatMaxLinesChanged(
-                              maxLines: value ?? availableLogcatSizes.first,
-                            ),
-                          );
-                        },
-                        items: availableLogcatSizes.map<DropdownMenuItem<int>>((
-                          int value,
-                        ) {
-                          return DropdownMenuItem<int>(
-                            value: value,
-                            child: Text(value.toString()),
-                          );
-                        }).toList(),
-                      );
-                    },
-                  ),
                   BlocBuilder<LogcatBloc, LogcatState>(
                     builder: (context, state) {
                       return DropdownButton<LogcatLevel>(

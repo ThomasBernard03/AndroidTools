@@ -49,13 +49,6 @@ class LogcatStateMapper extends ClassMapperBase<LogcatState> {
     opt: true,
     def: LogcatLevel.debug,
   );
-  static int _$maxLogcatLines(LogcatState v) => v.maxLogcatLines;
-  static const Field<LogcatState, int> _f$maxLogcatLines = Field(
-    'maxLogcatLines',
-    _$maxLogcatLines,
-    opt: true,
-    def: 500,
-  );
   static DeviceEntity? _$selectedDevice(LogcatState v) => v.selectedDevice;
   static const Field<LogcatState, DeviceEntity> _f$selectedDevice = Field(
     'selectedDevice',
@@ -82,7 +75,6 @@ class LogcatStateMapper extends ClassMapperBase<LogcatState> {
     #isSticky: _f$isSticky,
     #isPaused: _f$isPaused,
     #minimumLogLevel: _f$minimumLogLevel,
-    #maxLogcatLines: _f$maxLogcatLines,
     #selectedDevice: _f$selectedDevice,
     #processes: _f$processes,
     #selectedProcess: _f$selectedProcess,
@@ -94,7 +86,6 @@ class LogcatStateMapper extends ClassMapperBase<LogcatState> {
       isSticky: data.dec(_f$isSticky),
       isPaused: data.dec(_f$isPaused),
       minimumLogLevel: data.dec(_f$minimumLogLevel),
-      maxLogcatLines: data.dec(_f$maxLogcatLines),
       selectedDevice: data.dec(_f$selectedDevice),
       processes: data.dec(_f$processes),
       selectedProcess: data.dec(_f$selectedProcess),
@@ -173,7 +164,6 @@ abstract class LogcatStateCopyWith<$R, $In extends LogcatState, $Out>
     bool? isSticky,
     bool? isPaused,
     LogcatLevel? minimumLogLevel,
-    int? maxLogcatLines,
     DeviceEntity? selectedDevice,
     List<ProcessEntity>? processes,
     ProcessEntity? selectedProcess,
@@ -213,7 +203,6 @@ class _LogcatStateCopyWithImpl<$R, $Out>
     bool? isSticky,
     bool? isPaused,
     LogcatLevel? minimumLogLevel,
-    int? maxLogcatLines,
     Object? selectedDevice = $none,
     List<ProcessEntity>? processes,
     Object? selectedProcess = $none,
@@ -223,7 +212,6 @@ class _LogcatStateCopyWithImpl<$R, $Out>
       if (isSticky != null) #isSticky: isSticky,
       if (isPaused != null) #isPaused: isPaused,
       if (minimumLogLevel != null) #minimumLogLevel: minimumLogLevel,
-      if (maxLogcatLines != null) #maxLogcatLines: maxLogcatLines,
       if (selectedDevice != $none) #selectedDevice: selectedDevice,
       if (processes != null) #processes: processes,
       if (selectedProcess != $none) #selectedProcess: selectedProcess,
@@ -235,7 +223,6 @@ class _LogcatStateCopyWithImpl<$R, $Out>
     isSticky: data.get(#isSticky, or: $value.isSticky),
     isPaused: data.get(#isPaused, or: $value.isPaused),
     minimumLogLevel: data.get(#minimumLogLevel, or: $value.minimumLogLevel),
-    maxLogcatLines: data.get(#maxLogcatLines, or: $value.maxLogcatLines),
     selectedDevice: data.get(#selectedDevice, or: $value.selectedDevice),
     processes: data.get(#processes, or: $value.processes),
     selectedProcess: data.get(#selectedProcess, or: $value.selectedProcess),

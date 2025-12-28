@@ -1,0 +1,39 @@
+{
+  "fill" : {
+    "automatic-gradient" : "extended-gray:1.00000,1.00000"
+  },
+  "groups" : [
+    {
+      "blur-material" : 0,
+      "layers" : [
+        {
+          "image-name" : "android 1.png",
+          "name" : "android 1",
+          "position" : {
+            "scale" : 1,
+            "translation-in-points" : [
+              0,
+              -55
+            ]
+          }
+        }
+      ],
+      "lighting" : "individual",
+      "shadow" : {
+        "kind" : "neutral",
+        "opacity" : 0
+      },
+      "specular" : true,
+      "translucency" : {
+        "enabled" : true,
+        "value" : 0
+      }
+    }
+  ],
+  "supported-platforms" : {
+    "circles" : [
+      "watchOS"
+    ],
+    "squares" : "shared"
+  }
+}

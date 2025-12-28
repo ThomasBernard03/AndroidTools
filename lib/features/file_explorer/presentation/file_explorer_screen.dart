@@ -74,66 +74,86 @@ class _FileExplorerScreenState extends State<FileExplorerScreen> {
         ),
         body: BlocBuilder<FileExplorerBloc, FileExplorerState>(
           builder: (context, state) {
-            return FileExplorerDropTarget(
-              onFileDropped: (details) {
-                context.read<FileExplorerBloc>().add(
-                  OnUploadFiles(files: details.files.map((f) => f.path)),
-                );
-              },
-              child: BlocBuilder<FileExplorerBloc, FileExplorerState>(
-                builder: (context, state) {
-                  return GestureDetector(
-                    onSecondaryTapDown: (details) {
-                      FileExplorerMenus.showGeneralMenu(context, details).then((
-                        value,
-                      ) async {
-                        if (value == FileEntryMenuResult.upload) {
-                          onUploadFiles(context);
-                          return;
-                        }
-                        if (value == FileEntryMenuResult.refresh) {
-                          context.read<FileExplorerBloc>().add(
-                            OnRefreshFiles(),
-                          );
-                          return;
-                        }
-                        if (value == FileEntryMenuResult.newDirectory) {
-                          await onShowCreateDirectoryDialog(context);
-                          return;
-                        }
-                      });
+            return Column(
+              children: [
+                Expanded(
+                  child: FileExplorerDropTarget(
+                    onFileDropped: (details) {
+                      context.read<FileExplorerBloc>().add(
+                        OnUploadFiles(files: details.files.map((f) => f.path)),
+                      );
                     },
-                    child: ListView.builder(
-                      itemCount: state.files.length,
-                      itemBuilder: (context, index) {
-                        final file = state.files[index];
-                        return FileExplorerFileEntryItem(
-                          file: file,
-                          isSelected: state.selectedFile == file,
-                          onDownloadFile: () => context
-                              .read<FileExplorerBloc>()
-                              .add(OnDownloadFile(fileName: file.name)),
-                          onDeleteFile: () => context
-                              .read<FileExplorerBloc>()
-                              .add(OnDeleteFile(fileName: file.name)),
-                          onTap: () => context.read<FileExplorerBloc>().add(
-                            OnFileEntryTapped(fileEntry: file),
-                          ),
-                          onUploadFile: () async {
-                            await onUploadFiles(context);
+                    child: BlocBuilder<FileExplorerBloc, FileExplorerState>(
+                      builder: (context, state) {
+                        return GestureDetector(
+                          onSecondaryTapDown: (details) {
+                            FileExplorerMenus.showGeneralMenu(
+                              context,
+                              details,
+                            ).then((value) async {
+                              if (value == FileEntryMenuResult.upload) {
+                                if (context.mounted) {
+                                  onUploadFiles(context);
+                                }
+                                return;
+                              }
+                              if (value == FileEntryMenuResult.refresh) {
+                                if (context.mounted) {
+                                  context.read<FileExplorerBloc>().add(
+                                    OnRefreshFiles(),
+                                  );
+                                }
+                                return;
+                              }
+                              if (value == FileEntryMenuResult.newDirectory) {
+                                if (context.mounted) {
+                                  await onShowCreateDirectoryDialog(context);
+                                }
+                                return;
+                              }
+                            });
                           },
-                          onRefresh: () => context.read<FileExplorerBloc>().add(
-                            OnRefreshFiles(),
+                          child: ListView.builder(
+                            itemCount: state.files.length,
+                            itemBuilder: (context, index) {
+                              final file = state.files[index];
+                              return FileExplorerFileEntryItem(
+                                file: file,
+                                isSelected: state.selectedFile == file,
+                                onDownloadFile: () => context
+                                    .read<FileExplorerBloc>()
+                                    .add(OnDownloadFile(fileName: file.name)),
+                                onDeleteFile: () => context
+                                    .read<FileExplorerBloc>()
+                                    .add(OnDeleteFile(fileName: file.name)),
+                                onTap: () => context
+                                    .read<FileExplorerBloc>()
+                                    .add(OnFileEntryTapped(fileEntry: file)),
+                                onUploadFile: () async {
+                                  await onUploadFiles(context);
+                                },
+                                onRefresh: () => context
+                                    .read<FileExplorerBloc>()
+                                    .add(OnRefreshFiles()),
+                                onNewDirectory: () async {
+                                  await onShowCreateDirectoryDialog(context);
+                                },
+                              );
+                            },
                           ),
-                          onNewDirectory: () async {
-                            await onShowCreateDirectoryDialog(context);
-                          },
                         );
                       },
                     ),
-                  );
-                },
-              ),
+                  ),
+                ),
+                BlocBuilder<FileExplorerBloc, FileExplorerState>(
+                  builder: (context, state) {
+                    return state.isLoading
+                        ? LinearProgressIndicator()
+                        : SizedBox.shrink();
+                  },
+                ),
+              ],
             );
           },
         ),

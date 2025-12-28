@@ -88,8 +88,16 @@ class FileExplorerBloc extends Bloc<FileExplorerEvent, FileExplorerState> {
         return;
       }
 
+      emit(state.copyWith(isLoading: true));
       final files = await _listFilesUsecase(parentPath, device.deviceId);
-      emit(state.copyWith(files: files, path: parentPath, selectedFile: null));
+      emit(
+        state.copyWith(
+          files: files,
+          path: parentPath,
+          selectedFile: null,
+          isLoading: false,
+        ),
+      );
 
       _logger.i('Fetched ${files.length} file(s) for path $parentPath');
     });
@@ -100,6 +108,7 @@ class FileExplorerBloc extends Bloc<FileExplorerEvent, FileExplorerState> {
         return;
       }
 
+      emit(state.copyWith(isLoading: true));
       _logger.i("Start uploading ${event.files} to ${state.path}");
       await _uploadFilesUsecase(event.files, state.path, device.deviceId);
       _logger.i("Files uploaded refreshing files");
@@ -111,8 +120,9 @@ class FileExplorerBloc extends Bloc<FileExplorerEvent, FileExplorerState> {
         _logger.w("Device is null, can't refresh files");
         return;
       }
+      emit(state.copyWith(isLoading: true));
       final files = await _listFilesUsecase(state.path, device.deviceId);
-      emit(state.copyWith(files: files, selectedFile: null));
+      emit(state.copyWith(files: files, selectedFile: null, isLoading: false));
     });
     on<OnDownloadFile>((event, emit) async {
       final device = state.device;
@@ -130,6 +140,8 @@ class FileExplorerBloc extends Bloc<FileExplorerEvent, FileExplorerState> {
         _logger.i("User cancelled download");
         return;
       }
+      emit(state.copyWith(isLoading: true));
+
       _logger.i(
         "Downloading file $filePath for device ${device.deviceId}, downloading in $destinationPath",
       );
@@ -142,6 +154,7 @@ class FileExplorerBloc extends Bloc<FileExplorerEvent, FileExplorerState> {
         _logger.w("Device is null, can't delete file");
         return;
       }
+      emit(state.copyWith(isLoading: true));
       final filePath = p.join(state.path, event.fileName);
       _logger.i("Deleting file at $filePath for device ${device.deviceId}");
       await _deleteFileUsecase(filePath, device.deviceId);
@@ -156,6 +169,7 @@ class FileExplorerBloc extends Bloc<FileExplorerEvent, FileExplorerState> {
       _logger.i(
         "Creating directory ${event.name} at ${state.path} for device ${device.deviceId}",
       );
+      emit(state.copyWith(isLoading: true));
       await _createDirectoryUsecase(state.path, event.name, device.deviceId);
       add(OnRefreshFiles());
     });

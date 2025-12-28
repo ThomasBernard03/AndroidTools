@@ -6,11 +6,13 @@ class FileExplorerState with FileExplorerStateMappable {
   final FileEntry? selectedFile;
   final String path;
   final DeviceEntity? device;
+  final bool isLoading;
 
   FileExplorerState({
     this.files = const [],
     this.path = "/",
     this.device,
     this.selectedFile,
+    this.isLoading = false,
   });
 }

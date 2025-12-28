@@ -14,7 +14,7 @@ import 'package:sentry_flutter/sentry_flutter.dart';
 
 final getIt = GetIt.instance;
 
-Future<void> main() async {
+Future<void> main(List<String> args) async {
   WidgetsFlutterBinding.ensureInitialized();
   LogcatModule.configureDependencies();
   SharedModule.configureDependencies();
@@ -38,10 +38,6 @@ Future<void> main() async {
       "${Constants.environmentSentryDsn} found : ${sentryDsn.anonymize()}",
     );
   }
-
-  // await Window.initialize();
-  //  await Window.setEffect(effect: WindowEffect.acrylic);
-  // await Window.setToolbarStyle(toolbarStyle: MacOSToolbarStyle.unified);
 
   await SentryFlutter.init((options) {
     options.dsn = sentryDsn;

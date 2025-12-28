@@ -68,18 +68,16 @@ class _LogcatScreenState extends State<LogcatScreen> {
                   : BlocBuilder<LogcatBloc, LogcatState>(
                       builder: (context, state) {
                         return ListView.builder(
+                          prototypeItem: state.logs.isEmpty
+                              ? null
+                              : LogcatLine(line: state.logs.last),
                           reverse: true,
                           padding: EdgeInsets.all(8),
                           controller: _scrollController,
-                          itemCount: state.logs
-                              .take(state.maxLogcatLines)
-                              .length,
+                          itemCount: state.logs.length,
                           itemBuilder: (context, index) {
-                            return LogcatLine(
-                              line: state.logs.reversed
-                                  .take(state.maxLogcatLines)
-                                  .toList()[index],
-                            );
+                            final line = state.logs.reversed.elementAt(index);
+                            return LogcatLine(line: line);
                           },
                         );
                       },

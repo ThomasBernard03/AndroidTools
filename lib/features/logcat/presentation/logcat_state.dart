@@ -5,7 +5,6 @@ class LogcatState with LogcatStateMappable {
   final List<String> logs;
   final bool isSticky;
   final bool isPaused;
-  final int maxLogcatLines;
   final LogcatLevel minimumLogLevel;
   final DeviceEntity? selectedDevice;
   final List<ProcessEntity> processes;
@@ -16,7 +15,6 @@ class LogcatState with LogcatStateMappable {
     this.isSticky = true,
     this.isPaused = false,
     this.minimumLogLevel = LogcatLevel.debug,
-    this.maxLogcatLines = 500,
     this.selectedDevice,
     this.processes = const [],
     this.selectedProcess,

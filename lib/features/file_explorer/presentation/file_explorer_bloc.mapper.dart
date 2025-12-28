@@ -47,6 +47,13 @@ class FileExplorerStateMapper extends ClassMapperBase<FileExplorerState> {
     _$selectedFile,
     opt: true,
   );
+  static bool _$isLoading(FileExplorerState v) => v.isLoading;
+  static const Field<FileExplorerState, bool> _f$isLoading = Field(
+    'isLoading',
+    _$isLoading,
+    opt: true,
+    def: false,
+  );
 
   @override
   final MappableFields<FileExplorerState> fields = const {
@@ -54,6 +61,7 @@ class FileExplorerStateMapper extends ClassMapperBase<FileExplorerState> {
     #path: _f$path,
     #device: _f$device,
     #selectedFile: _f$selectedFile,
+    #isLoading: _f$isLoading,
   };
 
   static FileExplorerState _instantiate(DecodingData data) {
@@ -62,6 +70,7 @@ class FileExplorerStateMapper extends ClassMapperBase<FileExplorerState> {
       path: data.dec(_f$path),
       device: data.dec(_f$device),
       selectedFile: data.dec(_f$selectedFile),
+      isLoading: data.dec(_f$isLoading),
     );
   }
 
@@ -143,6 +152,7 @@ abstract class FileExplorerStateCopyWith<
     String? path,
     DeviceEntity? device,
     FileEntry? selectedFile,
+    bool? isLoading,
   });
   FileExplorerStateCopyWith<$R2, $In, $Out2> $chain<$R2, $Out2>(
     Then<$Out2, $R2> t,
@@ -170,12 +180,14 @@ class _FileExplorerStateCopyWithImpl<$R, $Out>
     String? path,
     Object? device = $none,
     Object? selectedFile = $none,
+    bool? isLoading,
   }) => $apply(
     FieldCopyWithData({
       if (files != null) #files: files,
       if (path != null) #path: path,
       if (device != $none) #device: device,
       if (selectedFile != $none) #selectedFile: selectedFile,
+      if (isLoading != null) #isLoading: isLoading,
     }),
   );
   @override
@@ -184,6 +196,7 @@ class _FileExplorerStateCopyWithImpl<$R, $Out>
     path: data.get(#path, or: $value.path),
     device: data.get(#device, or: $value.device),
     selectedFile: data.get(#selectedFile, or: $value.selectedFile),
+    isLoading: data.get(#isLoading, or: $value.isLoading),
   );
 
   @override

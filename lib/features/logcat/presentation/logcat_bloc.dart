@@ -91,10 +91,6 @@ class LogcatBloc extends Bloc<LogcatEvent, LogcatState> {
       emit(state.copyWith(isPaused: false));
       _logcatSubscription?.resume();
     });
-    on<OnLogcatMaxLinesChanged>((event, emit) {
-      _logger.i("Logcat max lines changed for ${event.maxLines}");
-      emit(state.copyWith(maxLogcatLines: event.maxLines));
-    });
     on<OnRefreshLogcat>((event, emit) async {
       _logger.i("Refreshing logcat");
       await _refreshConnectedDevicesUsecase();

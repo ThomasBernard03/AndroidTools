@@ -1,5 +1,9 @@
 # android_tools
 
+```shell
+fvm flutter clean && fvm flutter pub get && fvm dart run build_runner build -d
+```
+
 ## Roadmap
 - Update devices list when usb device is plug/unplug
 - Real time SQL database
@@ -70,7 +74,7 @@ fvm flutter clean && fvm flutter pub get && fvm dart run build_runner build -d
 
 Build app
 ```shell
-vm flutter build macos --dart-define=SENTRY_DSN=your_sentry_dsn  --obfuscate --split-debug-info=build/debug-info
+fvm flutter build macos --dart-define=SENTRY_DSN=your_sentry_dsn  --obfuscate --split-debug-info=build/debug-info
 ```
 
 Dans Xcode :
@@ -96,3 +100,12 @@ zip -r android_tools.zip android_tools.app
 
 TODO test this :
 xattr -dr com.apple.quarantine MonApp.app
+
+We use this awesome package to manage application update : [flutter_desktop_updater](https://github.com/MarlonJD/flutter_desktop_updater)
+
+So you can build the application with this command :
+```shell
+fvm dart run desktop_updater:release macos 
+fvm dart run desktop_updater:archive macos 
+```
+(Don't forget to pass `--dart-define` arguments to the first command)
