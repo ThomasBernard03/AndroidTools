@@ -68,6 +68,14 @@ class LogcatStateMapper extends ClassMapperBase<LogcatState> {
     _$selectedProcess,
     opt: true,
   );
+  static bool _$isShowProcessThreadIds(LogcatState v) =>
+      v.isShowProcessThreadIds;
+  static const Field<LogcatState, bool> _f$isShowProcessThreadIds = Field(
+    'isShowProcessThreadIds',
+    _$isShowProcessThreadIds,
+    opt: true,
+    def: false,
+  );
 
   @override
   final MappableFields<LogcatState> fields = const {
@@ -78,6 +86,7 @@ class LogcatStateMapper extends ClassMapperBase<LogcatState> {
     #selectedDevice: _f$selectedDevice,
     #processes: _f$processes,
     #selectedProcess: _f$selectedProcess,
+    #isShowProcessThreadIds: _f$isShowProcessThreadIds,
   };
 
   static LogcatState _instantiate(DecodingData data) {
@@ -89,6 +98,7 @@ class LogcatStateMapper extends ClassMapperBase<LogcatState> {
       selectedDevice: data.dec(_f$selectedDevice),
       processes: data.dec(_f$processes),
       selectedProcess: data.dec(_f$selectedProcess),
+      isShowProcessThreadIds: data.dec(_f$isShowProcessThreadIds),
     );
   }
 
@@ -167,6 +177,7 @@ abstract class LogcatStateCopyWith<$R, $In extends LogcatState, $Out>
     DeviceEntity? selectedDevice,
     List<ProcessEntity>? processes,
     ProcessEntity? selectedProcess,
+    bool? isShowProcessThreadIds,
   });
   LogcatStateCopyWith<$R2, $In, $Out2> $chain<$R2, $Out2>(Then<$Out2, $R2> t);
 }
@@ -206,6 +217,7 @@ class _LogcatStateCopyWithImpl<$R, $Out>
     Object? selectedDevice = $none,
     List<ProcessEntity>? processes,
     Object? selectedProcess = $none,
+    bool? isShowProcessThreadIds,
   }) => $apply(
     FieldCopyWithData({
       if (logs != null) #logs: logs,
@@ -215,6 +227,8 @@ class _LogcatStateCopyWithImpl<$R, $Out>
       if (selectedDevice != $none) #selectedDevice: selectedDevice,
       if (processes != null) #processes: processes,
       if (selectedProcess != $none) #selectedProcess: selectedProcess,
+      if (isShowProcessThreadIds != null)
+        #isShowProcessThreadIds: isShowProcessThreadIds,
     }),
   );
   @override
@@ -226,6 +240,10 @@ class _LogcatStateCopyWithImpl<$R, $Out>
     selectedDevice: data.get(#selectedDevice, or: $value.selectedDevice),
     processes: data.get(#processes, or: $value.processes),
     selectedProcess: data.get(#selectedProcess, or: $value.selectedProcess),
+    isShowProcessThreadIds: data.get(
+      #isShowProcessThreadIds,
+      or: $value.isShowProcessThreadIds,
+    ),
   );
 
   @override

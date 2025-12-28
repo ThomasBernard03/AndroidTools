@@ -42,3 +42,9 @@ class OnProcessSelected extends LogcatEvent {
   final ProcessEntity? process;
   OnProcessSelected({required this.process});
 }
+
+class OnIsShowProcessThreadIdsChanged extends LogcatEvent {
+  final bool isShowProcessThreadIds;
+
+  OnIsShowProcessThreadIdsChanged({required this.isShowProcessThreadIds});
+}

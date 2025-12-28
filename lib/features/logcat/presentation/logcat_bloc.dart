@@ -127,6 +127,14 @@ class LogcatBloc extends Bloc<LogcatEvent, LogcatState> {
       emit(state.copyWith(logs: [], selectedProcess: event.process));
       await _listenLogcat();
     });
+    on<OnIsShowProcessThreadIdsChanged>((event, emit) {
+      _logger.i(
+        "OnIsShowProcessThreadIds called with value: ${event.isShowProcessThreadIds}",
+      );
+      emit(
+        state.copyWith(isShowProcessThreadIds: event.isShowProcessThreadIds),
+      );
+    });
   }
   Future<void> _listenLogcat() async {
     if (state.selectedDevice == null) {

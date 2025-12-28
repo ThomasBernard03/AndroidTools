@@ -94,14 +94,22 @@ class _LogcatScreenState extends State<LogcatScreen> {
                       child: ListView.builder(
                         prototypeItem: state.logs.isEmpty
                             ? null
-                            : LogcatLine(line: state.logs.last),
+                            : LogcatLine(
+                                line: state.logs.last,
+                                isShowProcessThreadIds:
+                                    state.isShowProcessThreadIds,
+                              ),
                         reverse: true,
                         padding: EdgeInsets.all(8),
                         controller: _scrollController,
                         itemCount: state.logs.length,
                         itemBuilder: (context, index) {
                           final line = state.logs.reversed.elementAt(index);
-                          return LogcatLine(line: line);
+                          return LogcatLine(
+                            line: line,
+                            isShowProcessThreadIds:
+                                state.isShowProcessThreadIds,
+                          );
                         },
                       ),
                     );

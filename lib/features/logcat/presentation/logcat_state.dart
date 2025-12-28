@@ -5,6 +5,7 @@ class LogcatState with LogcatStateMappable {
   final List<String> logs;
   final bool isSticky;
   final bool isPaused;
+  final bool isShowProcessThreadIds;
   final LogcatLevel minimumLogLevel;
   final DeviceEntity? selectedDevice;
   final List<ProcessEntity> processes;
@@ -18,5 +19,6 @@ class LogcatState with LogcatStateMappable {
     this.selectedDevice,
     this.processes = const [],
     this.selectedProcess,
+    this.isShowProcessThreadIds = false,
   });
 }

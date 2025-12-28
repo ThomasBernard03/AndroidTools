@@ -13,8 +13,13 @@ class LogcatLine extends StatelessWidget {
   );
 
   final String line;
+  final bool isShowProcessThreadIds;
 
-  const LogcatLine({super.key, required this.line});
+  const LogcatLine({
+    super.key,
+    required this.line,
+    required this.isShowProcessThreadIds,
+  });
 
   @override
   Widget build(BuildContext context) {
@@ -38,17 +43,16 @@ class LogcatLine extends StatelessWidget {
               ),
             ),
           ),
-          WidgetSpan(
-            child: SizedBox(
-              width: 100,
-              child: Text(
-                textAlign: TextAlign.center,
-                '${parsed.processId.toString()}-'
-                '${parsed.threadId.toString()} ',
-                style: const TextStyle(fontSize: 12),
+          if (isShowProcessThreadIds)
+            WidgetSpan(
+              child: SizedBox(
+                width: 100,
+                child: Text(
+                  textAlign: TextAlign.center,
+                  '${parsed.processId}-${parsed.threadId} ',
+                ),
               ),
             ),
-          ),
 
           WidgetSpan(
             child: SizedBox(
