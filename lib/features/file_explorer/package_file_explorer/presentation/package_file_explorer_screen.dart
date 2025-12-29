@@ -1,4 +1,4 @@
-import 'package:android_tools/features/file_explorer/general_file_explorer/presentation/general_file_explorer_bloc.dart';
+import 'package:android_tools/features/file_explorer/package_file_explorer/presentation/package_file_explorer_bloc.dart';
 import 'package:android_tools/features/file_explorer/shared/core/string_extensions.dart';
 import 'package:android_tools/features/file_explorer/shared/presentation/widgets/file_entry_menu_result.dart';
 import 'package:android_tools/features/file_explorer/shared/presentation/widgets/file_explorer_app_bar.dart';
@@ -9,16 +9,16 @@ import 'package:file_picker/file_picker.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 
-class GeneralFileExplorerScreen extends StatefulWidget {
-  const GeneralFileExplorerScreen({super.key});
+class PackageFileExplorerScreen extends StatefulWidget {
+  const PackageFileExplorerScreen({super.key});
 
   @override
-  State<GeneralFileExplorerScreen> createState() =>
-      _GeneralFileExplorerScreenState();
+  State<PackageFileExplorerScreen> createState() =>
+      _PackageFileExplorerScreenState();
 }
 
-class _GeneralFileExplorerScreenState extends State<GeneralFileExplorerScreen> {
-  final bloc = GeneralFileExplorerBloc();
+class _PackageFileExplorerScreenState extends State<PackageFileExplorerScreen> {
+  final bloc = PackageFileExplorerBloc();
   bool isDropping = false;
 
   @override
@@ -34,7 +34,7 @@ class _GeneralFileExplorerScreenState extends State<GeneralFileExplorerScreen> {
     if (result == null || result.files.isEmpty) {
       return;
     }
-    context.read<GeneralFileExplorerBloc>().add(
+    context.read<PackageFileExplorerBloc>().add(
       OnUploadFiles(files: result.files.map((f) => f.path ?? "")),
     );
   }
@@ -62,7 +62,7 @@ class _GeneralFileExplorerScreenState extends State<GeneralFileExplorerScreen> {
     if (result == null || result.isEmpty) {
       return;
     }
-    context.read<GeneralFileExplorerBloc>().add(
+    context.read<PackageFileExplorerBloc>().add(
       OnCreateDirectory(name: result),
     );
   }
@@ -74,34 +74,34 @@ class _GeneralFileExplorerScreenState extends State<GeneralFileExplorerScreen> {
       child: Scaffold(
         appBar: PreferredSize(
           preferredSize: Size.fromHeight(kToolbarHeight),
-          child: BlocBuilder<GeneralFileExplorerBloc, GeneralFileExplorerState>(
+          child: BlocBuilder<PackageFileExplorerBloc, PackageFileExplorerState>(
             builder: (context, state) {
               return FileExplorerAppBar(
                 path: state.path,
                 onGoBack: state.path.isRootPath()
                     ? null
                     : () {
-                        context.read<GeneralFileExplorerBloc>().add(OnGoBack());
+                        context.read<PackageFileExplorerBloc>().add(OnGoBack());
                       },
               );
             },
           ),
         ),
-        body: BlocBuilder<GeneralFileExplorerBloc, GeneralFileExplorerState>(
+        body: BlocBuilder<PackageFileExplorerBloc, PackageFileExplorerState>(
           builder: (context, state) {
             return Column(
               children: [
                 Expanded(
                   child: FileExplorerDropTarget(
                     onFileDropped: (details) {
-                      context.read<GeneralFileExplorerBloc>().add(
+                      context.read<PackageFileExplorerBloc>().add(
                         OnUploadFiles(files: details.files.map((f) => f.path)),
                       );
                     },
                     child:
                         BlocBuilder<
-                          GeneralFileExplorerBloc,
-                          GeneralFileExplorerState
+                          PackageFileExplorerBloc,
+                          PackageFileExplorerState
                         >(
                           builder: (context, state) {
                             return GestureDetector(
@@ -119,7 +119,7 @@ class _GeneralFileExplorerScreenState extends State<GeneralFileExplorerScreen> {
                                   if (value == FileEntryMenuResult.refresh) {
                                     if (context.mounted) {
                                       context
-                                          .read<GeneralFileExplorerBloc>()
+                                          .read<PackageFileExplorerBloc>()
                                           .add(OnRefreshFiles());
                                     }
                                     return;
@@ -143,15 +143,15 @@ class _GeneralFileExplorerScreenState extends State<GeneralFileExplorerScreen> {
                                     file: file,
                                     isSelected: state.selectedFile == file,
                                     onDownloadFile: () => context
-                                        .read<GeneralFileExplorerBloc>()
+                                        .read<PackageFileExplorerBloc>()
                                         .add(
                                           OnDownloadFile(fileName: file.name),
                                         ),
                                     onDeleteFile: () => context
-                                        .read<GeneralFileExplorerBloc>()
+                                        .read<PackageFileExplorerBloc>()
                                         .add(OnDeleteFile(fileName: file.name)),
                                     onTap: () => context
-                                        .read<GeneralFileExplorerBloc>()
+                                        .read<PackageFileExplorerBloc>()
                                         .add(
                                           OnFileEntryTapped(fileEntry: file),
                                         ),
@@ -159,7 +159,7 @@ class _GeneralFileExplorerScreenState extends State<GeneralFileExplorerScreen> {
                                       await onUploadFiles(context);
                                     },
                                     onRefresh: () => context
-                                        .read<GeneralFileExplorerBloc>()
+                                        .read<PackageFileExplorerBloc>()
                                         .add(OnRefreshFiles()),
                                     onNewDirectory: () async {
                                       await onShowCreateDirectoryDialog(
@@ -174,7 +174,7 @@ class _GeneralFileExplorerScreenState extends State<GeneralFileExplorerScreen> {
                         ),
                   ),
                 ),
-                BlocBuilder<GeneralFileExplorerBloc, GeneralFileExplorerState>(
+                BlocBuilder<PackageFileExplorerBloc, PackageFileExplorerState>(
                   builder: (context, state) {
                     return state.isLoading
                         ? LinearProgressIndicator()

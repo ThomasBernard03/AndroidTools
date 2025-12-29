@@ -1,4 +1,5 @@
 import 'package:android_tools/features/file_explorer/general_file_explorer/presentation/general_file_explorer_screen.dart';
+import 'package:android_tools/features/file_explorer/package_file_explorer/presentation/package_file_explorer_screen.dart';
 import 'package:android_tools/features/home/presentation/home_bloc.dart';
 import 'package:android_tools/features/home/presentation/widgets/navigation_rail_item.dart';
 import 'package:android_tools/features/information/presentation/information_screen.dart';
@@ -117,6 +118,14 @@ class _HomeScreenState extends State<HomeScreen> {
                             _selectedIndex = 2;
                           }),
                         ),
+                        NavigationRailItem(
+                          selected: _selectedIndex == 4,
+                          icon: Icons.ac_unit_outlined,
+                          text: "App File explorer",
+                          onTap: () => setState(() {
+                            _selectedIndex = 4;
+                          }),
+                        ),
                       ],
                     ),
                   ),
@@ -127,6 +136,7 @@ class _HomeScreenState extends State<HomeScreen> {
                     1 => LogcatScreen(),
                     2 => GeneralFileExplorerScreen(),
                     3 => SettingsScreen(),
+                    4 => PackageFileExplorerScreen(),
                     _ => Placeholder(),
                   },
                 ),
