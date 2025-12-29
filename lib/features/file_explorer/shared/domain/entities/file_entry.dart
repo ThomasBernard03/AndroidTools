@@ -1,4 +1,4 @@
-import 'package:android_tools/features/file_explorer/domain/entities/file_type.dart';
+import 'package:android_tools/features/file_explorer/shared/domain/entities/file_type.dart';
 import 'package:equatable/equatable.dart';
 
 class FileEntry extends Equatable {

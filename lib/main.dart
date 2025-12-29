@@ -1,4 +1,5 @@
-import 'package:android_tools/features/file_explorer/core/fileexplorer_module.dart';
+import 'package:android_tools/features/file_explorer/general_file_explorer/core/general_file_explorer_module.dart';
+import 'package:android_tools/features/file_explorer/package_file_explorer/core/package_file_explorer_module.dart';
 import 'package:android_tools/features/home/presentation/home_screen.dart';
 import 'package:android_tools/features/information/core/information_module.dart';
 import 'package:android_tools/features/logcat/core/logcat_module.dart';
@@ -19,11 +20,9 @@ Future<void> main(List<String> args) async {
   LogcatModule.configureDependencies();
   SharedModule.configureDependencies();
   InformationModule.configureDependencies();
-  FileExplorerModule.configureDependencies();
+  GeneralFileExplorerModule.configureDependencies();
+  PackageFileExplorerModule.configureDependencies();
   await getIt.allReady();
-  // await windowManager.ensureInitialized();
-  // final wm = WindowManager.instance;
-  // await wm.setTitleBarStyle(TitleBarStyle.hidden);
   const sentryDsn = String.fromEnvironment('SENTRY_DSN', defaultValue: '');
   final logger = await getIt.getAsync<Logger>();
 

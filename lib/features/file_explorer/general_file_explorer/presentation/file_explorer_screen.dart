@@ -1,9 +1,9 @@
-import 'package:android_tools/features/file_explorer/presentation/file_explorer_bloc.dart';
-import 'package:android_tools/features/file_explorer/presentation/widgets/file_entry_menu_result.dart';
-import 'package:android_tools/features/file_explorer/presentation/widgets/file_explorer_app_bar.dart';
-import 'package:android_tools/features/file_explorer/presentation/widgets/file_explorer_file_entry_item.dart';
-import 'package:android_tools/features/file_explorer/presentation/widgets/file_explorer_drop_target.dart';
-import 'package:android_tools/features/file_explorer/presentation/widgets/file_explorer_menus.dart';
+import 'package:android_tools/features/file_explorer/general_file_explorer/presentation/file_explorer_bloc.dart';
+import 'package:android_tools/features/file_explorer/shared/presentation/widgets/file_entry_menu_result.dart';
+import 'package:android_tools/features/file_explorer/shared/presentation/widgets/file_explorer_app_bar.dart';
+import 'package:android_tools/features/file_explorer/shared/presentation/widgets/file_explorer_file_entry_item.dart';
+import 'package:android_tools/features/file_explorer/shared/presentation/widgets/file_explorer_drop_target.dart';
+import 'package:android_tools/features/file_explorer/shared/presentation/widgets/file_explorer_menus.dart';
 import 'package:file_picker/file_picker.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';

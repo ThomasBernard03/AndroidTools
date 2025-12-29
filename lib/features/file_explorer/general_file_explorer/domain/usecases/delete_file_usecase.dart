@@ -1,7 +1,7 @@
-import 'package:android_tools/features/file_explorer/domain/repositories/file_repository.dart';
+import 'package:android_tools/features/file_explorer/general_file_explorer/domain/repositories/general_file_repository.dart';
 
 class DeleteFileUsecase {
-  final FileRepository _fileRepository;
+  final GeneralFileRepository _fileRepository;
 
   DeleteFileUsecase(this._fileRepository);
 

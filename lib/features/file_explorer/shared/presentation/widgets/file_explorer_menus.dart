@@ -1,4 +1,4 @@
-import 'package:android_tools/features/file_explorer/presentation/widgets/file_entry_menu_result.dart';
+import 'package:android_tools/features/file_explorer/shared/presentation/widgets/file_entry_menu_result.dart';
 import 'package:flutter/material.dart';
 
 class FileExplorerMenus {

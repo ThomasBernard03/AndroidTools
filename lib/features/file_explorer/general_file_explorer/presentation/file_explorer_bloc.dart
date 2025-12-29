@@ -1,10 +1,10 @@
-import 'package:android_tools/features/file_explorer/core/string_extensions.dart';
-import 'package:android_tools/features/file_explorer/domain/entities/file_entry.dart';
-import 'package:android_tools/features/file_explorer/domain/usecases/create_directory_usecase.dart';
-import 'package:android_tools/features/file_explorer/domain/usecases/delete_file_usecase.dart';
-import 'package:android_tools/features/file_explorer/domain/usecases/download_file_usecase.dart';
-import 'package:android_tools/features/file_explorer/domain/usecases/list_files_usecase.dart';
-import 'package:android_tools/features/file_explorer/domain/usecases/upload_files_usecase.dart';
+import 'package:android_tools/features/file_explorer/shared/core/string_extensions.dart';
+import 'package:android_tools/features/file_explorer/shared/domain/entities/file_entry.dart';
+import 'package:android_tools/features/file_explorer/general_file_explorer/domain/usecases/create_directory_usecase.dart';
+import 'package:android_tools/features/file_explorer/general_file_explorer/domain/usecases/delete_file_usecase.dart';
+import 'package:android_tools/features/file_explorer/general_file_explorer/domain/usecases/download_file_usecase.dart';
+import 'package:android_tools/features/file_explorer/general_file_explorer/domain/usecases/list_files_usecase.dart';
+import 'package:android_tools/features/file_explorer/general_file_explorer/domain/usecases/upload_files_usecase.dart';
 import 'package:android_tools/main.dart';
 import 'package:android_tools/shared/domain/entities/device_entity.dart';
 import 'package:android_tools/shared/domain/usecases/listen_selected_device_usecase.dart';
@@ -13,15 +13,15 @@ import 'package:file_picker/file_picker.dart' hide FileType;
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:logger/logger.dart';
 import 'package:path/path.dart' as p;
-import 'package:android_tools/features/file_explorer/domain/entities/file_type.dart';
+import 'package:android_tools/features/file_explorer/shared/domain/entities/file_type.dart';
 
 part 'file_explorer_event.dart';
 part 'file_explorer_state.dart';
 part 'file_explorer_bloc.mapper.dart';
 
 class FileExplorerBloc extends Bloc<FileExplorerEvent, FileExplorerState> {
-  final ListFilesUsecase _listFilesUsecase = getIt.get();
   final Logger _logger = getIt.get();
+  final ListFilesUsecase _listFilesUsecase = getIt.get();
   final ListenSelectedDeviceUsecase _listenSelectedDeviceUsecase = getIt.get();
   final UploadFilesUsecase _uploadFilesUsecase = getIt.get();
   final DownloadFileUsecase _downloadFileUsecase = getIt.get();
@@ -42,7 +42,7 @@ class FileExplorerBloc extends Bloc<FileExplorerEvent, FileExplorerState> {
 
           final files = await _listFilesUsecase(state.path, device.deviceId);
           _logger.i('Fetched ${files.length} file(s) for first route');
-          emit(state.copyWith(files: files));
+          emit(state.copyWith(files: files.toList()));
         },
       );
     });

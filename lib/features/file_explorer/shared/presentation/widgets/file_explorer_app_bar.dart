@@ -1,5 +1,5 @@
-import 'package:android_tools/features/file_explorer/core/string_extensions.dart';
-import 'package:android_tools/features/file_explorer/presentation/file_explorer_bloc.dart';
+import 'package:android_tools/features/file_explorer/shared/core/string_extensions.dart';
+import 'package:android_tools/features/file_explorer/general_file_explorer/presentation/file_explorer_bloc.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 
