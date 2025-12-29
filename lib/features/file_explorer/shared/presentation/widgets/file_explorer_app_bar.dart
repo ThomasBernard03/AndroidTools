@@ -1,10 +1,11 @@
-import 'package:android_tools/features/file_explorer/shared/core/string_extensions.dart';
-import 'package:android_tools/features/file_explorer/general_file_explorer/presentation/file_explorer_bloc.dart';
+import 'package:android_tools/features/file_explorer/general_file_explorer/presentation/general_file_explorer_bloc.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 
 class FileExplorerAppBar extends StatelessWidget {
-  const FileExplorerAppBar({super.key});
+  final void Function()? onGoBack;
+
+  const FileExplorerAppBar({super.key, required this.onGoBack});
 
   @override
   Widget build(BuildContext context) {
@@ -12,19 +13,15 @@ class FileExplorerAppBar extends StatelessWidget {
       backgroundColor: Theme.of(context).scaffoldBackgroundColor,
       foregroundColor: Theme.of(context).colorScheme.onSurface,
       centerTitle: false,
-      title: BlocBuilder<FileExplorerBloc, FileExplorerState>(
+      title: BlocBuilder<GeneralFileExplorerBloc, GeneralFileExplorerState>(
         builder: (context, state) {
           return Text(state.path, style: Theme.of(context).textTheme.bodyLarge);
         },
       ),
-      leading: BlocBuilder<FileExplorerBloc, FileExplorerState>(
+      leading: BlocBuilder<GeneralFileExplorerBloc, GeneralFileExplorerState>(
         builder: (context, state) {
           return IconButton(
-            onPressed: state.path.isRootPath()
-                ? null
-                : () {
-                    context.read<FileExplorerBloc>().add(OnGoBack());
-                  },
+            onPressed: onGoBack,
             icon: Icon(Icons.chevron_left_rounded),
           );
         },

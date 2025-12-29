@@ -15,11 +15,12 @@ import 'package:logger/logger.dart';
 import 'package:path/path.dart' as p;
 import 'package:android_tools/features/file_explorer/shared/domain/entities/file_type.dart';
 
-part 'file_explorer_event.dart';
-part 'file_explorer_state.dart';
-part 'file_explorer_bloc.mapper.dart';
+part 'general_file_explorer_event.dart';
+part 'general_file_explorer_state.dart';
+part 'general_file_explorer_bloc.mapper.dart';
 
-class FileExplorerBloc extends Bloc<FileExplorerEvent, FileExplorerState> {
+class GeneralFileExplorerBloc
+    extends Bloc<GeneralFileExplorerEvent, GeneralFileExplorerState> {
   final Logger _logger = getIt.get();
   final ListFilesUsecase _listFilesUsecase = getIt.get();
   final ListenSelectedDeviceUsecase _listenSelectedDeviceUsecase = getIt.get();
@@ -28,7 +29,7 @@ class FileExplorerBloc extends Bloc<FileExplorerEvent, FileExplorerState> {
   final DeleteFileUsecase _deleteFileUsecase = getIt.get();
   final CreateDirectoryUsecase _createDirectoryUsecase = getIt.get();
 
-  FileExplorerBloc() : super(FileExplorerState()) {
+  GeneralFileExplorerBloc() : super(GeneralFileExplorerState()) {
     on<OnAppearing>((event, emit) async {
       await emit.onEach<DeviceEntity?>(
         _listenSelectedDeviceUsecase(),
