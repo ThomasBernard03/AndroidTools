@@ -91,6 +91,16 @@ class _PackageFileExplorerScreenState extends State<PackageFileExplorerScreen> {
           builder: (context, state) {
             return Column(
               children: [
+                DropdownButtonFormField(
+                  items: state.packages
+                      .map((p) => DropdownMenuItem(value: p, child: Text(p)))
+                      .toList(),
+                  onChanged: (package) {
+                    context.read<PackageFileExplorerBloc>().add(
+                      OnPackageSelected(package: package),
+                    );
+                  },
+                ),
                 Expanded(
                   child: FileExplorerDropTarget(
                     onFileDropped: (details) {
@@ -138,7 +148,7 @@ class _PackageFileExplorerScreenState extends State<PackageFileExplorerScreen> {
                               child: ListView.builder(
                                 itemCount: state.files.length,
                                 itemBuilder: (context, index) {
-                                  final file = state.files[index];
+                                  final file = state.files.toList()[index];
                                   return FileExplorerFileEntryItem(
                                     file: file,
                                     isSelected: state.selectedFile == file,

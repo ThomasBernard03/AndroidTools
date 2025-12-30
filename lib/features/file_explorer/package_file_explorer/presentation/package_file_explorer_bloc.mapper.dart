@@ -31,15 +31,15 @@ class PackageFileExplorerStateMapper
       v.selectedPackage;
   static const Field<PackageFileExplorerState, String> _f$selectedPackage =
       Field('selectedPackage', _$selectedPackage, opt: true);
-  static List<FileEntry> _$files(PackageFileExplorerState v) => v.files;
-  static const Field<PackageFileExplorerState, List<FileEntry>> _f$files =
+  static Iterable<FileEntry> _$files(PackageFileExplorerState v) => v.files;
+  static const Field<PackageFileExplorerState, Iterable<FileEntry>> _f$files =
       Field('files', _$files, opt: true, def: const []);
   static String _$path(PackageFileExplorerState v) => v.path;
   static const Field<PackageFileExplorerState, String> _f$path = Field(
     'path',
     _$path,
     opt: true,
-    def: "/",
+    def: "",
   );
   static DeviceEntity? _$device(PackageFileExplorerState v) => v.device;
   static const Field<PackageFileExplorerState, DeviceEntity> _f$device = Field(
@@ -152,12 +152,10 @@ abstract class PackageFileExplorerStateCopyWith<
   $Out
 >
     implements ClassCopyWith<$R, $In, $Out> {
-  ListCopyWith<$R, FileEntry, ObjectCopyWith<$R, FileEntry, FileEntry>>
-  get files;
   $R call({
     Iterable<String>? packages,
     String? selectedPackage,
-    List<FileEntry>? files,
+    Iterable<FileEntry>? files,
     String? path,
     DeviceEntity? device,
     FileEntry? selectedFile,
@@ -178,17 +176,10 @@ class _PackageFileExplorerStateCopyWithImpl<$R, $Out>
   late final ClassMapperBase<PackageFileExplorerState> $mapper =
       PackageFileExplorerStateMapper.ensureInitialized();
   @override
-  ListCopyWith<$R, FileEntry, ObjectCopyWith<$R, FileEntry, FileEntry>>
-  get files => ListCopyWith(
-    $value.files,
-    (v, t) => ObjectCopyWith(v, $identity, t),
-    (v) => call(files: v),
-  );
-  @override
   $R call({
     Iterable<String>? packages,
     Object? selectedPackage = $none,
-    List<FileEntry>? files,
+    Iterable<FileEntry>? files,
     String? path,
     Object? device = $none,
     Object? selectedFile = $none,

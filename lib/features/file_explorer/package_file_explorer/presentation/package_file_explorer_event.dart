@@ -37,3 +37,9 @@ class OnCreateDirectory extends PackageFileExplorerEvent {
 
   OnCreateDirectory({required this.name});
 }
+
+class OnPackageSelected extends PackageFileExplorerEvent {
+  final String? package;
+
+  OnPackageSelected({required this.package});
+}

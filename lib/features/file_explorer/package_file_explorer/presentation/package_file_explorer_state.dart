@@ -5,7 +5,7 @@ class PackageFileExplorerState with PackageFileExplorerStateMappable {
   final Iterable<String> packages;
   final String? selectedPackage;
 
-  final List<FileEntry> files;
+  final Iterable<FileEntry> files;
   final FileEntry? selectedFile;
   final String path;
   final DeviceEntity? device;
@@ -15,7 +15,7 @@ class PackageFileExplorerState with PackageFileExplorerStateMappable {
     this.packages = const [],
     this.selectedPackage,
     this.files = const [],
-    this.path = "/",
+    this.path = "",
     this.device,
     this.selectedFile,
     this.isLoading = false,
