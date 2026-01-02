@@ -1,10 +1,11 @@
 import 'package:desktop_drop/desktop_drop.dart';
+import 'package:file_picker/file_picker.dart';
 import 'package:flutter/material.dart';
 
 class ApkInstallerDropTarget extends StatefulWidget {
-  final OnDragDoneCallback? onApkDropped;
+  final void Function(String) onInstallApk;
 
-  const ApkInstallerDropTarget({super.key, this.onApkDropped});
+  const ApkInstallerDropTarget({super.key, required this.onInstallApk});
 
   @override
   State<ApkInstallerDropTarget> createState() => _ApkInstallerDropTargetState();
@@ -22,7 +23,15 @@ class _ApkInstallerDropTargetState extends State<ApkInstallerDropTarget> {
       onDragExited: (_) {
         setState(() => isDropping = false);
       },
-      onDragDone: widget.onApkDropped,
+      onDragDone: (details) {
+        final dropItem = details.files.firstOrNull;
+        final path = dropItem?.path;
+        if (path == null) {
+          return;
+        }
+
+        widget.onInstallApk(path);
+      },
       child: Stack(
         children: [
           Card.filled(
@@ -34,6 +43,21 @@ class _ApkInstallerDropTargetState extends State<ApkInstallerDropTarget> {
                   Text(
                     "Drag and drop your .apk file here to install app on connected device",
                     textAlign: TextAlign.center,
+                  ),
+                  Divider(),
+                  TextButton(
+                    onPressed: () async {
+                      final result = await FilePicker.platform.pickFiles(
+                        type: FileType.custom,
+                        allowedExtensions: ['apk'],
+                      );
+                      if ((result?.files.isEmpty ?? false)) {
+                        return;
+                      }
+                      final path = result!.files.first.path!;
+                      widget.onInstallApk(path);
+                    },
+                    child: Text("Open file explorer"),
                   ),
                 ],
               ),

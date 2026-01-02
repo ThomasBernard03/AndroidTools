@@ -38,12 +38,7 @@ class InformationScreen extends StatelessWidget {
                             },
                           ),
                           ApkInstallerDropTarget(
-                            onApkDropped: (details) {
-                              final apkPath = details.files.firstOrNull;
-                              final path = apkPath?.path;
-                              if (path == null) {
-                                return;
-                              }
+                            onInstallApk: (path) {
                               context.read<InformationBloc>().add(
                                 OnInstallApplication(applicationFilePath: path),
                               );
