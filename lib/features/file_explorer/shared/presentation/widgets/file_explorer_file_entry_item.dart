@@ -30,34 +30,38 @@ class FileExplorerFileEntryItem extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return GestureDetector(
-      onSecondaryTapDown: (details) {
-        FileExplorerMenus.showFileEntryMenu(context, details).then((value) {
-          switch (value) {
-            case FileEntryMenuResult.download:
-              onDownloadFile();
-            case FileEntryMenuResult.delete:
-              onDeleteFile();
-            case FileEntryMenuResult.upload:
-              onUploadFile();
-            case FileEntryMenuResult.refresh:
-              onRefresh();
-            case FileEntryMenuResult.newDirectory:
-              onNewDirectory();
-            case null:
-          }
-        });
-      },
-      child: ListTile(
-        enabled: file.type == FileType.directory || file.type == FileType.file,
-        selected: isSelected,
-        leading: Icon(file.type.icon()),
-        title: Text(file.name),
-        subtitle: Text(
-          "${file.date?.toIso8601String()}\n${file.size?.toReadableBytes()}",
+    return AbsorbPointer(
+      absorbing: false,
+      child: GestureDetector(
+        onSecondaryTapDown: (details) {
+          FileExplorerMenus.showFileEntryMenu(context, details).then((value) {
+            switch (value) {
+              case FileEntryMenuResult.download:
+                onDownloadFile();
+              case FileEntryMenuResult.delete:
+                onDeleteFile();
+              case FileEntryMenuResult.upload:
+                onUploadFile();
+              case FileEntryMenuResult.refresh:
+                onRefresh();
+              case FileEntryMenuResult.newDirectory:
+                onNewDirectory();
+              case null:
+            }
+          });
+        },
+        child: ListTile(
+          enabled:
+              file.type == FileType.directory || file.type == FileType.file,
+          selected: isSelected,
+          leading: Icon(file.type.icon()),
+          title: Text(file.name),
+          subtitle: Text(
+            "${file.date?.toIso8601String()}\n${file.size?.toReadableBytes()}",
+          ),
+          selectedTileColor: Theme.of(context).colorScheme.surfaceContainerHigh,
+          onTap: onTap,
         ),
-        selectedTileColor: Theme.of(context).colorScheme.surfaceContainerHigh,
-        onTap: onTap,
       ),
     );
   }

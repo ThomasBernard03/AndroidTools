@@ -43,14 +43,24 @@ class _HomeScreenState extends State<HomeScreen> {
                         builder: (context, state) {
                           return SizedBox(
                             width: 250,
-                            child: DropdownButton(
-                              icon: null,
-                              underline: SizedBox.shrink(),
-                              value: state.selectedDevice,
+                            child: DropdownButtonFormField(
+                              style: Theme.of(context).textTheme.bodyLarge
+                                  ?.copyWith(
+                                    color: Theme.of(
+                                      context,
+                                    ).colorScheme.onPrimary,
+                                  ),
+                              dropdownColor: Colors.white,
+                              initialValue: state.selectedDevice,
                               items: state.devices.map((device) {
                                 return DropdownMenuItem(
                                   value: device,
-                                  child: Text(device.name),
+                                  child: Text(
+                                    device.name,
+                                    style: Theme.of(
+                                      context,
+                                    ).textTheme.bodyLarge,
+                                  ),
                                 );
                               }).toList(),
                               onChanged: (value) {

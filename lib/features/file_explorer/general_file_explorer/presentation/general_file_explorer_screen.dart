@@ -105,6 +105,7 @@ class _GeneralFileExplorerScreenState extends State<GeneralFileExplorerScreen> {
                         >(
                           builder: (context, state) {
                             return GestureDetector(
+                              behavior: HitTestBehavior.deferToChild,
                               onSecondaryTapDown: (details) {
                                 FileExplorerMenus.showGeneralMenu(
                                   context,

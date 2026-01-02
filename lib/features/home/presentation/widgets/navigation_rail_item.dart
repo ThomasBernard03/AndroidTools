@@ -16,9 +16,13 @@ class NavigationRailItem extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return Material(
-      type: MaterialType.transparency,
+    return Card(
+      elevation: 0,
+      color: Colors.transparent,
+      clipBehavior: Clip.hardEdge,
       child: ListTile(
+        contentPadding: EdgeInsets.symmetric(horizontal: 16),
+        tileColor: Colors.transparent,
         selected: selected,
         leading: Icon(
           size: 16,
@@ -28,6 +32,7 @@ class NavigationRailItem extends StatelessWidget {
         title: Text(text, style: TextStyle(fontSize: 14)),
         hoverColor: Theme.of(context).colorScheme.surfaceContainerLow,
         selectedTileColor: Theme.of(context).colorScheme.surfaceContainer,
+        selectedColor: Theme.of(context).colorScheme.onBackground,
         onTap: onTap,
       ),
     );
