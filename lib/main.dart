@@ -27,7 +27,6 @@ Future<void> main(List<String> args) async {
   final logger = await getIt.getAsync<Logger>();
 
   logger.i("==== Starting application ====");
-
   if (sentryDsn.isEmpty) {
     logger.w(
       "${Constants.environmentSentryDsn} not found from environment, launch project with '--dart-define=${Constants.environmentSentryDsn}=your_sentry_dsn'",

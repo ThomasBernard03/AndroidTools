@@ -9,6 +9,7 @@ fvm flutter clean && fvm flutter pub get && fvm dart run build_runner build -d
 - Real time SQL database
 - Stack same logcat lines (like VSCode)
 - In app updates
+- Preview text & XML files in file explorer
 
 ## Install application
 
