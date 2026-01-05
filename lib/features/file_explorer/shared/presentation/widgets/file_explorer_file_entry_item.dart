@@ -3,7 +3,7 @@ import 'package:android_tools/features/file_explorer/shared/domain/entities/file
 import 'package:android_tools/features/file_explorer/shared/domain/entities/file_type.dart';
 import 'package:android_tools/features/file_explorer/shared/presentation/widgets/file_entry_menu_result.dart';
 import 'package:android_tools/features/file_explorer/shared/presentation/widgets/file_explorer_menus.dart';
-import 'package:android_tools/features/file_explorer/shared/presentation/widgets/file_type_extensions.dart';
+import 'package:android_tools/features/file_explorer/shared/presentation/widgets/file_entry_extensions.dart';
 import 'package:flutter/material.dart';
 
 class FileExplorerFileEntryItem extends StatelessWidget {
@@ -54,7 +54,7 @@ class FileExplorerFileEntryItem extends StatelessWidget {
           enabled:
               file.type == FileType.directory || file.type == FileType.file,
           selected: isSelected,
-          leading: Icon(file.type.icon()),
+          leading: file.icon(),
           title: Text(file.name),
           subtitle: Text(
             "${file.date?.toIso8601String()}\n${file.size?.toReadableBytes()}",

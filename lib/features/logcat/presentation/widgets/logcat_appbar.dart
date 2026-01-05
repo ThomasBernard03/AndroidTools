@@ -16,81 +16,74 @@ class LogcatAppbar extends StatefulWidget implements PreferredSizeWidget {
 class _LogcatAppbarState extends State<LogcatAppbar> {
   @override
   Widget build(BuildContext context) {
-    return Padding(
-      padding: const EdgeInsets.symmetric(horizontal: 8.0),
-      child: Row(
-        crossAxisAlignment: CrossAxisAlignment.start,
-        mainAxisAlignment: MainAxisAlignment.spaceBetween,
-        children: [
-          BlocBuilder<LogcatBloc, LogcatState>(
-            builder: (context, state) {
-              return Text(state.logs.length.toString());
-            },
-          ),
-          Row(
-            children: [
-              Row(
-                spacing: 8,
+    return AppBar(
+      title: BlocBuilder<LogcatBloc, LogcatState>(
+        builder: (context, state) {
+          return Text(
+            "${state.logs.length} lines",
+            style: TextStyle(color: Theme.of(context).colorScheme.onSurface),
+          );
+        },
+      ),
+      backgroundColor: Theme.of(context).colorScheme.surface,
+      actions: [
+        Row(
+          spacing: 8,
+          children: [
+            Card(
+              clipBehavior: Clip.hardEdge,
+              shape: RoundedRectangleBorder(
+                borderRadius: BorderRadius.circular(8),
+              ),
+              child: Row(
                 children: [
-                  Card(
-                    clipBehavior: Clip.hardEdge,
-                    shape: RoundedRectangleBorder(
-                      borderRadius: BorderRadius.circular(8),
-                    ),
-                    child: Row(
-                      children: [
-                        BlocBuilder<LogcatBloc, LogcatState>(
-                          builder: (context, state) {
-                            return FilledButton(
-                              style: ButtonStyle(
-                                shape: WidgetStateProperty.all(
-                                  BeveledRectangleBorder(),
-                                ),
-                              ),
-                              child: Icon(
-                                state.isPaused ? Icons.play_arrow : Icons.pause,
-                              ),
-                              onPressed: () {
-                                final event = state.isPaused
-                                    ? OnResumeLogcat()
-                                    : OnPauseLogcat();
-                                context.read<LogcatBloc>().add(event);
-                              },
-                            );
-                          },
-                        ),
-                        FilledButton(
-                          style: ButtonStyle(
-                            shape: WidgetStateProperty.all(
-                              BeveledRectangleBorder(),
-                            ),
+                  BlocBuilder<LogcatBloc, LogcatState>(
+                    builder: (context, state) {
+                      return FilledButton(
+                        style: ButtonStyle(
+                          shape: WidgetStateProperty.all(
+                            BeveledRectangleBorder(),
                           ),
-                          onPressed: () {
-                            context.read<LogcatBloc>().add(OnRefreshLogcat());
-                          },
-                          child: const Icon(Icons.refresh),
                         ),
-                      ],
-                    ),
-                  ),
-                  LogcatButton(
-                    color: Color.fromARGB(255, 213, 36, 54),
-                    icon: Icons.delete_outline_rounded,
-                    onPressed: () =>
-                        context.read<LogcatBloc>().add(OnClearLogcat()),
-                  ),
-                  IconButton(
-                    onPressed: () {
-                      Scaffold.of(context).openEndDrawer();
+                        child: Icon(
+                          state.isPaused ? Icons.play_arrow : Icons.pause,
+                        ),
+                        onPressed: () {
+                          final event = state.isPaused
+                              ? OnResumeLogcat()
+                              : OnPauseLogcat();
+                          context.read<LogcatBloc>().add(event);
+                        },
+                      );
                     },
-                    icon: Icon(Icons.filter_alt_off_rounded),
+                  ),
+                  FilledButton(
+                    style: ButtonStyle(
+                      shape: WidgetStateProperty.all(BeveledRectangleBorder()),
+                    ),
+                    onPressed: () {
+                      context.read<LogcatBloc>().add(OnRefreshLogcat());
+                    },
+                    child: const Icon(Icons.refresh),
                   ),
                 ],
               ),
-            ],
-          ),
-        ],
-      ),
+            ),
+            LogcatButton(
+              color: Color.fromARGB(255, 213, 36, 54),
+              icon: Icons.delete_outline_rounded,
+              onPressed: () => context.read<LogcatBloc>().add(OnClearLogcat()),
+            ),
+            IconButton(
+              color: Theme.of(context).colorScheme.primary,
+              onPressed: () {
+                Scaffold.of(context).openEndDrawer();
+              },
+              icon: Icon(Icons.filter_alt_off_rounded),
+            ),
+          ],
+        ),
+      ],
     );
   }
 }
