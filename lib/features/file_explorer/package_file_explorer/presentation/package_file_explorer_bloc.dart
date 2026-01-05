@@ -1,10 +1,10 @@
+import 'package:android_tools/features/file_explorer/package_file_explorer/domain/usecases/create_package_directory_usecase.dart';
+import 'package:android_tools/features/file_explorer/package_file_explorer/domain/usecases/delete_package_file_usecase.dart';
+import 'package:android_tools/features/file_explorer/package_file_explorer/domain/usecases/download_package_file_usecase.dart';
 import 'package:android_tools/features/file_explorer/package_file_explorer/domain/usecases/list_package_files_usecase.dart';
+import 'package:android_tools/features/file_explorer/package_file_explorer/domain/usecases/upload_package_files_usecase.dart';
 import 'package:android_tools/features/file_explorer/shared/core/string_extensions.dart';
 import 'package:android_tools/features/file_explorer/shared/domain/entities/file_entry.dart';
-import 'package:android_tools/features/file_explorer/general_file_explorer/domain/usecases/create_directory_usecase.dart';
-import 'package:android_tools/features/file_explorer/general_file_explorer/domain/usecases/delete_file_usecase.dart';
-import 'package:android_tools/features/file_explorer/general_file_explorer/domain/usecases/download_file_usecase.dart';
-import 'package:android_tools/features/file_explorer/general_file_explorer/domain/usecases/upload_files_usecase.dart';
 import 'package:android_tools/main.dart';
 import 'package:android_tools/shared/domain/entities/device_entity.dart';
 import 'package:android_tools/shared/domain/usecases/get_packages_usecase.dart';
@@ -26,10 +26,11 @@ class PackageFileExplorerBloc
   final GetPackagesUsecase _getPackagesUsecase = getIt.get();
   final ListPackageFilesUsecase _listPackageFilesUsecase = getIt.get();
   final ListenSelectedDeviceUsecase _listenSelectedDeviceUsecase = getIt.get();
-  final UploadFilesUsecase _uploadFilesUsecase = getIt.get();
-  final DownloadFileUsecase _downloadFileUsecase = getIt.get();
-  final DeleteFileUsecase _deleteFileUsecase = getIt.get();
-  final CreateDirectoryUsecase _createDirectoryUsecase = getIt.get();
+  final UploadPackageFilesUsecase _uploadPackageFilesUsecase = getIt.get();
+  final DownloadPackageFileUsecase _downloadPackageFileUsecase = getIt.get();
+  final DeletePackageFileUsecase _deletePackageFileUsecase = getIt.get();
+  final CreatePackageDirectoryUsecase _createPackageDirectoryUsecase = getIt
+      .get();
 
   PackageFileExplorerBloc() : super(PackageFileExplorerState()) {
     on<OnAppearing>((event, emit) async {
@@ -127,9 +128,20 @@ class PackageFileExplorerBloc
         return;
       }
 
+      final package = state.selectedPackage;
+      if (package == null) {
+        _logger.w("No package selected, can't upload files");
+        return;
+      }
+
       emit(state.copyWith(isLoading: true));
       _logger.i("Start uploading ${event.files} to ${state.path}");
-      await _uploadFilesUsecase(event.files, state.path, device.deviceId);
+      await _uploadPackageFilesUsecase(
+        package,
+        event.files,
+        state.path,
+        device.deviceId,
+      );
       _logger.i("Files uploaded refreshing files");
       add(OnRefreshFiles());
     });
@@ -139,9 +151,18 @@ class PackageFileExplorerBloc
         _logger.w("Device is null, can't refresh files");
         return;
       }
+      final package = state.selectedPackage;
+      if (package == null) {
+        _logger.w("No package selected, can't refresh files");
+        return;
+      }
       emit(state.copyWith(isLoading: true));
-      // final files = await _listFilesUsecase(state.path, device.deviceId);
-      // emit(state.copyWith(files: files, selectedFile: null, isLoading: false));
+      final files = await _listPackageFilesUsecase(
+        package,
+        state.path,
+        device.deviceId,
+      );
+      emit(state.copyWith(files: files, selectedFile: null, isLoading: false));
     });
     on<OnDownloadFile>((event, emit) async {
       final device = state.device;
@@ -149,6 +170,13 @@ class PackageFileExplorerBloc
         _logger.w("Device is null, can't download file");
         return;
       }
+
+      final package = state.selectedPackage;
+      if (package == null) {
+        _logger.w("No package selected, can't download file");
+        return;
+      }
+
       final filePath = p.join(state.path, event.fileName);
       final destinationPath = await FilePicker.platform.saveFile(
         dialogTitle: 'Save file',
@@ -159,12 +187,18 @@ class PackageFileExplorerBloc
         _logger.i("User cancelled download");
         return;
       }
+
       emit(state.copyWith(isLoading: true));
 
       _logger.i(
         "Downloading file $filePath for device ${device.deviceId}, downloading in $destinationPath",
       );
-      await _downloadFileUsecase(filePath, destinationPath, device.deviceId);
+      await _downloadPackageFileUsecase(
+        package,
+        filePath,
+        destinationPath,
+        device.deviceId,
+      );
       add(OnRefreshFiles());
     });
     on<OnDeleteFile>((event, emit) async {
@@ -173,10 +207,17 @@ class PackageFileExplorerBloc
         _logger.w("Device is null, can't delete file");
         return;
       }
+
+      final package = state.selectedPackage;
+      if (package == null) {
+        _logger.w("No package selected, can't delete file");
+        return;
+      }
+
       emit(state.copyWith(isLoading: true));
       final filePath = p.join(state.path, event.fileName);
       _logger.i("Deleting file at $filePath for device ${device.deviceId}");
-      await _deleteFileUsecase(filePath, device.deviceId);
+      await _deletePackageFileUsecase(package, filePath, device.deviceId);
       add(OnRefreshFiles());
     });
     on<OnCreateDirectory>((event, emit) async {
@@ -185,11 +226,23 @@ class PackageFileExplorerBloc
         _logger.w("Device is null, can't create directory");
         return;
       }
+
+      final package = state.selectedPackage;
+      if (package == null) {
+        _logger.w("No package selected, can't create directory");
+        return;
+      }
+
       _logger.i(
         "Creating directory ${event.name} at ${state.path} for device ${device.deviceId}",
       );
       emit(state.copyWith(isLoading: true));
-      await _createDirectoryUsecase(state.path, event.name, device.deviceId);
+      await _createPackageDirectoryUsecase(
+        package,
+        state.path,
+        event.name,
+        device.deviceId,
+      );
       add(OnRefreshFiles());
     });
     on<OnPackageSelected>((event, emit) async {
