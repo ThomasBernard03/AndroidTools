@@ -17,23 +17,31 @@ class NavigationRailItem extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Card(
+      shape: RoundedRectangleBorder(
+        borderRadius: BorderRadiusGeometry.circular(8),
+      ),
+      margin: EdgeInsets.zero,
       elevation: 0,
-      color: Colors.transparent,
+      color: selected
+          ? Theme.of(context).colorScheme.surfaceContainer
+          : Colors.transparent,
       clipBehavior: Clip.hardEdge,
-      child: ListTile(
-        contentPadding: EdgeInsets.symmetric(horizontal: 16),
-        tileColor: Colors.transparent,
-        selected: selected,
-        leading: Icon(
-          size: 16,
-          icon,
-          color: Theme.of(context).colorScheme.surfaceContainerHighest,
-        ),
-        title: Text(text, style: TextStyle(fontSize: 14)),
-        hoverColor: Theme.of(context).colorScheme.surfaceContainerLow,
-        selectedTileColor: Theme.of(context).colorScheme.surfaceContainer,
-        selectedColor: Theme.of(context).colorScheme.onBackground,
+      child: InkWell(
         onTap: onTap,
+        child: Padding(
+          padding: const EdgeInsets.all(8.0),
+          child: Row(
+            spacing: 8,
+            children: [
+              Icon(
+                size: 16,
+                icon,
+                color: Theme.of(context).colorScheme.surfaceContainerHighest,
+              ),
+              Text(text, style: TextStyle(fontSize: 14)),
+            ],
+          ),
+        ),
       ),
     );
   }

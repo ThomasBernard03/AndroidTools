@@ -102,41 +102,47 @@ class _HomeScreenState extends State<HomeScreen> {
                   width: 250,
                   child: Container(
                     color: Theme.of(context).colorScheme.surfaceContainerLowest,
-                    child: Column(
-                      children: [
-                        NavigationRailItem(
-                          selected: _selectedIndex == 0,
-                          icon: Icons.info,
-                          text: "Device information",
-                          onTap: () => setState(() {
-                            _selectedIndex = 0;
-                          }),
-                        ),
-                        NavigationRailItem(
-                          selected: _selectedIndex == 1,
-                          icon: Icons.pets,
-                          text: "Logcat",
-                          onTap: () => setState(() {
-                            _selectedIndex = 1;
-                          }),
-                        ),
-                        NavigationRailItem(
-                          selected: _selectedIndex == 2,
-                          icon: Icons.folder,
-                          text: "File explorer",
-                          onTap: () => setState(() {
-                            _selectedIndex = 2;
-                          }),
-                        ),
-                        NavigationRailItem(
-                          selected: _selectedIndex == 4,
-                          icon: Icons.ac_unit_outlined,
-                          text: "App File explorer",
-                          onTap: () => setState(() {
-                            _selectedIndex = 4;
-                          }),
-                        ),
-                      ],
+                    child: Padding(
+                      padding: const EdgeInsets.symmetric(
+                        horizontal: 16,
+                        vertical: 8,
+                      ),
+                      child: Column(
+                        children: [
+                          NavigationRailItem(
+                            selected: _selectedIndex == 0,
+                            icon: Icons.info_outline_rounded,
+                            text: "Device information",
+                            onTap: () => setState(() {
+                              _selectedIndex = 0;
+                            }),
+                          ),
+                          NavigationRailItem(
+                            selected: _selectedIndex == 1,
+                            icon: Icons.heart_broken_outlined,
+                            text: "Logcat",
+                            onTap: () => setState(() {
+                              _selectedIndex = 1;
+                            }),
+                          ),
+                          NavigationRailItem(
+                            selected: _selectedIndex == 2,
+                            icon: Icons.folder_outlined,
+                            text: "File explorer",
+                            onTap: () => setState(() {
+                              _selectedIndex = 2;
+                            }),
+                          ),
+                          NavigationRailItem(
+                            selected: _selectedIndex == 4,
+                            icon: Icons.phone_android_outlined,
+                            text: "App File explorer",
+                            onTap: () => setState(() {
+                              _selectedIndex = 4;
+                            }),
+                          ),
+                        ],
+                      ),
                     ),
                   ),
                 ),
