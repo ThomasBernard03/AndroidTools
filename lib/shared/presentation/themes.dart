@@ -19,7 +19,7 @@ class Themes {
     cardTheme: CardThemeData(color: const Color.fromARGB(255, 227, 227, 227)),
   );
   static ThemeData darkTheme = ThemeData(
-    scaffoldBackgroundColor: Color(0xFF10151B),
+    scaffoldBackgroundColor: Color(0xFF070F17),
     appBarTheme: AppBarTheme(
       backgroundColor: Color.fromARGB(255, 41, 92, 43),
       foregroundColor: Color(0xFFF9F9F9),
@@ -30,6 +30,11 @@ class Themes {
       surfaceContainerLow: Color(0xFF27292B),
       surfaceContainer: Color(0xFF313235),
       surfaceContainerHighest: Color(0xFF94ABBC),
+    ),
+    textTheme: TextTheme(
+      titleLarge: TextStyle(fontFamily: "Nothing", fontSize: 28),
+      titleMedium: TextStyle(fontFamily: "Nothing", fontSize: 24),
+      titleSmall: TextStyle(fontFamily: "Nothing", fontSize: 20),
     ),
   );
 }

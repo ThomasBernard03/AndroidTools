@@ -31,117 +31,65 @@ class _HomeScreenState extends State<HomeScreen> {
       child: BlocBuilder<HomeBloc, HomeState>(
         builder: (context, state) {
           return Scaffold(
-            appBar: PreferredSize(
-              preferredSize: Size.fromHeight(kToolbarHeight),
-              child: MoveWindow(
-                child: AppBar(
-                  actionsPadding: EdgeInsets.only(right: 10),
-                  titleSpacing: 90,
-                  title: Row(
-                    children: [
-                      BlocBuilder<HomeBloc, HomeState>(
-                        builder: (context, state) {
-                          return SizedBox(
-                            width: 250,
-                            child: DropdownButtonFormField(
-                              style: Theme.of(context).textTheme.bodyLarge
-                                  ?.copyWith(
-                                    color: Theme.of(
-                                      context,
-                                    ).colorScheme.onPrimary,
-                                  ),
-                              dropdownColor: Colors.white,
-                              initialValue: state.selectedDevice,
-                              items: state.devices.map((device) {
-                                return DropdownMenuItem(
-                                  value: device,
-                                  child: Text(
-                                    device.name,
-                                    style: Theme.of(
-                                      context,
-                                    ).textTheme.bodyLarge,
-                                  ),
-                                );
-                              }).toList(),
-                              onChanged: (value) {
-                                if (value == null) return;
-                                context.read<HomeBloc>().add(
-                                  OnDeviceSelected(device: value),
-                                );
-                              },
-                            ),
-                          );
-                        },
-                      ),
-                      IconButton(
-                        onPressed: () =>
-                            context.read<HomeBloc>().add(OnRefreshDevices()),
-                        icon: Icon(Icons.refresh),
-                      ),
-                      VerticalDivider(),
-                    ],
-                  ),
-                  actions: [
-                    Text(state.version),
-                    VerticalDivider(),
-                    IconButton(
-                      onPressed: () => {
-                        setState(() {
-                          _selectedIndex = 3;
-                        }),
-                      },
-                      icon: Icon(Icons.settings),
-                    ),
-                  ],
-                ),
-              ),
-            ),
             body: Row(
               children: [
-                SizedBox(
-                  width: 250,
-                  child: Container(
-                    color: Theme.of(context).colorScheme.surfaceContainerLowest,
-                    child: Padding(
-                      padding: const EdgeInsets.symmetric(
-                        horizontal: 16,
-                        vertical: 8,
-                      ),
-                      child: Column(
-                        children: [
-                          NavigationRailItem(
-                            selected: _selectedIndex == 0,
-                            icon: Icons.info_outline_rounded,
-                            text: "Device information",
-                            onTap: () => setState(() {
-                              _selectedIndex = 0;
-                            }),
-                          ),
-                          NavigationRailItem(
-                            selected: _selectedIndex == 1,
-                            icon: Icons.heart_broken_outlined,
-                            text: "Logcat",
-                            onTap: () => setState(() {
-                              _selectedIndex = 1;
-                            }),
-                          ),
-                          NavigationRailItem(
-                            selected: _selectedIndex == 2,
-                            icon: Icons.folder_outlined,
-                            text: "File explorer",
-                            onTap: () => setState(() {
-                              _selectedIndex = 2;
-                            }),
-                          ),
-                          NavigationRailItem(
-                            selected: _selectedIndex == 4,
-                            icon: Icons.phone_android_outlined,
-                            text: "App File explorer",
-                            onTap: () => setState(() {
-                              _selectedIndex = 4;
-                            }),
-                          ),
-                        ],
+                MoveWindow(
+                  child: SizedBox(
+                    width: 250,
+                    child: Container(
+                      color: Color(0xFF181E25),
+                      child: Padding(
+                        padding: const EdgeInsets.symmetric(
+                          horizontal: 16,
+                          vertical: 8,
+                        ),
+                        child: Column(
+                          children: [
+                            SizedBox.fromSize(size: Size(0, 20)),
+                            Text(
+                              "Android Tools",
+                              style: TextStyle(
+                                fontFamily: 'Nothing',
+                                fontSize: 18,
+                              ),
+                            ),
+                            Divider(color: Color(0xFF484A4C)),
+                            NavigationRailItem(
+                              selected: _selectedIndex == 0,
+                              icon: Icons.info_outline_rounded,
+                              text: "Device information",
+                              onTap: () => setState(() {
+                                _selectedIndex = 0;
+                              }),
+                            ),
+                            NavigationRailItem(
+                              selected: _selectedIndex == 1,
+                              icon: Icons.heart_broken_outlined,
+                              text: "Logcat",
+                              onTap: () => setState(() {
+                                _selectedIndex = 1;
+                              }),
+                            ),
+                            NavigationRailItem(
+                              selected: _selectedIndex == 2,
+                              icon: Icons.folder_outlined,
+                              text: "File explorer",
+                              onTap: () => setState(() {
+                                _selectedIndex = 2;
+                              }),
+                            ),
+                            NavigationRailItem(
+                              selected: _selectedIndex == 4,
+                              icon: Icons.phone_android_outlined,
+                              text: "App File explorer",
+                              onTap: () => setState(() {
+                                _selectedIndex = 4;
+                              }),
+                            ),
+
+                            Divider(),
+                          ],
+                        ),
                       ),
                     ),
                   ),

@@ -43,7 +43,7 @@ flutter:
   assets:
     - assets/adb/windows/adb.exe
     - assets/adb/linux/adb
-    - assets/logcat.svg
+    - assets/pixel_10.png
     - assets/android_versions/
 
   # An image asset can refer to one or more resolution-specific "variants", see
@@ -57,8 +57,10 @@ flutter:
   # "family" key with the font family name, and a "fonts" key with a
   # list giving the asset and other descriptors for the font. For
   # example:
-  # fonts:
-  #   - family: Schyler
+  fonts:
+    - family: Nothing
+      fonts:
+        - asset: assets/fonts/nothing.otf
   #     fonts:
   #       - asset: fonts/Schyler-Regular.ttf
   #       - asset: fonts/Schyler-Italic.ttf
