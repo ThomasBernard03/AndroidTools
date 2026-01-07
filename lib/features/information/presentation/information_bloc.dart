@@ -1,4 +1,6 @@
+import 'package:android_tools/features/information/domain/entities/device_battery_information_entity.dart';
 import 'package:android_tools/features/information/domain/entities/device_information_entity.dart';
+import 'package:android_tools/features/information/domain/usecases/get_device_battery_information_usecase.dart';
 import 'package:android_tools/features/information/domain/usecases/get_device_information_usecase.dart';
 import 'package:android_tools/main.dart';
 import 'package:android_tools/shared/domain/entities/device_entity.dart';
@@ -20,6 +22,8 @@ class InformationBloc extends Bloc<InformationEvent, InformationState> {
   final RefreshConnectedDevicesUsecase _refreshConnectedDevicesUsecase = getIt
       .get();
   final InstallApplicationUsecase _installApplicationUsecase = getIt.get();
+  final GetDeviceBatteryInformationUsecase _getDeviceBatteryInformationUsecase =
+      getIt.get();
 
   InformationBloc() : super(InformationState()) {
     on<OnAppearing>((event, emit) async {
@@ -35,8 +39,16 @@ class InformationBloc extends Bloc<InformationEvent, InformationState> {
           final information = await _getDeviceInformationUsecase(
             device.deviceId,
           );
-          _logger.d(information);
-          emit(state.copyWith(deviceInformation: information, device: device));
+          final batteryInformation = await _getDeviceBatteryInformationUsecase(
+            device.deviceId,
+          );
+          emit(
+            state.copyWith(
+              deviceInformation: information,
+              device: device,
+              deviceBatteryInformation: batteryInformation,
+            ),
+          );
         },
       );
     });

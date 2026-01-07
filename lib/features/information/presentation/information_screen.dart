@@ -42,79 +42,101 @@ class InformationScreen extends StatelessWidget {
                           ),
                         ],
                       ),
-                      Row(
-                        spacing: 16,
-                        crossAxisAlignment: CrossAxisAlignment.start,
-                        children: [
-                          Container(
-                            decoration: BoxDecoration(
-                              borderRadius: BorderRadius.circular(16),
-                              boxShadow: [
-                                BoxShadow(
-                                  color: Colors.white.withAlpha(25),
-                                  blurRadius: 64,
-                                  offset: const Offset(0, 10),
+                      Center(
+                        child: Row(
+                          spacing: 16,
+                          mainAxisSize: MainAxisSize.min,
+                          crossAxisAlignment: CrossAxisAlignment.start,
+                          children: [
+                            Container(
+                              decoration: BoxDecoration(
+                                borderRadius: BorderRadius.circular(16),
+                                boxShadow: [
+                                  BoxShadow(
+                                    color: Colors.white.withAlpha(25),
+                                    blurRadius: 64,
+                                    offset: const Offset(0, 10),
+                                  ),
+                                ],
+                              ),
+                              child: ClipRRect(
+                                borderRadius: BorderRadius.circular(16),
+                                child: Image.asset(
+                                  "assets/pixel_10.png",
+                                  height: 400,
                                 ),
-                              ],
-                            ),
-                            child: ClipRRect(
-                              borderRadius: BorderRadius.circular(16),
-                              child: Image.asset(
-                                "assets/pixel_10.png",
-                                height: 400,
                               ),
                             ),
-                          ),
-                          SizedBox(
-                            height: 400,
-                            child: Column(
-                              crossAxisAlignment: CrossAxisAlignment.start,
-                              spacing: 8,
-                              children: [
-                                InformationRecapItem(
-                                  label: "Manufacturer",
-                                  value:
-                                      state.deviceInformation?.manufacturer ??
-                                      "-",
-                                ),
+                            SizedBox(
+                              height: 400,
+                              child: Column(
+                                crossAxisAlignment: CrossAxisAlignment.start,
+                                spacing: 8,
+                                children: [
+                                  InformationRecapItem(
+                                    label: "Manufacturer",
+                                    value:
+                                        state.deviceInformation?.manufacturer ??
+                                        "-",
+                                  ),
 
-                                InformationRecapItem(
-                                  label: "Serial Number",
-                                  value:
-                                      state.deviceInformation?.serialNumber ??
-                                      "-",
-                                ),
-                                InformationRecapItem(
-                                  label: "Model",
-                                  value: state.deviceInformation?.model ?? "-",
-                                ),
-                                InformationRecapItem(
-                                  label: "Android Version",
-                                  value:
-                                      state.deviceInformation?.version ?? "-",
-                                ),
+                                  InformationRecapItem(
+                                    label: "Serial Number",
+                                    value:
+                                        state.deviceInformation?.serialNumber ??
+                                        "-",
+                                  ),
+                                  InformationRecapItem(
+                                    label: "Model",
+                                    value:
+                                        state.deviceInformation?.model ?? "-",
+                                  ),
+                                  InformationRecapItem(
+                                    label: "Android Version",
+                                    value:
+                                        state.deviceInformation?.version ?? "-",
+                                  ),
 
-                                const Spacer(),
+                                  const Spacer(),
 
-                                Column(
-                                  crossAxisAlignment: CrossAxisAlignment.end,
-                                  children: [
-                                    Text("100%"),
-                                    SizedBox(
-                                      width: 60,
-                                      height: 4,
-                                      child: LinearProgressIndicator(
-                                        color: Colors.white,
-                                        backgroundColor: Color(0xFF2B2F33),
-                                        borderRadius: BorderRadius.circular(20),
-                                      ),
+                                  if (state.deviceBatteryInformation != null)
+                                    Column(
+                                      crossAxisAlignment:
+                                          CrossAxisAlignment.end,
+                                      children: [
+                                        Text(
+                                          "${state.deviceBatteryInformation?.level}%",
+                                        ),
+                                        SizedBox(
+                                          width: 60,
+                                          height: 4,
+                                          child: LinearProgressIndicator(
+                                            value:
+                                                state
+                                                        .deviceBatteryInformation
+                                                        ?.isCharging ==
+                                                    true
+                                                ? null
+                                                : ((state
+                                                                  .deviceBatteryInformation
+                                                                  ?.level ??
+                                                              0) /
+                                                          100)
+                                                      .toDouble(),
+                                            color: Colors.white,
+                                            backgroundColor: Color(0xFF2B2F33),
+                                            borderRadius: BorderRadius.circular(
+                                              20,
+                                            ),
+                                          ),
+                                        ),
+                                      ],
                                     ),
-                                  ],
-                                ),
-                              ],
+                                ],
+                              ),
                             ),
-                          ),
-                        ],
+                          ],
+                        ),
                       ),
                       Wrap(
                         children: [
