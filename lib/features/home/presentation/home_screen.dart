@@ -44,6 +44,7 @@ class _HomeScreenState extends State<HomeScreen> {
                           vertical: 8,
                         ),
                         child: Column(
+                          spacing: 12,
                           children: [
                             SizedBox.fromSize(size: Size(0, 20)),
                             Text(
@@ -53,6 +54,29 @@ class _HomeScreenState extends State<HomeScreen> {
                                 fontSize: 18,
                               ),
                             ),
+                            if (state.devices.isNotEmpty)
+                              DropdownButtonFormField(
+                                icon: Icon(Icons.keyboard_arrow_down),
+                                style: Theme.of(context).textTheme.bodyMedium,
+                                initialValue: state.selectedDevice,
+                                items: state.devices
+                                    .map(
+                                      (device) => DropdownMenuItem(
+                                        value: device,
+                                        child: Text(device.name),
+                                      ),
+                                    )
+                                    .toList(),
+                                onChanged: (device) {
+                                  if (device == null) return;
+                                  context.read<HomeBloc>().add(
+                                    OnDeviceSelected(device: device),
+                                  );
+                                },
+                                decoration: InputDecoration.collapsed(
+                                  hintText: "",
+                                ),
+                              ),
                             Divider(color: Color(0xFF484A4C)),
                             NavigationRailItem(
                               selected: _selectedIndex == 0,

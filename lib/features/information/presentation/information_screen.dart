@@ -1,5 +1,6 @@
 import 'package:android_tools/features/information/presentation/information_bloc.dart';
 import 'package:android_tools/features/information/presentation/widgets/apk_installer_drop_target.dart';
+import 'package:android_tools/features/information/presentation/widgets/device_preview.dart';
 import 'package:android_tools/features/information/presentation/widgets/information_recap_item.dart';
 import 'package:android_tools/shared/presentation/refresh_device_button.dart';
 import 'package:flutter/material.dart';
@@ -44,7 +45,7 @@ class InformationScreen extends StatelessWidget {
                       ),
                       Center(
                         child: Row(
-                          spacing: 16,
+                          spacing: 32,
                           mainAxisSize: MainAxisSize.min,
                           crossAxisAlignment: CrossAxisAlignment.start,
                           children: [
@@ -61,9 +62,9 @@ class InformationScreen extends StatelessWidget {
                               ),
                               child: ClipRRect(
                                 borderRadius: BorderRadius.circular(16),
-                                child: Image.asset(
-                                  "assets/pixel_10.png",
-                                  height: 400,
+                                child: DevicePreview(
+                                  version:
+                                      state.deviceInformation?.version ?? "",
                                 ),
                               ),
                             ),
@@ -138,6 +139,7 @@ class InformationScreen extends StatelessWidget {
                           ],
                         ),
                       ),
+
                       Wrap(
                         children: [
                           ApkInstallerDropTarget(
