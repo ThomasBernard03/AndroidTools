@@ -78,6 +78,7 @@ class LogcatLine extends StatelessWidget {
                 style: TextStyle(
                   color: parsed.level.onBackgroundColor(),
                   fontSize: 14,
+                  fontFamily: "Nothing",
                 ),
               ),
             ),

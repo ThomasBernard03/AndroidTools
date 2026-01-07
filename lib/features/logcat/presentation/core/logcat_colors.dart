@@ -10,29 +10,19 @@ class LogcatColors {
   static final Color verboseTextColor = Color.fromARGB(255, 102, 102, 102);
   static final Color verboseOnBackgroundColor = Color.fromARGB(255, 34, 34, 34);
 
-  static final Color debugBackgroundTextColor = Color.fromARGB(
-    255,
-    207,
-    231,
-    255,
-  );
-  static final Color debugOnBackgroundTextColor = Colors.black;
-  static final Color debugTextColor = Color.fromARGB(255, 56, 159, 214);
+  static final Color debugBackgroundColor = Color(0xFF305D78);
+  static final Color debugOnBackgroundTextColor = Color(0xFFBBBBBB);
+  static final Color debugTextColor = Color(0xFF299999);
 
-  static final Color infoBackgroundColor = Color.fromARGB(255, 233, 245, 230);
-  static final Color infoTextColor = Color.fromARGB(255, 92, 169, 107);
-  static final Color infoOnBackgroundColor = Color.fromARGB(255, 65, 77, 65);
+  static final Color infoBackgroundColor = Color(0xFF6A8759);
+  static final Color infoTextColor = Color(0xFFABC023);
+  static final Color infoOnBackgroundColor = Color(0xFFE9F5E6);
 
-  static final Color errorTextColor = Color.fromARGB(255, 205, 0, 0);
-  static final Color errorBackgroundColor = Color.fromARGB(255, 207, 91, 86);
-  static final Color errorOnBackgroundColor = Colors.white;
+  static final Color errorTextColor = Color(0xFFFD6A67);
+  static final Color errorBackgroundColor = Color(0xFFCF5B56);
+  static final Color errorOnBackgroundColor = Color(0xFF000000);
 
-  static final Color warningTextColor = Color.fromARGB(255, 100, 86, 7);
-  static final Color warningBackgroundColor = Color.fromARGB(
-    255,
-    245,
-    234,
-    193,
-  );
+  static final Color warningTextColor = Color(0xFFBBB529);
+  static final Color warningBackgroundColor = Color(0xFFBBB529);
   static final Color warningOnBackgroundColor = Colors.black;
 }

@@ -8,7 +8,7 @@ extension LogcatLevelExtensions on LogcatLevel {
   Color backgroundColor() {
     return switch (this) {
       LogcatLevel.verbose => LogcatColors.verboseBackgroundColor,
-      LogcatLevel.debug => LogcatColors.debugBackgroundTextColor,
+      LogcatLevel.debug => LogcatColors.debugBackgroundColor,
       LogcatLevel.info => LogcatColors.infoBackgroundColor,
       LogcatLevel.warning => LogcatColors.warningBackgroundColor,
       LogcatLevel.error => LogcatColors.errorBackgroundColor,
