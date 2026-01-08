@@ -16,29 +16,37 @@ class _ApkInstallerDropTargetState extends State<ApkInstallerDropTarget> {
 
   @override
   Widget build(BuildContext context) {
-    return DropTarget(
-      onDragEntered: (_) {
-        setState(() => isDropping = true);
-      },
-      onDragExited: (_) {
-        setState(() => isDropping = false);
-      },
-      onDragDone: (details) {
-        final dropItem = details.files.firstOrNull;
-        final path = dropItem?.path;
-        if (path == null) {
-          return;
-        }
+    return Card(
+      clipBehavior: Clip.hardEdge,
+      color: Color(0xFF1B2128),
 
-        widget.onInstallApk(path);
-      },
-      child: Stack(
-        children: [
-          Card.filled(
-            child: Padding(
+      child: DropTarget(
+        onDragEntered: (_) {
+          setState(() => isDropping = true);
+        },
+        onDragExited: (_) {
+          setState(() => isDropping = false);
+        },
+        onDragDone: (details) {
+          final dropItem = details.files.firstOrNull;
+          final path = dropItem?.path;
+          if (path == null) {
+            return;
+          }
+
+          widget.onInstallApk(path);
+        },
+        child: Stack(
+          children: [
+            Padding(
               padding: EdgeInsets.all(16.0),
               child: Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
+                  Text(
+                    "Application installer",
+                    style: Theme.of(context).textTheme.titleMedium,
+                  ),
                   Icon(Icons.add_rounded, size: 200),
                   Text(
                     "Drag and drop your .apk file here to install app on connected device",
@@ -62,38 +70,38 @@ class _ApkInstallerDropTargetState extends State<ApkInstallerDropTarget> {
                 ],
               ),
             ),
-          ),
 
-          if (isDropping)
-            Positioned.fill(
-              child: IgnorePointer(
-                child: Container(
-                  color: Colors.black.withAlpha(60),
-                  child: Center(
-                    child: Column(
-                      mainAxisSize: MainAxisSize.min,
-                      children: const [
-                        Icon(
-                          Icons.file_download_outlined,
-                          size: 64,
-                          color: Colors.white,
-                        ),
-                        SizedBox(height: 12),
-                        Text(
-                          'Drop your .apk files here',
-                          style: TextStyle(
+            if (isDropping)
+              Positioned.fill(
+                child: IgnorePointer(
+                  child: Container(
+                    color: Colors.black.withAlpha(60),
+                    child: Center(
+                      child: Column(
+                        mainAxisSize: MainAxisSize.min,
+                        children: const [
+                          Icon(
+                            Icons.file_download_outlined,
+                            size: 64,
                             color: Colors.white,
-                            fontSize: 18,
-                            fontWeight: FontWeight.w500,
                           ),
-                        ),
-                      ],
+                          SizedBox(height: 12),
+                          Text(
+                            'Drop your .apk files here',
+                            style: TextStyle(
+                              color: Colors.white,
+                              fontSize: 18,
+                              fontWeight: FontWeight.w500,
+                            ),
+                          ),
+                        ],
+                      ),
                     ),
                   ),
                 ),
               ),
-            ),
-        ],
+          ],
+        ),
       ),
     );
   }

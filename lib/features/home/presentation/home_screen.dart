@@ -77,10 +77,8 @@ class _HomeScreenState extends State<HomeScreen> {
                                   hintText: "",
                                 ),
                               ),
-                            Divider(color: Color(0xFF484A4C)),
                             NavigationRailItem(
                               selected: _selectedIndex == 0,
-                              icon: Icons.info_outline_rounded,
                               text: "Device information",
                               onTap: () => setState(() {
                                 _selectedIndex = 0;
@@ -88,7 +86,6 @@ class _HomeScreenState extends State<HomeScreen> {
                             ),
                             NavigationRailItem(
                               selected: _selectedIndex == 1,
-                              icon: Icons.heart_broken_outlined,
                               text: "Logcat",
                               onTap: () => setState(() {
                                 _selectedIndex = 1;
@@ -96,7 +93,6 @@ class _HomeScreenState extends State<HomeScreen> {
                             ),
                             NavigationRailItem(
                               selected: _selectedIndex == 2,
-                              icon: Icons.folder_outlined,
                               text: "File explorer",
                               onTap: () => setState(() {
                                 _selectedIndex = 2;
@@ -104,14 +100,27 @@ class _HomeScreenState extends State<HomeScreen> {
                             ),
                             NavigationRailItem(
                               selected: _selectedIndex == 4,
-                              icon: Icons.phone_android_outlined,
                               text: "App File explorer",
                               onTap: () => setState(() {
                                 _selectedIndex = 4;
                               }),
                             ),
 
-                            Divider(),
+                            Spacer(),
+
+                            Divider(color: Color(0xFF484A4C)),
+
+                            TextButton(
+                              onPressed: () => setState(() {
+                                _selectedIndex = 3;
+                              }),
+                              child: Text("Settings"),
+                            ),
+
+                            Text(
+                              state.version,
+                              style: TextStyle(fontFamily: "Nothing"),
+                            ),
                           ],
                         ),
                       ),

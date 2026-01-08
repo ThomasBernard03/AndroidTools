@@ -140,16 +140,21 @@ class InformationScreen extends StatelessWidget {
                         ),
                       ),
 
-                      Wrap(
-                        children: [
-                          ApkInstallerDropTarget(
-                            onInstallApk: (path) {
-                              context.read<InformationBloc>().add(
-                                OnInstallApplication(applicationFilePath: path),
-                              );
-                            },
-                          ),
-                        ],
+                      Padding(
+                        padding: EdgeInsetsGeometry.all(42),
+                        child: Column(
+                          children: [
+                            ApkInstallerDropTarget(
+                              onInstallApk: (path) {
+                                context.read<InformationBloc>().add(
+                                  OnInstallApplication(
+                                    applicationFilePath: path,
+                                  ),
+                                );
+                              },
+                            ),
+                          ],
+                        ),
                       ),
                     ],
                   );
