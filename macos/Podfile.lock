@@ -1,11 +1,10 @@
 PODS:
+  - auto_updater_macos (0.0.1):
+    - FlutterMacOS
+    - Sparkle
   - bitsdojo_window_macos (0.0.1):
     - FlutterMacOS
-  - cryptography_flutter_plus (0.2.0):
-    - FlutterMacOS
   - desktop_drop (0.0.1):
-    - FlutterMacOS
-  - desktop_updater (0.0.1):
     - FlutterMacOS
   - file_picker (0.0.1):
     - FlutterMacOS
@@ -20,14 +19,14 @@ PODS:
     - Flutter
     - FlutterMacOS
     - Sentry/HybridSDK (= 8.56.2)
+  - Sparkle (2.8.1)
   - url_launcher_macos (0.0.1):
     - FlutterMacOS
 
 DEPENDENCIES:
+  - auto_updater_macos (from `Flutter/ephemeral/.symlinks/plugins/auto_updater_macos/macos`)
   - bitsdojo_window_macos (from `Flutter/ephemeral/.symlinks/plugins/bitsdojo_window_macos/macos`)
-  - cryptography_flutter_plus (from `Flutter/ephemeral/.symlinks/plugins/cryptography_flutter_plus/macos`)
   - desktop_drop (from `Flutter/ephemeral/.symlinks/plugins/desktop_drop/macos`)
-  - desktop_updater (from `Flutter/ephemeral/.symlinks/plugins/desktop_updater/macos`)
   - file_picker (from `Flutter/ephemeral/.symlinks/plugins/file_picker/macos`)
   - FlutterMacOS (from `Flutter/ephemeral`)
   - package_info_plus (from `Flutter/ephemeral/.symlinks/plugins/package_info_plus/macos`)
@@ -38,16 +37,15 @@ DEPENDENCIES:
 SPEC REPOS:
   trunk:
     - Sentry
+    - Sparkle
 
 EXTERNAL SOURCES:
+  auto_updater_macos:
+    :path: Flutter/ephemeral/.symlinks/plugins/auto_updater_macos/macos
   bitsdojo_window_macos:
     :path: Flutter/ephemeral/.symlinks/plugins/bitsdojo_window_macos/macos
-  cryptography_flutter_plus:
-    :path: Flutter/ephemeral/.symlinks/plugins/cryptography_flutter_plus/macos
   desktop_drop:
     :path: Flutter/ephemeral/.symlinks/plugins/desktop_drop/macos
-  desktop_updater:
-    :path: Flutter/ephemeral/.symlinks/plugins/desktop_updater/macos
   file_picker:
     :path: Flutter/ephemeral/.symlinks/plugins/file_picker/macos
   FlutterMacOS:
@@ -62,16 +60,16 @@ EXTERNAL SOURCES:
     :path: Flutter/ephemeral/.symlinks/plugins/url_launcher_macos/macos
 
 SPEC CHECKSUMS:
+  auto_updater_macos: 3a42f1a06be6981f1a18be37e6e7bf86aa732118
   bitsdojo_window_macos: 7959fb0ca65a3ccda30095c181ecb856fae48ea9
-  cryptography_flutter_plus: 7c6e0d0f08664499a2c5402aa7cbcca07f2a7130
   desktop_drop: 10a3e6a7fa9dbe350541f2574092fecfa345a07b
-  desktop_updater: 982886a70a8098539a3877716baf80218124c4d0
   file_picker: 7584aae6fa07a041af2b36a2655122d42f578c1a
   FlutterMacOS: d0db08ddef1a9af05a5ec4b724367152bb0500b1
   package_info_plus: f0052d280d17aa382b932f399edf32507174e870
   path_provider_foundation: bb55f6dbba17d0dccd6737fe6f7f34fbd0376880
   Sentry: b53951377b78e21a734f5dc8318e333dbfc682d7
   sentry_flutter: 580133c878f86698e23bb5dd7217a3387c4b79b5
+  Sparkle: a346a4341537c625955751ed3ae4b340b68551fa
   url_launcher_macos: f87a979182d112f911de6820aefddaf56ee9fbfd
 
 PODFILE CHECKSUM: 54d867c82ac51cbd61b565781b9fada492027009

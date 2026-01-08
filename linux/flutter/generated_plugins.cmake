@@ -5,7 +5,6 @@
 list(APPEND FLUTTER_PLUGIN_LIST
   bitsdojo_window_linux
   desktop_drop
-  desktop_updater
   sentry_flutter
   url_launcher_linux
 )

@@ -17,5 +17,5 @@ class Constants {
 
   static const environmentGitRepositoryUrl = "GIT_REPOSITORY_URL";
   static const environmentSentryDsn = "SENTRY_DSN";
-  static const environmentAppArchiveUrl = "APP_ARCHIVE_URL";
+  static const environmentAutoUpdaterFeedUrl = "AUTO_UPDATER_FEED_URL";
 }

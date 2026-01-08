@@ -7,6 +7,7 @@ import 'package:android_tools/shared/core/constants.dart';
 import 'package:android_tools/shared/core/shared_module.dart';
 import 'package:android_tools/shared/core/string_extensions.dart';
 import 'package:android_tools/shared/presentation/themes.dart';
+import 'package:auto_updater/auto_updater.dart';
 import 'package:bitsdojo_window/bitsdojo_window.dart';
 import 'package:flutter/material.dart';
 import 'package:get_it/get_it.dart';
@@ -23,18 +24,37 @@ Future<void> main(List<String> args) async {
   GeneralFileExplorerModule.configureDependencies();
   PackageFileExplorerModule.configureDependencies();
   await getIt.allReady();
-  const sentryDsn = String.fromEnvironment('SENTRY_DSN', defaultValue: '');
   final logger = await getIt.getAsync<Logger>();
-
   logger.i("==== Starting application ====");
+  const sentryDsn = String.fromEnvironment(
+    Constants.environmentSentryDsn,
+    defaultValue: '',
+  );
   if (sentryDsn.isEmpty) {
     logger.w(
       "${Constants.environmentSentryDsn} not found from environment, launch project with '--dart-define=${Constants.environmentSentryDsn}=your_sentry_dsn'",
     );
   } else {
     logger.i(
-      "${Constants.environmentSentryDsn} found : ${sentryDsn.anonymize()}",
+      "${Constants.environmentSentryDsn} found: ${sentryDsn.anonymize()}",
     );
+  }
+
+  const autoUpdaterFeedUrl = String.fromEnvironment(
+    Constants.environmentAutoUpdaterFeedUrl,
+    defaultValue: '',
+  );
+  if (autoUpdaterFeedUrl.isEmpty) {
+    logger.w(
+      "${Constants.environmentAutoUpdaterFeedUrl} not found from environment, launch project with '--dart-define=${Constants.environmentAutoUpdaterFeedUrl}=your_feed_url'",
+    );
+  } else {
+    logger.i(
+      "${Constants.environmentAutoUpdaterFeedUrl} found: ${autoUpdaterFeedUrl.anonymize()}",
+    );
+    await autoUpdater.setFeedURL(autoUpdaterFeedUrl);
+    await autoUpdater.checkForUpdates();
+    await autoUpdater.setScheduledCheckInterval(3600);
   }
 
   await SentryFlutter.init((options) {

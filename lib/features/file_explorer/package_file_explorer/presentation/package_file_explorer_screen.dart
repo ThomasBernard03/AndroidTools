@@ -34,9 +34,11 @@ class _PackageFileExplorerScreenState extends State<PackageFileExplorerScreen> {
     if (result == null || result.files.isEmpty) {
       return;
     }
-    context.read<PackageFileExplorerBloc>().add(
-      OnUploadFiles(files: result.files.map((f) => f.path ?? "")),
-    );
+    if (context.mounted) {
+      context.read<PackageFileExplorerBloc>().add(
+        OnUploadFiles(files: result.files.map((f) => f.path ?? "")),
+      );
+    }
   }
 
   Future<void> onShowCreateDirectoryDialog(BuildContext context) async {
@@ -62,9 +64,11 @@ class _PackageFileExplorerScreenState extends State<PackageFileExplorerScreen> {
     if (result == null || result.isEmpty) {
       return;
     }
-    context.read<PackageFileExplorerBloc>().add(
-      OnCreateDirectory(name: result),
-    );
+    if (context.mounted) {
+      context.read<PackageFileExplorerBloc>().add(
+        OnCreateDirectory(name: result),
+      );
+    }
   }
 
   @override

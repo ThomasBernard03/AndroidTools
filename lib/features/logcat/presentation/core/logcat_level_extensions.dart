@@ -1,5 +1,3 @@
-import 'dart:ui';
-
 import 'package:android_tools/features/logcat/domain/entities/logcat_level.dart';
 import 'package:android_tools/features/logcat/presentation/core/logcat_colors.dart';
 import 'package:flutter/material.dart';
