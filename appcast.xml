@@ -1,0 +1,22 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<rss version="2.0" xmlns:sparkle="http://www.andymatuschak.org/xml-namespaces/sparkle">
+    <channel>
+        <title>AndroidTools</title>
+        <description>Most recent updates to AndroidTools</description>
+        <language>en</language>
+        <item>
+            <title>Version 2.1.0</title>
+            <sparkle:version>10</sparkle:version>
+            <sparkle:shortVersionString>2.1.0</sparkle:shortVersionString>
+            <sparkle:releaseNotesLink>
+                https://github.com/ThomasBernard03/AndroidTools/releases/tag/2.1.0
+            </sparkle:releaseNotesLink>
+            <pubDate>Fri, O9 Jan 2026 18:00:00 +0200</pubDate>
+            <enclosure url="https://github.com/ThomasBernard03/AndroidTools/releases/download/2.1.0/android_tools.zip"
+                       sparkle:edSignature="HTLVKUPmkNoGbZrf6uUKYrMrkXa4yqSzpOE0fPRh0348d2qThhTju0TUuvsdOOAM+nZuqSj8OjhTlD8EM4bWAg=="
+                       sparkle:os="macos"
+                       length="85704011"
+                       type="application/octet-stream" />
+        </item>
+    </channel>
+</rss>
