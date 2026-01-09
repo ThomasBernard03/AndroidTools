@@ -52,9 +52,13 @@ Future<void> main(List<String> args) async {
     logger.i(
       "${Constants.environmentAutoUpdaterFeedUrl} found: ${autoUpdaterFeedUrl.anonymize()}",
     );
-    await autoUpdater.setFeedURL(autoUpdaterFeedUrl);
-    await autoUpdater.checkForUpdates();
-    await autoUpdater.setScheduledCheckInterval(3600);
+    try {
+      await autoUpdater.setFeedURL(autoUpdaterFeedUrl);
+      await autoUpdater.checkForUpdates();
+      await autoUpdater.setScheduledCheckInterval(3600);
+    } catch (e) {
+      logger.w("Error with autoUpdater: $e");
+    }
   }
 
   await SentryFlutter.init((options) {
