@@ -41,8 +41,6 @@ flutter:
 
   # To add assets to your application, add an assets section, like this:
   assets:
-    - assets/adb/windows/adb.exe
-    - assets/adb/linux/adb
     - assets/pixel_10.png
     - assets/android_versions/
     - assets/pixels/

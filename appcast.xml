@@ -13,9 +13,9 @@
             </sparkle:releaseNotesLink>
             <pubDate>Fri, O9 Jan 2026 18:00:00 +0200</pubDate>
             <enclosure url="https://github.com/ThomasBernard03/AndroidTools/releases/download/2.1.0/android_tools.zip"
-                       sparkle:edSignature="L1xW7HEPyyR2YoO01sfjlSiFLJS5HDt14FWmngxWARaZE6nMX/jPSg+543l2eZuM7orPNe1Qbl9zoSThjJLlCQ=="
+                       sparkle:edSignature="HTLVKUPmkNoGbZrf6uUKYrMrkXa4yqSzpOE0fPRh0348d2qThhTju0TUuvsdOOAM+nZuqSj8OjhTlD8EM4bWAg=="
                        sparkle:os="macos"
-                       length="105899147"
+                       length="85704011"
                        type="application/octet-stream" />
         </item>
     </channel>
