@@ -48,7 +48,6 @@ Ex :
 fvm flutter run --dart-define=SENTRY_DSN=your_dsn
 ```
 
-TODO ReACTIVER LE SANDBOX
 
 
 ```shell

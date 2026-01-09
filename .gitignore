@@ -51,3 +51,4 @@ app.*.map.json
 
 sentry.properties
 /dist
+*.zip
