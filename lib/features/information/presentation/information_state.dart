@@ -4,11 +4,13 @@ part of 'information_bloc.dart';
 class InformationState with InformationStateMappable {
   final DeviceInformationEntity? deviceInformation;
   final DeviceBatteryInformationEntity? deviceBatteryInformation;
+  final DeviceStorageInformationEntity? deviceStorageInformation;
   final DeviceEntity? device;
 
   InformationState({
     this.deviceInformation,
     this.device,
     this.deviceBatteryInformation,
+    this.deviceStorageInformation,
   });
 }

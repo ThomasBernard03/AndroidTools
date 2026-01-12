@@ -44,12 +44,22 @@ class InformationStateMapper extends ClassMapperBase<InformationState> {
     _$deviceBatteryInformation,
     opt: true,
   );
+  static DeviceStorageInformationEntity? _$deviceStorageInformation(
+    InformationState v,
+  ) => v.deviceStorageInformation;
+  static const Field<InformationState, DeviceStorageInformationEntity>
+  _f$deviceStorageInformation = Field(
+    'deviceStorageInformation',
+    _$deviceStorageInformation,
+    opt: true,
+  );
 
   @override
   final MappableFields<InformationState> fields = const {
     #deviceInformation: _f$deviceInformation,
     #device: _f$device,
     #deviceBatteryInformation: _f$deviceBatteryInformation,
+    #deviceStorageInformation: _f$deviceStorageInformation,
   };
 
   static InformationState _instantiate(DecodingData data) {
@@ -57,6 +67,7 @@ class InformationStateMapper extends ClassMapperBase<InformationState> {
       deviceInformation: data.dec(_f$deviceInformation),
       device: data.dec(_f$device),
       deviceBatteryInformation: data.dec(_f$deviceBatteryInformation),
+      deviceStorageInformation: data.dec(_f$deviceStorageInformation),
     );
   }
 
@@ -126,6 +137,7 @@ abstract class InformationStateCopyWith<$R, $In extends InformationState, $Out>
     DeviceInformationEntity? deviceInformation,
     DeviceEntity? device,
     DeviceBatteryInformationEntity? deviceBatteryInformation,
+    DeviceStorageInformationEntity? deviceStorageInformation,
   });
   InformationStateCopyWith<$R2, $In, $Out2> $chain<$R2, $Out2>(
     Then<$Out2, $R2> t,
@@ -145,12 +157,15 @@ class _InformationStateCopyWithImpl<$R, $Out>
     Object? deviceInformation = $none,
     Object? device = $none,
     Object? deviceBatteryInformation = $none,
+    Object? deviceStorageInformation = $none,
   }) => $apply(
     FieldCopyWithData({
       if (deviceInformation != $none) #deviceInformation: deviceInformation,
       if (device != $none) #device: device,
       if (deviceBatteryInformation != $none)
         #deviceBatteryInformation: deviceBatteryInformation,
+      if (deviceStorageInformation != $none)
+        #deviceStorageInformation: deviceStorageInformation,
     }),
   );
   @override
@@ -163,6 +178,10 @@ class _InformationStateCopyWithImpl<$R, $Out>
     deviceBatteryInformation: data.get(
       #deviceBatteryInformation,
       or: $value.deviceBatteryInformation,
+    ),
+    deviceStorageInformation: data.get(
+      #deviceStorageInformation,
+      or: $value.deviceStorageInformation,
     ),
   );
 

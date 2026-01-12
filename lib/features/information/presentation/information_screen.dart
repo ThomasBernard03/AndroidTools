@@ -1,7 +1,9 @@
 import 'package:android_tools/features/information/presentation/information_bloc.dart';
 import 'package:android_tools/features/information/presentation/widgets/apk_installer_drop_target.dart';
+import 'package:android_tools/features/information/presentation/widgets/bubble_progress.dart';
 import 'package:android_tools/features/information/presentation/widgets/device_preview.dart';
 import 'package:android_tools/features/information/presentation/widgets/information_recap_item.dart';
+import 'package:android_tools/features/information/presentation/widgets/storage_information_widget.dart';
 import 'package:android_tools/shared/presentation/refresh_device_button.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
@@ -144,6 +146,22 @@ class InformationScreen extends StatelessWidget {
                         padding: EdgeInsetsGeometry.all(42),
                         child: Column(
                           children: [
+                            BlocBuilder<InformationBloc, InformationState>(
+                              builder: (context, state) {
+                                return StorageInformationWidget(
+                                  totalBytes:
+                                      state
+                                          .deviceStorageInformation
+                                          ?.totalBytes ??
+                                      1,
+                                  freeBytes:
+                                      state
+                                          .deviceStorageInformation
+                                          ?.freeBytes ??
+                                      0,
+                                );
+                              },
+                            ),
                             ApkInstallerDropTarget(
                               onInstallApk: (path) {
                                 context.read<InformationBloc>().add(
