@@ -36,10 +36,6 @@ jobs:
           channel: "stable"
 
       - name: Install dependencies & build
-        env:
-          CODE_SIGNING_ALLOWED: NO
-          CODE_SIGNING_REQUIRED: NO
-          CODE_SIGNING_IDENTITY: ""
         run: |
           flutter pub get
           dart run build_runner build -d
