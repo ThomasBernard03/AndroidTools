@@ -36,10 +36,14 @@ jobs:
           channel: "stable"
 
       - name: Install dependencies & build
+        env:
+          CODE_SIGNING_ALLOWED: NO
+          CODE_SIGNING_REQUIRED: NO
+          CODE_SIGNING_IDENTITY: ""
         run: |
           flutter pub get
           dart run build_runner build -d
-          flutter build macos --release --no-codesign \
+          flutter build macos --release \
             --dart-define=SENTRY_DSN=${{ env.SENTRY_DSN }} \
             --dart-define=GIT_REPOSITORY_URL=${{ env.REPOSITORY_URL }} \
             --dart-define=AUTO_UPDATER_FEED_URL=${{ env.APP_CAST_FILE_PATH }}
