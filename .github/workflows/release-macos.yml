@@ -1,0 +1,143 @@
+name: Build & Release macOS
+
+on:
+  push:
+    branches:
+      - main
+
+permissions:
+  contents: write
+
+env:
+  GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+
+jobs:
+  release:
+    runs-on: macos-latest
+
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+
+      - name: Read version from pubspec.yaml
+        id: version
+        run: |
+          FULL_VERSION=$(grep '^version:' pubspec.yaml | sed 's/version: //')
+          VERSION=$(echo $FULL_VERSION | cut -d'+' -f1)
+          BUILD=$(echo $FULL_VERSION | cut -d'+' -f2)
+          echo "version=$VERSION" >> $GITHUB_OUTPUT
+          echo "build=$BUILD" >> $GITHUB_OUTPUT
+          echo "tag=v$VERSION" >> $GITHUB_OUTPUT
+
+      - name: Set up Flutter
+        uses: subosito/flutter-action@v2
+        with:
+          flutter-version: "3.38.0"
+          channel: "stable"
+
+      - name: Install dependencies & build
+        run: |
+          flutter pub get
+          dart run build_runner build -d
+          flutter build macos --release \
+            --dart-define=SENTRY_DSN=${{ secrets.SENTRY_DSN }} \
+            --dart-define=GIT_REPOSITORY_URL=https://github.com/ThomasBernard03/AndroidTools
+            --dart-define=AUTO_UPDATER_FEED_URL=${{ secrets.APP_CAST_FILE_PATH }}
+
+      - name: Install Sparkle tools (Full Distribution)
+        run: |
+          curl -L -o sparkle.tar.xz https://github.com/sparkle-project/Sparkle/releases/download/2.6.4/Sparkle-2.6.4.tar.xz
+          mkdir -p sparkle_dist
+          tar -xf sparkle.tar.xz -C sparkle_dist
+          
+          ls -R sparkle_dist/bin
+          chmod +x ./sparkle_dist/bin/sign_update
+
+      - name: Generate Sparkle Signature & Update Appcast
+        env:
+          SPARKLE_PRIVATE_KEY_CONTENT: ${{ secrets.SPARKLE_PRIVATE_KEY }}
+        run: |
+          APP_PATH="build/macos/Build/Products/Release/Android Tools-${{ steps.version.outputs.version }}.app"
+          SIGN_TOOL="./sparkle_dist/bin/sign_update"
+          APPCAST_FILE="appcast.xml"
+
+          echo "--- Preparing key ---"
+          echo "$SPARKLE_PRIVATE_KEY_CONTENT" > sparkle_key.priv
+
+          echo "--- Signing app ---"
+          RAW_OUTPUT=$($SIGN_TOOL --ed-key-file sparkle_key.priv "$APP_PATH")
+          SIGNATURE=$(echo "$RAW_OUTPUT" | sed -n 's/.*sparkle:edSignature="\([^"]*\)".*/\1/p')
+          rm sparkle_key.priv
+
+          if [ -z "$SIGNATURE" ]; then
+            echo "❌ Unable to extract Sparkle signature"
+            exit 1
+          fi
+
+          FILE_SIZE=$(stat -f%z "$APP_PATH")
+          PUB_DATE=$(date -R)
+          VERSION="${{ steps.version.outputs.version }}"
+          BUILD="${{ steps.version.outputs.build }}"
+          TAG="${{ steps.version.outputs.tag }}"
+
+          DOWNLOAD_URL="https://github.com/ThomasBernard03/AndroidTools/releases/download/$TAG/android_tools.zip"
+          RELEASE_NOTES_URL="https://github.com/ThomasBernard03/AndroidTools/releases/tag/$VERSION"
+
+          read -r -d '' NEW_ITEM <<EOF
+          <item>
+              <title>Version $VERSION</title>
+              <sparkle:version>$BUILD</sparkle:version>
+              <sparkle:shortVersionString>$VERSION</sparkle:shortVersionString>
+              <sparkle:releaseNotesLink>
+                  $RELEASE_NOTES_URL
+              </sparkle:releaseNotesLink>
+              <pubDate>$PUB_DATE</pubDate>
+              <enclosure
+                  url="$DOWNLOAD_URL"
+                  sparkle:edSignature="$SIGNATURE"
+                  sparkle:os="macos"
+                  length="$FILE_SIZE"
+                  type="application/octet-stream" />
+          </item>
+          EOF
+
+          if [ ! -f "$APPCAST_FILE" ]; then
+            echo "--- Creating new appcast.xml ---"
+            cat <<EOF > $APPCAST_FILE
+          <?xml version="1.0" encoding="UTF-8"?>
+          <rss version="2.0" xmlns:sparkle="http://www.andymatuschak.org/xml-namespaces/sparkle">
+              <channel>
+                  <title>AndroidTools</title>
+                  <description>Most recent updates to AndroidTools</description>
+                  <language>en</language>
+          $NEW_ITEM
+              </channel>
+          </rss>
+          EOF
+          else
+            echo "--- Updating existing appcast.xml ---"
+            awk -v item="$NEW_ITEM" '
+              /<\/channel>/ {
+                print item
+              }
+              { print }
+            ' "$APPCAST_FILE" > appcast.tmp && mv appcast.tmp "$APPCAST_FILE"
+          fi
+
+          echo "✅ Appcast updated successfully"
+
+      - name: Push Appcast to Repository
+        run: |
+          git config user.name "github-actions"
+          git config user.email "github-actions@github.com"
+          git pull origin main
+          git add appcast.xml
+          git diff --quiet --cached || git commit -m "chore: update appcast to v${{ steps.version.outputs.version }}"
+          git push origin main
+
+      - name: Create GitHub Release
+        uses: softprops/action-gh-release@v1
+        with:
+          tag_name: ${{ steps.version.outputs.tag }}
+          name: Release ${{ steps.version.outputs.version }}
+          files: build/macos/Build/Products/Release/AndroidTools-${{ steps.version.outputs.version }}.app

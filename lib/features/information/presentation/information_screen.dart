@@ -1,6 +1,5 @@
 import 'package:android_tools/features/information/presentation/information_bloc.dart';
 import 'package:android_tools/features/information/presentation/widgets/apk_installer_drop_target.dart';
-import 'package:android_tools/features/information/presentation/widgets/bubble_progress.dart';
 import 'package:android_tools/features/information/presentation/widgets/device_preview.dart';
 import 'package:android_tools/features/information/presentation/widgets/information_recap_item.dart';
 import 'package:android_tools/features/information/presentation/widgets/storage_information_widget.dart';
