@@ -133,18 +133,18 @@ jobs:
 
           if [ ! -f "$APPCAST_FILE" ]; then
             cat <<EOF > "$APPCAST_FILE"
-<?xml version="1.0" encoding="UTF-8"?>
-<rss version="2.0" xmlns:sparkle="http://www.andymatuschak.org/xml-namespaces/sparkle">
-  <channel>
-    <title>AndroidTools</title>
-    <description>Most recent updates to AndroidTools</description>
-    <language>en</language>
-EOF
-            cat "$NEW_ITEM_FILE" >> "$APPCAST_FILE"
-            cat <<EOF >> "$APPCAST_FILE"
-  </channel>
-</rss>
-EOF
+          <?xml version="1.0" encoding="UTF-8"?>
+          <rss version="2.0" xmlns:sparkle="http://www.andymatuschak.org/xml-namespaces/sparkle">
+            <channel>
+              <title>AndroidTools</title>
+              <description>Most recent updates to AndroidTools</description>
+              <language>en</language>
+          EOF
+                      cat "$NEW_ITEM_FILE" >> "$APPCAST_FILE"
+                      cat <<EOF >> "$APPCAST_FILE"
+            </channel>
+          </rss>
+          EOF
           else
             perl -0777 -i -pe "s|(</channel>)|`cat $NEW_ITEM_FILE`\\n\\1|" "$APPCAST_FILE"
           fi
