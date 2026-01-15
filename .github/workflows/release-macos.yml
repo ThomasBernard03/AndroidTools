@@ -44,6 +44,26 @@ jobs:
             --dart-define=GIT_REPOSITORY_URL=${{ env.REPOSITORY_URL }} \
             --dart-define=AUTO_UPDATER_FEED_URL=${{ env.APP_CAST_FILE_PATH }}
 
+
+      - name: Install create-dmg
+        run: brew install create-dmg
+
+      - name: Create DMG
+        run: |
+          mkdir -p build/dmg_source
+          cp -R "build/macos/Build/Products/Release/Android Tools.app" build/dmg_source/
+          
+          create-dmg \
+            --volname "Android Tools" \
+            --window-pos 200 120 \
+            --window-size 500 300 \
+            --icon-size 100 \
+            --icon "Android Tools.app" 125 150 \
+            --app-drop-link 375 150 \
+            --hide-extension "Android Tools.app" \
+            "build/macos/Build/Products/Release/AndroidTools-${{ steps.version.outputs.version }}.dmg" \
+            "build/dmg_source/"
+
       - name: Install Sparkle tools (Full Distribution)
         run: |
           curl -L -o sparkle.tar.xz https://github.com/sparkle-project/Sparkle/releases/download/2.6.4/Sparkle-2.6.4.tar.xz
@@ -57,7 +77,7 @@ jobs:
         env:
           SPARKLE_PRIVATE_KEY_CONTENT: ${{ secrets.SPARKLE_PRIVATE_KEY }}
         run: |
-          APP_PATH="build/macos/Build/Products/Release/Android Tools.app"
+          DMG_PATH="build/macos/Build/Products/Release/AndroidTools-${{ steps.version.outputs.version }}.dmg"
           SIGN_TOOL="./sparkle_dist/bin/sign_update"
           APPCAST_FILE="appcast.xml"
 
@@ -65,7 +85,7 @@ jobs:
           echo "$SPARKLE_PRIVATE_KEY_CONTENT" > sparkle_key.priv
 
           echo "--- Signing app ---"
-          RAW_OUTPUT=$($SIGN_TOOL --ed-key-file sparkle_key.priv "$APP_PATH")
+          RAW_OUTPUT=$($SIGN_TOOL --ed-key-file sparkle_key.priv "$DMG_PATH")
           SIGNATURE=$(echo "$RAW_OUTPUT" | sed -n 's/.*sparkle:edSignature="\([^"]*\)".*/\1/p')
           rm sparkle_key.priv
 
@@ -74,13 +94,13 @@ jobs:
             exit 1
           fi
 
-          FILE_SIZE=$(stat -f%z "$APP_PATH")
+          FILE_SIZE=$(stat -f%z "$DMG_PATH")
           PUB_DATE=$(date -R)
           VERSION="${{ steps.version.outputs.version }}"
           BUILD="${{ steps.version.outputs.build }}"
           TAG="${{ steps.version.outputs.tag }}"
 
-          DOWNLOAD_URL="https://github.com/ThomasBernard03/AndroidTools/releases/download/$TAG/android_tools.zip"
+          DOWNLOAD_URL="https://github.com/ThomasBernard03/AndroidTools/releases/download/${{ steps.version.outputs.tag }}/AndroidTools-${{ steps.version.outputs.version }}.dmg"
           RELEASE_NOTES_URL="https://github.com/ThomasBernard03/AndroidTools/releases/tag/$VERSION"
 
           read -r -d '' NEW_ITEM <<EOF
@@ -140,4 +160,4 @@ jobs:
         with:
           tag_name: ${{ steps.version.outputs.tag }}
           name: Release ${{ steps.version.outputs.version }}
-          files: build/macos/Build/Products/Release/AndroidTools-${{ steps.version.outputs.version }}.app
+          files: build/macos/Build/Products/Release/AndroidTools-${{ steps.version.outputs.version }}.dmg
