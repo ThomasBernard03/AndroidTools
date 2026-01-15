@@ -75,14 +75,14 @@ jobs:
 
       - name: Generate Sparkle Signature & Update Appcast
         env:
-          SPARKLE_PRIVATE_KEY_CONTENT: ${{ secrets.SPARKLE_PRIVATE_KEY }}
+          SPARKLE_PRIVATE_KEY: ${{ secrets.SPARKLE_PRIVATE_KEY }}
         run: |
           DMG_PATH="build/macos/Build/Products/Release/AndroidTools-${{ steps.version.outputs.version }}.dmg"
           SIGN_TOOL="./sparkle_dist/bin/sign_update"
           APPCAST_FILE="appcast.xml"
 
-          if [ -z "$SPARKLE_PRIVATE_KEY" ]; then
-            echo "❌ ERROR : SPARKLE_PRIVATE_KEY is empty, add this secrets in github action secrets"
+          if [ -z "$SPARKLE_PRIVATE_KEY_CONTENT" ]; then
+            echo "❌ ERROR : SPARKLE_PRIVATE_KEY_CONTENT is empty, add this secrets in github action secrets"
             exit 1
           fi
 
