@@ -77,45 +77,63 @@ jobs:
         env:
           SPARKLE_PRIVATE_KEY: ${{ secrets.SPARKLE_PRIVATE_KEY }}
         run: |
+          set -euo pipefail
+          set -x
+
           DMG_PATH="build/macos/Build/Products/Release/AndroidTools-${{ steps.version.outputs.version }}.dmg"
           SIGN_TOOL="./sparkle_dist/bin/sign_update"
           APPCAST_FILE="appcast.xml"
 
+          echo "--- Checking inputs ---"
+          ls -lh build/macos/Build/Products/Release || true
+
+          if [ ! -f "$DMG_PATH" ]; then
+            echo "❌ DMG not found at $DMG_PATH"
+            exit 1
+          fi
+
           if [ -z "$SPARKLE_PRIVATE_KEY" ]; then
-            echo "❌ ERROR : SPARKLE_PRIVATE_KEY is empty, add this secrets in github action secrets"
+            echo "❌ SPARKLE_PRIVATE_KEY is empty"
             exit 1
           fi
 
           echo "--- Preparing key ---"
-          echo "$SPARKLE_PRIVATE_KEY" > sparkle_key.priv
+          printf "%s" "$SPARKLE_PRIVATE_KEY" > sparkle_key.priv
+          chmod 600 sparkle_key.priv
+          wc -c sparkle_key.priv
 
-          echo "--- Signing app ---"
-          RAW_OUTPUT=$($SIGN_TOOL --ed-key-file sparkle_key.priv "$DMG_PATH")
-          SIGNATURE=$(echo "$RAW_OUTPUT" | sed -n 's/.*sparkle:edSignature="\([^"]*\)".*/\1/p')
-          rm sparkle_key.priv
+          echo "--- Checking sign_update binary ---"
+          ls -lh "$SIGN_TOOL"
+          "$SIGN_TOOL" --help
+
+          echo "--- Signing DMG ---"
+          SIGN_OUTPUT=$("$SIGN_TOOL" --ed-key-file sparkle_key.priv "$DMG_PATH")
+          echo "$SIGN_OUTPUT"
+
+          SIGNATURE=$(echo "$SIGN_OUTPUT" | sed -n 's/.*sparkle:edSignature="\([^"]*\)".*/\1/p')
+          rm -f sparkle_key.priv
 
           if [ -z "$SIGNATURE" ]; then
             echo "❌ Unable to extract Sparkle signature"
             exit 1
           fi
 
+          echo "✅ Signature extracted"
+
           FILE_SIZE=$(stat -f%z "$DMG_PATH")
           PUB_DATE=$(date -R)
           VERSION="${{ steps.version.outputs.version }}"
           BUILD="${{ steps.version.outputs.build }}"
-          TAG="${{ steps.version.outputs.tag }}"
 
-          DOWNLOAD_URL="https://github.com/ThomasBernard03/AndroidTools/releases/download/${{ steps.version.outputs.tag }}/AndroidTools-${{ steps.version.outputs.version }}.dmg"
-          RELEASE_NOTES_URL="https://github.com/ThomasBernard03/AndroidTools/releases/tag/$VERSION"
+          DOWNLOAD_URL="https://github.com/ThomasBernard03/AndroidTools/releases/download/v$VERSION/AndroidTools-$VERSION.dmg"
+          RELEASE_NOTES_URL="https://github.com/ThomasBernard03/AndroidTools/releases/tag/v$VERSION"
 
           read -r -d '' NEW_ITEM <<EOF
           <item>
               <title>Version $VERSION</title>
               <sparkle:version>$BUILD</sparkle:version>
               <sparkle:shortVersionString>$VERSION</sparkle:shortVersionString>
-              <sparkle:releaseNotesLink>
-                  $RELEASE_NOTES_URL
-              </sparkle:releaseNotesLink>
+              <sparkle:releaseNotesLink>$RELEASE_NOTES_URL</sparkle:releaseNotesLink>
               <pubDate>$PUB_DATE</pubDate>
               <enclosure
                   url="$DOWNLOAD_URL"
@@ -127,24 +145,20 @@ jobs:
           EOF
 
           if [ ! -f "$APPCAST_FILE" ]; then
-            echo "--- Creating new appcast.xml ---"
-            cat <<EOF > $APPCAST_FILE
+            cat <<EOF > "$APPCAST_FILE"
           <?xml version="1.0" encoding="UTF-8"?>
           <rss version="2.0" xmlns:sparkle="http://www.andymatuschak.org/xml-namespaces/sparkle">
-              <channel>
-                  <title>AndroidTools</title>
-                  <description>Most recent updates to AndroidTools</description>
-                  <language>en</language>
+            <channel>
+              <title>AndroidTools</title>
+              <description>Most recent updates to AndroidTools</description>
+              <language>en</language>
           $NEW_ITEM
-              </channel>
+            </channel>
           </rss>
           EOF
           else
-            echo "--- Updating existing appcast.xml ---"
             awk -v item="$NEW_ITEM" '
-              /<\/channel>/ {
-                print item
-              }
+              /<\/channel>/ { print item }
               { print }
             ' "$APPCAST_FILE" > appcast.tmp && mv appcast.tmp "$APPCAST_FILE"
           fi
