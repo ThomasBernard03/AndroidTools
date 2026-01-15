@@ -57,7 +57,7 @@ jobs:
         env:
           SPARKLE_PRIVATE_KEY_CONTENT: ${{ secrets.SPARKLE_PRIVATE_KEY }}
         run: |
-          APP_PATH="build/macos/Build/Products/Release/Android Tools-${{ steps.version.outputs.version }}.app"
+          APP_PATH="build/macos/Build/Products/Release/Android Tools.app"
           SIGN_TOOL="./sparkle_dist/bin/sign_update"
           APPCAST_FILE="appcast.xml"
 
