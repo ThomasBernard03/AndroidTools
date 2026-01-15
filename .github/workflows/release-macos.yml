@@ -23,8 +23,9 @@ jobs:
         id: version
         run: |
           FULL_VERSION=$(grep '^version:' pubspec.yaml | sed 's/version: //')
-          VERSION=$(echo $FULL_VERSION | cut -d'+' -f1)
-          BUILD=$(echo $FULL_VERSION | cut -d'+' -f2)
+          VERSION=$(echo "$FULL_VERSION" | cut -d'+' -f1)
+          BUILD=$(echo "$FULL_VERSION" | cut -d'+' -f2)
+
           echo "version=$VERSION" >> $GITHUB_OUTPUT
           echo "build=$BUILD" >> $GITHUB_OUTPUT
           echo "tag=v$VERSION" >> $GITHUB_OUTPUT
@@ -44,7 +45,6 @@ jobs:
             --dart-define=GIT_REPOSITORY_URL=${{ env.REPOSITORY_URL }} \
             --dart-define=AUTO_UPDATER_FEED_URL=${{ env.APP_CAST_FILE_PATH }}
 
-
       - name: Install create-dmg
         run: brew install create-dmg
 
@@ -52,7 +52,7 @@ jobs:
         run: |
           mkdir -p build/dmg_source
           cp -R "build/macos/Build/Products/Release/Android Tools.app" build/dmg_source/
-          
+
           create-dmg \
             --volname "Android Tools" \
             --window-pos 200 120 \
@@ -64,69 +64,54 @@ jobs:
             "build/macos/Build/Products/Release/AndroidTools-${{ steps.version.outputs.version }}.dmg" \
             "build/dmg_source/"
 
-      - name: Install Sparkle tools (Full Distribution)
+      - name: Install Sparkle tools
         run: |
           curl -L -o sparkle.tar.xz https://github.com/sparkle-project/Sparkle/releases/download/2.6.4/Sparkle-2.6.4.tar.xz
           mkdir -p sparkle_dist
           tar -xf sparkle.tar.xz -C sparkle_dist
-          
-          ls -R sparkle_dist/bin
-          chmod +x ./sparkle_dist/bin/sign_update
+          chmod +x sparkle_dist/bin/sign_update
 
-      - name: Generate Sparkle Signature & Update Appcast
+      - name: Sign DMG with Sparkle
+        id: sparkle_sign
         env:
           SPARKLE_PRIVATE_KEY: ${{ secrets.SPARKLE_PRIVATE_KEY }}
         run: |
           set -euo pipefail
-          set -x
 
           DMG_PATH="build/macos/Build/Products/Release/AndroidTools-${{ steps.version.outputs.version }}.dmg"
           SIGN_TOOL="./sparkle_dist/bin/sign_update"
-          APPCAST_FILE="appcast.xml"
 
-          echo "--- Checking inputs ---"
-          ls -lh build/macos/Build/Products/Release || true
-
-          if [ ! -f "$DMG_PATH" ]; then
-            echo "❌ DMG not found at $DMG_PATH"
-            exit 1
-          fi
-
-          if [ -z "$SPARKLE_PRIVATE_KEY" ]; then
-            echo "❌ SPARKLE_PRIVATE_KEY is empty"
-            exit 1
-          fi
-
-          echo "--- Preparing key ---"
           printf "%s" "$SPARKLE_PRIVATE_KEY" > sparkle_key.priv
           chmod 600 sparkle_key.priv
-          wc -c sparkle_key.priv
 
-          echo "--- Checking sign_update binary ---"
-          ls -lh "$SIGN_TOOL"
-          "$SIGN_TOOL" --help
-
-          echo "--- Signing DMG ---"
           SIGN_OUTPUT=$("$SIGN_TOOL" --ed-key-file sparkle_key.priv "$DMG_PATH")
-          echo "$SIGN_OUTPUT"
-
-          SIGNATURE=$(echo "$SIGN_OUTPUT" | sed -n 's/.*sparkle:edSignature="\([^"]*\)".*/\1/p')
           rm -f sparkle_key.priv
 
+          SIGNATURE=$(echo "$SIGN_OUTPUT" | sed -n 's/.*sparkle:edSignature="\([^"]*\)".*/\1/p')
+
           if [ -z "$SIGNATURE" ]; then
-            echo "❌ Unable to extract Sparkle signature"
+            echo "❌ Sparkle signature extraction failed"
             exit 1
           fi
 
-          echo "✅ Signature extracted"
+          echo "signature=$SIGNATURE" >> $GITHUB_OUTPUT
+
+      - name: Update appcast.xml
+        run: |
+          set -euo pipefail
+
+          DMG_PATH="build/macos/Build/Products/Release/AndroidTools-${{ steps.version.outputs.version }}.dmg"
+          APPCAST_FILE="appcast.xml"
+
+          VERSION="${{ steps.version.outputs.version }}"
+          BUILD="${{ steps.version.outputs.build }}"
+          SIGNATURE="${{ steps.sparkle_sign.outputs.signature }}"
 
           FILE_SIZE=$(stat -f%z "$DMG_PATH")
           PUB_DATE=$(date -R)
-          VERSION="${{ steps.version.outputs.version }}"
-          BUILD="${{ steps.version.outputs.build }}"
 
-          DOWNLOAD_URL="https://github.com/ThomasBernard03/AndroidTools/releases/download/v$VERSION/AndroidTools-$VERSION.dmg"
-          RELEASE_NOTES_URL="https://github.com/ThomasBernard03/AndroidTools/releases/tag/v$VERSION"
+          DOWNLOAD_URL="https://github.com/ThomasBernard03/AndroidTools/releases/download/$VERSION/AndroidTools-$VERSION.dmg"
+          RELEASE_NOTES_URL="https://github.com/ThomasBernard03/AndroidTools/releases/tag/$VERSION"
 
           NEW_ITEM=$(cat <<EOF
           <item>
@@ -164,8 +149,6 @@ jobs:
             ' "$APPCAST_FILE" > appcast.tmp && mv appcast.tmp "$APPCAST_FILE"
           fi
 
-          echo "✅ Appcast updated successfully"
-
       - name: Push Appcast to Repository
         run: |
           git config user.name "github-actions"
@@ -179,5 +162,5 @@ jobs:
         uses: softprops/action-gh-release@v1
         with:
           tag_name: ${{ steps.version.outputs.tag }}
-          name: Release ${{ steps.version.outputs.version }}
+          name: ${{ steps.version.outputs.version }}
           files: build/macos/Build/Products/Release/AndroidTools-${{ steps.version.outputs.version }}.dmg
