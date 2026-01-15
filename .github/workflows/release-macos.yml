@@ -81,6 +81,11 @@ jobs:
           SIGN_TOOL="./sparkle_dist/bin/sign_update"
           APPCAST_FILE="appcast.xml"
 
+          if [ -z "$SPARKLE_PRIVATE_KEY" ]; then
+            echo "❌ ERROR : SPARKLE_PRIVATE_KEY is empty, add this secrets in github action secrets"
+            exit 1
+          fi
+
           echo "--- Preparing key ---"
           echo "$SPARKLE_PRIVATE_KEY_CONTENT" > sparkle_key.priv
 
