@@ -110,10 +110,12 @@ jobs:
           FILE_SIZE=$(stat -f%z "$DMG_PATH")
           PUB_DATE=$(date -R)
 
-          DOWNLOAD_URL="https://github.com/ThomasBernard03/AndroidTools/releases/download/$VERSION/AndroidTools-$VERSION.dmg"
-          RELEASE_NOTES_URL="https://github.com/ThomasBernard03/AndroidTools/releases/tag/$VERSION"
+          DOWNLOAD_URL="https://github.com/ThomasBernard03/AndroidTools/releases/download/v$VERSION/AndroidTools-$VERSION.dmg"
+          RELEASE_NOTES_URL="https://github.com/ThomasBernard03/AndroidTools/releases/tag/v$VERSION"
 
-          NEW_ITEM=$(cat <<EOF
+          NEW_ITEM_FILE="$(mktemp)"
+
+          cat <<EOF > "$NEW_ITEM_FILE"
           <item>
               <title>Version $VERSION</title>
               <sparkle:version>$BUILD</sparkle:version>
@@ -128,7 +130,6 @@ jobs:
                   type="application/octet-stream" />
           </item>
           EOF
-          )
 
           if [ ! -f "$APPCAST_FILE" ]; then
             cat <<EOF > "$APPCAST_FILE"
@@ -138,16 +139,21 @@ jobs:
               <title>AndroidTools</title>
               <description>Most recent updates to AndroidTools</description>
               <language>en</language>
-          $NEW_ITEM
+          EOF
+            cat "$NEW_ITEM_FILE" >> "$APPCAST_FILE"
+            cat <<EOF >> "$APPCAST_FILE"
             </channel>
           </rss>
           EOF
           else
-            awk -v item="$NEW_ITEM" '
-              /<\/channel>/ { print item }
-              { print }
-            ' "$APPCAST_FILE" > appcast.tmp && mv appcast.tmp "$APPCAST_FILE"
+            sed "/<\/channel>/{
+              r $NEW_ITEM_FILE
+            }" "$APPCAST_FILE" > appcast.tmp
+            mv appcast.tmp "$APPCAST_FILE"
           fi
+
+          rm "$NEW_ITEM_FILE"
+
 
       - name: Push Appcast to Repository
         run: |
