@@ -46,19 +46,6 @@
         length="33635949"
         type="application/octet-stream" />
 		</item>
-		<item>
-			<title>Version 2.1.3</title>
-			<sparkle:version>13</sparkle:version>
-			<sparkle:shortVersionString>2.1.3</sparkle:shortVersionString>
-			<sparkle:releaseNotesLink>https://github.com/ThomasBernard03/AndroidTools/releases/tag/v2.1.3</sparkle:releaseNotesLink>
-			<pubDate>Thu, 15 Jan 2026 21:57:18 +0000</pubDate>
-			<enclosure
-        url="https://github.com/ThomasBernard03/AndroidTools/releases/download/v2.1.3/AndroidTools-2.1.3.dmg"
-        sparkle:edSignature="Fw6qEBsvwa5NH9AkVFcyDTOfhY7PI6eDieRjfXB6J0j2Swya4wKm+7cj07ZTn1KUF1UNnSl3zYcZT2XIOmscAA=="
-        sparkle:os="macos"
-        length="33636060"
-        type="application/octet-stream" />
-		</item>
 	  <item>
     <title>Version 2.1.3</title>
     <sparkle:version>13</sparkle:version>

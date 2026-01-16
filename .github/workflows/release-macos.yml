@@ -100,19 +100,19 @@ jobs:
           RELEASE_NOTES_URL="https://github.com/ThomasBernard03/AndroidTools/releases/tag/$VERSION"
 
           NEW_ITEM=$(cat <<EOF
-            <item>
-              <title>Version $VERSION</title>
-              <sparkle:version>$BUILD</sparkle:version>
-              <sparkle:shortVersionString>$VERSION</sparkle:shortVersionString>
-              <sparkle:releaseNotesLink>$RELEASE_NOTES_URL</sparkle:releaseNotesLink>
-              <pubDate>$PUB_DATE</pubDate>
-              <enclosure
-                url="$DOWNLOAD_URL"
-                sparkle:edSignature="$SIGNATURE"
-                sparkle:os="macos"
-                length="$FILE_SIZE"
-                type="application/octet-stream" />
-            </item>
+              <item>
+                <title>Version $VERSION</title>
+                <sparkle:version>$BUILD</sparkle:version>
+                <sparkle:shortVersionString>$VERSION</sparkle:shortVersionString>
+                <sparkle:releaseNotesLink>$RELEASE_NOTES_URL</sparkle:releaseNotesLink>
+                <pubDate>$PUB_DATE</pubDate>
+                <enclosure
+                  url="$DOWNLOAD_URL"
+                  sparkle:edSignature="$SIGNATURE"
+                  sparkle:os="macos"
+                  length="$FILE_SIZE"
+                  type="application/octet-stream" />
+              </item>
           EOF
                     )
 
