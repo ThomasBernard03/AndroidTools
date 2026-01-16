@@ -41,9 +41,9 @@ jobs:
           flutter pub get
           dart run build_runner build -d
           flutter build macos --release \
-            --dart-define=SENTRY_DSN=${{ env.SENTRY_DSN }} \
-            --dart-define=GIT_REPOSITORY_URL=${{ env.REPOSITORY_URL }} \
-            --dart-define=AUTO_UPDATER_FEED_URL=${{ env.APP_CAST_FILE_PATH }}
+            --dart-define=SENTRY_DSN=${{ vars.SENTRY_DSN }} \
+            --dart-define=GIT_REPOSITORY_URL=${{ vars.REPOSITORY_URL }} \
+            --dart-define=AUTO_UPDATER_FEED_URL=${{ vars.APP_CAST_FILE_PATH }}
 
       - name: Create ZIP from .app
         run: |
