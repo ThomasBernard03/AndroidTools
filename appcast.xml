@@ -85,5 +85,18 @@
         length="87941610"
         type="application/octet-stream" />
     </item>
+    <item>
+      <title>Version 2.1.5</title>
+      <sparkle:version>15</sparkle:version>
+      <sparkle:shortVersionString>2.1.5</sparkle:shortVersionString>
+      <sparkle:releaseNotesLink>https://github.com/ThomasBernard03/AndroidTools/releases/tag/2.1.5</sparkle:releaseNotesLink>
+      <pubDate>Fri, 16 Jan 2026 21:33:50 +0000</pubDate>
+      <enclosure
+        url="https://github.com/ThomasBernard03/AndroidTools/releases/download/2.1.5/AndroidTools-2.1.5.zip"
+        sparkle:edSignature="ABtHxq92xg/RrEum3cf/SRH+GvXYeyqT5ds3CALRD1jTN+oK42T8YY1tAUGtnTCRp8j4UWyJ7xcqX6MZnyzZDw=="
+        sparkle:os="macos"
+        length="87941617"
+        type="application/octet-stream" />
+    </item>
 </channel>
 </rss>
