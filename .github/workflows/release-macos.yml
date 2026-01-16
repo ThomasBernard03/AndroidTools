@@ -28,7 +28,7 @@ jobs:
 
           echo "version=$VERSION" >> $GITHUB_OUTPUT
           echo "build=$BUILD" >> $GITHUB_OUTPUT
-          echo "tag=v$VERSION" >> $GITHUB_OUTPUT
+          echo "tag=$VERSION" >> $GITHUB_OUTPUT
 
       - name: Set up Flutter
         uses: subosito/flutter-action@v2
@@ -45,24 +45,10 @@ jobs:
             --dart-define=GIT_REPOSITORY_URL=${{ env.REPOSITORY_URL }} \
             --dart-define=AUTO_UPDATER_FEED_URL=${{ env.APP_CAST_FILE_PATH }}
 
-      - name: Install create-dmg
-        run: brew install create-dmg
-
-      - name: Create DMG
+      - name: Create ZIP from .app
         run: |
-          mkdir -p build/dmg_source
-          cp -R "build/macos/Build/Products/Release/Android Tools.app" build/dmg_source/
-
-          create-dmg \
-            --volname "Android Tools" \
-            --window-pos 200 120 \
-            --window-size 500 300 \
-            --icon-size 100 \
-            --icon "Android Tools.app" 125 150 \
-            --app-drop-link 375 150 \
-            --hide-extension "Android Tools.app" \
-            "build/macos/Build/Products/Release/AndroidTools-${{ steps.version.outputs.version }}.dmg" \
-            "build/dmg_source/"
+          cd build/macos/Build/Products/Release
+          zip -r "AndroidTools-${{ steps.version.outputs.version }}.zip" "Android Tools.app"
 
       - name: Install Sparkle tools
         run: |
@@ -71,26 +57,26 @@ jobs:
           tar -xf sparkle.tar.xz -C sparkle_dist
           chmod +x sparkle_dist/bin/sign_update
 
-      - name: Sign DMG with Sparkle
+      - name: Sign ZIP with Sparkle
         id: sparkle_sign
         env:
           SPARKLE_PRIVATE_KEY: ${{ secrets.SPARKLE_PRIVATE_KEY }}
         run: |
           set -euo pipefail
 
-          DMG_PATH="build/macos/Build/Products/Release/AndroidTools-${{ steps.version.outputs.version }}.dmg"
+          ZIP_PATH="build/macos/Build/Products/Release/AndroidTools-${{ steps.version.outputs.version }}.zip"
           SIGN_TOOL="./sparkle_dist/bin/sign_update"
 
           printf "%s" "$SPARKLE_PRIVATE_KEY" > sparkle_key.priv
           chmod 600 sparkle_key.priv
 
-          SIGN_OUTPUT=$("$SIGN_TOOL" --ed-key-file sparkle_key.priv "$DMG_PATH")
+          SIGN_OUTPUT=$("$SIGN_TOOL" --ed-key-file sparkle_key.priv "$ZIP_PATH")
           rm -f sparkle_key.priv
 
           SIGNATURE=$(echo "$SIGN_OUTPUT" | sed -n 's/.*sparkle:edSignature="\([^"]*\)".*/\1/p')
 
           if [ -z "$SIGNATURE" ]; then
-            echo "❌ Sparkle signature extraction failed"
+            echo "Sparkle signature extraction failed"
             exit 1
           fi
 
@@ -100,57 +86,51 @@ jobs:
         run: |
           set -euo pipefail
 
-          DMG_PATH="build/macos/Build/Products/Release/AndroidTools-${{ steps.version.outputs.version }}.dmg"
+          ZIP_PATH="build/macos/Build/Products/Release/AndroidTools-${{ steps.version.outputs.version }}.zip"
           APPCAST_FILE="appcast.xml"
 
           VERSION="${{ steps.version.outputs.version }}"
           BUILD="${{ steps.version.outputs.build }}"
           SIGNATURE="${{ steps.sparkle_sign.outputs.signature }}"
 
-          FILE_SIZE=$(stat -f%z "$DMG_PATH")
+          FILE_SIZE=$(stat -f%z "$ZIP_PATH")
           PUB_DATE=$(date -R)
 
-          DOWNLOAD_URL="https://github.com/ThomasBernard03/AndroidTools/releases/download/v$VERSION/AndroidTools-$VERSION.dmg"
-          RELEASE_NOTES_URL="https://github.com/ThomasBernard03/AndroidTools/releases/tag/v$VERSION"
+          DOWNLOAD_URL="https://github.com/ThomasBernard03/AndroidTools/releases/download/$VERSION/AndroidTools-$VERSION.zip"
+          RELEASE_NOTES_URL="https://github.com/ThomasBernard03/AndroidTools/releases/tag/$VERSION"
 
-          NEW_ITEM_FILE="$(mktemp)"
-
-          cat <<EOF > "$NEW_ITEM_FILE"
-          <item>
+          NEW_ITEM=$(cat <<EOF
+            <item>
               <title>Version $VERSION</title>
               <sparkle:version>$BUILD</sparkle:version>
               <sparkle:shortVersionString>$VERSION</sparkle:shortVersionString>
               <sparkle:releaseNotesLink>$RELEASE_NOTES_URL</sparkle:releaseNotesLink>
               <pubDate>$PUB_DATE</pubDate>
               <enclosure
-                  url="$DOWNLOAD_URL"
-                  sparkle:edSignature="$SIGNATURE"
-                  sparkle:os="macos"
-                  length="$FILE_SIZE"
-                  type="application/octet-stream" />
-          </item>
+                url="$DOWNLOAD_URL"
+                sparkle:edSignature="$SIGNATURE"
+                sparkle:os="macos"
+                length="$FILE_SIZE"
+                type="application/octet-stream" />
+            </item>
           EOF
+                    )
 
-          if [ ! -f "$APPCAST_FILE" ]; then
-            cat <<EOF > "$APPCAST_FILE"
+                    if [ ! -f "$APPCAST_FILE" ]; then
+                      cat <<EOF > "$APPCAST_FILE"
           <?xml version="1.0" encoding="UTF-8"?>
           <rss version="2.0" xmlns:sparkle="http://www.andymatuschak.org/xml-namespaces/sparkle">
             <channel>
               <title>AndroidTools</title>
               <description>Most recent updates to AndroidTools</description>
               <language>en</language>
-          EOF
-                      cat "$NEW_ITEM_FILE" >> "$APPCAST_FILE"
-                      cat <<EOF >> "$APPCAST_FILE"
+          $NEW_ITEM
             </channel>
           </rss>
           EOF
-          else
-            perl -0777 -i -pe "s|(</channel>)|`cat $NEW_ITEM_FILE`\\n\\1|" "$APPCAST_FILE"
-          fi
-
-          rm "$NEW_ITEM_FILE"
-
+                    else
+                      perl -0777 -i -pe "s|(</channel>)|$NEW_ITEM\n\\1|" "$APPCAST_FILE"
+                    fi
 
       - name: Push Appcast to Repository
         run: |
@@ -166,4 +146,4 @@ jobs:
         with:
           tag_name: ${{ steps.version.outputs.tag }}
           name: ${{ steps.version.outputs.version }}
-          files: build/macos/Build/Products/Release/AndroidTools-${{ steps.version.outputs.version }}.dmg
+          files: build/macos/Build/Products/Release/AndroidTools-${{ steps.version.outputs.version }}.zip
