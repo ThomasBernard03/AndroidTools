@@ -72,5 +72,18 @@
         length="87933867"
         type="application/octet-stream" />
     </item>
+    <item>
+      <title>Version 2.1.4</title>
+      <sparkle:version>14</sparkle:version>
+      <sparkle:shortVersionString>2.1.4</sparkle:shortVersionString>
+      <sparkle:releaseNotesLink>https://github.com/ThomasBernard03/AndroidTools/releases/tag/2.1.4</sparkle:releaseNotesLink>
+      <pubDate>Fri, 16 Jan 2026 21:22:12 +0000</pubDate>
+      <enclosure
+        url="https://github.com/ThomasBernard03/AndroidTools/releases/download/2.1.4/AndroidTools-2.1.4.zip"
+        sparkle:edSignature="i5GYXPqAi0mWzgGIEpzrYZhsnoUDLE2mBOv1MgsLO+81F4PekwwhVPLhlTC3HTKFNb78X+4XKgjSWOYY+Yv6DA=="
+        sparkle:os="macos"
+        length="87941610"
+        type="application/octet-stream" />
+    </item>
 </channel>
 </rss>
