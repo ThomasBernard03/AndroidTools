@@ -30,5 +30,7 @@
 	<string>NSApplication</string>
 	<key>SUPublicEDKey</key>
     <string>z9EBcFEFrJ5Bi6oiODtO2k6fo7X61gTEKmiuG3+Qxwg=</string>
+	<key>SUFeedURL</key>
+	<string>https://raw.githubusercontent.com/ThomasBernard03/AndroidTools/refs/heads/main/appcast.xml</string>
 </dict>
 </plist>
