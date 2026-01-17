@@ -1,5 +1,6 @@
 import 'package:android_tools/main.dart';
 import 'package:android_tools/shared/core/constants.dart';
+import 'package:auto_updater/auto_updater.dart';
 import 'package:dart_mappable/dart_mappable.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:logger/logger.dart';
@@ -18,6 +19,10 @@ class SettingsBloc extends Bloc<SettingsEvent, SettingsState> {
       final logDirectory = await Constants.getApplicationLogsDirectory();
       final uri = Uri.file(logDirectory.path);
       await launchUrl(uri);
+    });
+    on<OnCheckForUpdates>((event, emit) async {
+      _logger.i("Checking for updates");
+      await autoUpdater.checkForUpdates();
     });
     on<OnOpenGithubProject>((event, emit) async {
       _logger.i("Opening github repository");

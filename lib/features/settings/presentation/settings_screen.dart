@@ -43,6 +43,12 @@ class _SettingsScreenState extends State<SettingsScreen> {
                   onTap: () =>
                       context.read<SettingsBloc>().add(OnOpenLogDirectory()),
                 ),
+                ListTile(
+                  leading: Icon(Icons.update),
+                  title: Text("Check for updates"),
+                  onTap: () =>
+                      context.read<SettingsBloc>().add(OnCheckForUpdates()),
+                ),
               ],
             );
           },

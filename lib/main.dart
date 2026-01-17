@@ -54,8 +54,7 @@ Future<void> main(List<String> args) async {
     );
     try {
       await autoUpdater.setFeedURL(autoUpdaterFeedUrl);
-      await autoUpdater.checkForUpdates();
-      await autoUpdater.setScheduledCheckInterval(3600);
+      await autoUpdater.checkForUpdates(inBackground: true);
     } catch (e) {
       logger.w("Error with autoUpdater: $e");
     }
