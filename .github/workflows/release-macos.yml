@@ -65,7 +65,7 @@ jobs:
         env:
           SPARKLE_PRIVATE_KEY_CONTENT: ${{ secrets.SPARKLE_PRIVATE_KEY }}
         run: |
-          ZIP_PATH="build/macos/Build/Products/Release/AndroidTools-${{ steps.version.outputs.version }}.zip"
+          ZIP_PATH="AndroidTools-${{ steps.version.outputs.version }}.zip"
           SIGN_TOOL="./sparkle_dist/bin/sign_update"
 
           echo "--- Préparation de la clé ---"
@@ -90,7 +90,7 @@ jobs:
         run: |
           set -e
 
-          ZIP=build/macos/Build/Products/Release/AndroidTools-${{ steps.version.outputs.version }}.zip
+          ZIP=AndroidTools-${{ steps.version.outputs.version }}.zip
 
           export VERSION=${{ steps.version.outputs.version }}
           export BUILD=${{ steps.version.outputs.build }}
@@ -126,5 +126,5 @@ jobs:
           tag_name: ${{ steps.version.outputs.tag }}
           name: ${{ steps.version.outputs.version }}
           files: |
-            build/macos/Build/Products/Release/AndroidTools-${{ steps.version.outputs.version }}.zip
-            build/macos/Build/Products/Release/AndroidTools-${{ steps.version.outputs.version }}.zip.sig
+            AndroidTools-${{ steps.version.outputs.version }}.zip
+            AndroidTools-${{ steps.version.outputs.version }}.zip.sig
