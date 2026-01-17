@@ -63,13 +63,11 @@ jobs:
           ZIP_PATH="AndroidTools-${{ steps.version.outputs.version }}.zip"
           SIG_PATH="$ZIP_PATH.sig"
 
-          # On écrit la clé dans un fichier temporaire
-          echo "$SPARKLE_PRIVATE_KEY" > sparkle_private_key.pem
-          # Nettoyage des éventuels retours à la ligne
-          awk 'NF {sub(/\r/, ""); print}' sparkle_private_key.pem > sparkle_private_key_clean.pem
+          echo "-----BEGIN DSA PRIVATE KEY-----" > sparkle_key.pem
+          echo "$SPARKLE_PRIVATE_KEY" | fold -w64 >> sparkle_key.pem
+          echo "-----END DSA PRIVATE KEY-----" >> sparkle_key.pem
 
-          # Génération de la signature Sparkle
-          openssl dgst -sha1 -binary -sign sparkle_private_key_clean.pem "$ZIP_PATH" | openssl base64 > "$SIG_PATH"
+          openssl dgst -sha1 -binary -sign sparkle_key.pem "$ZIP_PATH" | openssl base64 > "$SIG_PATH"
 
           echo "✅ ZIP signed successfully"
           SIGNATURE=$(cat "$SIG_PATH")
