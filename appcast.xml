@@ -7,6 +7,19 @@
     <language>en</language>
 
     <item>
+      <title>Version 2.1.10</title>
+      <sparkle:version>20</sparkle:version>
+      <sparkle:shortVersionString>2.1.10</sparkle:shortVersionString>
+      <sparkle:releaseNotesLink>https://github.com/ThomasBernard03/AndroidTools/releases/tag/2.1.10</sparkle:releaseNotesLink>
+      <pubDate>Sat, 17 Jan 2026 14:46:49 +0000</pubDate>
+      <enclosure
+        url="https://github.com/ThomasBernard03/AndroidTools/releases/download/2.1.10/AndroidTools-2.1.10.zip"
+        sparkle:edSignature="i0oo6wHqFy8khoGB2dFVL2oQL8stDevrrVmw2LTaeVzLmyS+AnG6apaWkDVjldZF2rN800by09fNOYDBbXZRBA=="
+        sparkle:os="macos"
+        length="84083997"
+        type="application/octet-stream" />
+    </item>
+    <item>
       <title>Version 2.1.9</title>
       <sparkle:version>19</sparkle:version>
       <sparkle:shortVersionString>2.1.9</sparkle:shortVersionString>
