@@ -4,6 +4,7 @@ import 'package:android_tools/features/information/presentation/widgets/device_p
 import 'package:android_tools/features/information/presentation/widgets/information_recap_item.dart';
 import 'package:android_tools/features/information/presentation/widgets/storage_information_widget.dart';
 import 'package:android_tools/shared/presentation/refresh_device_button.dart';
+import 'package:bitsdojo_window/bitsdojo_window.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 
@@ -17,6 +18,36 @@ class InformationScreen extends StatelessWidget {
     return BlocProvider.value(
       value: bloc..add(OnAppearing()),
       child: Scaffold(
+        appBar: PreferredSize(
+          preferredSize: Size.fromHeight(kToolbarHeight),
+          child: MoveWindow(
+            child: AppBar(
+              backgroundColor: Colors.transparent,
+              elevation: 0,
+              surfaceTintColor: Colors.transparent,
+              title: BlocBuilder<InformationBloc, InformationState>(
+                builder: (context, state) {
+                  return Text(
+                    state.device?.name ?? "",
+                    style: Theme.of(context).textTheme.titleLarge,
+                  );
+                },
+              ),
+              actions: [
+                BlocBuilder<InformationBloc, InformationState>(
+                  builder: (context, state) {
+                    return IconButton(
+                      onPressed: () {
+                        context.read<InformationBloc>().add(OnRefreshDevices());
+                      },
+                      icon: Icon(Icons.refresh),
+                    );
+                  },
+                ),
+              ],
+            ),
+          ),
+        ),
         body: BlocBuilder<InformationBloc, InformationState>(
           builder: (context, state) {
             if (state.isLoading) {
@@ -38,21 +69,7 @@ class InformationScreen extends StatelessWidget {
 
             return ListView(
               children: [
-                Row(
-                  children: [
-                    Expanded(
-                      child: Center(
-                        child: Padding(
-                          padding: const EdgeInsets.all(40),
-                          child: Text(
-                            state.device?.name ?? "",
-                            style: Theme.of(context).textTheme.titleLarge,
-                          ),
-                        ),
-                      ),
-                    ),
-                  ],
-                ),
+                SizedBox.fromSize(size: Size.fromHeight(50)),
                 Center(
                   child: Row(
                     spacing: 32,
