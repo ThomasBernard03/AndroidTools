@@ -53,24 +53,37 @@ jobs:
           cd build/macos/Build/Products/Release
           zip -r "../../../../../AndroidTools-${{ steps.version.outputs.version }}.zip" "Android Tools.app"
 
-      - name: Sign ZIP with Sparkle private key
+      - name: Install Sparkle tools
+        run: |
+          curl -L -o sparkle.tar.xz https://github.com/sparkle-project/Sparkle/releases/download/2.6.4/Sparkle-2.6.4.tar.xz
+          mkdir -p sparkle_dist
+          tar -xf sparkle.tar.xz -C sparkle_dist
+          chmod +x ./sparkle_dist/bin/sign_update
+
+      - name: Generate Sparkle Signature for ZIP
         id: sparkle
         env:
-          SPARKLE_PRIVATE_KEY: ${{ secrets.SPARKLE_PRIVATE_KEY }}
+          SPARKLE_PRIVATE_KEY_CONTENT: ${{ secrets.SPARKLE_PRIVATE_KEY }}
         run: |
-          set -euo pipefail
+          ZIP_PATH="build/macos/Build/Products/Release/AndroidTools-${{ steps.version.outputs.version }}.zip"
+          SIGN_TOOL="./sparkle_dist/bin/sign_update"
 
-          ZIP_PATH="AndroidTools-${{ steps.version.outputs.version }}.zip"
-          SIG_PATH="$ZIP_PATH.sig"
+          echo "--- Préparation de la clé ---"
+          echo "$SPARKLE_PRIVATE_KEY_CONTENT" > sparkle_key.priv
 
-          echo "-----BEGIN DSA PRIVATE KEY-----" > sparkle_key.pem
-          echo "$SPARKLE_PRIVATE_KEY" | fold -w64 >> sparkle_key.pem
-          echo "-----END DSA PRIVATE KEY-----" >> sparkle_key.pem
+          echo "--- Tentative de signature ---"
+          RAW_OUTPUT=$($SIGN_TOOL --ed-key-file sparkle_key.priv "$ZIP_PATH")
 
-          openssl dgst -sha1 -binary -sign sparkle_key.pem "$ZIP_PATH" | openssl base64 > "$SIG_PATH"
+          SIGNATURE=$(echo "$RAW_OUTPUT" | sed -n 's/.*sparkle:edSignature="\([^"]*\)".*/\1/p')
+          rm sparkle_key.priv
 
-          echo "✅ ZIP signed successfully"
-          SIGNATURE=$(cat "$SIG_PATH")
+          if [ -z "$SIGNATURE" ]; then
+            echo "❌ ERREUR : Impossible d'extraire la signature du résultat."
+            echo "Sortie brute : $RAW_OUTPUT"
+            exit 1
+          fi
+
+          echo "✅ Signature générée : $SIGNATURE"
           echo "signature=$SIGNATURE" >> $GITHUB_OUTPUT
 
       - name: Generate appcast
