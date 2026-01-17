@@ -11,6 +11,19 @@
       <sparkle:version>19</sparkle:version>
       <sparkle:shortVersionString>2.1.9</sparkle:shortVersionString>
       <sparkle:releaseNotesLink>https://github.com/ThomasBernard03/AndroidTools/releases/tag/2.1.9</sparkle:releaseNotesLink>
+      <pubDate>Sat, 17 Jan 2026 14:24:20 +0000</pubDate>
+      <enclosure
+        url="https://github.com/ThomasBernard03/AndroidTools/releases/download/2.1.9/AndroidTools-2.1.9.zip"
+        sparkle:edSignature="W9LuTkDMQP5MDu2FjGxGnfjQ1iPwiH5RwZj1LhG09ShVPosF24DBxCIp78ouWOhCiwfyZaR2Cphow8fiBYb0AA=="
+        sparkle:os="macos"
+        length="84083933"
+        type="application/octet-stream" />
+    </item>
+    <item>
+      <title>Version 2.1.9</title>
+      <sparkle:version>19</sparkle:version>
+      <sparkle:shortVersionString>2.1.9</sparkle:shortVersionString>
+      <sparkle:releaseNotesLink>https://github.com/ThomasBernard03/AndroidTools/releases/tag/2.1.9</sparkle:releaseNotesLink>
       <pubDate>Sat, 17 Jan 2026 11:38:16 +0000</pubDate>
       <enclosure
         url="https://github.com/ThomasBernard03/AndroidTools/releases/download/2.1.9/AndroidTools-2.1.9.zip"
