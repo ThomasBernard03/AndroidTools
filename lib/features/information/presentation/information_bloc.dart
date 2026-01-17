@@ -36,7 +36,13 @@ class InformationBloc extends Bloc<InformationEvent, InformationState> {
         onData: (device) async {
           if (device == null) {
             _logger.w("Selected device is null, can't get information");
-            emit(state.copyWith(deviceInformation: null, device: null));
+            emit(
+              state.copyWith(
+                deviceInformation: null,
+                device: null,
+                isLoading: false,
+              ),
+            );
             return;
           }
 
@@ -51,6 +57,7 @@ class InformationBloc extends Bloc<InformationEvent, InformationState> {
           );
           emit(
             state.copyWith(
+              isLoading: false,
               deviceInformation: information,
               device: device,
               deviceBatteryInformation: batteryInformation,
