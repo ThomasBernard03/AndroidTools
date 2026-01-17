@@ -36,7 +36,7 @@ jobs:
           flutter-version: "3.38.0"
           channel: "stable"
 
-      - name: Install dependencies & build
+      - name: Build macOS app
         run: |
           flutter clean
           flutter pub get
@@ -51,7 +51,11 @@ jobs:
       - name: Create ZIP from .app
         run: |
           cd build/macos/Build/Products/Release
-          zip -r ../../../../../AndroidTools-${{ steps.version.outputs.version }}.zip "Android Tools.app"
+          zip -r "../../../../../AndroidTools-${{ steps.version.outputs.version }}.zip" "Android Tools.app"
+
+      - name: Activate auto_updater
+        run: |
+          dart pub global activate auto_updater
 
       - name: Sign update with auto_updater
         id: autoupdater
@@ -62,19 +66,15 @@ jobs:
 
           ZIP_PATH="AndroidTools-${{ steps.version.outputs.version }}.zip"
 
-          echo "--- Writing private key ---"
-          echo "$AUTO_UPDATER_PRIVATE_KEY" > private_key.pem
-          chmod 600 private_key.pem
-
           echo "--- Signing ZIP with auto_updater ---"
-          RAW_OUTPUT=$(dart run auto_updater:sign_update "$ZIP_PATH")
+          # on passe la clé via stdin pour éviter les null checks
+          RAW_OUTPUT=$(echo "$AUTO_UPDATER_PRIVATE_KEY" | dart run auto_updater:sign_update --ed-key-file - "$ZIP_PATH")
 
           echo "--- Raw auto_updater output ---"
           echo "$RAW_OUTPUT"
 
+          # extraction de la signature pour l'appcast
           SIGNATURE=$(echo "$RAW_OUTPUT" | sed -n 's/.*sparkle:edSignature="\([^"]*\)".*/\1/p')
-
-          rm -f private_key.pem
 
           if [ -z "$SIGNATURE" ]; then
             echo "❌ ERROR: auto_updater signature extraction failed"
