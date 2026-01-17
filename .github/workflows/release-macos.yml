@@ -82,64 +82,42 @@ jobs:
 
           echo "signature=$SIGNATURE" >> $GITHUB_OUTPUT
 
-      - name: Update appcast.xml
+      - name: Generate appcast
         run: |
-          set -euo pipefail
+          ZIP=build/macos/Build/Products/Release/AndroidTools-${{ steps.version.outputs.version }}.zip
+          export VERSION=${{ steps.version.outputs.version }}
+          export BUILD=${{ steps.version.outputs.build }}
+          export SIGNATURE=${{ steps.sparkle.outputs.signature }}
+          export FILE_SIZE=$(stat -f%z "$ZIP")
+          export PUB_DATE=$(date -R)
+          export DOWNLOAD_URL=https://github.com/ThomasBernard03/AndroidTools/releases/download/$VERSION/AndroidTools-$VERSION.zip
+          export RELEASE_NOTES_URL=https://github.com/ThomasBernard03/AndroidTools/releases/tag/$VERSION
 
-          ZIP_PATH="build/macos/Build/Products/Release/AndroidTools-${{ steps.version.outputs.version }}.zip"
-          APPCAST_FILE="appcast.xml"
+          ITEM=$(sed \
+            -e "s/{{VERSION}}/$VERSION/g" \
+            -e "s/{{BUILD}}/$BUILD/g" \
+            -e "s/{{SIGNATURE}}/$SIGNATURE/g" \
+            -e "s|{{DOWNLOAD_URL}}|$DOWNLOAD_URL|g" \
+            -e "s|{{RELEASE_NOTES_URL}}|$RELEASE_NOTES_URL|g" \
+            -e "s/{{FILE_SIZE}}/$FILE_SIZE/g" \
+            -e "s/{{PUB_DATE}}/$PUB_DATE/g" \
+            appcast/items/macos.item.xml.tpl)
 
-          VERSION="${{ steps.version.outputs.version }}"
-          BUILD="${{ steps.version.outputs.build }}"
-          SIGNATURE="${{ steps.sparkle_sign.outputs.signature }}"
+          if [ -f appcast.xml ]; then
+            ITEMS="$ITEM\n$(sed -n '/<item>/,$p' appcast.xml | sed '/<\/channel>/,$d')"
+          else
+            ITEMS="$ITEM"
+          fi
 
-          FILE_SIZE=$(stat -f%z "$ZIP_PATH")
-          PUB_DATE=$(date -R)
+          sed "s|{{ITEMS}}|$ITEMS|" appcast/appcast.xml.tpl > appcast.xml
 
-          DOWNLOAD_URL="https://github.com/ThomasBernard03/AndroidTools/releases/download/$VERSION/AndroidTools-$VERSION.zip"
-          RELEASE_NOTES_URL="https://github.com/ThomasBernard03/AndroidTools/releases/tag/$VERSION"
-
-          NEW_ITEM=$(cat <<EOF
-              <item>
-                <title>Version $VERSION</title>
-                <sparkle:version>$BUILD</sparkle:version>
-                <sparkle:shortVersionString>$VERSION</sparkle:shortVersionString>
-                <sparkle:releaseNotesLink>$RELEASE_NOTES_URL</sparkle:releaseNotesLink>
-                <pubDate>$PUB_DATE</pubDate>
-                <enclosure
-                  url="$DOWNLOAD_URL"
-                  sparkle:edSignature="$SIGNATURE"
-                  sparkle:os="macos"
-                  length="$FILE_SIZE"
-                  type="application/octet-stream" />
-              </item>
-          EOF
-                    )
-
-                    if [ ! -f "$APPCAST_FILE" ]; then
-                      cat <<EOF > "$APPCAST_FILE"
-          <?xml version="1.0" encoding="UTF-8"?>
-          <rss version="2.0" xmlns:sparkle="http://www.andymatuschak.org/xml-namespaces/sparkle">
-            <channel>
-              <title>AndroidTools</title>
-              <description>Most recent updates to AndroidTools</description>
-              <language>en</language>
-          $NEW_ITEM
-            </channel>
-          </rss>
-          EOF
-                    else
-                      perl -0777 -i -pe "s|(</channel>)|$NEW_ITEM\n\\1|" "$APPCAST_FILE"
-                    fi
-
-      - name: Push Appcast to Repository
+      - name: Commit appcast
         run: |
-          git config user.name "github-actions"
-          git config user.email "github-actions@github.com"
-          git pull origin main
+          git config user.name github-actions
+          git config user.email github-actions@github.com
           git add appcast.xml
-          git diff --quiet --cached || git commit -m "chore: update appcast to v${{ steps.version.outputs.version }}"
-          git push origin main
+          git diff --quiet --cached || git commit -m "chore(appcast): macOS ${{ steps.version.outputs.version }}"
+          git push
 
       - name: Create GitHub Release
         uses: softprops/action-gh-release@v1
