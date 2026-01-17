@@ -5,7 +5,6 @@
     <title>AndroidTools</title>
     <description>Most recent updates to AndroidTools</description>
     <language>en</language>
-
     <item>
       <title>Version 2.1.8</title>
       <sparkle:version>18</sparkle:version>
@@ -19,45 +18,5 @@
         length="87977384"
         type="application/octet-stream" />
     </item>
-    <item>
-      <title>Version 2.1.7</title>
-      <sparkle:version>17</sparkle:version>
-      <sparkle:shortVersionString>2.1.7</sparkle:shortVersionString>
-      <sparkle:releaseNotesLink>https://github.com/ThomasBernard03/AndroidTools/releases/tag/2.1.7</sparkle:releaseNotesLink>
-      <pubDate>Sat, 17 Jan 2026 11:04:51 +0000</pubDate>
-      <enclosure
-        url="https://github.com/ThomasBernard03/AndroidTools/releases/download/2.1.7/AndroidTools-2.1.7.zip"
-        sparkle:edSignature=""
-        sparkle:os="macos"
-        length="87977396"
-        type="application/octet-stream" />
-    </item>
-    <item>
-      <title>Version 2.1.6</title>
-      <sparkle:version>16</sparkle:version>
-      <sparkle:shortVersionString>2.1.6</sparkle:shortVersionString>
-      <sparkle:releaseNotesLink>https://github.com/ThomasBernard03/AndroidTools/releases/tag/2.1.6</sparkle:releaseNotesLink>
-      <pubDate>Sat, 17 Jan 2026 10:47:23 +0000</pubDate>
-      <enclosure
-        url="https://github.com/ThomasBernard03/AndroidTools/releases/download/2.1.6/AndroidTools-2.1.6.zip"
-        sparkle:edSignature=""
-        sparkle:os="macos"
-        length="87941623"
-        type="application/octet-stream" />
-    </item>
-    <item>
-      <title>Version 2.1.5</title>
-      <sparkle:version>15</sparkle:version>
-      <sparkle:shortVersionString>2.1.5</sparkle:shortVersionString>
-      <sparkle:releaseNotesLink>https://github.com/ThomasBernard03/AndroidTools/releases/tag/2.1.5</sparkle:releaseNotesLink>
-      <pubDate>Fri, 16 Jan 2026 21:33:50 +0000</pubDate>
-      <enclosure
-        url="https://github.com/ThomasBernard03/AndroidTools/releases/download/2.1.5/AndroidTools-2.1.5.zip"
-        sparkle:edSignature="ABtHxq92xg/RrEum3cf/SRH+GvXYeyqT5ds3CALRD1jTN+oK42T8YY1tAUGtnTCRp8j4UWyJ7xcqX6MZnyzZDw=="
-        sparkle:os="macos"
-        length="87941617"
-        type="application/octet-stream" />
-    </item>
-
   </channel>
 </rss>
