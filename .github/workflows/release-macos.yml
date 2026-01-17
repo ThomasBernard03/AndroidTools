@@ -53,35 +53,26 @@ jobs:
           cd build/macos/Build/Products/Release
           zip -r "../../../../../AndroidTools-${{ steps.version.outputs.version }}.zip" "Android Tools.app"
 
-      - name: Activate auto_updater
-        run: |
-          dart pub global activate auto_updater
-
-      - name: Sign update with auto_updater
-        id: autoupdater
+      - name: Sign ZIP with Sparkle private key
+        id: sparkle
         env:
-          AUTO_UPDATER_PRIVATE_KEY: ${{ secrets.AUTO_UPDATER_PRIVATE_KEY }}
+          SPARKLE_PRIVATE_KEY: ${{ secrets.SPARKLE_PRIVATE_KEY }}
         run: |
           set -euo pipefail
 
           ZIP_PATH="AndroidTools-${{ steps.version.outputs.version }}.zip"
+          SIG_PATH="$ZIP_PATH.sig"
 
-          echo "--- Signing ZIP with auto_updater ---"
-          # on passe la clé via stdin pour éviter les null checks
-          RAW_OUTPUT=$(echo "$AUTO_UPDATER_PRIVATE_KEY" | dart run auto_updater:sign_update --ed-key-file - "$ZIP_PATH")
+          # On écrit la clé dans un fichier temporaire
+          echo "$SPARKLE_PRIVATE_KEY" > sparkle_private_key.pem
+          # Nettoyage des éventuels retours à la ligne
+          awk 'NF {sub(/\r/, ""); print}' sparkle_private_key.pem > sparkle_private_key_clean.pem
 
-          echo "--- Raw auto_updater output ---"
-          echo "$RAW_OUTPUT"
+          # Génération de la signature Sparkle
+          openssl dgst -sha1 -binary -sign sparkle_private_key_clean.pem "$ZIP_PATH" | openssl base64 > "$SIG_PATH"
 
-          # extraction de la signature pour l'appcast
-          SIGNATURE=$(echo "$RAW_OUTPUT" | sed -n 's/.*sparkle:edSignature="\([^"]*\)".*/\1/p')
-
-          if [ -z "$SIGNATURE" ]; then
-            echo "❌ ERROR: auto_updater signature extraction failed"
-            exit 1
-          fi
-
-          echo "✅ Signature extracted"
+          echo "✅ ZIP signed successfully"
+          SIGNATURE=$(cat "$SIG_PATH")
           echo "signature=$SIGNATURE" >> $GITHUB_OUTPUT
 
       - name: Generate appcast
@@ -92,7 +83,7 @@ jobs:
 
           export VERSION=${{ steps.version.outputs.version }}
           export BUILD=${{ steps.version.outputs.build }}
-          export SIGNATURE=${{ steps.autoupdater.outputs.signature }}
+          export SIGNATURE=${{ steps.sparkle.outputs.signature }}
           export FILE_SIZE=$(stat -f%z "$ZIP")
           export PUB_DATE=$(date -R)
           export DOWNLOAD_URL=https://github.com/ThomasBernard03/AndroidTools/releases/download/$VERSION/AndroidTools-$VERSION.zip
@@ -123,4 +114,6 @@ jobs:
         with:
           tag_name: ${{ steps.version.outputs.tag }}
           name: ${{ steps.version.outputs.version }}
-          files: build/macos/Build/Products/Release/AndroidTools-${{ steps.version.outputs.version }}.zip
+          files: |
+            build/macos/Build/Products/Release/AndroidTools-${{ steps.version.outputs.version }}.zip
+            build/macos/Build/Products/Release/AndroidTools-${{ steps.version.outputs.version }}.zip.sig
