@@ -68,22 +68,22 @@ jobs:
           ZIP_PATH="AndroidTools-${{ steps.version.outputs.version }}.zip"
           SIGN_TOOL="./sparkle_dist/bin/sign_update"
 
-          echo "--- Préparation de la clé ---"
+          echo "--- Preparing key ---"
           echo "$SPARKLE_PRIVATE_KEY_CONTENT" > sparkle_key.priv
 
-          echo "--- Tentative de signature ---"
+          echo "--- try to sign zip ---"
           RAW_OUTPUT=$($SIGN_TOOL --ed-key-file sparkle_key.priv "$ZIP_PATH")
 
           SIGNATURE=$(echo "$RAW_OUTPUT" | sed -n 's/.*sparkle:edSignature="\([^"]*\)".*/\1/p')
           rm sparkle_key.priv
 
           if [ -z "$SIGNATURE" ]; then
-            echo "❌ ERREUR : Impossible d'extraire la signature du résultat."
+            echo "❌ ERROR: Can't parse signature from result"
             echo "Sortie brute : $RAW_OUTPUT"
             exit 1
           fi
 
-          echo "✅ Signature générée : $SIGNATURE"
+          echo "✅ Generated signature: $SIGNATURE"
           echo "signature=$SIGNATURE" >> $GITHUB_OUTPUT
 
       - name: Generate appcast
