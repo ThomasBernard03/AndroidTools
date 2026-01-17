@@ -84,7 +84,10 @@ jobs:
 
       - name: Generate appcast
         run: |
+          set -e
+
           ZIP=build/macos/Build/Products/Release/AndroidTools-${{ steps.version.outputs.version }}.zip
+
           export VERSION=${{ steps.version.outputs.version }}
           export BUILD=${{ steps.version.outputs.build }}
           export SIGNATURE=${{ steps.sparkle.outputs.signature }}
@@ -93,23 +96,17 @@ jobs:
           export DOWNLOAD_URL=https://github.com/ThomasBernard03/AndroidTools/releases/download/$VERSION/AndroidTools-$VERSION.zip
           export RELEASE_NOTES_URL=https://github.com/ThomasBernard03/AndroidTools/releases/tag/$VERSION
 
-          ITEM=$(sed \
-            -e "s/{{VERSION}}/$VERSION/g" \
-            -e "s/{{BUILD}}/$BUILD/g" \
-            -e "s/{{SIGNATURE}}/$SIGNATURE/g" \
-            -e "s|{{DOWNLOAD_URL}}|$DOWNLOAD_URL|g" \
-            -e "s|{{RELEASE_NOTES_URL}}|$RELEASE_NOTES_URL|g" \
-            -e "s/{{FILE_SIZE}}/$FILE_SIZE/g" \
-            -e "s/{{PUB_DATE}}/$PUB_DATE/g" \
-            appcast/items/macos.item.xml.tpl)
+          NEW_ITEM=$(envsubst < appcast/items/macos.item.xml.tpl)
 
           if [ -f appcast.xml ]; then
-            ITEMS="$ITEM\n$(sed -n '/<item>/,$p' appcast.xml | sed '/<\/channel>/,$d')"
-          else
-            ITEMS="$ITEM"
-          fi
+            EXISTING_ITEMS=$(sed -n '/<item>/,/<\/item>/p' appcast.xml)
+            export ITEMS="$NEW_ITEM
+          $EXISTING_ITEMS"
+              else
+                export ITEMS="$NEW_ITEM"
+              fi
 
-          sed "s|{{ITEMS}}|$ITEMS|" appcast/appcast.xml.tpl > appcast.xml
+              envsubst < appcast/appcast.xml.tpl > appcast.xml
 
       - name: Commit appcast
         run: |

@@ -6,7 +6,7 @@
     <description>Most recent updates to AndroidTools</description>
     <language>en</language>
 
-{{ITEMS}}
+${ITEMS}
 
   </channel>
 </rss>
