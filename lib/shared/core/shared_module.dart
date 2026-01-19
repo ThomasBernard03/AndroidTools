@@ -52,6 +52,7 @@ class SharedModule {
   static Future<Logger> _createLogger() async {
     final logDirectory = await Constants.getApplicationLogsDirectory();
     return Logger(
+      filter: ProductionFilter(),
       printer: SimplePrinter(printTime: true, colors: false),
       output: MultiOutput([
         AdvancedFileOutput(
