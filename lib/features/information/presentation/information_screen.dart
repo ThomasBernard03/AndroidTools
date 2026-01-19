@@ -23,7 +23,6 @@ class InformationScreen extends StatelessWidget {
           child: MoveWindow(
             child: AppBar(
               backgroundColor: Colors.transparent,
-              elevation: 0,
               surfaceTintColor: Colors.transparent,
               title: BlocBuilder<InformationBloc, InformationState>(
                 builder: (context, state) {

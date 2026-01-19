@@ -111,10 +111,22 @@ class _HomeScreenState extends State<HomeScreen> {
                             Divider(color: Color(0xFF484A4C)),
 
                             TextButton(
+                              style: ButtonStyle(
+                                foregroundColor: WidgetStatePropertyAll(
+                                  Theme.of(context).colorScheme.onSurface,
+                                ),
+                              ),
                               onPressed: () => setState(() {
                                 _selectedIndex = 3;
                               }),
-                              child: Text("Settings"),
+                              child: Row(
+                                mainAxisAlignment: MainAxisAlignment.center,
+                                spacing: 8,
+                                children: [
+                                  Icon(Icons.settings_outlined),
+                                  Text("APP SETTINGS"),
+                                ],
+                              ),
                             ),
 
                             Text(

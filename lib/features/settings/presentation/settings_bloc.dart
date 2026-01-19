@@ -41,5 +41,23 @@ class SettingsBloc extends Bloc<SettingsEvent, SettingsState> {
       final uri = Uri.parse(repositoryUrl);
       await launchUrl(uri);
     });
+
+    on<OnCreateIssue>((event, emit) async {
+      _logger.i("Creating issue");
+      const issueUrl = String.fromEnvironment(
+        Constants.environmentIssueUrl,
+        defaultValue: '',
+      );
+
+      if (issueUrl.isEmpty) {
+        _logger.w(
+          "${Constants.environmentIssueUrl} not found from environment, launch project with '--dart-define=${Constants.environmentIssueUrl}=your_issue_url'",
+        );
+        return;
+      }
+
+      final uri = Uri.parse(issueUrl);
+      await launchUrl(uri);
+    });
   }
 }

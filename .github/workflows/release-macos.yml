@@ -45,6 +45,7 @@ jobs:
             --dart-define=SENTRY_DSN=${{ vars.SENTRY_DSN }} \
             --dart-define=GIT_REPOSITORY_URL=${{ vars.REPOSITORY_URL }} \
             --dart-define=AUTO_UPDATER_FEED_URL=${{ vars.APP_CAST_FILE_PATH }} \
+            --dart-define=ISSUE_URL=${{ vars.ISSUE_URL }} \
             --obfuscate \
             --split-debug-info=build/debug-info
 
