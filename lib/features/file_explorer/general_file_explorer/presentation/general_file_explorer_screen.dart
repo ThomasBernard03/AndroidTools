@@ -9,6 +9,7 @@ import 'package:file_picker/file_picker.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/rendering.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:flutter_svg/svg.dart';
 
 class GeneralFileExplorerScreen extends StatefulWidget {
   const GeneralFileExplorerScreen({super.key});
@@ -77,6 +78,7 @@ class _GeneralFileExplorerScreenState extends State<GeneralFileExplorerScreen> {
     return BlocProvider.value(
       value: bloc,
       child: Scaffold(
+        backgroundColor: Color(0xff000000),
         appBar: PreferredSize(
           preferredSize: Size.fromHeight(kToolbarHeight),
           child: BlocBuilder<GeneralFileExplorerBloc, GeneralFileExplorerState>(
@@ -142,6 +144,7 @@ class _GeneralFileExplorerScreenState extends State<GeneralFileExplorerScreen> {
                                 });
                               },
                               child: ListView.builder(
+                                padding: EdgeInsets.all(16),
                                 itemCount: state.files.length,
                                 itemBuilder: (context, index) {
                                   final file = state.files[index];
@@ -211,7 +214,10 @@ class _GeneralFileExplorerScreenState extends State<GeneralFileExplorerScreen> {
                                     child: Row(
                                       spacing: 4,
                                       children: [
-                                        Icon(Icons.folder_open, size: 12),
+                                        SvgPicture.asset(
+                                          "assets/images/folder/red_folder.svg",
+                                          width: 12,
+                                        ),
                                         Text(parts[index]),
                                       ],
                                     ),

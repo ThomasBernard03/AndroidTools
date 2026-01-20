@@ -27,6 +27,7 @@ dependencies:
   package_info_plus: ^9.0.0
   bitsdojo_window: ^0.1.6
   auto_updater: ^1.0.0
+  intl: ^0.20.2
 
 dev_dependencies:
   sentry_dart_plugin: ^3.2.0
@@ -39,10 +40,13 @@ dev_dependencies:
 flutter:
   uses-material-design: true
 
-  # To add assets to your application, add an assets section, like this:
   assets:
     - assets/android_versions/
     - assets/pixels/
+    - assets/images/
+    - assets/images/file/
+    - assets/images/file_extensions/
+    - assets/images/folder/
 
   # An image asset can refer to one or more resolution-specific "variants", see
   # https://flutter.dev/to/resolution-aware-images
