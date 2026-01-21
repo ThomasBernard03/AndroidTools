@@ -18,8 +18,7 @@ class FileExplorerAppBar extends StatelessWidget {
         backgroundColor: Theme.of(context).scaffoldBackgroundColor,
         foregroundColor: Theme.of(context).colorScheme.onSurface,
         surfaceTintColor: Theme.of(context).scaffoldBackgroundColor,
-        centerTitle: false,
-        title: Text(path, style: Theme.of(context).textTheme.bodyLarge),
+        title: Text(path, style: Theme.of(context).textTheme.titleLarge),
         leading: IconButton(
           onPressed: onGoBack,
           icon: Icon(Icons.chevron_left_rounded),

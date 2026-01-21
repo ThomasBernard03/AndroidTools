@@ -98,6 +98,13 @@ class _GeneralFileExplorerScreenState extends State<GeneralFileExplorerScreen> {
           builder: (context, state) {
             return Column(
               children: [
+                BlocBuilder<GeneralFileExplorerBloc, GeneralFileExplorerState>(
+                  builder: (context, state) {
+                    return state.isLoading
+                        ? LinearProgressIndicator()
+                        : SizedBox.fromSize(size: Size.fromHeight(4));
+                  },
+                ),
                 Expanded(
                   child: FileExplorerDropTarget(
                     onFileDropped: (details) {
@@ -230,13 +237,6 @@ class _GeneralFileExplorerScreenState extends State<GeneralFileExplorerScreen> {
                           ),
                     ),
                   ),
-                ),
-                BlocBuilder<GeneralFileExplorerBloc, GeneralFileExplorerState>(
-                  builder: (context, state) {
-                    return state.isLoading
-                        ? LinearProgressIndicator()
-                        : SizedBox.shrink();
-                  },
                 ),
               ],
             );

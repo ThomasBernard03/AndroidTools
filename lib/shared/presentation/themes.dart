@@ -8,6 +8,9 @@ class Themes {
       backgroundColor: Color.fromARGB(255, 41, 92, 43),
       foregroundColor: Color(0xFFF9F9F9),
     ),
+    progressIndicatorTheme: ProgressIndicatorThemeData(
+      linearTrackColor: Colors.white,
+    ),
     colorScheme: ColorScheme.dark(
       primary: Color(0xFFD71921),
       surfaceContainerLowest: Color(0xFF090B0E),
