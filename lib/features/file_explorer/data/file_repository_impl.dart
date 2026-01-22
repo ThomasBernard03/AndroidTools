@@ -2,14 +2,57 @@ import 'dart:io';
 
 import 'package:android_tools/features/file_explorer/data/base_adb_file_repository.dart';
 import 'package:android_tools/features/file_explorer/domain/entities/file_entry.dart';
+import 'package:android_tools/features/file_explorer/domain/entities/file_type.dart';
 import 'package:android_tools/features/file_explorer/domain/repositories/file_repository.dart';
+import 'package:android_tools/shared/domain/repositories/package_repository.dart';
 
 class GeneralFileRepositoryImpl extends BaseAdbFileRepository
     implements FileRepository {
-  GeneralFileRepositoryImpl(super.logger, super.shell);
+  final PackageRepository _packageRepository;
+
+  GeneralFileRepositoryImpl(super.logger, super.shell, this._packageRepository);
 
   @override
   Future<List<FileEntry>> listFiles(String path, String deviceId) async {
+    if (path == '/data') {
+      return [
+        FileEntry(
+          type: FileType.directory,
+          name: 'data',
+          permissions: 'drwx--x--x',
+        ),
+      ];
+    }
+
+    if (path == '/data/data') {
+      final packages = await _packageRepository.getAllPackages(deviceId);
+      return packages
+          .map(
+            (pkg) => FileEntry(
+              type: FileType.directory,
+              name: pkg,
+              permissions: 'drwx------',
+            ),
+          )
+          .toList();
+    }
+
+    if (path.startsWith('/data/data/')) {
+      final package = path.split('/').last;
+
+      final (out, err, code) = await run([
+        '-s',
+        deviceId,
+        'shell',
+        'run-as',
+        package,
+        'ls',
+        '-l',
+      ]);
+
+      return code == 0 ? parseLsOutput(out) : [];
+    }
+
     final target = path.isEmpty ? '/' : path;
 
     final (out, err, code) = await run([

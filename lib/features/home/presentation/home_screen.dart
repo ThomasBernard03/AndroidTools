@@ -97,13 +97,6 @@ class _HomeScreenState extends State<HomeScreen> {
                                 _selectedIndex = 2;
                               }),
                             ),
-                            NavigationRailItem(
-                              selected: _selectedIndex == 4,
-                              text: "App File explorer",
-                              onTap: () => setState(() {
-                                _selectedIndex = 4;
-                              }),
-                            ),
 
                             Spacer(),
 
@@ -144,7 +137,6 @@ class _HomeScreenState extends State<HomeScreen> {
                     1 => LogcatScreen(),
                     2 => FileExplorerScreen(),
                     3 => SettingsScreen(),
-                    4 => FileExplorerScreen(),
                     _ => Placeholder(),
                   },
                 ),
