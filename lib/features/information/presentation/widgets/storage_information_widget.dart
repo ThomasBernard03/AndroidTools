@@ -1,4 +1,4 @@
-import 'package:android_tools/features/file_explorer/shared/core/int_extensions.dart';
+import 'package:android_tools/features/file_explorer/core/int_extensions.dart';
 import 'package:android_tools/features/information/presentation/widgets/bubble_progress.dart';
 import 'package:flutter/material.dart';
 

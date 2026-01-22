@@ -1,5 +1,4 @@
-import 'package:android_tools/features/file_explorer/general_file_explorer/presentation/general_file_explorer_screen.dart';
-import 'package:android_tools/features/file_explorer/package_file_explorer/presentation/package_file_explorer_screen.dart';
+import 'package:android_tools/features/file_explorer/presentation/file_explorer_screen.dart';
 import 'package:android_tools/features/home/presentation/home_bloc.dart';
 import 'package:android_tools/features/home/presentation/widgets/navigation_rail_item.dart';
 import 'package:android_tools/features/information/presentation/information_screen.dart';
@@ -143,9 +142,9 @@ class _HomeScreenState extends State<HomeScreen> {
                   child: switch (_selectedIndex) {
                     0 => InformationScreen(),
                     1 => LogcatScreen(),
-                    2 => GeneralFileExplorerScreen(),
+                    2 => FileExplorerScreen(),
                     3 => SettingsScreen(),
-                    4 => PackageFileExplorerScreen(),
+                    4 => FileExplorerScreen(),
                     _ => Placeholder(),
                   },
                 ),
