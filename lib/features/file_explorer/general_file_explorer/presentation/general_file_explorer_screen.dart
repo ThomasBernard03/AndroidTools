@@ -346,50 +346,50 @@ class _GeneralFileExplorerScreenState extends State<GeneralFileExplorerScreen> {
                   ),
                   Container(
                     color: Color(0xFF1A1D1C),
-                    child: Padding(
-                      padding: const EdgeInsets.symmetric(horizontal: 16.0),
-                      child: SizedBox(
-                        height: 30,
-                        child:
-                            BlocBuilder<
-                              GeneralFileExplorerBloc,
-                              GeneralFileExplorerState
-                            >(
-                              builder: (context, state) {
-                                final parts = state.path.split("/");
+                    child: SizedBox(
+                      height: 30,
+                      child:
+                          BlocBuilder<
+                            GeneralFileExplorerBloc,
+                            GeneralFileExplorerState
+                          >(
+                            builder: (context, state) {
+                              final parts = state.path.split("/");
 
-                                return ListView.separated(
-                                  scrollDirection: Axis.horizontal,
-                                  separatorBuilder: (context, index) {
-                                    return Icon(
-                                      Icons.chevron_right_rounded,
-                                      size: 12,
-                                      color: Color.fromARGB(255, 98, 99, 99),
-                                    );
-                                  },
-                                  itemBuilder: (context, index) {
-                                    return Padding(
-                                      padding: const EdgeInsets.symmetric(
-                                        horizontal: 8.0,
-                                      ),
-                                      child: Row(
-                                        spacing: 4,
-                                        children: [
-                                          SvgPicture.asset(
-                                            "assets/images/folder/red_folder.svg",
-                                            width: 12,
-                                          ),
-                                          Text(parts[index]),
-                                        ],
-                                      ),
-                                    );
-                                  },
+                              return ListView.separated(
+                                padding: const EdgeInsets.symmetric(
+                                  horizontal: 16.0,
+                                ),
+                                scrollDirection: Axis.horizontal,
+                                separatorBuilder: (context, index) {
+                                  return Icon(
+                                    Icons.chevron_right_rounded,
+                                    size: 12,
+                                    color: Color.fromARGB(255, 98, 99, 99),
+                                  );
+                                },
+                                itemBuilder: (context, index) {
+                                  return Padding(
+                                    padding: const EdgeInsets.symmetric(
+                                      horizontal: 8.0,
+                                    ),
+                                    child: Row(
+                                      spacing: 4,
+                                      children: [
+                                        SvgPicture.asset(
+                                          "assets/images/folder/red_folder.svg",
+                                          width: 12,
+                                        ),
+                                        Text(parts[index]),
+                                      ],
+                                    ),
+                                  );
+                                },
 
-                                  itemCount: parts.length,
-                                );
-                              },
-                            ),
-                      ),
+                                itemCount: parts.length,
+                              );
+                            },
+                          ),
                     ),
                   ),
                 ],
