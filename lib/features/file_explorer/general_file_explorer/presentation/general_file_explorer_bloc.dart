@@ -174,5 +174,17 @@ class GeneralFileExplorerBloc
       await _createDirectoryUsecase(state.path, event.name, device.deviceId);
       add(OnRefreshFiles());
     });
+    on<OnGoToDirectory>((event, emit) async {
+      final device = state.device;
+      if (device == null) {
+        _logger.w("Device is null, can't go to directory");
+        return;
+      }
+
+      final files = await _listFilesUsecase(event.path, device.deviceId);
+      emit(state.copyWith(files: files, path: event.path, selectedFile: null));
+      _logger.i('Fetched ${files.length} file(s) for path ${event.path}');
+      return;
+    });
   }
 }

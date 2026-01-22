@@ -369,19 +369,29 @@ class _GeneralFileExplorerScreenState extends State<GeneralFileExplorerScreen> {
                                   );
                                 },
                                 itemBuilder: (context, index) {
-                                  return Padding(
-                                    padding: const EdgeInsets.symmetric(
-                                      horizontal: 8.0,
-                                    ),
-                                    child: Row(
-                                      spacing: 4,
-                                      children: [
-                                        SvgPicture.asset(
-                                          "assets/images/folder/red_folder.svg",
-                                          width: 12,
-                                        ),
-                                        Text(parts[index]),
-                                      ],
+                                  final part = parts[index];
+                                  return TextButton(
+                                    onPressed: () {
+                                      final newPath =
+                                          "/${parts.take(index + 1).join("/")}";
+                                      context
+                                          .read<GeneralFileExplorerBloc>()
+                                          .add(OnGoToDirectory(path: newPath));
+                                    },
+                                    child: Padding(
+                                      padding: const EdgeInsets.symmetric(
+                                        horizontal: 8.0,
+                                      ),
+                                      child: Row(
+                                        spacing: 4,
+                                        children: [
+                                          SvgPicture.asset(
+                                            "assets/images/folder/red_folder.svg",
+                                            width: 12,
+                                          ),
+                                          Text(part),
+                                        ],
+                                      ),
                                     ),
                                   );
                                 },

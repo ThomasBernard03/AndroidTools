@@ -37,3 +37,9 @@ class OnCreateDirectory extends GeneralFileExplorerEvent {
 
   OnCreateDirectory({required this.name});
 }
+
+class OnGoToDirectory extends GeneralFileExplorerEvent {
+  final String path;
+
+  OnGoToDirectory({required this.path});
+}
