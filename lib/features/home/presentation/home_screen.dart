@@ -1,3 +1,4 @@
+import 'package:android_tools/features/application_installer/presentation/application_installer_screen.dart';
 import 'package:android_tools/features/file_explorer/presentation/file_explorer_screen.dart';
 import 'package:android_tools/features/home/presentation/home_bloc.dart';
 import 'package:android_tools/features/home/presentation/widgets/navigation_rail_item.dart';
@@ -76,6 +77,7 @@ class _HomeScreenState extends State<HomeScreen> {
                                   hintText: "",
                                 ),
                               ),
+
                             NavigationRailItem(
                               selected: _selectedIndex == 0,
                               text: "Device information",
@@ -85,16 +87,23 @@ class _HomeScreenState extends State<HomeScreen> {
                             ),
                             NavigationRailItem(
                               selected: _selectedIndex == 1,
-                              text: "Logcat",
+                              text: "Application installer",
                               onTap: () => setState(() {
                                 _selectedIndex = 1;
                               }),
                             ),
                             NavigationRailItem(
                               selected: _selectedIndex == 2,
-                              text: "File explorer",
+                              text: "Logcat",
                               onTap: () => setState(() {
                                 _selectedIndex = 2;
+                              }),
+                            ),
+                            NavigationRailItem(
+                              selected: _selectedIndex == 3,
+                              text: "File explorer",
+                              onTap: () => setState(() {
+                                _selectedIndex = 3;
                               }),
                             ),
 
@@ -109,7 +118,7 @@ class _HomeScreenState extends State<HomeScreen> {
                                 ),
                               ),
                               onPressed: () => setState(() {
-                                _selectedIndex = 3;
+                                _selectedIndex = 4;
                               }),
                               child: Row(
                                 mainAxisAlignment: MainAxisAlignment.center,
@@ -134,9 +143,10 @@ class _HomeScreenState extends State<HomeScreen> {
                 Expanded(
                   child: switch (_selectedIndex) {
                     0 => InformationScreen(),
-                    1 => LogcatScreen(),
-                    2 => FileExplorerScreen(),
-                    3 => SettingsScreen(),
+                    1 => ApplicationInstallerScreen(),
+                    2 => LogcatScreen(),
+                    3 => FileExplorerScreen(),
+                    4 => SettingsScreen(),
                     _ => Placeholder(),
                   },
                 ),
