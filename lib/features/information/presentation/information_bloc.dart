@@ -6,7 +6,6 @@ import 'package:android_tools/features/information/domain/usecases/get_device_in
 import 'package:android_tools/features/information/domain/usecases/get_device_storage_information_usecase.dart';
 import 'package:android_tools/main.dart';
 import 'package:android_tools/shared/domain/entities/device_entity.dart';
-import 'package:android_tools/shared/domain/usecases/install_application_usecase.dart';
 import 'package:android_tools/shared/domain/usecases/listen_selected_device_usecase.dart';
 import 'package:android_tools/shared/domain/usecases/refresh_connected_devices_usecase.dart';
 import 'package:dart_mappable/dart_mappable.dart';
@@ -23,7 +22,6 @@ class InformationBloc extends Bloc<InformationEvent, InformationState> {
   final GetDeviceInformationUsecase _getDeviceInformationUsecase = getIt.get();
   final RefreshConnectedDevicesUsecase _refreshConnectedDevicesUsecase = getIt
       .get();
-  final InstallApplicationUsecase _installApplicationUsecase = getIt.get();
   final GetDeviceBatteryInformationUsecase _getDeviceBatteryInformationUsecase =
       getIt.get();
   final GetDeviceStorageInformationUsecase _getDeviceStorageInformationUsecase =
@@ -70,14 +68,6 @@ class InformationBloc extends Bloc<InformationEvent, InformationState> {
     on<OnRefreshDevices>((event, emit) async {
       _logger.i("Refresing connected devices");
       await _refreshConnectedDevicesUsecase();
-    });
-    on<OnInstallApplication>((event, emit) {
-      final device = state.device;
-      if (device == null) {
-        _logger.w("Selected device is null, can't install apk");
-        return;
-      }
-      _installApplicationUsecase(event.applicationFilePath, device.deviceId);
     });
   }
 }

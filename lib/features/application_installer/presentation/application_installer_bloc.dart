@@ -13,5 +13,8 @@ class ApplicationInstallerBloc
 
   ApplicationInstallerBloc() : super(ApplicationInstallerState()) {
     on<OnAppearing>((event, emit) async {});
+    on<OnInstallApk>((event, emit) {
+      _logger.i("Installing apk: ${event.apkPath}");
+    });
   }
 }
