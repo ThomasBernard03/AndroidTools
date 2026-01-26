@@ -5,7 +5,7 @@ import 'package:path_provider/path_provider.dart';
 
 part 'app_database.g.dart';
 
-@DriftDatabase(tables: [InstallHistoryModel])
+@DriftDatabase(tables: [InstalledApplicationHistoryModel])
 class AppDatabase extends _$AppDatabase {
   AppDatabase([QueryExecutor? executor]) : super(executor ?? _openConnection());
 

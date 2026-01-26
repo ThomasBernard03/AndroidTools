@@ -1,5 +1,6 @@
 import 'package:android_tools/main.dart';
 import 'package:android_tools/shared/core/constants.dart';
+import 'package:android_tools/shared/data/datasources/local/app_database.dart';
 import 'package:android_tools/shared/data/datasources/shell/shell_datasource.dart';
 import 'package:android_tools/shared/data/repositories/application_repository_impl.dart';
 import 'package:android_tools/shared/data/repositories/device_repository_impl.dart';
@@ -19,6 +20,7 @@ class SharedModule {
   static void configureDependencies() {
     getIt.registerSingletonAsync<Logger>(() => _createLogger());
     getIt.registerLazySingleton(() => ShellDatasource());
+    getIt.registerLazySingleton(() => AppDatabase());
 
     _registerRepositories();
     _registerUseCases();
@@ -29,7 +31,7 @@ class SharedModule {
       () => DeviceRepositoryImpl(getIt.get(), getIt.get()),
     );
     getIt.registerLazySingleton<ApplicationRepository>(
-      () => ApplicationRepositoryImpl(getIt.get()),
+      () => ApplicationRepositoryImpl(getIt.get(), getIt.get()),
     );
     getIt.registerLazySingleton<PackageRepository>(
       () => PackageRepositoryImpl(getIt.get()),

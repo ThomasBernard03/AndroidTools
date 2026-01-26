@@ -11,13 +11,13 @@ class GeneralFileRepositoryImpl implements FileRepository {
   GeneralFileRepositoryImpl(this._packageRepository, this._shellDatasource);
 
   ({String package, String? subPath})? _parsePrivateAppPath(String path) {
-    if (!path.startsWith('/data/data/')) return null;
+    if (!path.startsWith('data/data/')) return null;
 
     final parts = path.split('/');
-    if (parts.length < 4) return null;
+    if (parts.length < 3) return null;
 
-    final package = parts[3];
-    final subPath = parts.length > 4 ? parts.sublist(4).join('/') : null;
+    final package = parts[2];
+    final subPath = parts.length > 3 ? parts.sublist(3).join('/') : null;
 
     return (package: package, subPath: subPath);
   }
@@ -28,7 +28,7 @@ class GeneralFileRepositoryImpl implements FileRepository {
       adbExecutablePath: _shellDatasource.getAdbPath(),
     );
 
-    if (path == '/data') {
+    if (path == 'data') {
       return [
         FileEntry(
           type: FileType.directory,
@@ -38,7 +38,7 @@ class GeneralFileRepositoryImpl implements FileRepository {
       ];
     }
 
-    if (path == '/data/data') {
+    if (path == 'data/data') {
       final packages = await _packageRepository.getAllPackages(deviceId);
       return packages
           .map(
@@ -51,7 +51,7 @@ class GeneralFileRepositoryImpl implements FileRepository {
           .toList();
     }
 
-    if (path.startsWith('/data/data/')) {
+    if (path.startsWith('data/data/')) {
       final result = _parsePrivateAppPath(path);
       if (result == null) {
         return [];

@@ -344,8 +344,9 @@ class _FileExplorerScreenState extends State<FileExplorerScreen> {
                               final part = parts[index];
                               return TextButton(
                                 onPressed: () {
-                                  final newPath =
-                                      "/${parts.take(index + 1).join("/")}";
+                                  final newPath = parts
+                                      .take(index + 1)
+                                      .join("/");
                                   context.read<FileExplorerBloc>().add(
                                     OnGoToDirectory(path: newPath),
                                   );

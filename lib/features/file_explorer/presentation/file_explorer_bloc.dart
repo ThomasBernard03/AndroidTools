@@ -33,7 +33,7 @@ class FileExplorerBloc extends Bloc<FileExplorerEvent, FileExplorerState> {
       await emit.onEach<DeviceEntity?>(
         _listenSelectedDeviceUsecase(),
         onData: (device) async {
-          emit(state.copyWith(path: "/", device: device, files: []));
+          emit(state.copyWith(path: "", device: device, files: []));
 
           if (device == null) {
             _logger.i("Selected device is null, can't get files");
@@ -82,10 +82,14 @@ class FileExplorerBloc extends Bloc<FileExplorerEvent, FileExplorerState> {
 
       final currentPath = state.path;
 
-      final parentPath = p.dirname(currentPath);
+      var parentPath = p.dirname(currentPath);
       if (currentPath.isRootPath()) {
         _logger.i("Already at root, can't go back further");
         return;
+      }
+
+      if (parentPath == ".") {
+        parentPath = "";
       }
 
       emit(state.copyWith(isLoading: true));
