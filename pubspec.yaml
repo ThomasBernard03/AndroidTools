@@ -11,9 +11,9 @@ dependencies:
   sentry_flutter: ^9.9.0
   flutter:
     sdk: flutter
-  # adb_dart: ^1.0.0
-  adb_dart:
-    path: ../../adb_dart
+  adb_dart: ^1.2.0
+  # adb_dart:
+  #  path: ../../adb_dart
   cupertino_icons: ^1.0.8
   path_provider: ^2.1.5
   dart_mappable: ^4.6.1

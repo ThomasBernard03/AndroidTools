@@ -1,7 +1,9 @@
 import 'package:adb_dart/adb_dart.dart';
 import 'package:android_tools/features/information/domain/entities/device_information_entity.dart';
 import 'package:android_tools/features/information/domain/usecases/get_device_battery_information_usecase.dart';
+import 'package:android_tools/features/information/domain/usecases/get_device_display_information_usecase.dart';
 import 'package:android_tools/features/information/domain/usecases/get_device_information_usecase.dart';
+import 'package:android_tools/features/information/domain/usecases/get_device_network_information_usecase.dart';
 import 'package:android_tools/features/information/domain/usecases/get_device_storage_information_usecase.dart';
 import 'package:android_tools/main.dart';
 import 'package:android_tools/shared/domain/entities/device_entity.dart';
@@ -24,6 +26,10 @@ class InformationBloc extends Bloc<InformationEvent, InformationState> {
   final GetDeviceBatteryInformationUsecase _getDeviceBatteryInformationUsecase =
       getIt.get();
   final GetDeviceStorageInformationUsecase _getDeviceStorageInformationUsecase =
+      getIt.get();
+  final GetDeviceDisplayInformationUsecase _getDeviceDisplayInformationUsecase =
+      getIt.get();
+  final GetDeviceNetworkInformationUsecase _getDeviceNetworkInformationUsecase =
       getIt.get();
 
   InformationBloc() : super(InformationState()) {
@@ -52,6 +58,12 @@ class InformationBloc extends Bloc<InformationEvent, InformationState> {
           final storageInformation = await _getDeviceStorageInformationUsecase(
             device.deviceId,
           );
+          final displayInformation = await _getDeviceDisplayInformationUsecase(
+            device.deviceId,
+          );
+          final networkInformation = await _getDeviceNetworkInformationUsecase(
+            device.deviceId,
+          );
           emit(
             state.copyWith(
               isLoading: false,
@@ -59,6 +71,8 @@ class InformationBloc extends Bloc<InformationEvent, InformationState> {
               device: device,
               deviceBatteryInformation: batteryInformation,
               deviceStorageInformation: storageInformation,
+              deviceDisplayInformation: displayInformation,
+              deviceNetworkInformation: networkInformation,
             ),
           );
         },

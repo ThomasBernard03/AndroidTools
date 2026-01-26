@@ -5,4 +5,6 @@ abstract class DeviceInformationRepository {
   Future<DeviceInformationEntity> getDeviceInformation(String deviceId);
   Future<BatteryInfo?> getDeviceBatteryInformation(String deviceId);
   Future<StorageInfo?> getDeviceStorageInformation(String deviceId);
+  Future<DisplayInfo?> getDeviceDisplayInformation(String deviceId);
+  Future<NetworkInfo?> getDeviceNetworkInformation(String deviceId);
 }

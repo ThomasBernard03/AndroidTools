@@ -37,4 +37,18 @@ class DeviceInformationRepositoryImpl implements DeviceInformationRepository {
     final adbClient = AdbClient(adbExecutablePath: adbPath);
     return adbClient.getBatteryInfo(deviceId);
   }
+
+  @override
+  Future<DisplayInfo?> getDeviceDisplayInformation(String deviceId) {
+    final adbPath = _shellDatasource.getAdbPath();
+    final adbClient = AdbClient(adbExecutablePath: adbPath);
+    return adbClient.getDisplayInfo(deviceId);
+  }
+
+  @override
+  Future<NetworkInfo?> getDeviceNetworkInformation(String deviceId) {
+    final adbPath = _shellDatasource.getAdbPath();
+    final adbClient = AdbClient(adbExecutablePath: adbPath);
+    return adbClient.getNetworkInfo(deviceId);
+  }
 }

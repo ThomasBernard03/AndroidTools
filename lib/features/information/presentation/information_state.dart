@@ -6,6 +6,8 @@ class InformationState with InformationStateMappable {
   final DeviceInformationEntity? deviceInformation;
   final BatteryInfo? deviceBatteryInformation;
   final StorageInfo? deviceStorageInformation;
+  final DisplayInfo? deviceDisplayInformation;
+  final NetworkInfo? deviceNetworkInformation;
   final DeviceEntity? device;
 
   InformationState({
@@ -14,5 +16,7 @@ class InformationState with InformationStateMappable {
     this.device,
     this.deviceBatteryInformation,
     this.deviceStorageInformation,
+    this.deviceDisplayInformation,
+    this.deviceNetworkInformation,
   });
 }

@@ -1,6 +1,9 @@
 import 'package:android_tools/features/information/presentation/information_bloc.dart';
+import 'package:android_tools/features/information/presentation/widgets/battery_information_widget.dart';
 import 'package:android_tools/features/information/presentation/widgets/device_preview.dart';
+import 'package:android_tools/features/information/presentation/widgets/display_information_widget.dart';
 import 'package:android_tools/features/information/presentation/widgets/information_recap_item.dart';
+import 'package:android_tools/features/information/presentation/widgets/network_information_widget.dart';
 import 'package:android_tools/features/information/presentation/widgets/storage_information_widget.dart';
 import 'package:android_tools/shared/presentation/refresh_device_button.dart';
 import 'package:bitsdojo_window/bitsdojo_window.dart';
@@ -158,21 +161,41 @@ class InformationScreen extends StatelessWidget {
                 ),
 
                 Padding(
-                  padding: EdgeInsetsGeometry.all(42),
-                  child: Column(
+                  padding: EdgeInsets.all(42),
+                  child: Wrap(
+                    spacing: 16,
+                    runSpacing: 16,
+                    alignment: WrapAlignment.center,
                     children: [
-                      BlocBuilder<InformationBloc, InformationState>(
-                        builder: (context, state) {
-                          return StorageInformationWidget(
-                            totalBytes:
-                                state.deviceStorageInformation?.totalBytes ?? 1,
-                            freeBytes:
-                                state
-                                    .deviceStorageInformation
-                                    ?.availableBytes ??
-                                0,
-                          );
-                        },
+                      if (state.deviceBatteryInformation != null)
+                        BatteryInformationWidget(
+                          level: state.deviceBatteryInformation?.level ?? 0,
+                          isPlugged:
+                              state.deviceBatteryInformation?.isPlugged ??
+                              false,
+                          health: state.deviceBatteryInformation?.health,
+                          temperature:
+                              state.deviceBatteryInformation?.temperature,
+                        ),
+                      StorageInformationWidget(
+                        totalBytes:
+                            state.deviceStorageInformation?.totalBytes ?? 1,
+                        freeBytes:
+                            state.deviceStorageInformation?.availableBytes ?? 0,
+                      ),
+                      if (state.deviceDisplayInformation != null)
+                        DisplayInformationWidget(
+                          width:
+                              state.deviceDisplayInformation?.widthPixels ?? 0,
+                          height:
+                              state.deviceDisplayInformation?.heightPixels ?? 0,
+                          density:
+                              state.deviceDisplayInformation?.densityDpi ?? 0,
+                        ),
+                      NetworkInformationWidget(
+                        wifiSsid: state.deviceNetworkInformation?.wifi?.ssid,
+                        ipAddress:
+                            state.deviceNetworkInformation?.wifi?.ipAddress,
                       ),
                     ],
                   ),

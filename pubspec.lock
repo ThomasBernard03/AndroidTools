@@ -12,9 +12,10 @@ packages:
   adb_dart:
     dependency: "direct main"
     description:
-      path: "../../adb_dart"
-      relative: true
-    source: path
+      name: adb_dart
+      sha256: b5d7d8ddd1492ff0a78ede589940a621949af9f61897bddcde45a0af87f92ec5
+      url: "https://pub.dev"
+    source: hosted
     version: "1.2.0"
   analyzer:
     dependency: transitive
