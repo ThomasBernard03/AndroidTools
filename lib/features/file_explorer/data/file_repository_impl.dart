@@ -52,17 +52,21 @@ class GeneralFileRepositoryImpl implements FileRepository {
     }
 
     if (path.startsWith('/data/data/')) {
-      final parts = path.split('/');
-
-      // /data/data/<package>/...
-      if (parts.length < 4) {
+      final result = _parsePrivateAppPath(path);
+      if (result == null) {
         return [];
       }
 
-      final package = parts[3];
-      final subPath = parts.length > 4 ? parts.sublist(4).join('/') : '';
+      final filesResult = await adbClient.listFiles(
+        result.subPath ?? "",
+        deviceId,
+        packageName: result.package,
+      );
 
-      adbClient.listFiles(subPath, deviceId, packageName: package);
+      return filesResult.map(
+        (x) =>
+            FileEntry(type: x.type, permissions: x.permissions, name: x.name),
+      );
     }
 
     final result = await adbClient.listFiles(path, deviceId);
