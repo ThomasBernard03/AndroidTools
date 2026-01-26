@@ -143,6 +143,23 @@ class _ApplicationInstallerScreenState
                   ),
                 ),
               ),
+
+            Positioned(
+              bottom: 0,
+              left: 0,
+              right: 0,
+              child:
+                  BlocBuilder<
+                    ApplicationInstallerBloc,
+                    ApplicationInstallerState
+                  >(
+                    builder: (context, state) {
+                      return state.isLoading
+                          ? LinearProgressIndicator()
+                          : SizedBox.shrink();
+                    },
+                  ),
+            ),
           ],
         ),
       ),

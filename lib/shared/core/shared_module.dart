@@ -32,7 +32,7 @@ class SharedModule {
       () => ApplicationRepositoryImpl(getIt.get()),
     );
     getIt.registerLazySingleton<PackageRepository>(
-      () => PackageRepositoryImpl(getIt.get(), getIt.get()),
+      () => PackageRepositoryImpl(getIt.get()),
     );
   }
 

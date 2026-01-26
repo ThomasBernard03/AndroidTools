@@ -1,13 +1,11 @@
 import 'package:adb_dart/adb_dart.dart';
 import 'package:android_tools/shared/data/datasources/shell/shell_datasource.dart';
 import 'package:android_tools/shared/domain/repositories/package_repository.dart';
-import 'package:logger/logger.dart';
 
 class PackageRepositoryImpl implements PackageRepository {
-  final Logger _logger;
   final ShellDatasource _shellDatasource;
 
-  PackageRepositoryImpl(this._logger, this._shellDatasource);
+  PackageRepositoryImpl(this._shellDatasource);
 
   @override
   Future<Iterable<String>> getAllPackages(String deviceId) {
