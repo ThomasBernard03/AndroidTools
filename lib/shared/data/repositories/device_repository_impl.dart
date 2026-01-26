@@ -1,6 +1,5 @@
 import 'dart:async';
-import 'dart:io';
-
+import 'package:adb_dart/adb_dart.dart';
 import 'package:android_tools/shared/data/datasources/shell/shell_datasource.dart';
 import 'package:android_tools/shared/domain/entities/device_entity.dart';
 import 'package:android_tools/shared/domain/repositories/device_repository.dart';
@@ -52,54 +51,17 @@ class DeviceRepositoryImpl implements DeviceRepository {
 
   Future<List<DeviceEntity>> _getConnectedDevices() async {
     final adbPath = shellDatasource.getAdbPath();
-    try {
-      logger.i("Searching connected devices");
 
-      final process = await Process.run(adbPath, ['devices', '-l']);
-
-      if (process.exitCode != 0) {
-        logger.w("Error fetching devices: ${process.stderr}");
-        return [];
-      }
-
-      final output = process.stdout as String;
-      final lines = output.split('\n');
-
-      final devices = <DeviceEntity>[];
-
-      for (var line in lines) {
-        line = line.trim();
-        if (line.isEmpty || line.startsWith('List of devices')) continue;
-
-        final parts = line.split(RegExp(r'\s+'));
-        if (parts.length < 2 || parts[1] != 'device') continue;
-
-        String manufacturer = "Unknown";
-        String deviceId = parts[0];
-        String name = deviceId;
-
-        for (var part in parts.skip(2)) {
-          if (part.startsWith('model:')) {
-            name = part.replaceFirst('model:', '');
-          } else if (part.startsWith('manufacturer:')) {
-            manufacturer = part.replaceFirst('manufacturer:', '');
-          }
-        }
-
-        devices.add(
-          DeviceEntity(
-            manufacturer: manufacturer,
-            name: name,
-            deviceId: deviceId,
+    final adbClient = AdbClient(adbExecutablePath: adbPath);
+    final connectedDevices = await adbClient.listConnectedDevices();
+    return connectedDevices
+        .map(
+          (c) => DeviceEntity(
+            manufacturer: c.manufacturer,
+            name: c.name,
+            deviceId: c.deviceId,
           ),
-        );
-      }
-
-      logger.i("Found ${devices.length} devices");
-      return devices;
-    } catch (e) {
-      logger.w("Exception while fetching devices: $e");
-      return [];
-    }
+        )
+        .toList();
   }
 }

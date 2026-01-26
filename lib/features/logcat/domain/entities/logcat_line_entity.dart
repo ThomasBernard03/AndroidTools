@@ -1,4 +1,4 @@
-import 'package:android_tools/features/logcat/domain/entities/logcat_level.dart';
+import 'package:adb_dart/adb_dart.dart';
 
 class LogcatLineEntity {
   final DateTime dateTime;

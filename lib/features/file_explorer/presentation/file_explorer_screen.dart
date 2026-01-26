@@ -113,7 +113,7 @@ class _FileExplorerScreenState extends State<FileExplorerScreen> {
     if (query.isEmpty) return;
 
     for (int i = 0; i < files.length; i++) {
-      if (files[i].name.toLowerCase().contains(query)) {
+      if (files.elementAt(i).name.toLowerCase().contains(query)) {
         setState(() {
           _matchedIndexes.add(i);
         });
@@ -290,7 +290,7 @@ class _FileExplorerScreenState extends State<FileExplorerScreen> {
                               padding: EdgeInsets.all(16),
                               itemCount: state.files.length,
                               itemBuilder: (context, index) {
-                                final file = state.files[index];
+                                final file = state.files.elementAt(index);
                                 return FileExplorerFileEntryItem(
                                   file: file,
                                   isSelected: state.selectedFile == file,

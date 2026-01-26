@@ -1,7 +1,7 @@
 import 'package:android_tools/features/file_explorer/domain/entities/file_entry.dart';
 
 abstract class FileRepository {
-  Future<List<FileEntry>> listFiles(String path, String deviceId);
+  Future<Iterable<FileEntry>> listFiles(String path, String deviceId);
   Future<void> deleteFile(String filePath, String deviceId);
   Future<void> createDirectory(String path, String name, String deviceId);
   Future<void> downloadFile(

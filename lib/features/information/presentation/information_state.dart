@@ -4,8 +4,10 @@ part of 'information_bloc.dart';
 class InformationState with InformationStateMappable {
   final bool isLoading;
   final DeviceInformationEntity? deviceInformation;
-  final DeviceBatteryInformationEntity? deviceBatteryInformation;
-  final DeviceStorageInformationEntity? deviceStorageInformation;
+  final BatteryInfo? deviceBatteryInformation;
+  final StorageInfo? deviceStorageInformation;
+  final DisplayInfo? deviceDisplayInformation;
+  final NetworkInfo? deviceNetworkInformation;
   final DeviceEntity? device;
 
   InformationState({
@@ -14,5 +16,7 @@ class InformationState with InformationStateMappable {
     this.device,
     this.deviceBatteryInformation,
     this.deviceStorageInformation,
+    this.deviceDisplayInformation,
+    this.deviceNetworkInformation,
   });
 }

@@ -29,10 +29,10 @@ class SharedModule {
       () => DeviceRepositoryImpl(getIt.get(), getIt.get()),
     );
     getIt.registerLazySingleton<ApplicationRepository>(
-      () => ApplicationRepositoryImpl(getIt.get(), getIt.get()),
+      () => ApplicationRepositoryImpl(getIt.get()),
     );
     getIt.registerLazySingleton<PackageRepository>(
-      () => PackageRepositoryImpl(getIt.get(), getIt.get()),
+      () => PackageRepositoryImpl(getIt.get()),
     );
   }
 

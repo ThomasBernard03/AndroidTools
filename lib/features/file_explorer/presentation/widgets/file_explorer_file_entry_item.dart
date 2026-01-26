@@ -1,6 +1,6 @@
+import 'package:adb_dart/adb_dart.dart' hide FileEntry;
 import 'package:android_tools/features/file_explorer/core/int_extensions.dart';
 import 'package:android_tools/features/file_explorer/domain/entities/file_entry.dart';
-import 'package:android_tools/features/file_explorer/domain/entities/file_type.dart';
 import 'package:android_tools/features/file_explorer/presentation/widgets/file_entry_menu_result.dart';
 import 'package:android_tools/features/file_explorer/presentation/widgets/file_explorer_menus.dart';
 import 'package:android_tools/features/file_explorer/presentation/widgets/file_entry_extensions.dart';

@@ -1,4 +1,4 @@
-import 'package:android_tools/features/logcat/domain/entities/logcat_level.dart';
+import 'package:adb_dart/adb_dart.dart';
 import 'package:android_tools/features/logcat/domain/entities/logcat_line_entity.dart';
 import 'package:android_tools/features/logcat/presentation/core/logcat_level_extensions.dart';
 import 'package:flutter/material.dart';

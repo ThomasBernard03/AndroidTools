@@ -1,9 +1,9 @@
 import 'dart:async';
 
+import 'package:adb_dart/adb_dart.dart';
 import 'package:android_tools/features/logcat/domain/entities/process_entity.dart';
 import 'package:android_tools/features/logcat/domain/usecases/get_processes_usecase.dart';
 import 'package:android_tools/shared/domain/entities/device_entity.dart';
-import 'package:android_tools/features/logcat/domain/entities/logcat_level.dart';
 import 'package:android_tools/features/logcat/domain/usecases/clear_logcat_usecase.dart';
 import 'package:android_tools/features/logcat/domain/usecases/listen_logcat_usecase.dart';
 import 'package:android_tools/main.dart';
@@ -27,7 +27,7 @@ class LogcatBloc extends Bloc<LogcatEvent, LogcatState> {
   final Logger _logger = getIt.get();
   final ListenSelectedDeviceUsecase _listenSelectedDeviceUsecase = getIt.get();
 
-  StreamSubscription<List<String>>? _logcatSubscription;
+  StreamSubscription<Iterable<String>>? _logcatSubscription;
 
   LogcatBloc() : super(LogcatState()) {
     on<OnStartListeningLogcat>((event, emit) async {

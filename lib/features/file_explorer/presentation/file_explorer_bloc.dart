@@ -1,3 +1,4 @@
+import 'package:adb_dart/adb_dart.dart' hide FileEntry;
 import 'package:android_tools/features/file_explorer/core/string_extensions.dart';
 import 'package:android_tools/features/file_explorer/domain/entities/file_entry.dart';
 import 'package:android_tools/features/file_explorer/domain/usecases/create_directory_usecase.dart';
@@ -13,7 +14,6 @@ import 'package:file_picker/file_picker.dart' hide FileType;
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:logger/logger.dart';
 import 'package:path/path.dart' as p;
-import 'package:android_tools/features/file_explorer/domain/entities/file_type.dart';
 
 part 'file_explorer_event.dart';
 part 'file_explorer_state.dart';
