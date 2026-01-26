@@ -1,10 +1,9 @@
 import 'dart:async';
-import 'dart:convert';
 import 'dart:io';
 
+import 'package:adb_dart/adb_dart.dart';
 import 'package:android_tools/features/logcat/domain/entities/process_entity.dart';
 import 'package:android_tools/shared/data/datasources/shell/shell_datasource.dart';
-import 'package:android_tools/features/logcat/domain/entities/logcat_level.dart';
 import 'package:android_tools/features/logcat/domain/repositories/logcat_repository.dart';
 import 'package:logger/logger.dart';
 
@@ -15,98 +14,23 @@ class LogcatRepositoryImpl implements LogcatRepository {
   LogcatRepositoryImpl(this._logger, this._shellDatasource);
 
   @override
-  Stream<List<String>> listenLogcat(
+  Stream<Iterable<String>> listenLogcat(
     String deviceId,
     LogcatLevel? level,
     int? processId,
-  ) async* {
-    if (deviceId.isEmpty) {
-      _logger.w("Device id can't be empty, can't listen for logs");
-      return;
-    }
-
-    final adbPath = _shellDatasource.getAdbPath();
-
-    final args = <String>['-s', deviceId, 'logcat'];
-
-    if (level != null) {
-      args.add('*:${_mapLevel(level)}');
-    }
-
-    if (processId != null) {
-      args.addAll(['--pid', processId.toString()]);
-    }
-
-    final process = await Process.start(adbPath, args);
-
-    final buffer = <String>[];
-    final controller = StreamController<List<String>>();
-    Timer? timer;
-
-    process.stdout
-        .transform(utf8.decoder)
-        .transform(const LineSplitter())
-        .listen(
-          (line) {
-            buffer.add(line);
-
-            if (timer == null || !timer!.isActive) {
-              timer = Timer.periodic(const Duration(milliseconds: 500), (_) {
-                if (buffer.isNotEmpty) {
-                  controller.add(List.from(buffer));
-                  buffer.clear();
-                }
-              });
-            }
-          },
-          onDone: () {
-            timer?.cancel();
-            if (buffer.isNotEmpty) {
-              controller.add(List.from(buffer));
-            }
-            controller.close();
-          },
-        );
-
-    yield* controller.stream;
-  }
-
-  String _mapLevel(LogcatLevel level) {
-    switch (level) {
-      case LogcatLevel.verbose:
-        return 'V';
-      case LogcatLevel.debug:
-        return 'D';
-      case LogcatLevel.info:
-        return 'I';
-      case LogcatLevel.warning:
-        return 'W';
-      case LogcatLevel.error:
-        return 'E';
-      case LogcatLevel.fatal:
-        return 'F';
-    }
+  ) {
+    final adbClient = AdbClient(
+      adbExecutablePath: _shellDatasource.getAdbPath(),
+    );
+    return adbClient.listenLogcat(deviceId);
   }
 
   @override
   Future<void> clearLogcat(String deviceId) async {
-    try {
-      _logger.i("Cleaning logcat");
-      final adbPath = _shellDatasource.getAdbPath();
-      final process = await Process.run(adbPath, [
-        '-s',
-        deviceId,
-        'logcat',
-        '-c',
-      ]);
-      if (process.exitCode != 0) {
-        _logger.w("Error when clearing logcat : ${process.stderr}");
-      } else {
-        _logger.i("Logcat cleared successfully");
-      }
-    } catch (e) {
-      _logger.w('Exception clearing logcat: $e');
-    }
+    final adbClient = AdbClient(
+      adbExecutablePath: _shellDatasource.getAdbPath(),
+    );
+    adbClient.clearLogcat(deviceId);
   }
 
   @override

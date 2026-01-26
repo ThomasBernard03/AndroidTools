@@ -134,7 +134,7 @@ class InformationScreen extends StatelessWidget {
                                       value:
                                           state
                                                   .deviceBatteryInformation
-                                                  ?.isCharging ==
+                                                  ?.isPlugged ==
                                               true
                                           ? null
                                           : ((state
@@ -167,7 +167,10 @@ class InformationScreen extends StatelessWidget {
                             totalBytes:
                                 state.deviceStorageInformation?.totalBytes ?? 1,
                             freeBytes:
-                                state.deviceStorageInformation?.freeBytes ?? 0,
+                                state
+                                    .deviceStorageInformation
+                                    ?.availableBytes ??
+                                0,
                           );
                         },
                       ),

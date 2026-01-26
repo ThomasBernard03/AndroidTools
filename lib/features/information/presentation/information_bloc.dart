@@ -1,6 +1,5 @@
-import 'package:android_tools/features/information/domain/entities/device_battery_information_entity.dart';
+import 'package:adb_dart/adb_dart.dart';
 import 'package:android_tools/features/information/domain/entities/device_information_entity.dart';
-import 'package:android_tools/features/information/domain/entities/device_storage_information_entity.dart';
 import 'package:android_tools/features/information/domain/usecases/get_device_battery_information_usecase.dart';
 import 'package:android_tools/features/information/domain/usecases/get_device_information_usecase.dart';
 import 'package:android_tools/features/information/domain/usecases/get_device_storage_information_usecase.dart';

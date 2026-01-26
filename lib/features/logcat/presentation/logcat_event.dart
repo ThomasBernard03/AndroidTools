@@ -25,7 +25,7 @@ class OnResumeLogcat extends LogcatEvent {}
 class OnRefreshLogcat extends LogcatEvent {}
 
 class OnLogReceived extends LogcatEvent {
-  final List<String> lines;
+  final Iterable<String> lines;
   OnLogReceived({required this.lines});
 }
 

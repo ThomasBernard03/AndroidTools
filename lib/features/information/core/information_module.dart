@@ -15,7 +15,7 @@ class InformationModule {
       () => GetDeviceBatteryInformationUsecase(getIt.get()),
     );
     getIt.registerLazySingleton<DeviceInformationRepository>(
-      () => DeviceInformationRepositoryImpl(getIt.get(), getIt.get()),
+      () => DeviceInformationRepositoryImpl(getIt.get()),
     );
   }
 }

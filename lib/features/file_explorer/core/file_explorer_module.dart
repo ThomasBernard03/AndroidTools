@@ -15,7 +15,7 @@ class FileExplorerModule {
 
   static void _registerRepositories() {
     getIt.registerLazySingleton<FileRepository>(
-      () => GeneralFileRepositoryImpl(getIt.get(), getIt.get(), getIt.get()),
+      () => GeneralFileRepositoryImpl(getIt.get(), getIt.get()),
     );
   }
 
