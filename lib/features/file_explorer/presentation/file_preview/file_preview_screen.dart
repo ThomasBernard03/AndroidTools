@@ -1,6 +1,7 @@
 import 'package:adb_dart/adb_dart.dart';
 import 'package:android_tools/features/file_explorer/presentation/file_preview/file_preview_bloc.dart';
-import 'package:android_tools/features/file_explorer/presentation/file_preview/text_preview_widget.dart';
+import 'package:android_tools/features/file_explorer/presentation/file_preview/widgets/image_preview_widget.dart';
+import 'package:android_tools/features/file_explorer/presentation/file_preview/widgets/text_preview_widget.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 
@@ -71,9 +72,9 @@ class FilePreviewScreen extends StatelessWidget {
   Widget _buildPreviewContent(BuildContext context, FilePreviewState state) {
     switch (state.previewType) {
       case PreviewType.text:
-        return _buildTextPreview(context, state);
+        return _buildTextPreview(state);
       case PreviewType.image:
-        return _buildImagePreview(context, state);
+        return _buildImagePreview(state);
       case PreviewType.video:
         return _buildVideoPreview(context, state);
       case PreviewType.audio:
@@ -83,30 +84,21 @@ class FilePreviewScreen extends StatelessWidget {
     }
   }
 
-  Widget _buildTextPreview(BuildContext context, FilePreviewState state) {
+  Widget _buildTextPreview(FilePreviewState state) {
     return TextPreviewWidget(
       content: state.content ?? "",
       fileName: fileEntry.name,
     );
   }
 
-  Widget _buildImagePreview(BuildContext context, FilePreviewState state) {
-    return Center(
-      child: Column(
-        mainAxisAlignment: MainAxisAlignment.center,
-        children: [
-          const Icon(Icons.image, size: 64, color: Colors.grey),
-          const SizedBox(height: 16),
-          Text('Image preview', style: Theme.of(context).textTheme.titleMedium),
-          const SizedBox(height: 8),
-          Text(
-            'Coming soon...',
-            style: Theme.of(
-              context,
-            ).textTheme.bodyMedium?.copyWith(color: Colors.grey),
-          ),
-        ],
-      ),
+  Widget _buildImagePreview(FilePreviewState state) {
+    if (state.localFilePath == null) {
+      return const Center(child: Text('No image file path available'));
+    }
+
+    return ImagePreviewWidget(
+      imagePath: state.localFilePath!,
+      fileName: fileEntry.name,
     );
   }
 
