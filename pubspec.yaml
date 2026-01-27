@@ -27,6 +27,7 @@ dependencies:
   desktop_drop: ^0.7.0
   file_picker: ^10.3.7
   url_launcher: ^6.3.2
+  mime: ^1.0.0
   package_info_plus: ^9.0.0
   bitsdojo_window: ^0.1.6
   auto_updater: ^1.0.0
