@@ -1,5 +1,6 @@
 import 'package:adb_dart/adb_dart.dart';
 import 'package:android_tools/features/file_explorer/presentation/file_preview/file_preview_bloc.dart';
+import 'package:android_tools/features/file_explorer/presentation/file_preview/text_preview_widget.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 
@@ -17,20 +18,17 @@ class FilePreviewScreen extends StatelessWidget {
   Widget build(BuildContext context) {
     return BlocProvider(
       create: (context) => FilePreviewBloc()
-        ..add(OnFilePreviewAppearing(
-          fileEntry: fileEntry,
-          currentPath: currentPath,
-        )),
-      child: Scaffold(
-        appBar: AppBar(
-          title: Text(fileEntry.name),
+        ..add(
+          OnFilePreviewAppearing(
+            fileEntry: fileEntry,
+            currentPath: currentPath,
+          ),
         ),
+      child: Scaffold(
         body: BlocBuilder<FilePreviewBloc, FilePreviewState>(
           builder: (context, state) {
             if (state.status == FilePreviewStatus.loading) {
-              return const Center(
-                child: CircularProgressIndicator(),
-              );
+              return const Center(child: CircularProgressIndicator());
             }
 
             if (state.status == FilePreviewStatus.error) {
@@ -63,9 +61,7 @@ class FilePreviewScreen extends StatelessWidget {
               return _buildPreviewContent(context, state);
             }
 
-            return const Center(
-              child: Text('No preview available'),
-            );
+            return const Center(child: Text('No preview available'));
           },
         ),
       ),
@@ -88,15 +84,9 @@ class FilePreviewScreen extends StatelessWidget {
   }
 
   Widget _buildTextPreview(BuildContext context, FilePreviewState state) {
-    return SingleChildScrollView(
-      padding: const EdgeInsets.all(16),
-      child: SelectableText(
-        state.content ?? '',
-        style: const TextStyle(
-          fontFamily: 'monospace',
-          fontSize: 14,
-        ),
-      ),
+    return TextPreviewWidget(
+      content: state.content ?? "",
+      fileName: fileEntry.name,
     );
   }
 
@@ -105,22 +95,15 @@ class FilePreviewScreen extends StatelessWidget {
       child: Column(
         mainAxisAlignment: MainAxisAlignment.center,
         children: [
-          const Icon(
-            Icons.image,
-            size: 64,
-            color: Colors.grey,
-          ),
+          const Icon(Icons.image, size: 64, color: Colors.grey),
           const SizedBox(height: 16),
-          Text(
-            'Image preview',
-            style: Theme.of(context).textTheme.titleMedium,
-          ),
+          Text('Image preview', style: Theme.of(context).textTheme.titleMedium),
           const SizedBox(height: 8),
           Text(
             'Coming soon...',
-            style: Theme.of(context).textTheme.bodyMedium?.copyWith(
-                  color: Colors.grey,
-                ),
+            style: Theme.of(
+              context,
+            ).textTheme.bodyMedium?.copyWith(color: Colors.grey),
           ),
         ],
       ),
@@ -132,22 +115,15 @@ class FilePreviewScreen extends StatelessWidget {
       child: Column(
         mainAxisAlignment: MainAxisAlignment.center,
         children: [
-          const Icon(
-            Icons.video_library,
-            size: 64,
-            color: Colors.grey,
-          ),
+          const Icon(Icons.video_library, size: 64, color: Colors.grey),
           const SizedBox(height: 16),
-          Text(
-            'Video preview',
-            style: Theme.of(context).textTheme.titleMedium,
-          ),
+          Text('Video preview', style: Theme.of(context).textTheme.titleMedium),
           const SizedBox(height: 8),
           Text(
             'Coming soon...',
-            style: Theme.of(context).textTheme.bodyMedium?.copyWith(
-                  color: Colors.grey,
-                ),
+            style: Theme.of(
+              context,
+            ).textTheme.bodyMedium?.copyWith(color: Colors.grey),
           ),
         ],
       ),
@@ -159,22 +135,15 @@ class FilePreviewScreen extends StatelessWidget {
       child: Column(
         mainAxisAlignment: MainAxisAlignment.center,
         children: [
-          const Icon(
-            Icons.audio_file,
-            size: 64,
-            color: Colors.grey,
-          ),
+          const Icon(Icons.audio_file, size: 64, color: Colors.grey),
           const SizedBox(height: 16),
-          Text(
-            'Audio preview',
-            style: Theme.of(context).textTheme.titleMedium,
-          ),
+          Text('Audio preview', style: Theme.of(context).textTheme.titleMedium),
           const SizedBox(height: 8),
           Text(
             'Coming soon...',
-            style: Theme.of(context).textTheme.bodyMedium?.copyWith(
-                  color: Colors.grey,
-                ),
+            style: Theme.of(
+              context,
+            ).textTheme.bodyMedium?.copyWith(color: Colors.grey),
           ),
         ],
       ),
@@ -186,11 +155,7 @@ class FilePreviewScreen extends StatelessWidget {
       child: Column(
         mainAxisAlignment: MainAxisAlignment.center,
         children: [
-          const Icon(
-            Icons.insert_drive_file,
-            size: 64,
-            color: Colors.grey,
-          ),
+          const Icon(Icons.insert_drive_file, size: 64, color: Colors.grey),
           const SizedBox(height: 16),
           Text(
             'Preview not available',
@@ -199,9 +164,9 @@ class FilePreviewScreen extends StatelessWidget {
           const SizedBox(height: 8),
           Text(
             'This file type is not supported for preview',
-            style: Theme.of(context).textTheme.bodyMedium?.copyWith(
-                  color: Colors.grey,
-                ),
+            style: Theme.of(
+              context,
+            ).textTheme.bodyMedium?.copyWith(color: Colors.grey),
             textAlign: TextAlign.center,
           ),
         ],

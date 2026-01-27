@@ -2,7 +2,7 @@ import 'package:adb_dart/adb_dart.dart';
 import 'package:android_tools/features/file_explorer/presentation/file_explorer_bloc.dart';
 import 'package:android_tools/features/file_explorer/core/string_extensions.dart';
 import 'package:android_tools/features/file_explorer/presentation/file_preview/file_preview_bloc.dart';
-import 'package:android_tools/features/file_explorer/presentation/file_preview/widgets/file_preview_content.dart';
+import 'package:android_tools/features/file_explorer/presentation/file_preview/file_preview_screen.dart';
 import 'package:android_tools/features/file_explorer/presentation/widgets/file_entry_menu_result.dart';
 import 'package:android_tools/features/file_explorer/presentation/widgets/file_explorer_app_bar.dart';
 import 'package:android_tools/features/file_explorer/presentation/widgets/file_explorer_file_entry_item.dart';
@@ -274,142 +274,129 @@ class _FileExplorerScreenState extends State<FileExplorerScreen> {
                                 );
                               }
                             },
-                            child: BlocBuilder<FileExplorerBloc, FileExplorerState>(
-                              builder: (context, state) {
-                                return GestureDetector(
-                                  behavior: HitTestBehavior.deferToChild,
-                                  onSecondaryTapDown: (details) {
-                                    FileExplorerMenus.showGeneralMenu(
-                                      context,
-                                      details,
-                                    ).then((value) async {
-                                      if (value == FileEntryMenuResult.upload) {
-                                        if (context.mounted) {
-                                          onUploadFiles(context);
-                                        }
-                                        return;
-                                      }
-                                      if (value == FileEntryMenuResult.refresh) {
-                                        if (context.mounted) {
-                                          context.read<FileExplorerBloc>().add(
-                                            OnRefreshFiles(),
-                                          );
-                                        }
-                                        return;
-                                      }
-                                      if (value == FileEntryMenuResult.newDirectory) {
-                                        if (context.mounted) {
-                                          await onShowCreateDirectoryDialog(context);
-                                        }
-                                        return;
-                                      }
-                                    });
-                                  },
-                                  child: ListView.builder(
-                                    controller: _scrollController,
-                                    padding: EdgeInsets.all(16),
-                                    itemCount: state.files.length,
-                                    itemBuilder: (context, index) {
-                                      final file = state.files.elementAt(index);
-                                      return FileExplorerFileEntryItem(
-                                        file: file,
-                                        isSelected: state.selectedFile == file,
-                                        onDownloadFile: () => context
-                                            .read<FileExplorerBloc>()
-                                            .add(OnDownloadFile(fileName: file.name)),
-                                        onDeleteFile: () => context
-                                            .read<FileExplorerBloc>()
-                                            .add(OnDeleteFile(fileName: file.name)),
-                                        onTap: () {
-                                          context
-                                              .read<FileExplorerBloc>()
-                                              .add(OnFileEntryTapped(fileEntry: file));
-
-                                          // Trigger preview for files
-                                          if (file.type == FileType.file) {
-                                            previewBloc.add(OnFilePreviewAppearing(
-                                              fileEntry: file,
-                                              currentPath: state.path,
-                                            ));
+                            child:
+                                BlocBuilder<
+                                  FileExplorerBloc,
+                                  FileExplorerState
+                                >(
+                                  builder: (context, state) {
+                                    return GestureDetector(
+                                      behavior: HitTestBehavior.deferToChild,
+                                      onSecondaryTapDown: (details) {
+                                        FileExplorerMenus.showGeneralMenu(
+                                          context,
+                                          details,
+                                        ).then((value) async {
+                                          if (value ==
+                                              FileEntryMenuResult.upload) {
+                                            if (context.mounted) {
+                                              onUploadFiles(context);
+                                            }
+                                            return;
                                           }
+                                          if (value ==
+                                              FileEntryMenuResult.refresh) {
+                                            if (context.mounted) {
+                                              context
+                                                  .read<FileExplorerBloc>()
+                                                  .add(OnRefreshFiles());
+                                            }
+                                            return;
+                                          }
+                                          if (value ==
+                                              FileEntryMenuResult
+                                                  .newDirectory) {
+                                            if (context.mounted) {
+                                              await onShowCreateDirectoryDialog(
+                                                context,
+                                              );
+                                            }
+                                            return;
+                                          }
+                                        });
+                                      },
+                                      child: ListView.builder(
+                                        controller: _scrollController,
+                                        padding: EdgeInsets.all(16),
+                                        itemCount: state.files.length,
+                                        itemBuilder: (context, index) {
+                                          final file = state.files.elementAt(
+                                            index,
+                                          );
+                                          return FileExplorerFileEntryItem(
+                                            file: file,
+                                            isSelected:
+                                                state.selectedFile == file,
+                                            onDownloadFile: () => context
+                                                .read<FileExplorerBloc>()
+                                                .add(
+                                                  OnDownloadFile(
+                                                    fileName: file.name,
+                                                  ),
+                                                ),
+                                            onDeleteFile: () => context
+                                                .read<FileExplorerBloc>()
+                                                .add(
+                                                  OnDeleteFile(
+                                                    fileName: file.name,
+                                                  ),
+                                                ),
+                                            onTap: () {
+                                              context
+                                                  .read<FileExplorerBloc>()
+                                                  .add(
+                                                    OnFileEntryTapped(
+                                                      fileEntry: file,
+                                                    ),
+                                                  );
+
+                                              // Trigger preview for files
+                                              if (file.type == FileType.file) {
+                                                previewBloc.add(
+                                                  OnFilePreviewAppearing(
+                                                    fileEntry: file,
+                                                    currentPath: state.path,
+                                                  ),
+                                                );
+                                              }
+                                            },
+                                            onUploadFile: () async {
+                                              await onUploadFiles(context);
+                                            },
+                                            onRefresh: () => context
+                                                .read<FileExplorerBloc>()
+                                                .add(OnRefreshFiles()),
+                                            onNewDirectory: () async {
+                                              await onShowCreateDirectoryDialog(
+                                                context,
+                                              );
+                                            },
+                                          );
                                         },
-                                        onUploadFile: () async {
-                                          await onUploadFiles(context);
-                                        },
-                                        onRefresh: () => context
-                                            .read<FileExplorerBloc>()
-                                            .add(OnRefreshFiles()),
-                                        onNewDirectory: () async {
-                                          await onShowCreateDirectoryDialog(context);
-                                        },
-                                      );
-                                    },
-                                  ),
-                                );
-                              },
-                            ),
+                                      ),
+                                    );
+                                  },
+                                ),
                           ),
                         ),
                         // Divider
-                        Container(
-                          width: 1,
-                          color: Color(0xFF2A2A2A),
-                        ),
+                        Container(width: 1, color: Color(0xFF2A2A2A)),
                         // Right panel: File Preview
-                        Expanded(
-                          flex: 1,
-                          child: Container(
-                            color: Color(0xFF0D0D0D),
-                            child: BlocProvider.value(
-                              value: previewBloc,
-                              child: BlocBuilder<FilePreviewBloc, FilePreviewState>(
-                                builder: (context, previewState) {
-                                  return Column(
-                                    children: [
-                                      // Preview header
-                                      if (previewState.fileEntry != null)
-                                        Container(
-                                          padding: EdgeInsets.all(16),
-                                          decoration: BoxDecoration(
-                                            color: Color(0xFF1A1D1C),
-                                            border: Border(
-                                              bottom: BorderSide(
-                                                color: Color(0xFF2A2A2A),
-                                                width: 1,
-                                              ),
-                                            ),
-                                          ),
-                                          child: Row(
-                                            children: [
-                                              Icon(
-                                                Icons.visibility_outlined,
-                                                size: 20,
-                                                color: Colors.grey,
-                                              ),
-                                              SizedBox(width: 8),
-                                              Expanded(
-                                                child: Text(
-                                                  previewState.fileEntry!.name,
-                                                  style: TextStyle(
-                                                    fontWeight: FontWeight.w500,
-                                                    fontSize: 14,
-                                                  ),
-                                                  overflow: TextOverflow.ellipsis,
-                                                ),
-                                              ),
-                                            ],
-                                          ),
-                                        ),
-                                      // Preview content
-                                      Expanded(
-                                        child: FilePreviewContent(state: previewState),
+                        BlocBuilder<FileExplorerBloc, FileExplorerState>(
+                          builder: (context, state) {
+                            return Expanded(
+                              flex: 1,
+                              child: state.selectedFile != null
+                                  ? FilePreviewScreen(
+                                      key: ValueKey(
+                                        '${state.path}/${state.selectedFile!.name}',
                                       ),
-                                    ],
-                                  );
-                                },
-                              ),
-                            ),
-                          ),
+                                      fileEntry: state.selectedFile!,
+                                      currentPath: state.path,
+                                    )
+                                  : SizedBox.shrink(),
+                            );
+                          },
                         ),
                       ],
                     ),
