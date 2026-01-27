@@ -38,15 +38,16 @@ class _FileExplorerScreenState extends State<FileExplorerScreen> {
 
   Future<void> onUploadFiles(BuildContext context) async {
     final result = await FilePicker.platform.pickFiles(
-      dialogTitle: 'Choose files',
+      dialogTitle: 'Choose file',
     );
     if (result == null || result.files.isEmpty) {
       return;
     }
     if (context.mounted) {
-      context.read<FileExplorerBloc>().add(
-        OnUploadFiles(files: result.files.map((f) => f.path ?? "")),
-      );
+      final firstFile = result.files.map((f) => f.path ?? "").firstOrNull;
+      if (firstFile != null && firstFile.isNotEmpty) {
+        context.read<FileExplorerBloc>().add(OnUploadFile(file: firstFile));
+      }
     }
   }
 
@@ -248,11 +249,14 @@ class _FileExplorerScreenState extends State<FileExplorerScreen> {
                   Expanded(
                     child: FileExplorerDropTarget(
                       onFileDropped: (details) {
-                        context.read<FileExplorerBloc>().add(
-                          OnUploadFiles(
-                            files: details.files.map((f) => f.path),
-                          ),
-                        );
+                        final firstFile = details.files
+                            .map((f) => f.path)
+                            .firstOrNull;
+                        if (firstFile != null) {
+                          context.read<FileExplorerBloc>().add(
+                            OnUploadFile(file: firstFile),
+                          );
+                        }
                       },
                       child: BlocBuilder<FileExplorerBloc, FileExplorerState>(
                         builder: (context, state) {

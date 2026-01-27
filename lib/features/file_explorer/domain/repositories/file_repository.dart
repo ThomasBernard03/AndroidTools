@@ -10,7 +10,7 @@ abstract class FileRepository {
     String deviceId,
   );
   Future<void> uploadFiles(
-    Iterable<String> filesPath,
+    String filePath,
     String destination,
     String deviceId,
   );

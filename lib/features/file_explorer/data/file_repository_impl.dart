@@ -83,6 +83,19 @@ class GeneralFileRepositoryImpl implements FileRepository {
     final adbClient = AdbClient(
       adbExecutablePath: _shellDatasource.getAdbPath(),
     );
+
+    if (filePath.startsWith('data/data/')) {
+      final result = _parsePrivateAppPath(filePath);
+      if (result == null) return;
+
+      await adbClient.deleteFile(
+        result.subPath ?? "",
+        deviceId,
+        packageName: result.package,
+      );
+      return;
+    }
+
     await adbClient.deleteFile(filePath, deviceId);
   }
 
@@ -97,6 +110,20 @@ class GeneralFileRepositoryImpl implements FileRepository {
     final adbClient = AdbClient(
       adbExecutablePath: _shellDatasource.getAdbPath(),
     );
+
+    if (path.startsWith('data/data/')) {
+      final result = _parsePrivateAppPath(path);
+      if (result == null) return;
+
+      await adbClient.createDirectory(
+        result.subPath ?? "",
+        name,
+        deviceId,
+        packageName: result.package,
+      );
+      return;
+    }
+
     await adbClient.createDirectory(path, name, deviceId);
   }
 
@@ -111,13 +138,48 @@ class GeneralFileRepositoryImpl implements FileRepository {
     final adbClient = AdbClient(
       adbExecutablePath: _shellDatasource.getAdbPath(),
     );
-    adbClient.downloadFile(filePath, destinationPath, deviceId);
+
+    if (filePath.startsWith('data/data/')) {
+      final result = _parsePrivateAppPath(filePath);
+      if (result == null) return;
+
+      await adbClient.downloadFile(
+        result.subPath ?? "",
+        destinationPath,
+        deviceId,
+        packageName: result.package,
+      );
+      return;
+    }
+
+    await adbClient.downloadFile(filePath, destinationPath, deviceId);
   }
 
   @override
   Future<void> uploadFiles(
-    Iterable<String> filesPath,
+    String filePath,
     String destination,
     String deviceId,
-  ) async {}
+  ) async {
+    if (filePath.isEmpty || destination.isEmpty) return;
+
+    final adbClient = AdbClient(
+      adbExecutablePath: _shellDatasource.getAdbPath(),
+    );
+
+    if (destination.startsWith('data/data/')) {
+      final result = _parsePrivateAppPath(destination);
+      if (result == null) return;
+
+      await adbClient.uploadFile(
+        filePath,
+        result.subPath ?? "",
+        deviceId,
+        packageName: result.package,
+      );
+      return;
+    }
+
+    await adbClient.uploadFile(filePath, destination, deviceId);
+  }
 }
