@@ -1,5 +1,4 @@
-import 'package:adb_dart/adb_dart.dart' hide FileEntry;
-import 'package:android_tools/features/file_explorer/domain/entities/file_entry.dart';
+import 'package:adb_dart/adb_dart.dart';
 import 'package:android_tools/features/file_explorer/domain/repositories/file_repository.dart';
 import 'package:android_tools/shared/data/datasources/shell/shell_datasource.dart';
 import 'package:android_tools/shared/domain/repositories/package_repository.dart';
@@ -63,17 +62,11 @@ class GeneralFileRepositoryImpl implements FileRepository {
         packageName: result.package,
       );
 
-      return filesResult.map(
-        (x) =>
-            FileEntry(type: x.type, permissions: x.permissions, name: x.name),
-      );
+      return filesResult;
     }
 
     final result = await adbClient.listFiles(path, deviceId);
-
-    return result.map(
-      (x) => FileEntry(type: x.type, permissions: x.permissions, name: x.name),
-    );
+    return result;
   }
 
   @override

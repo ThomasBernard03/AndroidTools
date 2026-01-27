@@ -1,6 +1,5 @@
-import 'package:adb_dart/adb_dart.dart' hide FileEntry;
+import 'package:adb_dart/adb_dart.dart';
 import 'package:android_tools/features/file_explorer/core/string_extensions.dart';
-import 'package:android_tools/features/file_explorer/domain/entities/file_entry.dart';
 import 'package:android_tools/features/file_explorer/domain/usecases/create_directory_usecase.dart';
 import 'package:android_tools/features/file_explorer/domain/usecases/delete_file_usecase.dart';
 import 'package:android_tools/features/file_explorer/domain/usecases/download_file_usecase.dart';
