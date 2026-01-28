@@ -78,6 +78,22 @@ class ApplicationRepositoryImpl implements ApplicationRepository {
             updatedAt: Value(DateTime.now()),
           ),
         );
+
+    // 4. Clean old entries if max history size is exceeded
+    final pathsToDelete = await _applicationLocalDatasource.cleanOldHistoryEntries();
+
+    // 5. Delete the APK files that were removed from history
+    for (final filePath in pathsToDelete) {
+      try {
+        final file = File(filePath);
+        if (await file.exists()) {
+          await file.delete();
+          _logger.i("Deleted old APK file: $filePath");
+        }
+      } catch (e) {
+        _logger.e("Error deleting APK file $filePath: $e");
+      }
+    }
   }
 
   @override
@@ -85,5 +101,53 @@ class ApplicationRepositoryImpl implements ApplicationRepository {
     return _applicationLocalDatasource
         .watchInstalledApplicationHistory()
         .map((models) => models.map((model) => model.toEntity()).toList());
+  }
+
+  @override
+  Future<void> clearInstalledApplicationHistory() async {
+    try {
+      // 1. Clear database records
+      await _applicationLocalDatasource.clearInstalledApplicationHistory();
+
+      // 2. Delete all files in installed_apks directory
+      final appSupportDir = await getApplicationSupportDirectory();
+      final installedApksDir = Directory(path.join(appSupportDir.path, 'installed_apks'));
+
+      if (await installedApksDir.exists()) {
+        await installedApksDir.delete(recursive: true);
+        // Recreate the directory for future installations
+        await installedApksDir.create(recursive: true);
+      }
+
+      _logger.i("Installed application history cleared successfully");
+    } catch (e) {
+      _logger.e("Error clearing installed application history: $e");
+      rethrow;
+    }
+  }
+
+  @override
+  Future<int> getMaxHistorySize() async {
+    return await _applicationLocalDatasource.getMaxHistorySize();
+  }
+
+  @override
+  Future<void> setMaxHistorySize(int size) async {
+    await _applicationLocalDatasource.setMaxHistorySize(size);
+    // Clean old entries immediately if the new size is smaller than current count
+    final pathsToDelete = await _applicationLocalDatasource.cleanOldHistoryEntries();
+
+    // Delete the APK files that were removed from history
+    for (final filePath in pathsToDelete) {
+      try {
+        final file = File(filePath);
+        if (await file.exists()) {
+          await file.delete();
+          _logger.i("Deleted old APK file: $filePath");
+        }
+      } catch (e) {
+        _logger.e("Error deleting APK file $filePath: $e");
+      }
+    }
   }
 }
