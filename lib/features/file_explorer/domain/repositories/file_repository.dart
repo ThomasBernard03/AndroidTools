@@ -1,4 +1,4 @@
-import 'package:android_tools/features/file_explorer/domain/entities/file_entry.dart';
+import 'package:adb_dart/adb_dart.dart';
 
 abstract class FileRepository {
   Future<Iterable<FileEntry>> listFiles(String path, String deviceId);
@@ -10,7 +10,7 @@ abstract class FileRepository {
     String deviceId,
   );
   Future<void> uploadFiles(
-    Iterable<String> filesPath,
+    String filePath,
     String destination,
     String deviceId,
   );

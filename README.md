@@ -1,117 +1,180 @@
-<a href='https://nextchat.club'>
-  <img src="https://github.com/user-attachments/assets/83bdcc07-ae5e-4954-a53a-ac151ba6ccf3" width="1000" alt="icon"/>
-</a>
+<div align="center">
 
-<h1 align="center">Android Tools</h1>
+# 🔧 Android Tools
 
-# android_tools
+### A powerful desktop application for managing Android devices
 
-```shell
-fvm flutter clean && fvm flutter pub get && fvm dart run build_runner build -d
-```
+[![Version](https://img.shields.io/badge/version-2026.01.1-blue.svg)](https://github.com/yourusername/android-tools/releases)
+[![Flutter](https://img.shields.io/badge/Flutter-3.9.2-02569B?logo=flutter)](https://flutter.dev)
+[![License](https://img.shields.io/badge/license-MIT-green.svg)](LICENSE)
+[![Platform](https://img.shields.io/badge/platform-macOS%20%7C%20-lightgrey.svg)](https://github.com/yourusername/android-tools)
 
-## Roadmap
-- Update devices list when usb device is plug/unplug
-- Real time SQL database
-- Stack same logcat lines (like VSCode)
-- In app updates
-- Preview text & XML files in file explorer
+[Features](#features) • [Installation](#installation) • [Usage](#usage) • [Building](#building) • [Contributing](#contributing)
 
-## Install application
-
-### Macos
-1. Download latest version from github release.
-2. Unzip installer
-3. Double clic on application
-4. A popup will show "Android tools not opened"
-5. Go to settings -> Confidentialité et sécurité, scroll to bottom
-6. android_tools 2 a été bloqué, clic on `open`
-
-
-## Running the Project with a Sentry DSN
-
-This project supports Sentry error tracking via a **compile-time configuration** using `--dart-define`.
-
-For security reasons, the Sentry DSN is **not included** in the repository. You must provide it yourself when running or building the app.
+</div>
 
 ---
 
-### How It Works
+## 📱 Overview
 
-The project reads the DSN using:
+**Android Tools** is a comprehensive desktop application designed to simplify Android device management. Whether you're a developer, power user, or enthusiast, Android Tools provides an intuitive interface for exploring device files, monitoring logs, and installing applications.
 
-```dart
-const sentryDsn = String.fromEnvironment(
-  'SENTRY_DSN',
-  defaultValue: '',
-);
+Built with Flutter, it offers a modern, responsive UI that works seamlessly across different platforms.
+
+## ✨ Features
+
+### 🗂️ **File Explorer**
+- Browse your Android device's file system with an intuitive interface
+- Preview images, text files, and view file metadata
+- Drag and drop files between your computer and device
+- Support for all common file formats
+
+### 📦 **Application Installer**
+- Install APK files with a single click
+- Batch installation support for multiple apps
+- Track installation history
+
+### 📊 **Device Information**
+- View detailed device specifications
+- Check Android version and build information
+- Monitor device status in real-time
+
+### 📝 **Logcat Viewer**
+- Real-time log monitoring
+- Advanced filtering by tag, priority
+- Clean, readable log presentation
+
+## 🚀 Installation
+
+### macOS
+
+1. Download the latest release from the [Releases page](https://github.com/yourusername/android-tools/releases)
+2. Unzip the downloaded file
+3. Double-click `android_tools.app`
+4. If you see "Android Tools cannot be opened":
+   - Go to **System Preferences** → **Privacy & Security**
+   - Scroll down and click **Open Anyway** next to the Android Tools warning
+5. The app will launch successfully
+
+### Windows & Linux
+Coming soon! Star this repository to get notified when they're available.
+
+## 📋 Prerequisites
+
+- **ADB (Android Debug Bridge)** must be installed and available in your PATH
+- **USB Debugging** enabled on your Android device
+- **macOS 10.14+** (for macOS users)
+
+## 🎯 Usage
+
+1. **Connect your Android device** via USB
+2. **Enable USB Debugging** on your device (Settings → Developer Options → USB Debugging)
+3. **Launch Android Tools**
+4. **Accept the USB debugging prompt** on your device
+5. Your device will appear in the app, ready to use!
+
+### Quick Actions
+- 🗂️ Click **File Explorer** to browse device files
+- 📦 Click **Install APK** to install applications
+- 📝 Click **Logcat** to view device logs
+- ℹ️ Click **Information** to view device details
+
+## 🛠️ Building from Source
+
+
+### Setup
+
+```bash
+# Clone the repository
+git clone https://github.com/yourusername/android-tools.git
+cd android-tools
+
+# Install dependencies
+fvm flutter pub get
+
+# Generate code
+fvm dart run build_runner build -d
 ```
 
-So when you wan't to launch projet, don't forget `--dart-define=SENTRY_DSN`
+### Running the App
 
-Ex :
-```shell
-fvm flutter run --dart-define=SENTRY_DSN=your_dsn
+```bash
+# Run with Sentry (optional, for error tracking)
+fvm flutter run --dart-define=SENTRY_DSN=your_sentry_dsn
 ```
 
+### Building for macOS
 
-
-```shell
-fvm flutter clean && fvm flutter pub get && fvm dart run build_runner build -d
+```bash
+# Build the app
+fvm flutter build macos \
+  --dart-define=SENTRY_DSN=your_sentry_dsn \
+  --obfuscate \
+  --split-debug-info=build/debug-info
 ```
 
-```shell
-    Successfully installed the Sentry Flutter SDK!
-
-    Next steps:
-    1. Run flutter run to test the setup - we've added a test error that will trigger on app start
-    2. For production builds, run flutter build apk --obfuscate --split-debug-info=build/debug-info (or ios/macos) then flutter pub run sentry_dart_plugin to upload debug symbols
-    3. View your test error and transaction data at https://thomas-bernard.sentry.io/issues/?project=4510551404183632
-
-    Learn more:
-    - Debug Symbols: https://docs.sentry.io/platforms/dart/guides/flutter/debug-symbols/
-    - Performance Monitoring: https://docs.sentry.io/platforms/dart/guides/flutter/performance/
-    - Integrations: https://docs.sentry.io/platforms/dart/guides/flutter/integrations/
-```
-
-## Build
-
-### Macos
-
-Build app
-```shell
-fvm flutter build macos --dart-define=SENTRY_DSN=your_sentry_dsn  --obfuscate --split-debug-info=build/debug-info
-```
-
-Dans Xcode :
-	1.	Sélectionne le scheme Release
-	2.	Menu Product → Build
-	3.	Puis Product → Archive
-
-Une fois l’archive créée :
-	•	Clique sur Distribute App
-	•	Choisis Copy App
-	•	Exporte ton .app quelque part
-
-
-Check signature :
-```shell
-codesign -dv android_tools.app
-```
-
-// THIS LINE WORKS !!
-```shell
+```bash
 zip -r android_tools.zip android_tools.app
 ```
 
-TODO test this :
-xattr -dr com.apple.quarantine MonApp.app
+## 🗺️ Roadmap
 
-We use this awesome package to manage application update : [flutter_desktop_updater](https://github.com/MarlonJD/flutter_desktop_updater)
+- [ ] Real-time device connection/disconnection detection
+- [ ] Live SQL database viewer
+- [ ] Stack similar logcat lines (VSCode-style)
+- [ ] Windows and Linux support
+- [ ] Screen mirroring
 
-So you can build the application with this command :
-```shell
-fvm dart run desktop_updater:release macos 
-fvm dart run desktop_updater:archive macos 
+## 🤝 Contributing
+
+Contributions are welcome! Please feel free to submit a Pull Request.
+
+1. Fork the project
+2. Create your feature branch (`git checkout -b feature/AmazingFeature`)
+3. Commit your changes (`git commit -m 'Add some AmazingFeature'`)
+4. Push to the branch (`git push origin feature/AmazingFeature`)
+5. Open a Pull Request
+
+## 📝 Development Notes
+
+### Code Generation
+The project uses build_runner for code generation. Run this after modifying models or database schemas:
+
+```bash
+fvm flutter clean && fvm flutter pub get && fvm dart run build_runner build -d
 ```
-(Don't forget to pass `--dart-define` arguments to the first command)
+
+### Sentry Integration
+For error tracking, set your Sentry DSN:
+
+```dart
+--dart-define=SENTRY_DSN=your_sentry_dsn
+```
+
+### Auto-Updater
+Configure auto-updates by setting the feed URL:
+
+```dart
+--dart-define=AUTO_UPDATER_FEED_URL=your_feed_url
+```
+
+## 📄 License
+
+This project is licensed under the MIT License - see the [LICENSE](LICENSE) file for details.
+
+## 🙏 Acknowledgments
+
+- Built with [Flutter](https://flutter.dev)
+- ADB integration via [adb_dart](https://pub.dev/packages/adb_dart)
+- AAPT integration via [aapt_dart](https://pub.dev/packages/aapt_dart)
+- Auto-updates powered by [auto_updater](https://pub.dev/packages/auto_updater)
+
+---
+
+<div align="center">
+
+**Made with ❤️ for the Android developer community**
+
+[Report Bug](https://github.com/yourusername/android-tools/issues) • [Request Feature](https://github.com/yourusername/android-tools/issues)
+
+</div>

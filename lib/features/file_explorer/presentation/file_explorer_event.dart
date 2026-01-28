@@ -12,10 +12,10 @@ class OnFileEntryTapped extends FileExplorerEvent {
 
 class OnGoBack extends FileExplorerEvent {}
 
-class OnUploadFiles extends FileExplorerEvent {
-  final Iterable<String> files;
+class OnUploadFile extends FileExplorerEvent {
+  final String file;
 
-  OnUploadFiles({required this.files});
+  OnUploadFile({required this.file});
 }
 
 class OnRefreshFiles extends FileExplorerEvent {}

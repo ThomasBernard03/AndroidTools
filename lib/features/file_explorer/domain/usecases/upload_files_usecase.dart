@@ -5,11 +5,7 @@ class UploadFilesUsecase {
 
   UploadFilesUsecase(this._fileRepository);
 
-  Future<void> call(
-    Iterable<String> filesPath,
-    String destination,
-    String deviceId,
-  ) {
-    return _fileRepository.uploadFiles(filesPath, destination, deviceId);
+  Future<void> call(String filePath, String destination, String deviceId) {
+    return _fileRepository.uploadFiles(filePath, destination, deviceId);
   }
 }

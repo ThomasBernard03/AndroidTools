@@ -1,44 +1,40 @@
-import 'package:adb_dart/adb_dart.dart' hide FileEntry;
-import 'package:android_tools/features/file_explorer/domain/entities/file_entry.dart';
+import 'package:adb_dart/adb_dart.dart';
 import 'package:android_tools/features/file_explorer/domain/repositories/file_repository.dart';
-import 'package:android_tools/shared/data/datasources/shell/shell_datasource.dart';
 import 'package:android_tools/shared/domain/repositories/package_repository.dart';
 
 class GeneralFileRepositoryImpl implements FileRepository {
   final PackageRepository _packageRepository;
-  final ShellDatasource _shellDatasource;
+  final AdbClient _adbClient;
 
-  GeneralFileRepositoryImpl(this._packageRepository, this._shellDatasource);
+  GeneralFileRepositoryImpl(this._packageRepository, this._adbClient);
 
   ({String package, String? subPath})? _parsePrivateAppPath(String path) {
-    if (!path.startsWith('/data/data/')) return null;
+    if (!path.startsWith('data/data/')) return null;
 
     final parts = path.split('/');
-    if (parts.length < 4) return null;
+    if (parts.length < 3) return null;
 
-    final package = parts[3];
-    final subPath = parts.length > 4 ? parts.sublist(4).join('/') : null;
+    final package = parts[2];
+    final subPath = parts.length > 3 ? parts.sublist(3).join('/') : null;
 
     return (package: package, subPath: subPath);
   }
 
   @override
   Future<Iterable<FileEntry>> listFiles(String path, String deviceId) async {
-    final adbClient = AdbClient(
-      adbExecutablePath: _shellDatasource.getAdbPath(),
-    );
-
-    if (path == '/data') {
+    if (path == 'data') {
       return [
         FileEntry(
           type: FileType.directory,
           name: 'data',
           permissions: 'drwx--x--x',
+          date: DateTime(1970),
+          size: 4096,
         ),
       ];
     }
 
-    if (path == '/data/data') {
+    if (path == 'data/data') {
       final packages = await _packageRepository.getAllPackages(deviceId);
       return packages
           .map(
@@ -46,44 +42,48 @@ class GeneralFileRepositoryImpl implements FileRepository {
               type: FileType.directory,
               name: pkg,
               permissions: 'drwx------',
+              date: DateTime(1970),
+              size: 4096,
             ),
           )
           .toList();
     }
 
-    if (path.startsWith('/data/data/')) {
+    if (path.startsWith('data/data/')) {
       final result = _parsePrivateAppPath(path);
       if (result == null) {
         return [];
       }
 
-      final filesResult = await adbClient.listFiles(
+      final filesResult = await _adbClient.listFiles(
         result.subPath ?? "",
         deviceId,
         packageName: result.package,
       );
 
-      return filesResult.map(
-        (x) =>
-            FileEntry(type: x.type, permissions: x.permissions, name: x.name),
-      );
+      return filesResult;
     }
 
-    final result = await adbClient.listFiles(path, deviceId);
-
-    return result.map(
-      (x) => FileEntry(type: x.type, permissions: x.permissions, name: x.name),
-    );
+    final result = await _adbClient.listFiles(path, deviceId);
+    return result;
   }
 
   @override
   Future<void> deleteFile(String filePath, String deviceId) async {
     if (filePath.isEmpty) return;
+    if (filePath.startsWith('data/data/')) {
+      final result = _parsePrivateAppPath(filePath);
+      if (result == null) return;
 
-    final adbClient = AdbClient(
-      adbExecutablePath: _shellDatasource.getAdbPath(),
-    );
-    await adbClient.deleteFile(filePath, deviceId);
+      await _adbClient.deleteFile(
+        result.subPath ?? "",
+        deviceId,
+        packageName: result.package,
+      );
+      return;
+    }
+
+    await _adbClient.deleteFile(filePath, deviceId);
   }
 
   @override
@@ -94,10 +94,20 @@ class GeneralFileRepositoryImpl implements FileRepository {
   ) async {
     if (path.isEmpty || name.isEmpty) return;
 
-    final adbClient = AdbClient(
-      adbExecutablePath: _shellDatasource.getAdbPath(),
-    );
-    await adbClient.createDirectory(path, name, deviceId);
+    if (path.startsWith('data/data/')) {
+      final result = _parsePrivateAppPath(path);
+      if (result == null) return;
+
+      await _adbClient.createDirectory(
+        result.subPath ?? "",
+        name,
+        deviceId,
+        packageName: result.package,
+      );
+      return;
+    }
+
+    await _adbClient.createDirectory(path, name, deviceId);
   }
 
   @override
@@ -108,16 +118,43 @@ class GeneralFileRepositoryImpl implements FileRepository {
   ) async {
     if (filePath.isEmpty || destinationPath.isEmpty) return;
 
-    final adbClient = AdbClient(
-      adbExecutablePath: _shellDatasource.getAdbPath(),
-    );
-    adbClient.downloadFile(filePath, destinationPath, deviceId);
+    if (filePath.startsWith('data/data/')) {
+      final result = _parsePrivateAppPath(filePath);
+      if (result == null) return;
+
+      await _adbClient.downloadFile(
+        result.subPath ?? "",
+        destinationPath,
+        deviceId,
+        packageName: result.package,
+      );
+      return;
+    }
+
+    await _adbClient.downloadFile(filePath, destinationPath, deviceId);
   }
 
   @override
   Future<void> uploadFiles(
-    Iterable<String> filesPath,
+    String filePath,
     String destination,
     String deviceId,
-  ) async {}
+  ) async {
+    if (filePath.isEmpty || destination.isEmpty) return;
+
+    if (destination.startsWith('data/data/')) {
+      final result = _parsePrivateAppPath(destination);
+      if (result == null) return;
+
+      await _adbClient.uploadFile(
+        filePath,
+        result.subPath ?? "",
+        deviceId,
+        packageName: result.package,
+      );
+      return;
+    }
+
+    await _adbClient.uploadFile(filePath, destination, deviceId);
+  }
 }

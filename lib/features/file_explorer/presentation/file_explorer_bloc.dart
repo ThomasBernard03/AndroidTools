@@ -1,6 +1,5 @@
-import 'package:adb_dart/adb_dart.dart' hide FileEntry;
+import 'package:adb_dart/adb_dart.dart';
 import 'package:android_tools/features/file_explorer/core/string_extensions.dart';
-import 'package:android_tools/features/file_explorer/domain/entities/file_entry.dart';
 import 'package:android_tools/features/file_explorer/domain/usecases/create_directory_usecase.dart';
 import 'package:android_tools/features/file_explorer/domain/usecases/delete_file_usecase.dart';
 import 'package:android_tools/features/file_explorer/domain/usecases/download_file_usecase.dart';
@@ -33,7 +32,7 @@ class FileExplorerBloc extends Bloc<FileExplorerEvent, FileExplorerState> {
       await emit.onEach<DeviceEntity?>(
         _listenSelectedDeviceUsecase(),
         onData: (device) async {
-          emit(state.copyWith(path: "/", device: device, files: []));
+          emit(state.copyWith(path: "", device: device, files: []));
 
           if (device == null) {
             _logger.i("Selected device is null, can't get files");
@@ -82,10 +81,14 @@ class FileExplorerBloc extends Bloc<FileExplorerEvent, FileExplorerState> {
 
       final currentPath = state.path;
 
-      final parentPath = p.dirname(currentPath);
+      var parentPath = p.dirname(currentPath);
       if (currentPath.isRootPath()) {
         _logger.i("Already at root, can't go back further");
         return;
+      }
+
+      if (parentPath == ".") {
+        parentPath = "";
       }
 
       emit(state.copyWith(isLoading: true));
@@ -101,7 +104,7 @@ class FileExplorerBloc extends Bloc<FileExplorerEvent, FileExplorerState> {
 
       _logger.i('Fetched ${files.length} file(s) for path $parentPath');
     });
-    on<OnUploadFiles>((event, emit) async {
+    on<OnUploadFile>((event, emit) async {
       final device = state.device;
       if (device == null) {
         _logger.w("Device is null, can't upload files");
@@ -109,8 +112,8 @@ class FileExplorerBloc extends Bloc<FileExplorerEvent, FileExplorerState> {
       }
 
       emit(state.copyWith(isLoading: true));
-      _logger.i("Start uploading ${event.files} to ${state.path}");
-      await _uploadFilesUsecase(event.files, state.path, device.deviceId);
+      _logger.i("Start uploading ${event.file} to ${state.path}");
+      await _uploadFilesUsecase(event.file, state.path, device.deviceId);
       _logger.i("Files uploaded refreshing files");
       add(OnRefreshFiles());
     });

@@ -1,6 +1,8 @@
 import 'package:android_tools/main.dart';
 import 'package:android_tools/shared/domain/entities/device_entity.dart';
+import 'package:android_tools/shared/domain/entities/installed_application_history_entity.dart';
 import 'package:android_tools/shared/domain/usecases/install_application_usecase.dart';
+import 'package:android_tools/shared/domain/usecases/listen_installed_application_history_usecase.dart';
 import 'package:android_tools/shared/domain/usecases/listen_selected_device_usecase.dart';
 import 'package:dart_mappable/dart_mappable.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
@@ -15,20 +17,27 @@ class ApplicationInstallerBloc
   final Logger _logger = getIt.get();
   final InstallApplicationUsecase _installApplicationUsecase = getIt.get();
   final ListenSelectedDeviceUsecase _listenSelectedDeviceUsecase = getIt.get();
+  final ListenInstalledApplicationHistoryUsecase
+  _listenInstalledApplicationHistoryUsecase = getIt.get();
 
   ApplicationInstallerBloc() : super(ApplicationInstallerState()) {
     on<OnAppearing>((event, emit) async {
-      await emit.onEach<DeviceEntity?>(
-        _listenSelectedDeviceUsecase(),
-        onData: (device) {
-          emit(state.copyWith(selectedDevice: device));
-        },
-      );
+      await Future.wait([
+        emit.forEach<DeviceEntity?>(
+          _listenSelectedDeviceUsecase(),
+          onData: (device) {
+            return state.copyWith(selectedDevice: device);
+          },
+        ),
+        emit.forEach<List<InstalledApplicationHistoryEntity>>(
+          _listenInstalledApplicationHistoryUsecase(),
+          onData: (history) {
+            return state.copyWith(installedApplicationHistory: history);
+          },
+        ),
+      ]);
     });
-    //on<OnRefreshDevices>((event, emit) async {
-    //  _logger.i("Refresing connected devices");
-    //  await _refreshConnectedDevicesUsecase();
-    //});
+
     on<OnInstallApk>((event, emit) async {
       final device = state.selectedDevice;
       if (device == null) {

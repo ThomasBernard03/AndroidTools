@@ -1,6 +1,5 @@
-import 'package:adb_dart/adb_dart.dart' hide FileEntry;
+import 'package:adb_dart/adb_dart.dart';
 import 'package:android_tools/features/file_explorer/core/int_extensions.dart';
-import 'package:android_tools/features/file_explorer/domain/entities/file_entry.dart';
 import 'package:android_tools/features/file_explorer/presentation/widgets/file_entry_menu_result.dart';
 import 'package:android_tools/features/file_explorer/presentation/widgets/file_explorer_menus.dart';
 import 'package:android_tools/features/file_explorer/presentation/widgets/file_entry_extensions.dart';
@@ -58,7 +57,11 @@ class FileExplorerFileEntryItem extends StatelessWidget {
             borderRadius: BorderRadiusGeometry.all(Radius.circular(12)),
           ),
           child: ListTile(
-            tileColor: Color(0xFF131313),
+            selectedColor: Theme.of(context).colorScheme.onPrimary,
+            selectedTileColor: Theme.of(context).colorScheme.primary,
+            tileColor: isSelected
+                ? Theme.of(context).colorScheme.primary
+                : Color(0xFF131313),
             enabled:
                 file.type == FileType.directory || file.type == FileType.file,
             selected: isSelected,
@@ -81,9 +84,6 @@ class FileExplorerFileEntryItem extends StatelessWidget {
                 Text(file.size?.toReadableBytes() ?? ""),
               ],
             ),
-            selectedTileColor: Theme.of(
-              context,
-            ).colorScheme.surfaceContainerHigh,
             onTap: onTap,
           ),
         ),
