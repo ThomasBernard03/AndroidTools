@@ -1,18 +1,32 @@
 import 'dart:io';
 
+import 'package:aapt_dart/aapt_dart.dart';
 import 'package:adb_dart/adb_dart.dart';
 import 'package:android_tools/shared/data/datasources/local/app_database.dart';
+import 'package:android_tools/shared/data/datasources/local/application_local_datasource.dart';
 import 'package:android_tools/shared/data/datasources/shell/shell_datasource.dart';
+import 'package:android_tools/shared/data/mappers/installed_application_history_mapper.dart';
+import 'package:android_tools/shared/domain/entities/installed_application_history_entity.dart';
 import 'package:android_tools/shared/domain/repositories/application_repository.dart';
-import 'package:drift/drift.dart' as drift;
+import 'package:drift/drift.dart';
+import 'package:logger/logger.dart';
 import 'package:path/path.dart' as path;
 import 'package:path_provider/path_provider.dart';
 
 class ApplicationRepositoryImpl implements ApplicationRepository {
   final ShellDatasource _shellDatasource;
   final AppDatabase _database;
+  final ApplicationLocalDatasource _applicationLocalDatasource;
+  final AaptClient _aaptClient;
+  final Logger _logger;
 
-  ApplicationRepositoryImpl(this._shellDatasource, this._database);
+  ApplicationRepositoryImpl(
+    this._shellDatasource,
+    this._database,
+    this._applicationLocalDatasource,
+    this._aaptClient,
+    this._logger,
+  );
 
   @override
   Future<void> intallApplication(String apkPath, String deviceId) async {
@@ -37,16 +51,39 @@ class ApplicationRepositoryImpl implements ApplicationRepository {
     final cachedApkPath = path.join(cacheDir.path, fileName);
     await apkFile.copy(cachedApkPath);
 
+    // 3. Get apk information
+    ApkInfo? apkInfo;
+    try {
+      apkInfo = await _aaptClient.getApkInfo(cachedApkPath);
+    } catch (e) {
+      _logger.e("Error when retrieving apk info $e");
+    }
+
     // 3. Save to database
-    await _database.into(_database.installedApplicationHistoryModel).insert(
+    await _database
+        .into(_database.installedApplicationHistoryModel)
+        .insert(
           InstalledApplicationHistoryModelCompanion(
-            applicationName: drift.Value(originalFileName),
-            applicationVersionName: const drift.Value('Unknown'),
-            applicationVersionCode: const drift.Value(0),
-            path: drift.Value(cachedApkPath),
-            createdAt: drift.Value(DateTime.now()),
-            updatedAt: drift.Value(DateTime.now()),
+            applicationName: Value(
+              apkInfo?.applicationLabel ?? originalFileName,
+            ),
+            applicationVersionName: apkInfo == null
+                ? Value.absent()
+                : Value(apkInfo.versionName),
+            applicationVersionCode: apkInfo == null
+                ? Value.absent()
+                : Value(apkInfo.versionCode),
+            path: Value(cachedApkPath),
+            createdAt: Value(DateTime.now()),
+            updatedAt: Value(DateTime.now()),
           ),
         );
+  }
+
+  @override
+  Stream<List<InstalledApplicationHistoryEntity>> watchInstalledApplicationHistory() {
+    return _applicationLocalDatasource
+        .watchInstalledApplicationHistory()
+        .map((models) => models.map((model) => model.toEntity()).toList());
   }
 }

@@ -4,6 +4,7 @@ import 'package:desktop_drop/desktop_drop.dart';
 import 'package:file_picker/file_picker.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:intl/intl.dart';
 
 class ApplicationInstallerScreen extends StatefulWidget {
   const ApplicationInstallerScreen({super.key});
@@ -107,7 +108,47 @@ class _ApplicationInstallerScreenState
 
                       Divider(),
 
-                      Text("History"),
+                      Text(
+                        "History",
+                        style: Theme.of(context).textTheme.titleMedium,
+                      ),
+                      SizedBox(height: 8),
+
+                      if (state.installedApplicationHistory.isEmpty)
+                        Center(
+                          child: Padding(
+                            padding: const EdgeInsets.all(32.0),
+                            child: Text(
+                              "No applications installed yet",
+                              style: Theme.of(context).textTheme.bodyMedium
+                                  ?.copyWith(color: Colors.grey),
+                            ),
+                          ),
+                        )
+                      else
+                        ...state.installedApplicationHistory.map((app) {
+                          final dateFormat = DateFormat("yyyy/MM/dd HH:mm");
+
+                          return Card(
+                            child: ListTile(
+                              leading: Icon(Icons.android),
+                              title: Text(app.applicationName),
+                              subtitle: Text(
+                                'Version ${app.applicationVersionName} (${app.applicationVersionCode})\n'
+                                '${app.createdAt != null ? dateFormat.format(app.createdAt!) : ""}',
+                              ),
+                              trailing: IconButton(
+                                icon: Icon(Icons.install_mobile),
+                                tooltip: 'Reinstall',
+                                onPressed: () {
+                                  context.read<ApplicationInstallerBloc>().add(
+                                    OnInstallApk(apkPath: app.path),
+                                  );
+                                },
+                              ),
+                            ),
+                          );
+                        }),
                     ],
                   ),
                 );

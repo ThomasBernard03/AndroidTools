@@ -9,6 +9,14 @@ packages:
       url: "https://pub.dev"
     source: hosted
     version: "92.0.0"
+  aapt_dart:
+    dependency: "direct main"
+    description:
+      name: aapt_dart
+      sha256: "4db40690193703c7069aae90eb52d4de26824781b7b3397699118604d8de6f8d"
+      url: "https://pub.dev"
+    source: hosted
+    version: "1.0.0"
   adb_dart:
     dependency: "direct main"
     description:

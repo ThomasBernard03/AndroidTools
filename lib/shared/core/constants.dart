@@ -15,6 +15,20 @@ class Constants {
     return logDirectory;
   }
 
+  static String getAdbPath() {
+    final execDir = Directory(Platform.resolvedExecutable).parent;
+    final contents = execDir.parent;
+    final resources = Directory("${contents.path}/Resources");
+    return "${resources.path}/adb";
+  }
+
+  static String getAaptPath() {
+    final execDir = Directory(Platform.resolvedExecutable).parent;
+    final contents = execDir.parent;
+    final resources = Directory("${contents.path}/Resources");
+    return "${resources.path}/aapt";
+  }
+
   static const environmentGitRepositoryUrl = "GIT_REPOSITORY_URL";
   static const environmentIssueUrl = "ISSUE_URL";
   static const environmentSentryDsn = "SENTRY_DSN";
