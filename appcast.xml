@@ -7,6 +7,19 @@
     <language>en</language>
 
     <item>
+      <title>Version 2026.02.1</title>
+      <sparkle:version>27</sparkle:version>
+      <sparkle:shortVersionString>2026.02.1</sparkle:shortVersionString>
+      <sparkle:releaseNotesLink>https://github.com/ThomasBernard03/AndroidTools/releases/tag/2026.02.1</sparkle:releaseNotesLink>
+      <pubDate>Tue, 03 Feb 2026 19:32:15 +0000</pubDate>
+      <enclosure
+        url="https://github.com/ThomasBernard03/AndroidTools/releases/download/2026.02.1/AndroidTools-2026.02.1.zip"
+        sparkle:edSignature="pCbnV412DMgjqBYTH79LIHO/45dK7jN4rtbJQiGhph4oXiTNjN5OfD1W88Vu53r5+HxuF0LolLnDIFYv1QVPDA=="
+        sparkle:os="macos"
+        length="103995444"
+        type="application/octet-stream" />
+    </item>
+    <item>
       <title>Version 2026.01.1</title>
       <sparkle:version>26</sparkle:version>
       <sparkle:shortVersionString>2026.01.1</sparkle:shortVersionString>
