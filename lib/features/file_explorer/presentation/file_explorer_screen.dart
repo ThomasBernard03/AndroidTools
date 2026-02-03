@@ -424,6 +424,11 @@ class _FileExplorerScreenState extends State<FileExplorerScreen> {
                             itemBuilder: (context, index) {
                               final part = parts[index];
                               return TextButton(
+                                style: ButtonStyle(
+                                  foregroundColor: WidgetStatePropertyAll(
+                                    Theme.of(context).colorScheme.onSurface,
+                                  ),
+                                ),
                                 onPressed: () {
                                   final newPath = parts
                                       .take(index + 1)

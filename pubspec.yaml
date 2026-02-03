@@ -2,10 +2,10 @@ name: android_tools
 description: "A new Flutter project."
 publish_to: 'none' # Remove this line if you wish to publish to pub.dev
 
-version: 2026.01.1+26
+version: 2026.02.1+27
 
 environment:
-  sdk: ^3.9.2
+  sdk: ^3.10.8
 
 dependencies:
   sentry_flutter: ^9.9.0
@@ -33,9 +33,7 @@ dependencies:
   bitsdojo_window: ^0.1.6
   auto_updater: ^1.0.0
   intl: ^0.20.2
-  flutter_code_editor: ^0.3.5
-  flutter_highlight: ^0.7.0
-
+  flutter_monaco: ^1.4.0
   drift: ^2.30.1
   drift_flutter: ^0.2.8
 

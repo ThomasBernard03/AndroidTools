@@ -22,7 +22,7 @@ class LogcatRepositoryImpl implements LogcatRepository {
     final adbClient = AdbClient(
       adbExecutablePath: _shellDatasource.getAdbPath(),
     );
-    return adbClient.listenLogcat(deviceId);
+    return adbClient.listenLogcat(deviceId, level: level, processId: processId);
   }
 
   @override
