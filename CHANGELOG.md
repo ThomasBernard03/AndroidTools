@@ -7,6 +7,9 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [2026.02.1] - 2026-02-XX
 
+### Fixs
+- Can filter logcat by level & process
+
 ### Improvements
 - Improve text file preview performances (Thanks to [flutter_monaco](https://github.com/omar-hanafy/flutter_monaco))
 - Can preview svg images

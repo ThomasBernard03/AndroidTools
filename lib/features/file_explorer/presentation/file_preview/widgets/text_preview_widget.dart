@@ -16,6 +16,11 @@ class TextPreviewWidget extends StatelessWidget {
     return MonacoEditor(
       initialValue: content,
       interactionEnabled: false,
+      loadingBuilder: (context) => Center(
+        child: CircularProgressIndicator(
+          color: Theme.of(context).colorScheme.onSurface,
+        ),
+      ),
       options: EditorOptions(
         wordWrap: false,
         lineNumbers: false,
