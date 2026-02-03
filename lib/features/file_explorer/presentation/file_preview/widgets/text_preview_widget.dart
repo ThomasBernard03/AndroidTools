@@ -16,7 +16,13 @@ class TextPreviewWidget extends StatelessWidget {
     return MonacoEditor(
       initialValue: content,
       interactionEnabled: false,
-      options: EditorOptions(wordWrap: false),
+      options: EditorOptions(
+        wordWrap: false,
+        lineNumbers: false,
+        readOnly: true,
+        scrollBeyondLastLine: false,
+        contextMenu: false,
+      ),
     );
   }
 }
