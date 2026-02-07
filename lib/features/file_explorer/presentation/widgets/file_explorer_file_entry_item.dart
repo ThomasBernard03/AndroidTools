@@ -9,6 +9,7 @@ import 'package:intl/intl.dart';
 class FileExplorerFileEntryItem extends StatelessWidget {
   final FileEntry file;
   final bool isSelected;
+  final bool isSearchHighlighted;
   final void Function() onDownloadFile;
   final void Function() onDeleteFile;
   final void Function() onUploadFile;
@@ -20,6 +21,7 @@ class FileExplorerFileEntryItem extends StatelessWidget {
     super.key,
     required this.file,
     required this.isSelected,
+    this.isSearchHighlighted = false,
     required this.onDownloadFile,
     required this.onDeleteFile,
     required this.onTap,
@@ -51,7 +53,26 @@ class FileExplorerFileEntryItem extends StatelessWidget {
             }
           });
         },
-        child: Card(
+        child: AnimatedContainer(
+          duration: const Duration(milliseconds: 200),
+          decoration: isSearchHighlighted
+              ? BoxDecoration(
+                  border: Border.all(
+                    color: Colors.orange,
+                    width: 2,
+                  ),
+                  borderRadius: BorderRadius.circular(12),
+                  boxShadow: [
+                    BoxShadow(
+                      color: Colors.orange.withValues(alpha: 0.5),
+                      blurRadius: 8,
+                      spreadRadius: 2,
+                    ),
+                  ],
+                )
+              : null,
+          child: Card(
+          margin: EdgeInsets.zero,
           clipBehavior: Clip.hardEdge,
           shape: RoundedRectangleBorder(
             borderRadius: BorderRadiusGeometry.all(Radius.circular(12)),
@@ -86,6 +107,7 @@ class FileExplorerFileEntryItem extends StatelessWidget {
             ),
             onTap: onTap,
           ),
+        ),
         ),
       ),
     );

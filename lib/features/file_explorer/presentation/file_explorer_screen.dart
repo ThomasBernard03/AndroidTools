@@ -34,6 +34,7 @@ class _FileExplorerScreenState extends State<FileExplorerScreen> {
   bool _showSearch = false;
   List<int> _matchingIndexes = [];
   int _currentMatchIndex = -1;
+  String? _currentPath;
 
   @override
   void initState() {
@@ -254,68 +255,6 @@ class _FileExplorerScreenState extends State<FileExplorerScreen> {
                           : SizedBox.fromSize(size: Size.fromHeight(4));
                     },
                   ),
-                  if (_showSearch)
-                    Container(
-                      color: Color(0xFF1E1E1E),
-                      padding: EdgeInsets.symmetric(horizontal: 16, vertical: 8),
-                      child: Row(
-                        children: [
-                          Expanded(
-                            child: TextField(
-                              controller: _searchController,
-                              focusNode: _searchFocusNode,
-                              autofocus: true,
-                              style: TextStyle(color: Colors.white),
-                              decoration: InputDecoration(
-                                hintText: 'Rechercher...',
-                                hintStyle: TextStyle(color: Colors.white54),
-                                border: OutlineInputBorder(
-                                  borderSide: BorderSide(color: Colors.white24),
-                                ),
-                                enabledBorder: OutlineInputBorder(
-                                  borderSide: BorderSide(color: Colors.white24),
-                                ),
-                                focusedBorder: OutlineInputBorder(
-                                  borderSide: BorderSide(color: Colors.blue),
-                                ),
-                                contentPadding: EdgeInsets.symmetric(
-                                  horizontal: 12,
-                                  vertical: 8,
-                                ),
-                                isDense: true,
-                                suffixText: _matchingIndexes.isEmpty
-                                    ? '0/0'
-                                    : '${_currentMatchIndex + 1}/${_matchingIndexes.length}',
-                                suffixStyle: TextStyle(color: Colors.white70),
-                              ),
-                              onChanged: (_) => _updateMatches(),
-                            ),
-                          ),
-                          SizedBox(width: 8),
-                          IconButton(
-                            icon: Icon(Icons.keyboard_arrow_up, color: Colors.white),
-                            onPressed: _matchingIndexes.isEmpty ? null : _goToPreviousMatch,
-                            tooltip: 'Précédent (Shift+Enter)',
-                            padding: EdgeInsets.all(4),
-                            constraints: BoxConstraints(),
-                          ),
-                          IconButton(
-                            icon: Icon(Icons.keyboard_arrow_down, color: Colors.white),
-                            onPressed: _matchingIndexes.isEmpty ? null : _goToNextMatch,
-                            tooltip: 'Suivant (Enter)',
-                            padding: EdgeInsets.all(4),
-                            constraints: BoxConstraints(),
-                          ),
-                          IconButton(
-                            icon: Icon(Icons.close, color: Colors.white),
-                            onPressed: _closeSearch,
-                            tooltip: 'Fermer (Escape)',
-                            padding: EdgeInsets.all(4),
-                            constraints: BoxConstraints(),
-                          ),
-                        ],
-                      ),
-                    ),
                   Expanded(
                     child: Row(
                       children: [
@@ -339,42 +278,118 @@ class _FileExplorerScreenState extends State<FileExplorerScreen> {
                                   FileExplorerState
                                 >(
                                   builder: (context, state) {
-                                    return GestureDetector(
-                                      behavior: HitTestBehavior.deferToChild,
-                                      onSecondaryTapDown: (details) {
-                                        FileExplorerMenus.showGeneralMenu(
-                                          context,
-                                          details,
-                                        ).then((value) async {
-                                          if (value ==
-                                              FileEntryMenuResult.upload) {
-                                            if (context.mounted) {
-                                              onUploadFiles(context);
-                                            }
-                                            return;
-                                          }
-                                          if (value ==
-                                              FileEntryMenuResult.refresh) {
-                                            if (context.mounted) {
-                                              context
-                                                  .read<FileExplorerBloc>()
-                                                  .add(OnRefreshFiles());
-                                            }
-                                            return;
-                                          }
-                                          if (value ==
-                                              FileEntryMenuResult
-                                                  .newDirectory) {
-                                            if (context.mounted) {
-                                              await onShowCreateDirectoryDialog(
+                                    // Check if path has changed and update search results
+                                    if (_currentPath != state.path) {
+                                      _currentPath = state.path;
+                                      // Update matches on next frame to avoid calling setState during build
+                                      WidgetsBinding.instance.addPostFrameCallback((_) {
+                                        if (_showSearch && mounted) {
+                                          _updateMatches();
+                                        }
+                                      });
+                                    }
+
+                                    return Column(
+                                      children: [
+                                        if (_showSearch)
+                                          Container(
+                                            color: Color(0xFF1E1E1E),
+                                            padding: EdgeInsets.symmetric(horizontal: 16, vertical: 8),
+                                            child: Row(
+                                              children: [
+                                                Expanded(
+                                                  child: TextField(
+                                                    controller: _searchController,
+                                                    focusNode: _searchFocusNode,
+                                                    autofocus: true,
+                                                    style: TextStyle(color: Colors.white),
+                                                    decoration: InputDecoration(
+                                                      hintText: 'Rechercher...',
+                                                      hintStyle: TextStyle(color: Colors.white54),
+                                                      border: OutlineInputBorder(
+                                                        borderSide: BorderSide(color: Colors.white24),
+                                                      ),
+                                                      enabledBorder: OutlineInputBorder(
+                                                        borderSide: BorderSide(color: Colors.white24),
+                                                      ),
+                                                      focusedBorder: OutlineInputBorder(
+                                                        borderSide: BorderSide(color: Colors.blue),
+                                                      ),
+                                                      contentPadding: EdgeInsets.symmetric(
+                                                        horizontal: 12,
+                                                        vertical: 8,
+                                                      ),
+                                                      isDense: true,
+                                                      suffixText: _matchingIndexes.isEmpty
+                                                          ? '0/0'
+                                                          : '${_currentMatchIndex + 1}/${_matchingIndexes.length}',
+                                                      suffixStyle: TextStyle(color: Colors.white70),
+                                                    ),
+                                                    onChanged: (_) => _updateMatches(),
+                                                  ),
+                                                ),
+                                                SizedBox(width: 8),
+                                                IconButton(
+                                                  icon: Icon(Icons.keyboard_arrow_up, color: Colors.white),
+                                                  onPressed: _matchingIndexes.isEmpty ? null : _goToPreviousMatch,
+                                                  tooltip: 'Précédent (Shift+Enter)',
+                                                  padding: EdgeInsets.all(4),
+                                                  constraints: BoxConstraints(),
+                                                ),
+                                                IconButton(
+                                                  icon: Icon(Icons.keyboard_arrow_down, color: Colors.white),
+                                                  onPressed: _matchingIndexes.isEmpty ? null : _goToNextMatch,
+                                                  tooltip: 'Suivant (Enter)',
+                                                  padding: EdgeInsets.all(4),
+                                                  constraints: BoxConstraints(),
+                                                ),
+                                                IconButton(
+                                                  icon: Icon(Icons.close, color: Colors.white),
+                                                  onPressed: _closeSearch,
+                                                  tooltip: 'Fermer (Escape)',
+                                                  padding: EdgeInsets.all(4),
+                                                  constraints: BoxConstraints(),
+                                                ),
+                                              ],
+                                            ),
+                                          ),
+                                        Expanded(
+                                          child: GestureDetector(
+                                            behavior: HitTestBehavior.deferToChild,
+                                            onSecondaryTapDown: (details) {
+                                              FileExplorerMenus.showGeneralMenu(
                                                 context,
-                                              );
-                                            }
-                                            return;
-                                          }
-                                        });
-                                      },
-                                      child: ListView.builder(
+                                                details,
+                                              ).then((value) async {
+                                                if (value ==
+                                                    FileEntryMenuResult.upload) {
+                                                  if (context.mounted) {
+                                                    onUploadFiles(context);
+                                                  }
+                                                  return;
+                                                }
+                                                if (value ==
+                                                    FileEntryMenuResult.refresh) {
+                                                  if (context.mounted) {
+                                                    context
+                                                        .read<FileExplorerBloc>()
+                                                        .add(OnRefreshFiles());
+                                                  }
+                                                  return;
+                                                }
+                                                if (value ==
+                                                    FileEntryMenuResult
+                                                        .newDirectory) {
+                                                  if (context.mounted) {
+                                                    await onShowCreateDirectoryDialog(
+                                                      context,
+                                                    );
+                                                  }
+                                                  return;
+                                                }
+                                              });
+                                            },
+                                            child: ListView.builder(
                                         controller: _scrollController,
                                         padding: EdgeInsets.all(16),
                                         itemCount: state.files.length,
@@ -382,10 +397,16 @@ class _FileExplorerScreenState extends State<FileExplorerScreen> {
                                           final file = state.files.elementAt(
                                             index,
                                           );
+                                          final isSearchHighlighted = _showSearch &&
+                                              _currentMatchIndex >= 0 &&
+                                              _currentMatchIndex < _matchingIndexes.length &&
+                                              _matchingIndexes[_currentMatchIndex] == index;
+
                                           return FileExplorerFileEntryItem(
                                             file: file,
                                             isSelected:
                                                 state.selectedFile == file,
+                                            isSearchHighlighted: isSearchHighlighted,
                                             onDownloadFile: () => context
                                                 .read<FileExplorerBloc>()
                                                 .add(
@@ -433,7 +454,10 @@ class _FileExplorerScreenState extends State<FileExplorerScreen> {
                                           );
                                         },
                                       ),
-                                    );
+                                    ),
+                                  ),
+                                        ],
+                                      );
                                   },
                                 ),
                           ),
