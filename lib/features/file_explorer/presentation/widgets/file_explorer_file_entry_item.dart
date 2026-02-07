@@ -9,7 +9,7 @@ import 'package:intl/intl.dart';
 class FileExplorerFileEntryItem extends StatelessWidget {
   final FileEntry file;
   final bool isSelected;
-  final bool isSearchHighlighted;
+  final String? searchQuery;
   final void Function() onDownloadFile;
   final void Function() onDeleteFile;
   final void Function() onUploadFile;
@@ -21,7 +21,7 @@ class FileExplorerFileEntryItem extends StatelessWidget {
     super.key,
     required this.file,
     required this.isSelected,
-    this.isSearchHighlighted = false,
+    this.searchQuery,
     required this.onDownloadFile,
     required this.onDeleteFile,
     required this.onTap,
@@ -29,6 +29,58 @@ class FileExplorerFileEntryItem extends StatelessWidget {
     required this.onRefresh,
     required this.onNewDirectory,
   });
+
+  Widget _buildHighlightedText(String text, String? query, TextStyle? style) {
+    if (query == null || query.isEmpty) {
+      return Text(text, style: style);
+    }
+
+    final lowerText = text.toLowerCase();
+    final lowerQuery = query.toLowerCase();
+    final matches = <TextSpan>[];
+    int currentIndex = 0;
+
+    while (currentIndex < text.length) {
+      final matchIndex = lowerText.indexOf(lowerQuery, currentIndex);
+
+      if (matchIndex == -1) {
+        // No more matches, add remaining text
+        matches.add(TextSpan(
+          text: text.substring(currentIndex),
+          style: style,
+        ));
+        break;
+      }
+
+      // Add text before match
+      if (matchIndex > currentIndex) {
+        matches.add(TextSpan(
+          text: text.substring(currentIndex, matchIndex),
+          style: style,
+        ));
+      }
+
+      // Add highlighted match
+      matches.add(TextSpan(
+        text: text.substring(matchIndex, matchIndex + query.length),
+        style: style?.copyWith(
+          backgroundColor: Colors.orange,
+          color: Colors.black,
+          fontWeight: FontWeight.bold,
+        ) ?? TextStyle(
+          backgroundColor: Colors.orange,
+          color: Colors.black,
+          fontWeight: FontWeight.bold,
+        ),
+      ));
+
+      currentIndex = matchIndex + query.length;
+    }
+
+    return RichText(
+      text: TextSpan(children: matches),
+    );
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -53,25 +105,7 @@ class FileExplorerFileEntryItem extends StatelessWidget {
             }
           });
         },
-        child: AnimatedContainer(
-          duration: const Duration(milliseconds: 200),
-          decoration: isSearchHighlighted
-              ? BoxDecoration(
-                  border: Border.all(
-                    color: Colors.orange,
-                    width: 2,
-                  ),
-                  borderRadius: BorderRadius.circular(12),
-                  boxShadow: [
-                    BoxShadow(
-                      color: Colors.orange.withValues(alpha: 0.5),
-                      blurRadius: 8,
-                      spreadRadius: 2,
-                    ),
-                  ],
-                )
-              : null,
-          child: Card(
+        child: Card(
           margin: EdgeInsets.zero,
           clipBehavior: Clip.hardEdge,
           shape: RoundedRectangleBorder(
@@ -87,7 +121,11 @@ class FileExplorerFileEntryItem extends StatelessWidget {
                 file.type == FileType.directory || file.type == FileType.file,
             selected: isSelected,
             leading: file.icon(),
-            title: Text(file.name),
+            title: _buildHighlightedText(
+              file.name,
+              searchQuery,
+              DefaultTextStyle.of(context).style,
+            ),
             subtitle: Row(
               spacing: 8,
               children: [
@@ -107,7 +145,6 @@ class FileExplorerFileEntryItem extends StatelessWidget {
             ),
             onTap: onTap,
           ),
-        ),
         ),
       ),
     );

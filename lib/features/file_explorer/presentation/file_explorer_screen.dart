@@ -397,16 +397,15 @@ class _FileExplorerScreenState extends State<FileExplorerScreen> {
                                           final file = state.files.elementAt(
                                             index,
                                           );
-                                          final isSearchHighlighted = _showSearch &&
-                                              _currentMatchIndex >= 0 &&
-                                              _currentMatchIndex < _matchingIndexes.length &&
-                                              _matchingIndexes[_currentMatchIndex] == index;
+                                          final query = _showSearch && _searchController.text.isNotEmpty
+                                              ? _searchController.text
+                                              : null;
 
                                           return FileExplorerFileEntryItem(
                                             file: file,
                                             isSelected:
                                                 state.selectedFile == file,
-                                            isSearchHighlighted: isSearchHighlighted,
+                                            searchQuery: query,
                                             onDownloadFile: () => context
                                                 .read<FileExplorerBloc>()
                                                 .add(
