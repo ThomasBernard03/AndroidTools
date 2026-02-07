@@ -21,10 +21,10 @@ packages:
     dependency: "direct main"
     description:
       name: adb_dart
-      sha256: b5d7d8ddd1492ff0a78ede589940a621949af9f61897bddcde45a0af87f92ec5
+      sha256: "60719ce56eadeffc3a1591a3d59d1ea6f38555449f3aa427d2ae508d43f35ee0"
       url: "https://pub.dev"
     source: hosted
-    version: "1.2.0"
+    version: "1.2.2"
   analyzer:
     dependency: transitive
     description:

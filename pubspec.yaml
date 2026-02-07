@@ -11,7 +11,7 @@ dependencies:
   sentry_flutter: ^9.9.0
   flutter:
     sdk: flutter
-  adb_dart: ^1.2.0
+  adb_dart: ^1.2.2
   aapt_dart: ^1.0.0
   # adb_dart:
   #  path: ../../adb_dart
