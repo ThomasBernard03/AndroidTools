@@ -55,7 +55,7 @@ class LogcatBloc extends Bloc<LogcatEvent, LogcatState> {
       _logger.d("Adding ${event.lines.length} new lines to logcat lines");
       final updated = List<String>.from(state.logs)..addAll(event.lines);
       _logger.d("Size of logcat lines : ${updated.length}");
-      emit(state.copyWith(logs: updated));
+      emit(state.copyWith(logs: updated, isLoading: false));
     });
 
     on<OnClearLogcat>((event, emit) async {

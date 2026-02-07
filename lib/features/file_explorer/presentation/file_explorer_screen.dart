@@ -10,7 +10,6 @@ import 'package:android_tools/features/file_explorer/presentation/widgets/file_e
 import 'package:android_tools/features/file_explorer/presentation/widgets/file_explorer_menus.dart';
 import 'package:file_picker/file_picker.dart' as file_picker;
 import 'package:flutter/material.dart';
-import 'package:flutter/services.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_svg/svg.dart';
 
@@ -25,14 +24,6 @@ class _FileExplorerScreenState extends State<FileExplorerScreen> {
   final bloc = FileExplorerBloc();
   final previewBloc = FilePreviewBloc();
   bool isDropping = false;
-  final FocusNode _rootFocus = FocusNode();
-  final FocusNode _searchFocus = FocusNode();
-  final TextEditingController _searchController = TextEditingController();
-  final ScrollController _scrollController = ScrollController();
-
-  bool _showSearch = false;
-  int _currentMatchIndex = 0;
-  List<int> _matchedIndexes = [];
 
   @override
   void initState() {
@@ -90,119 +81,11 @@ class _FileExplorerScreenState extends State<FileExplorerScreen> {
     }
   }
 
-  void _openSearch({String initialText = ""}) {
-    setState(() {
-      _showSearch = true;
-      _searchController.text = initialText;
-      _searchController.selection = TextSelection.collapsed(
-        offset: _searchController.text.length,
-      );
-    });
-
-    _updateMatches();
-    _searchFocus.requestFocus();
-  }
-
-  void _closeSearch() {
-    setState(() {
-      _showSearch = false;
-      _searchController.clear();
-      _matchedIndexes.clear();
-      _currentMatchIndex = 0;
-    });
-
-    _rootFocus.requestFocus();
-  }
-
-  void _updateMatches() {
-    final files = bloc.state.files;
-    final query = _searchController.text.toLowerCase();
-
-    setState(() {
-      _matchedIndexes = [];
-    });
-
-    if (query.isEmpty) return;
-
-    for (int i = 0; i < files.length; i++) {
-      if (files.elementAt(i).name.toLowerCase().contains(query)) {
-        setState(() {
-          _matchedIndexes.add(i);
-        });
-      }
-    }
-
-    setState(() {});
-  }
-
-  void _goToNextMatch() {
-    if (_matchedIndexes.isEmpty) return;
-
-    setState(() {
-      _currentMatchIndex = (_currentMatchIndex + 1) % _matchedIndexes.length;
-    });
-
-    _scrollToCurrentMatch();
-  }
-
-  void _scrollToCurrentMatch() {
-    if (_matchedIndexes.isEmpty) return;
-
-    final index = _matchedIndexes[_currentMatchIndex];
-    const itemHeight = 64.0;
-
-    _scrollController.animateTo(
-      index * itemHeight,
-      duration: Duration(milliseconds: 120),
-      curve: Curves.easeOut,
-    );
-  }
-
   @override
   Widget build(BuildContext context) {
     return BlocProvider.value(
       value: bloc,
-      child: Focus(
-        autofocus: true,
-        focusNode: _rootFocus,
-        onKeyEvent: (node, event) {
-          if (event is! KeyDownEvent) return KeyEventResult.ignored;
-
-          final key = event.logicalKey;
-          final isCtrlOrCmd =
-              HardwareKeyboard.instance.isControlPressed ||
-              HardwareKeyboard.instance.isMetaPressed;
-
-          // Ctrl+F / Cmd+F
-          if (isCtrlOrCmd && key == LogicalKeyboardKey.keyF) {
-            _openSearch();
-            return KeyEventResult.handled;
-          }
-
-          // Escape
-          if (key == LogicalKeyboardKey.escape && _showSearch) {
-            _closeSearch();
-            return KeyEventResult.handled;
-          }
-
-          // Enter
-          if (key == LogicalKeyboardKey.enter && _showSearch) {
-            _goToNextMatch();
-            return KeyEventResult.handled;
-          }
-
-          if (!_showSearch &&
-              event.character != null &&
-              event.character!.isNotEmpty &&
-              event.character!.codeUnitAt(0) >= 32 &&
-              !isCtrlOrCmd) {
-            _openSearch(initialText: event.character!);
-            return KeyEventResult.handled;
-          }
-
-          return KeyEventResult.ignored;
-        },
-        child: Scaffold(
+      child: Scaffold(
           backgroundColor: Color(0xff000000),
           appBar: PreferredSize(
             preferredSize: Size.fromHeight(kToolbarHeight),
@@ -223,33 +106,6 @@ class _FileExplorerScreenState extends State<FileExplorerScreen> {
             builder: (context, state) {
               return Column(
                 children: [
-                  if (_showSearch)
-                    Container(
-                      color: Color(0xFF1A1D1C),
-                      padding: EdgeInsets.symmetric(
-                        horizontal: 16,
-                        vertical: 8,
-                      ),
-                      child: TextField(
-                        controller: _searchController,
-                        focusNode: _searchFocus,
-                        autofocus: true,
-                        decoration: InputDecoration(
-                          hintText: "Rechercher…",
-                          border: OutlineInputBorder(),
-                          isDense: true,
-                          suffix: Text(
-                            "$_currentMatchIndex / ${_matchedIndexes.length}",
-                          ),
-                        ),
-                        onChanged: (_) {
-                          _currentMatchIndex = 0;
-                          _updateMatches();
-                          _scrollToCurrentMatch();
-                        },
-                        onSubmitted: (_) => _goToNextMatch(),
-                      ),
-                    ),
                   BlocBuilder<FileExplorerBloc, FileExplorerState>(
                     builder: (context, state) {
                       return state.isLoading
@@ -316,7 +172,6 @@ class _FileExplorerScreenState extends State<FileExplorerScreen> {
                                         });
                                       },
                                       child: ListView.builder(
-                                        controller: _scrollController,
                                         padding: EdgeInsets.all(16),
                                         itemCount: state.files.length,
                                         itemBuilder: (context, index) {
@@ -465,7 +320,6 @@ class _FileExplorerScreenState extends State<FileExplorerScreen> {
               );
             },
           ),
-        ),
       ),
     );
   }
