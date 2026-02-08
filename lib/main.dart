@@ -66,7 +66,7 @@ Future<void> main(List<String> args) async {
   }, appRunner: () => runApp(SentryWidget(child: MyApp())));
 
   doWhenWindowReady(() {
-    appWindow.minSize = Size(600, 450);
+    appWindow.minSize = Size(800, 50);
     appWindow.alignment = Alignment.center;
     appWindow.show();
   });

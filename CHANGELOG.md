@@ -8,6 +8,8 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 
 ### Fixs
 - Fix search in file explorer
+- Fix upload in private app directory
+- Filx delete file in private app directory
 
 
 ## [2026.02.1] - 2026-02-03
