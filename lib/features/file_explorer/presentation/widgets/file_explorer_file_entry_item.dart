@@ -115,11 +115,9 @@ class FileExplorerFileEntryItem extends StatelessWidget {
             borderRadius: BorderRadiusGeometry.all(Radius.circular(12)),
           ),
           child: ListTile(
-            selectedColor: Theme.of(context).colorScheme.onPrimary,
-            selectedTileColor: Theme.of(context).colorScheme.primary,
-            tileColor: isSelected
-                ? Theme.of(context).colorScheme.primary
-                : Color(0xff000000),
+            selectedColor: Theme.of(context).colorScheme.surface,
+            selectedTileColor: Theme.of(context).colorScheme.onSurface,
+            tileColor: Color(0xff000000),
             enabled:
                 file.type == FileType.directory || file.type == FileType.file,
             selected: isSelected,
@@ -127,11 +125,7 @@ class FileExplorerFileEntryItem extends StatelessWidget {
             title: Row(
               spacing: 8,
               children: [
-                _buildHighlightedText(
-                  file.name,
-                  searchQuery,
-                  DefaultTextStyle.of(context).style,
-                ),
+                _buildHighlightedText(file.name, searchQuery, null),
 
                 if (file.type == FileType.file)
                   Container(
@@ -144,10 +138,7 @@ class FileExplorerFileEntryItem extends StatelessWidget {
                   ),
 
                 if (file.type == FileType.file)
-                  Text(
-                    file.size?.toReadableBytes() ?? "",
-                    style: Theme.of(context).textTheme.bodySmall,
-                  ),
+                  Text(file.size?.toReadableBytes() ?? ""),
               ],
             ),
             onTap: onTap,

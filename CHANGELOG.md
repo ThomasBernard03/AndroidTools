@@ -4,12 +4,15 @@ All notable changes to Android Tools will be documented in this file.
 
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 
-## [2026.02.2] - 2026-02-XX
+## [2026.02.2] - 2026-02-08
 
 ### Fixs
 - Fix search in file explorer
 - Fix upload in private app directory
 - Filx delete file in private app directory
+
+### Improvements
+- New file explorer design
 
 
 ## [2026.02.1] - 2026-02-03

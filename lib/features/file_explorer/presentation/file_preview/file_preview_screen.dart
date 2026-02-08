@@ -1,7 +1,9 @@
 import 'package:adb_dart/adb_dart.dart';
+import 'package:android_tools/features/file_explorer/core/int_extensions.dart';
 import 'package:android_tools/features/file_explorer/presentation/file_preview/file_preview_bloc.dart';
 import 'package:android_tools/features/file_explorer/presentation/file_preview/widgets/image_preview_widget.dart';
 import 'package:android_tools/features/file_explorer/presentation/file_preview/widgets/text_preview_widget.dart';
+import 'package:android_tools/features/file_explorer/presentation/widgets/file_entry_extensions.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 
@@ -59,7 +61,46 @@ class FilePreviewScreen extends StatelessWidget {
             }
 
             if (state.status == FilePreviewStatus.loaded) {
-              return _buildPreviewContent(context, state);
+              return Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+
+                children: [
+                  Expanded(child: _buildPreviewContent(context, state)),
+                  Padding(
+                    padding: const EdgeInsets.all(8.0),
+                    child: Column(
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      children: [
+                        Text(
+                          fileEntry.name,
+                          style: Theme.of(context).textTheme.titleSmall,
+                        ),
+
+                        Divider(
+                          color: Theme.of(
+                            context,
+                          ).colorScheme.onSurface.withAlpha(60),
+                        ),
+
+                        Text(
+                          fileEntry.size?.toReadableBytes() ?? "",
+                          style: Theme.of(context).textTheme.bodyMedium,
+                        ),
+
+                        Text(
+                          fileEntry.date?.toIso8601String() ?? "",
+                          style: Theme.of(context).textTheme.bodyMedium,
+                        ),
+
+                        Text(
+                          fileEntry.permissions,
+                          style: Theme.of(context).textTheme.bodyMedium,
+                        ),
+                      ],
+                    ),
+                  ),
+                ],
+              );
             }
 
             return const Center(child: Text('No preview available'));
@@ -146,22 +187,7 @@ class FilePreviewScreen extends StatelessWidget {
     return Center(
       child: Column(
         mainAxisAlignment: MainAxisAlignment.center,
-        children: [
-          const Icon(Icons.insert_drive_file, size: 64, color: Colors.grey),
-          const SizedBox(height: 16),
-          Text(
-            'Preview not available',
-            style: Theme.of(context).textTheme.titleMedium,
-          ),
-          const SizedBox(height: 8),
-          Text(
-            'This file type is not supported for preview',
-            style: Theme.of(
-              context,
-            ).textTheme.bodyMedium?.copyWith(color: Colors.grey),
-            textAlign: TextAlign.center,
-          ),
-        ],
+        children: [fileEntry.icon(width: 200)],
       ),
     );
   }

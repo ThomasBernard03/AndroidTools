@@ -3,23 +3,23 @@ import 'package:flutter/material.dart';
 import 'package:flutter_svg/svg.dart';
 
 extension FileEntryExtensions on FileEntry {
-  Widget icon() {
+  Widget icon({double width = 20}) {
     switch (type) {
       case FileType.directory:
         return SvgPicture.asset(
           "assets/images/folder/red_folder.svg",
-          width: 20,
+          width: width,
         );
       case FileType.symlink:
         return Icon(Icons.drive_folder_upload_outlined);
       case FileType.unknown:
         return Icon(Icons.folder_off);
       case FileType.file:
-        return _buildFileIcon(name);
+        return _buildFileIcon(name, width);
     }
   }
 
-  Widget _buildFileIcon(String name) {
+  Widget _buildFileIcon(String name, double width) {
     final lowerName = name.toLowerCase();
 
     final assetName = switch (lowerName) {
@@ -37,8 +37,11 @@ extension FileEntryExtensions on FileEntry {
     return Stack(
       alignment: AlignmentGeometry.center,
       children: [
-        SvgPicture.asset("assets/images/file/file_dark.svg", width: 20),
-        SvgPicture.asset("assets/images/file_extensions/$assetName", width: 8),
+        SvgPicture.asset("assets/images/file/file_dark.svg", width: width),
+        SvgPicture.asset(
+          "assets/images/file_extensions/$assetName",
+          width: width / 2,
+        ),
       ],
     );
   }
