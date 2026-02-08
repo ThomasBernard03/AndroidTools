@@ -13,16 +13,15 @@ class FileExplorerBreadcrumb extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final parts = currentPath.split("/");
+    final parts = currentPath.split("/").where((part) => part.isNotEmpty).toList();
+    final breadcrumbItems = ["/", ...parts];
 
     return Container(
       color: Color(0xFF1A1D1C),
       child: SizedBox(
         height: 30,
         child: ListView.separated(
-          padding: const EdgeInsets.symmetric(
-            horizontal: 16.0,
-          ),
+          padding: const EdgeInsets.symmetric(horizontal: 16.0),
           scrollDirection: Axis.horizontal,
           separatorBuilder: (context, index) {
             return Icon(
@@ -32,7 +31,7 @@ class FileExplorerBreadcrumb extends StatelessWidget {
             );
           },
           itemBuilder: (context, index) {
-            final part = parts[index];
+            final part = breadcrumbItems[index];
             return TextButton(
               style: ButtonStyle(
                 foregroundColor: WidgetStatePropertyAll(
@@ -40,13 +39,15 @@ class FileExplorerBreadcrumb extends StatelessWidget {
                 ),
               ),
               onPressed: () {
-                final newPath = parts.take(index + 1).join("/");
-                onNavigateToPath(newPath);
+                if (index == 0) {
+                  onNavigateToPath("");
+                } else {
+                  final newPath = parts.take(index).join("/");
+                  onNavigateToPath(newPath);
+                }
               },
               child: Padding(
-                padding: const EdgeInsets.symmetric(
-                  horizontal: 8.0,
-                ),
+                padding: const EdgeInsets.symmetric(horizontal: 8.0),
                 child: Row(
                   spacing: 4,
                   children: [
@@ -60,7 +61,7 @@ class FileExplorerBreadcrumb extends StatelessWidget {
               ),
             );
           },
-          itemCount: parts.length,
+          itemCount: breadcrumbItems.length,
         ),
       ),
     );
