@@ -8,11 +8,12 @@ import 'package:android_tools/features/file_explorer/presentation/widgets/file_e
 import 'package:android_tools/features/file_explorer/presentation/widgets/file_explorer_file_entry_item.dart';
 import 'package:android_tools/features/file_explorer/presentation/widgets/file_explorer_drop_target.dart';
 import 'package:android_tools/features/file_explorer/presentation/widgets/file_explorer_menus.dart';
+import 'package:android_tools/features/file_explorer/presentation/widgets/file_explorer_breadcrumb.dart';
+import 'package:android_tools/features/file_explorer/presentation/widgets/file_explorer_search_bar.dart';
 import 'package:file_picker/file_picker.dart' as file_picker;
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:flutter_svg/svg.dart';
 
 class FileExplorerScreen extends StatefulWidget {
   const FileExplorerScreen({super.key});
@@ -285,102 +286,15 @@ class _FileExplorerScreenState extends State<FileExplorerScreen> {
                                 return Column(
                                   children: [
                                     if (_showSearch)
-                                      Container(
-                                        color: Color(0xFF1E1E1E),
-                                        padding: EdgeInsets.symmetric(
-                                          horizontal: 16,
-                                          vertical: 8,
-                                        ),
-                                        child: Row(
-                                          children: [
-                                            Expanded(
-                                              child: TextField(
-                                                controller: _searchController,
-                                                focusNode: _searchFocusNode,
-                                                autofocus: true,
-                                                style: TextStyle(
-                                                  color: Colors.white,
-                                                ),
-                                                decoration: InputDecoration(
-                                                  hintText: 'Rechercher...',
-                                                  hintStyle: TextStyle(
-                                                    color: Colors.white54,
-                                                  ),
-                                                  border: OutlineInputBorder(
-                                                    borderSide: BorderSide(
-                                                      color: Colors.white24,
-                                                    ),
-                                                  ),
-                                                  enabledBorder:
-                                                      OutlineInputBorder(
-                                                        borderSide: BorderSide(
-                                                          color: Colors.white24,
-                                                        ),
-                                                      ),
-                                                  focusedBorder:
-                                                      OutlineInputBorder(
-                                                        borderSide: BorderSide(
-                                                          color: Colors.blue,
-                                                        ),
-                                                      ),
-                                                  contentPadding:
-                                                      EdgeInsets.symmetric(
-                                                        horizontal: 12,
-                                                        vertical: 8,
-                                                      ),
-                                                  isDense: true,
-                                                  suffixText:
-                                                      _matchingIndexes.isEmpty
-                                                      ? '0/0'
-                                                      : '${_currentMatchIndex + 1}/${_matchingIndexes.length}',
-                                                  suffixStyle: TextStyle(
-                                                    color: Colors.white70,
-                                                  ),
-                                                ),
-                                                onChanged: (_) =>
-                                                    _updateMatches(),
-                                              ),
-                                            ),
-                                            SizedBox(width: 8),
-                                            IconButton(
-                                              icon: Icon(
-                                                Icons.keyboard_arrow_up,
-                                                color: Colors.white,
-                                              ),
-                                              onPressed:
-                                                  _matchingIndexes.isEmpty
-                                                  ? null
-                                                  : _goToPreviousMatch,
-                                              tooltip:
-                                                  'Précédent (Shift+Enter)',
-                                              padding: EdgeInsets.all(4),
-                                              constraints: BoxConstraints(),
-                                            ),
-                                            IconButton(
-                                              icon: Icon(
-                                                Icons.keyboard_arrow_down,
-                                                color: Colors.white,
-                                              ),
-                                              onPressed:
-                                                  _matchingIndexes.isEmpty
-                                                  ? null
-                                                  : _goToNextMatch,
-                                              tooltip: 'Suivant (Enter)',
-                                              padding: EdgeInsets.all(4),
-                                              constraints: BoxConstraints(),
-                                            ),
-                                            IconButton(
-                                              icon: Icon(
-                                                Icons.close,
-                                                color: Colors.white,
-                                              ),
-                                              onPressed: _closeSearch,
-                                              tooltip: 'Fermer (Escape)',
-                                              padding: EdgeInsets.all(4),
-                                              constraints: BoxConstraints(),
-                                            ),
-                                          ],
-                                        ),
+                                      FileExplorerSearchBar(
+                                        controller: _searchController,
+                                        focusNode: _searchFocusNode,
+                                        matchCount: _matchingIndexes.length,
+                                        currentMatchIndex: _currentMatchIndex,
+                                        onNext: _goToNextMatch,
+                                        onPrevious: _goToPreviousMatch,
+                                        onClose: _closeSearch,
+                                        onChanged: _updateMatches,
                                       ),
                                     Expanded(
                                       child: GestureDetector(
@@ -517,65 +431,17 @@ class _FileExplorerScreenState extends State<FileExplorerScreen> {
                       ],
                     ),
                   ),
-                  Container(
-                    color: Color(0xFF1A1D1C),
-                    child: SizedBox(
-                      height: 30,
-                      child: BlocBuilder<FileExplorerBloc, FileExplorerState>(
-                        builder: (context, state) {
-                          final parts = state.path.split("/");
-
-                          return ListView.separated(
-                            padding: const EdgeInsets.symmetric(
-                              horizontal: 16.0,
-                            ),
-                            scrollDirection: Axis.horizontal,
-                            separatorBuilder: (context, index) {
-                              return Icon(
-                                Icons.chevron_right_rounded,
-                                size: 12,
-                                color: Color.fromARGB(255, 98, 99, 99),
-                              );
-                            },
-                            itemBuilder: (context, index) {
-                              final part = parts[index];
-                              return TextButton(
-                                style: ButtonStyle(
-                                  foregroundColor: WidgetStatePropertyAll(
-                                    Theme.of(context).colorScheme.onSurface,
-                                  ),
-                                ),
-                                onPressed: () {
-                                  final newPath = parts
-                                      .take(index + 1)
-                                      .join("/");
-                                  context.read<FileExplorerBloc>().add(
-                                    OnGoToDirectory(path: newPath),
-                                  );
-                                },
-                                child: Padding(
-                                  padding: const EdgeInsets.symmetric(
-                                    horizontal: 8.0,
-                                  ),
-                                  child: Row(
-                                    spacing: 4,
-                                    children: [
-                                      SvgPicture.asset(
-                                        "assets/images/folder/red_folder.svg",
-                                        width: 12,
-                                      ),
-                                      Text(part),
-                                    ],
-                                  ),
-                                ),
-                              );
-                            },
-
-                            itemCount: parts.length,
+                  BlocBuilder<FileExplorerBloc, FileExplorerState>(
+                    builder: (context, state) {
+                      return FileExplorerBreadcrumb(
+                        currentPath: state.path,
+                        onNavigateToPath: (path) {
+                          context.read<FileExplorerBloc>().add(
+                            OnGoToDirectory(path: path),
                           );
                         },
-                      ),
-                    ),
+                      );
+                    },
                   ),
                 ],
               );
