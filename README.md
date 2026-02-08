@@ -4,10 +4,10 @@
 
 ### A powerful desktop application for managing Android devices
 
-[![Version](https://img.shields.io/badge/version-2026.01.1-blue.svg)](https://github.com/yourusername/android-tools/releases)
+[![Version](https://img.shields.io/badge/version-2026.02.2-blue.svg)](https://github.com/ThomasBernard03/AndroidTools/releases)
 [![Flutter](https://img.shields.io/badge/Flutter-3.38.9-02569B?logo=flutter)](https://flutter.dev)
 [![License](https://img.shields.io/badge/license-MIT-green.svg)](LICENSE)
-[![Platform](https://img.shields.io/badge/platform-macOS%20%7C%20-lightgrey.svg)](https://github.com/yourusername/android-tools)
+[![Platform](https://img.shields.io/badge/platform-macOS%20%7C%20-lightgrey.svg)](https://github.com/ThomasBernard03/AndroidTools)
 
 [Features](#features) • [Installation](#installation) • [Usage](#usage) • [Building](#building) • [Contributing](#contributing)
 
@@ -175,6 +175,6 @@ This project is licensed under the MIT License - see the [LICENSE](LICENSE) file
 
 **Made with ❤️ for the Android developer community**
 
-[Report Bug](https://github.com/yourusername/android-tools/issues) • [Request Feature](https://github.com/yourusername/android-tools/issues)
+[Report Bug](https://github.com/ThomasBernard03/AndroidTools/issues) • [Request Feature](https://github.com/ThomasBernard03/AndroidTools/issues)
 
 </div>
