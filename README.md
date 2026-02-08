@@ -48,7 +48,7 @@ Built with Flutter, it offers a modern, responsive UI that works seamlessly acro
 
 ### macOS
 
-1. Download the latest release from the [Releases page](https://github.com/yourusername/android-tools/releases)
+1. Download the latest release from the [Releases page](https://github.com/ThomasBernard03/AndroidTools/releases)
 2. Unzip the downloaded file
 3. Double-click `android_tools.app`
 4. If you see "Android Tools cannot be opened":
@@ -86,8 +86,8 @@ Coming soon! Star this repository to get notified when they're available.
 
 ```bash
 # Clone the repository
-git clone https://github.com/yourusername/android-tools.git
-cd android-tools
+git clone https://github.com/ThomasBernard03/AndroidTools.git
+cd AndroidTools
 
 # Install dependencies
 fvm flutter pub get
