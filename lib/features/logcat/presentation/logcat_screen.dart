@@ -76,7 +76,13 @@ class _LogcatScreenState extends State<LogcatScreen> {
           },
           child: BlocBuilder<LogcatBloc, LogcatState>(
             builder: (context, state) {
-              return state.selectedDevice == null
+              return state.isLoading
+                  ? Center(
+                      child: CircularProgressIndicator(
+                        color: Theme.of(context).colorScheme.onSurface,
+                      ),
+                    )
+                  : state.selectedDevice == null
                   ? Center(
                       child: RefreshDeviceButton(
                         onPressed: () =>

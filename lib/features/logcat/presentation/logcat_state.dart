@@ -3,6 +3,8 @@ part of 'logcat_bloc.dart';
 @MappableClass()
 class LogcatState with LogcatStateMappable {
   final List<String> logs;
+  final bool isLoading;
+
   final bool isSticky;
   final bool isPaused;
   final bool isShowProcessThreadIds;
@@ -13,6 +15,7 @@ class LogcatState with LogcatStateMappable {
 
   LogcatState({
     this.logs = const [],
+    this.isLoading = true,
     this.isSticky = true,
     this.isPaused = false,
     this.minimumLogLevel = LogcatLevel.debug,

@@ -32,5 +32,53 @@
     <string>z9EBcFEFrJ5Bi6oiODtO2k6fo7X61gTEKmiuG3+Qxwg=</string>
 	<key>SUFeedURL</key>
 	<string>https://raw.githubusercontent.com/ThomasBernard03/AndroidTools/refs/heads/main/appcast.xml</string>
+	    <key>CFBundleDocumentTypes</key>
+    <array>
+        <dict>
+            <key>CFBundleTypeIconFile</key>
+            <string>ApkForeground</string>
+            <key>CFBundleTypeIconSystemGenerated</key>
+            <integer>1</integer>
+            <key>CFBundleTypeName</key>
+            <string>Apk files</string>
+            <key>CFBundleTypeRole</key>
+            <string>Viewer</string>
+            <key>LSHandlerRank</key>
+            <string>Owner</string>
+            <key>LSItemContentTypes</key>
+            <array>
+                <string>com.domain.apk</string>
+            </array>
+        </dict>
+    </array>
+    <key>UTExportedTypeDeclarations</key>
+    <array>
+        <dict>
+            <key>UTTypeConformsTo</key>
+            <array>
+                <string>public.data</string>
+            </array>
+            <key>UTTypeDescription</key>
+            <string>Apk files</string>
+            <key>UTTypeIcons</key>
+            <dict>
+                <key>UTTypeIconBackgroundName</key>
+                <string>ApkBackground</string>
+                <key>UTTypeIconBadgeName</key>
+                <string>ApkForeground</string>
+                <key>UTTypeIconText</key>
+                <string>Apk</string>
+            </dict>
+            <key>UTTypeIdentifier</key>
+            <string>com.domain.apk</string>
+            <key>UTTypeTagSpecification</key>
+            <dict>
+                <key>public.filename-extension</key>
+                <array>
+                    <string>apk</string>
+                </array>
+            </dict>
+        </dict>
+    </array>
 </dict>
 </plist>
