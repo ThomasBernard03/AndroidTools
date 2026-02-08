@@ -8,7 +8,7 @@ extension FileEntryExtensions on FileEntry {
       case FileType.directory:
         return SvgPicture.asset(
           "assets/images/folder/red_folder.svg",
-          width: 30,
+          width: 20,
         );
       case FileType.symlink:
         return Icon(Icons.drive_folder_upload_outlined);
@@ -37,8 +37,8 @@ extension FileEntryExtensions on FileEntry {
     return Stack(
       alignment: AlignmentGeometry.center,
       children: [
-        SvgPicture.asset("assets/images/file/file_dark.svg", width: 30),
-        SvgPicture.asset("assets/images/file_extensions/$assetName", width: 14),
+        SvgPicture.asset("assets/images/file/file_dark.svg", width: 20),
+        SvgPicture.asset("assets/images/file_extensions/$assetName", width: 8),
       ],
     );
   }

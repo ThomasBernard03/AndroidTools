@@ -4,7 +4,6 @@ import 'package:android_tools/features/file_explorer/presentation/widgets/file_e
 import 'package:android_tools/features/file_explorer/presentation/widgets/file_explorer_menus.dart';
 import 'package:android_tools/features/file_explorer/presentation/widgets/file_entry_extensions.dart';
 import 'package:flutter/material.dart';
-import 'package:intl/intl.dart';
 
 class FileExplorerFileEntryItem extends StatelessWidget {
   final FileEntry file;
@@ -45,46 +44,50 @@ class FileExplorerFileEntryItem extends StatelessWidget {
 
       if (matchIndex == -1) {
         // No more matches, add remaining text
-        matches.add(TextSpan(
-          text: text.substring(currentIndex),
-          style: style,
-        ));
+        matches.add(TextSpan(text: text.substring(currentIndex), style: style));
         break;
       }
 
       // Add text before match
       if (matchIndex > currentIndex) {
-        matches.add(TextSpan(
-          text: text.substring(currentIndex, matchIndex),
-          style: style,
-        ));
+        matches.add(
+          TextSpan(
+            text: text.substring(currentIndex, matchIndex),
+            style: style,
+          ),
+        );
       }
 
       // Add highlighted match
-      matches.add(TextSpan(
-        text: text.substring(matchIndex, matchIndex + query.length),
-        style: style?.copyWith(
-          backgroundColor: Colors.orange,
-          color: Colors.black,
-          fontWeight: FontWeight.bold,
-        ) ?? TextStyle(
-          backgroundColor: Colors.orange,
-          color: Colors.black,
-          fontWeight: FontWeight.bold,
+      matches.add(
+        TextSpan(
+          text: text.substring(matchIndex, matchIndex + query.length),
+          style:
+              style?.copyWith(
+                backgroundColor: Colors.orange,
+                color: Colors.black,
+                fontWeight: FontWeight.bold,
+              ) ??
+              TextStyle(
+                backgroundColor: Colors.orange,
+                color: Colors.black,
+                fontWeight: FontWeight.bold,
+              ),
         ),
-      ));
+      );
 
       currentIndex = matchIndex + query.length;
     }
 
     return RichText(
       text: TextSpan(children: matches),
+      maxLines: 1,
+      overflow: TextOverflow.ellipsis,
     );
   }
 
   @override
   Widget build(BuildContext context) {
-    final dateTimeFormat = DateFormat("yyyy-MM-dd HH:mm");
     return AbsorbPointer(
       absorbing: false,
       child: GestureDetector(
@@ -116,31 +119,35 @@ class FileExplorerFileEntryItem extends StatelessWidget {
             selectedTileColor: Theme.of(context).colorScheme.primary,
             tileColor: isSelected
                 ? Theme.of(context).colorScheme.primary
-                : Color(0xFF131313),
+                : Color(0xff000000),
             enabled:
                 file.type == FileType.directory || file.type == FileType.file,
             selected: isSelected,
             leading: file.icon(),
-            title: _buildHighlightedText(
-              file.name,
-              searchQuery,
-              DefaultTextStyle.of(context).style,
-            ),
-            subtitle: Row(
+            title: Row(
               spacing: 8,
               children: [
-                Text(
-                  file.date != null ? dateTimeFormat.format(file.date!) : "-",
+                _buildHighlightedText(
+                  file.name,
+                  searchQuery,
+                  DefaultTextStyle.of(context).style,
                 ),
-                Container(
-                  decoration: BoxDecoration(
-                    shape: BoxShape.circle,
-                    color: Color(0xFF6E6E6E),
+
+                if (file.type == FileType.file)
+                  Container(
+                    decoration: BoxDecoration(
+                      shape: BoxShape.circle,
+                      color: Color(0xFF6E6E6E),
+                    ),
+                    height: 6,
+                    width: 6,
                   ),
-                  height: 6,
-                  width: 6,
-                ),
-                Text(file.size?.toReadableBytes() ?? ""),
+
+                if (file.type == FileType.file)
+                  Text(
+                    file.size?.toReadableBytes() ?? "",
+                    style: Theme.of(context).textTheme.bodySmall,
+                  ),
               ],
             ),
             onTap: onTap,

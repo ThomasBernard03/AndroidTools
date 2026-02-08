@@ -114,7 +114,9 @@ class _FileExplorerScreenState extends State<FileExplorerScreen> {
     if (_matchingIndexes.isEmpty) return;
 
     setState(() {
-      _currentMatchIndex = (_currentMatchIndex - 1 + _matchingIndexes.length) % _matchingIndexes.length;
+      _currentMatchIndex =
+          (_currentMatchIndex - 1 + _matchingIndexes.length) %
+          _matchingIndexes.length;
     });
     _scrollToMatch(_currentMatchIndex);
   }
@@ -123,7 +125,7 @@ class _FileExplorerScreenState extends State<FileExplorerScreen> {
     if (matchIndex < 0 || matchIndex >= _matchingIndexes.length) return;
 
     final fileIndex = _matchingIndexes[matchIndex];
-    const itemHeight = 64.0;
+    const itemHeight = 48.0;
     final targetOffset = fileIndex * itemHeight;
 
     _scrollController.animateTo(
@@ -186,7 +188,8 @@ class _FileExplorerScreenState extends State<FileExplorerScreen> {
         onKeyEvent: (node, event) {
           if (event is! KeyDownEvent) return KeyEventResult.ignored;
 
-          final isCtrlOrCmd = HardwareKeyboard.instance.isControlPressed ||
+          final isCtrlOrCmd =
+              HardwareKeyboard.instance.isControlPressed ||
               HardwareKeyboard.instance.isMetaPressed;
 
           // Cmd/Ctrl + F: Open search
@@ -204,14 +207,6 @@ class _FileExplorerScreenState extends State<FileExplorerScreen> {
           // Enter: Next match when search is open
           if (event.logicalKey == LogicalKeyboardKey.enter && _showSearch) {
             _goToNextMatch();
-            return KeyEventResult.handled;
-          }
-
-          // Shift + Enter: Previous match when search is open
-          if (event.logicalKey == LogicalKeyboardKey.enter &&
-              _showSearch &&
-              HardwareKeyboard.instance.isShiftPressed) {
-            _goToPreviousMatch();
             return KeyEventResult.handled;
           }
 
@@ -272,193 +267,232 @@ class _FileExplorerScreenState extends State<FileExplorerScreen> {
                                 );
                               }
                             },
-                            child:
-                                BlocBuilder<
-                                  FileExplorerBloc,
-                                  FileExplorerState
-                                >(
-                                  builder: (context, state) {
-                                    // Check if path has changed and update search results
-                                    if (_currentPath != state.path) {
-                                      _currentPath = state.path;
-                                      // Update matches on next frame to avoid calling setState during build
-                                      WidgetsBinding.instance.addPostFrameCallback((_) {
-                                        if (_showSearch && mounted) {
-                                          _updateMatches();
-                                        }
-                                      });
+                            child: BlocBuilder<FileExplorerBloc, FileExplorerState>(
+                              builder: (context, state) {
+                                // Check if path has changed and update search results
+                                if (_currentPath != state.path) {
+                                  _currentPath = state.path;
+                                  // Update matches on next frame to avoid calling setState during build
+                                  WidgetsBinding.instance.addPostFrameCallback((
+                                    _,
+                                  ) {
+                                    if (_showSearch && mounted) {
+                                      _updateMatches();
                                     }
+                                  });
+                                }
 
-                                    return Column(
-                                      children: [
-                                        if (_showSearch)
-                                          Container(
-                                            color: Color(0xFF1E1E1E),
-                                            padding: EdgeInsets.symmetric(horizontal: 16, vertical: 8),
-                                            child: Row(
-                                              children: [
-                                                Expanded(
-                                                  child: TextField(
-                                                    controller: _searchController,
-                                                    focusNode: _searchFocusNode,
-                                                    autofocus: true,
-                                                    style: TextStyle(color: Colors.white),
-                                                    decoration: InputDecoration(
-                                                      hintText: 'Rechercher...',
-                                                      hintStyle: TextStyle(color: Colors.white54),
-                                                      border: OutlineInputBorder(
-                                                        borderSide: BorderSide(color: Colors.white24),
+                                return Column(
+                                  children: [
+                                    if (_showSearch)
+                                      Container(
+                                        color: Color(0xFF1E1E1E),
+                                        padding: EdgeInsets.symmetric(
+                                          horizontal: 16,
+                                          vertical: 8,
+                                        ),
+                                        child: Row(
+                                          children: [
+                                            Expanded(
+                                              child: TextField(
+                                                controller: _searchController,
+                                                focusNode: _searchFocusNode,
+                                                autofocus: true,
+                                                style: TextStyle(
+                                                  color: Colors.white,
+                                                ),
+                                                decoration: InputDecoration(
+                                                  hintText: 'Rechercher...',
+                                                  hintStyle: TextStyle(
+                                                    color: Colors.white54,
+                                                  ),
+                                                  border: OutlineInputBorder(
+                                                    borderSide: BorderSide(
+                                                      color: Colors.white24,
+                                                    ),
+                                                  ),
+                                                  enabledBorder:
+                                                      OutlineInputBorder(
+                                                        borderSide: BorderSide(
+                                                          color: Colors.white24,
+                                                        ),
                                                       ),
-                                                      enabledBorder: OutlineInputBorder(
-                                                        borderSide: BorderSide(color: Colors.white24),
+                                                  focusedBorder:
+                                                      OutlineInputBorder(
+                                                        borderSide: BorderSide(
+                                                          color: Colors.blue,
+                                                        ),
                                                       ),
-                                                      focusedBorder: OutlineInputBorder(
-                                                        borderSide: BorderSide(color: Colors.blue),
-                                                      ),
-                                                      contentPadding: EdgeInsets.symmetric(
+                                                  contentPadding:
+                                                      EdgeInsets.symmetric(
                                                         horizontal: 12,
                                                         vertical: 8,
                                                       ),
-                                                      isDense: true,
-                                                      suffixText: _matchingIndexes.isEmpty
-                                                          ? '0/0'
-                                                          : '${_currentMatchIndex + 1}/${_matchingIndexes.length}',
-                                                      suffixStyle: TextStyle(color: Colors.white70),
-                                                    ),
-                                                    onChanged: (_) => _updateMatches(),
+                                                  isDense: true,
+                                                  suffixText:
+                                                      _matchingIndexes.isEmpty
+                                                      ? '0/0'
+                                                      : '${_currentMatchIndex + 1}/${_matchingIndexes.length}',
+                                                  suffixStyle: TextStyle(
+                                                    color: Colors.white70,
                                                   ),
                                                 ),
-                                                SizedBox(width: 8),
-                                                IconButton(
-                                                  icon: Icon(Icons.keyboard_arrow_up, color: Colors.white),
-                                                  onPressed: _matchingIndexes.isEmpty ? null : _goToPreviousMatch,
-                                                  tooltip: 'Précédent (Shift+Enter)',
-                                                  padding: EdgeInsets.all(4),
-                                                  constraints: BoxConstraints(),
-                                                ),
-                                                IconButton(
-                                                  icon: Icon(Icons.keyboard_arrow_down, color: Colors.white),
-                                                  onPressed: _matchingIndexes.isEmpty ? null : _goToNextMatch,
-                                                  tooltip: 'Suivant (Enter)',
-                                                  padding: EdgeInsets.all(4),
-                                                  constraints: BoxConstraints(),
-                                                ),
-                                                IconButton(
-                                                  icon: Icon(Icons.close, color: Colors.white),
-                                                  onPressed: _closeSearch,
-                                                  tooltip: 'Fermer (Escape)',
-                                                  padding: EdgeInsets.all(4),
-                                                  constraints: BoxConstraints(),
-                                                ),
-                                              ],
+                                                onChanged: (_) =>
+                                                    _updateMatches(),
+                                              ),
                                             ),
-                                          ),
-                                        Expanded(
-                                          child: GestureDetector(
-                                            behavior: HitTestBehavior.deferToChild,
-                                            onSecondaryTapDown: (details) {
-                                              FileExplorerMenus.showGeneralMenu(
-                                                context,
-                                                details,
-                                              ).then((value) async {
-                                                if (value ==
-                                                    FileEntryMenuResult.upload) {
-                                                  if (context.mounted) {
-                                                    onUploadFiles(context);
-                                                  }
-                                                  return;
-                                                }
-                                                if (value ==
-                                                    FileEntryMenuResult.refresh) {
-                                                  if (context.mounted) {
-                                                    context
-                                                        .read<FileExplorerBloc>()
-                                                        .add(OnRefreshFiles());
-                                                  }
-                                                  return;
-                                                }
-                                                if (value ==
-                                                    FileEntryMenuResult
-                                                        .newDirectory) {
-                                                  if (context.mounted) {
-                                                    await onShowCreateDirectoryDialog(
-                                                      context,
-                                                    );
-                                                  }
-                                                  return;
-                                                }
-                                              });
-                                            },
-                                            child: ListView.builder(
-                                        controller: _scrollController,
-                                        padding: EdgeInsets.all(16),
-                                        itemCount: state.files.length,
-                                        itemBuilder: (context, index) {
-                                          final file = state.files.elementAt(
-                                            index,
-                                          );
-                                          final query = _showSearch && _searchController.text.isNotEmpty
-                                              ? _searchController.text
-                                              : null;
-
-                                          return FileExplorerFileEntryItem(
-                                            file: file,
-                                            isSelected:
-                                                state.selectedFile == file,
-                                            searchQuery: query,
-                                            onDownloadFile: () => context
-                                                .read<FileExplorerBloc>()
-                                                .add(
-                                                  OnDownloadFile(
-                                                    fileName: file.name,
-                                                  ),
-                                                ),
-                                            onDeleteFile: () => context
-                                                .read<FileExplorerBloc>()
-                                                .add(
-                                                  OnDeleteFile(
-                                                    fileName: file.name,
-                                                  ),
-                                                ),
-                                            onTap: () {
-                                              context
-                                                  .read<FileExplorerBloc>()
-                                                  .add(
-                                                    OnFileEntryTapped(
-                                                      fileEntry: file,
-                                                    ),
-                                                  );
-
-                                              // Trigger preview for files
-                                              if (file.type == FileType.file) {
-                                                previewBloc.add(
-                                                  OnFilePreviewAppearing(
-                                                    fileEntry: file,
-                                                    currentPath: state.path,
-                                                  ),
+                                            SizedBox(width: 8),
+                                            IconButton(
+                                              icon: Icon(
+                                                Icons.keyboard_arrow_up,
+                                                color: Colors.white,
+                                              ),
+                                              onPressed:
+                                                  _matchingIndexes.isEmpty
+                                                  ? null
+                                                  : _goToPreviousMatch,
+                                              tooltip:
+                                                  'Précédent (Shift+Enter)',
+                                              padding: EdgeInsets.all(4),
+                                              constraints: BoxConstraints(),
+                                            ),
+                                            IconButton(
+                                              icon: Icon(
+                                                Icons.keyboard_arrow_down,
+                                                color: Colors.white,
+                                              ),
+                                              onPressed:
+                                                  _matchingIndexes.isEmpty
+                                                  ? null
+                                                  : _goToNextMatch,
+                                              tooltip: 'Suivant (Enter)',
+                                              padding: EdgeInsets.all(4),
+                                              constraints: BoxConstraints(),
+                                            ),
+                                            IconButton(
+                                              icon: Icon(
+                                                Icons.close,
+                                                color: Colors.white,
+                                              ),
+                                              onPressed: _closeSearch,
+                                              tooltip: 'Fermer (Escape)',
+                                              padding: EdgeInsets.all(4),
+                                              constraints: BoxConstraints(),
+                                            ),
+                                          ],
+                                        ),
+                                      ),
+                                    Expanded(
+                                      child: GestureDetector(
+                                        behavior: HitTestBehavior.deferToChild,
+                                        onSecondaryTapDown: (details) {
+                                          FileExplorerMenus.showGeneralMenu(
+                                            context,
+                                            details,
+                                          ).then((value) async {
+                                            if (value ==
+                                                FileEntryMenuResult.upload) {
+                                              if (context.mounted) {
+                                                onUploadFiles(context);
+                                              }
+                                              return;
+                                            }
+                                            if (value ==
+                                                FileEntryMenuResult.refresh) {
+                                              if (context.mounted) {
+                                                context
+                                                    .read<FileExplorerBloc>()
+                                                    .add(OnRefreshFiles());
+                                              }
+                                              return;
+                                            }
+                                            if (value ==
+                                                FileEntryMenuResult
+                                                    .newDirectory) {
+                                              if (context.mounted) {
+                                                await onShowCreateDirectoryDialog(
+                                                  context,
                                                 );
                                               }
-                                            },
-                                            onUploadFile: () async {
-                                              await onUploadFiles(context);
-                                            },
-                                            onRefresh: () => context
-                                                .read<FileExplorerBloc>()
-                                                .add(OnRefreshFiles()),
-                                            onNewDirectory: () async {
-                                              await onShowCreateDirectoryDialog(
-                                                context,
-                                              );
-                                            },
-                                          );
+                                              return;
+                                            }
+                                          });
                                         },
+                                        child: ListView.builder(
+                                          controller: _scrollController,
+                                          padding: EdgeInsets.all(16),
+                                          itemCount: state.files.length,
+                                          itemBuilder: (context, index) {
+                                            final file = state.files.elementAt(
+                                              index,
+                                            );
+                                            final query =
+                                                _showSearch &&
+                                                    _searchController
+                                                        .text
+                                                        .isNotEmpty
+                                                ? _searchController.text
+                                                : null;
+
+                                            return FileExplorerFileEntryItem(
+                                              file: file,
+                                              isSelected:
+                                                  state.selectedFile == file,
+                                              searchQuery: query,
+                                              onDownloadFile: () => context
+                                                  .read<FileExplorerBloc>()
+                                                  .add(
+                                                    OnDownloadFile(
+                                                      fileName: file.name,
+                                                    ),
+                                                  ),
+                                              onDeleteFile: () => context
+                                                  .read<FileExplorerBloc>()
+                                                  .add(
+                                                    OnDeleteFile(
+                                                      fileName: file.name,
+                                                    ),
+                                                  ),
+                                              onTap: () {
+                                                context
+                                                    .read<FileExplorerBloc>()
+                                                    .add(
+                                                      OnFileEntryTapped(
+                                                        fileEntry: file,
+                                                      ),
+                                                    );
+
+                                                // Trigger preview for files
+                                                if (file.type ==
+                                                    FileType.file) {
+                                                  previewBloc.add(
+                                                    OnFilePreviewAppearing(
+                                                      fileEntry: file,
+                                                      currentPath: state.path,
+                                                    ),
+                                                  );
+                                                }
+                                              },
+                                              onUploadFile: () async {
+                                                await onUploadFiles(context);
+                                              },
+                                              onRefresh: () => context
+                                                  .read<FileExplorerBloc>()
+                                                  .add(OnRefreshFiles()),
+                                              onNewDirectory: () async {
+                                                await onShowCreateDirectoryDialog(
+                                                  context,
+                                                );
+                                              },
+                                            );
+                                          },
+                                        ),
                                       ),
                                     ),
-                                  ),
-                                        ],
-                                      );
-                                  },
-                                ),
+                                  ],
+                                );
+                              },
+                            ),
                           ),
                         ),
                         // Divider
