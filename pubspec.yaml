@@ -50,7 +50,6 @@ flutter:
 
   assets:
     - assets/android_versions/
-    - assets/pixels/
     - assets/images/
     - assets/images/file/
     - assets/images/file_extensions/
