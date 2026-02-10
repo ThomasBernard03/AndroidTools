@@ -4,6 +4,15 @@ All notable changes to Android Tools will be documented in this file.
 
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 
+## [2026.02.3] - 2026-02-10
+
+### Improvements
+- Can download file from preview
+- Can delete file from preview
+
+### Fixs
+- Fix selected text color in file explorer
+
 ## [2026.02.2] - 2026-02-08
 
 ### Fixs
