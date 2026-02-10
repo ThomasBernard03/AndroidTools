@@ -2,10 +2,12 @@ import 'dart:io';
 import 'package:adb_dart/adb_dart.dart';
 import 'package:android_tools/features/file_explorer/core/file_extension_helper.dart';
 import 'package:android_tools/features/file_explorer/domain/usecases/download_file_to_cache_usecase.dart';
+import 'package:android_tools/features/file_explorer/domain/usecases/download_file_usecase.dart';
 import 'package:android_tools/main.dart';
 import 'package:android_tools/shared/domain/entities/device_entity.dart';
 import 'package:android_tools/shared/domain/usecases/listen_selected_device_usecase.dart';
 import 'package:dart_mappable/dart_mappable.dart';
+import 'package:file_picker/file_picker.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:logger/logger.dart';
 import 'package:path/path.dart' as p;
@@ -18,6 +20,7 @@ class FilePreviewBloc extends Bloc<FilePreviewEvent, FilePreviewState> {
   final Logger _logger = getIt.get();
   final DownloadFileToCacheUsecase _downloadFileToCacheUsecase = getIt.get();
   final ListenSelectedDeviceUsecase _listenSelectedDeviceUsecase = getIt.get();
+  final DownloadFileUsecase _downloadFileUsecase = getIt.get();
 
   DeviceEntity? _currentDevice;
 
@@ -27,7 +30,32 @@ class FilePreviewBloc extends Bloc<FilePreviewEvent, FilePreviewState> {
       _currentDevice = device;
     });
 
-    on<OnFilePreviewAppearing>((event, emit) async {
+    on<OnDownalodFileEvent>((event, emit) async {
+      final device = _currentDevice;
+      if (device == null) {
+        _logger.w("_currentDevice is null, can't download file");
+        return;
+      }
+
+      final destinationPath = await FilePicker.platform.saveFile(
+        dialogTitle: 'Save file',
+        fileName: event.fileEntry.name,
+      );
+
+      if (destinationPath == null) {
+        return;
+      }
+
+      _downloadFileUsecase(
+        p.join(state.path, event.fileEntry.name),
+        destinationPath,
+        device.deviceId,
+      );
+    });
+
+    on<OnDeleteFileEvent>((event, emit) async {});
+
+    on<OnFilePreviewAppearingEvent>((event, emit) async {
       if (_currentDevice == null) {
         _logger.w("Device is null, can't preview file");
         emit(
@@ -44,6 +72,7 @@ class FilePreviewBloc extends Bloc<FilePreviewEvent, FilePreviewState> {
           state.copyWith(
             status: FilePreviewStatus.loading,
             fileEntry: event.fileEntry,
+            path: event.currentPath,
           ),
         );
 

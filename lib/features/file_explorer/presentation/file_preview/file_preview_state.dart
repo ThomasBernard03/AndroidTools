@@ -1,19 +1,8 @@
 part of 'file_preview_bloc.dart';
 
-enum FilePreviewStatus {
-  initial,
-  loading,
-  loaded,
-  error,
-}
+enum FilePreviewStatus { initial, loading, loaded, error }
 
-enum PreviewType {
-  text,
-  image,
-  video,
-  audio,
-  unsupported,
-}
+enum PreviewType { text, image, video, audio, unsupported }
 
 @MappableClass()
 class FilePreviewState with FilePreviewStateMappable {
@@ -23,6 +12,7 @@ class FilePreviewState with FilePreviewStateMappable {
   final String? localFilePath;
   final String? errorMessage;
   final FileEntry? fileEntry;
+  final String path;
 
   FilePreviewState({
     this.status = FilePreviewStatus.initial,
@@ -31,5 +21,6 @@ class FilePreviewState with FilePreviewStateMappable {
     this.localFilePath,
     this.errorMessage,
     this.fileEntry,
+    this.path = "",
   });
 }

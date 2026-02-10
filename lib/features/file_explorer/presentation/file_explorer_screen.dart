@@ -380,7 +380,7 @@ class _FileExplorerScreenState extends State<FileExplorerScreen> {
                                                 if (file.type ==
                                                     FileType.file) {
                                                   previewBloc.add(
-                                                    OnFilePreviewAppearing(
+                                                    OnFilePreviewAppearingEvent(
                                                       fileEntry: file,
                                                       currentPath: state.path,
                                                     ),
