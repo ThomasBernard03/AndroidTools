@@ -78,10 +78,23 @@ jobs:
           echo "✅ Application signed successfully"
           codesign -d --entitlements - "build/macos/Build/Products/Release/Android Tools.app" 2>&1 | head -10
 
-      - name: Create ZIP from .app
+      - name: Create DMG installer
         run: |
-          cd build/macos/Build/Products/Release
-          zip -r "../../../../../AndroidTools-${{ needs.prepare-release.outputs.version }}-macos.zip" "Android Tools.app"
+          VERSION="${{ needs.prepare-release.outputs.version }}"
+          DMG_NAME="AndroidTools-$VERSION-macos.dmg"
+
+          # Create a temporary directory for DMG contents
+          mkdir -p dmg_temp
+          cp -R "build/macos/Build/Products/Release/Android Tools.app" dmg_temp/
+
+          # Create DMG using hdiutil
+          hdiutil create -volname "Android Tools" \
+            -srcfolder dmg_temp \
+            -ov -format UDZO \
+            "$DMG_NAME"
+
+          # Clean up
+          rm -rf dmg_temp
 
       - name: Install Sparkle tools
         run: |
@@ -90,19 +103,19 @@ jobs:
           tar -xf sparkle.tar.xz -C sparkle_dist
           chmod +x ./sparkle_dist/bin/sign_update
 
-      - name: Generate Sparkle Signature for ZIP
+      - name: Generate Sparkle Signature for DMG
         id: sparkle
         env:
           SPARKLE_PRIVATE_KEY_CONTENT: ${{ secrets.SPARKLE_PRIVATE_KEY }}
         run: |
-          ZIP_PATH="AndroidTools-${{ needs.prepare-release.outputs.version }}-macos.zip"
+          DMG_PATH="AndroidTools-${{ needs.prepare-release.outputs.version }}-macos.dmg"
           SIGN_TOOL="./sparkle_dist/bin/sign_update"
 
           echo "--- Preparing key ---"
           echo "$SPARKLE_PRIVATE_KEY_CONTENT" > sparkle_key.priv
 
-          echo "--- try to sign zip ---"
-          RAW_OUTPUT=$($SIGN_TOOL --ed-key-file sparkle_key.priv "$ZIP_PATH")
+          echo "--- try to sign dmg ---"
+          RAW_OUTPUT=$($SIGN_TOOL --ed-key-file sparkle_key.priv "$DMG_PATH")
 
           SIGNATURE=$(echo "$RAW_OUTPUT" | sed -n 's/.*sparkle:edSignature="\([^"]*\)".*/\1/p')
           rm sparkle_key.priv
@@ -120,14 +133,14 @@ jobs:
         run: |
           set -e
 
-          ZIP=AndroidTools-${{ needs.prepare-release.outputs.version }}-macos.zip
+          DMG=AndroidTools-${{ needs.prepare-release.outputs.version }}-macos.dmg
 
           export VERSION=${{ needs.prepare-release.outputs.version }}
           export BUILD=${{ needs.prepare-release.outputs.build }}
           export SIGNATURE=${{ steps.sparkle.outputs.signature }}
-          export FILE_SIZE=$(stat -f%z "$ZIP")
+          export FILE_SIZE=$(stat -f%z "$DMG")
           export PUB_DATE=$(date -R)
-          export DOWNLOAD_URL=https://github.com/ThomasBernard03/AndroidTools/releases/download/$VERSION/AndroidTools-$VERSION-macos.zip
+          export DOWNLOAD_URL=https://github.com/ThomasBernard03/AndroidTools/releases/download/$VERSION/AndroidTools-$VERSION-macos.dmg
           export RELEASE_NOTES_URL=https://github.com/ThomasBernard03/AndroidTools/releases/tag/$VERSION
 
           NEW_ITEM=$(envsubst < appcast/items/macos.item.xml.tpl)
@@ -155,7 +168,7 @@ jobs:
         with:
           tag_name: ${{ needs.prepare-release.outputs.tag }}
           files: |
-            AndroidTools-${{ needs.prepare-release.outputs.version }}-macos.zip
+            AndroidTools-${{ needs.prepare-release.outputs.version }}-macos.dmg
 
   build-windows:
     needs: prepare-release
@@ -184,18 +197,30 @@ jobs:
             --obfuscate `
             --split-debug-info=build/debug-info
 
-      - name: Create ZIP from Windows build
+      - name: Create MSIX installer
         shell: pwsh
         run: |
           $version = "${{ needs.prepare-release.outputs.version }}"
-          Compress-Archive -Path "build\windows\x64\runner\Release\*" -DestinationPath "AndroidTools-$version-windows.zip"
+          # Update MSIX version in pubspec.yaml (format: major.minor.build.revision)
+          $versionParts = $version -split '\.'
+          $msixVersion = "$($versionParts[0]).$($versionParts[1]).${{ needs.prepare-release.outputs.build }}.0"
+          (Get-Content pubspec.yaml) -replace 'msix_version: .*', "msix_version: $msixVersion" | Set-Content pubspec.yaml
+
+          # Generate MSIX
+          dart run msix:create
+
+      - name: Rename MSIX file
+        shell: pwsh
+        run: |
+          $version = "${{ needs.prepare-release.outputs.version }}"
+          Move-Item -Path "build/windows/x64/runner/Release/android_tools.msix" -Destination "AndroidTools-$version-windows.msix"
 
       - name: Upload Windows artifacts to release
         uses: softprops/action-gh-release@v1
         with:
           tag_name: ${{ needs.prepare-release.outputs.tag }}
           files: |
-            AndroidTools-${{ needs.prepare-release.outputs.version }}-windows.zip
+            AndroidTools-${{ needs.prepare-release.outputs.version }}-windows.msix
 
   finalize-release:
     needs: [prepare-release, build-macos, build-windows]

@@ -2,7 +2,7 @@ name: android_tools
 description: "A new Flutter project."
 publish_to: 'none' # Remove this line if you wish to publish to pub.dev
 
-version: 2026.02.2+28
+version: 2026.02.3+29
 
 environment:
   sdk: ^3.10.8
@@ -44,6 +44,7 @@ dev_dependencies:
   build_runner: ^2.10.4
   dart_mappable_builder: ^4.6.1
   drift_dev: ^2.30.1
+  msix: ^3.16.7
 
 flutter:
   uses-material-design: true
@@ -89,3 +90,12 @@ sentry:
   upload_source_maps: true
   project: android-tools
   org: thomas-bernard
+
+msix_config:
+  display_name: Android Tools
+  publisher_display_name: Thomas Bernard
+  identity_name: ThomasBernard.AndroidTools
+  msix_version: 1.0.0.0
+  logo_path: windows/runner/resources/app_icon.ico
+  capabilities: internetClient
+  install_certificate: false
