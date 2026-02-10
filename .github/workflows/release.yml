@@ -202,8 +202,14 @@ jobs:
         run: |
           $version = "${{ needs.prepare-release.outputs.version }}"
           # Update MSIX version in pubspec.yaml (format: major.minor.build.revision)
+          # Each part must be 0-65535, convert to int to remove leading zeros
           $versionParts = $version -split '\.'
-          $msixVersion = "$($versionParts[0]).$($versionParts[1]).${{ needs.prepare-release.outputs.build }}.0"
+          $major = [int]$versionParts[0]
+          $minor = [int]$versionParts[1]
+          $build = [int]"${{ needs.prepare-release.outputs.build }}"
+          $msixVersion = "$major.$minor.$build.0"
+
+          Write-Host "Using MSIX version: $msixVersion"
           (Get-Content pubspec.yaml) -replace 'msix_version: .*', "msix_version: $msixVersion" | Set-Content pubspec.yaml
 
           # Generate MSIX
