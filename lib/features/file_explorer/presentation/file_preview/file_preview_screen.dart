@@ -11,11 +11,15 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 class FilePreviewScreen extends StatelessWidget {
   final FileEntry fileEntry;
   final String currentPath;
+  final void Function() onDownloadFile;
+  final void Function() onDeleteFile;
 
   const FilePreviewScreen({
     super.key,
     required this.fileEntry,
     required this.currentPath,
+    required this.onDownloadFile,
+    required this.onDeleteFile,
   });
 
   @override
@@ -112,25 +116,14 @@ class FilePreviewScreen extends StatelessWidget {
                                 spacing: 8,
                                 children: [
                                   FilePreviewActionButton(
-                                    onPressed: () {
-                                      context.read<FilePreviewBloc>().add(
-                                        OnDownalodFileEvent(
-                                          fileEntry: fileEntry,
-                                        ),
-                                      );
-                                    },
+                                    onPressed: onDownloadFile,
                                     icon: Icons.download,
                                     text: 'Download',
                                   ),
                                   FilePreviewActionButton(
-                                    onPressed: () {},
+                                    onPressed: onDeleteFile,
                                     icon: Icons.delete,
                                     text: 'Delete',
-                                  ),
-                                  FilePreviewActionButton(
-                                    onPressed: () {},
-                                    icon: Icons.star,
-                                    text: 'Set favorite',
                                   ),
                                 ],
                               ),

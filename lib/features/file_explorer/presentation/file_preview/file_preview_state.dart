@@ -12,7 +12,6 @@ class FilePreviewState with FilePreviewStateMappable {
   final String? localFilePath;
   final String? errorMessage;
   final FileEntry? fileEntry;
-  final String path;
 
   FilePreviewState({
     this.status = FilePreviewStatus.initial,
@@ -21,6 +20,5 @@ class FilePreviewState with FilePreviewStateMappable {
     this.localFilePath,
     this.errorMessage,
     this.fileEntry,
-    this.path = "",
   });
 }

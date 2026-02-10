@@ -11,13 +11,3 @@ class OnFilePreviewAppearingEvent extends FilePreviewEvent {
     required this.currentPath,
   });
 }
-
-class OnDownalodFileEvent extends FilePreviewEvent {
-  final FileEntry fileEntry;
-  OnDownalodFileEvent({required this.fileEntry});
-}
-
-class OnDeleteFileEvent extends FilePreviewEvent {
-  final FileEntry fileEntry;
-  OnDeleteFileEvent({required this.fileEntry});
-}
