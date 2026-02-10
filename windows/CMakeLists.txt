@@ -108,6 +108,14 @@ install(FILES "${AOT_LIBRARY}" DESTINATION "${INSTALL_BUNDLE_DATA_DIR}"
   COMPONENT Runtime)
 
 # Install Android Tools binaries (adb.exe and aapt.exe)
-install(FILES "${CMAKE_CURRENT_SOURCE_DIR}/adb.exe"
-  DESTINATION "${CMAKE_INSTALL_PREFIX}"
-  COMPONENT Runtime)
+if(EXISTS "${CMAKE_CURRENT_SOURCE_DIR}/adb.exe")
+  install(FILES "${CMAKE_CURRENT_SOURCE_DIR}/adb.exe"
+    DESTINATION "${CMAKE_INSTALL_PREFIX}"
+    COMPONENT Runtime)
+endif()
+
+if(EXISTS "${CMAKE_CURRENT_SOURCE_DIR}/aapt.exe")
+  install(FILES "${CMAKE_CURRENT_SOURCE_DIR}/aapt.exe"
+    DESTINATION "${CMAKE_INSTALL_PREFIX}"
+    COMPONENT Runtime)
+endif()
