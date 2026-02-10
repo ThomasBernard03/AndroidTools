@@ -380,7 +380,7 @@ class _FileExplorerScreenState extends State<FileExplorerScreen> {
                                                 if (file.type ==
                                                     FileType.file) {
                                                   previewBloc.add(
-                                                    OnFilePreviewAppearing(
+                                                    OnFilePreviewAppearingEvent(
                                                       fileEntry: file,
                                                       currentPath: state.path,
                                                     ),
@@ -423,6 +423,20 @@ class _FileExplorerScreenState extends State<FileExplorerScreen> {
                                       ),
                                       fileEntry: state.selectedFile!,
                                       currentPath: state.path,
+                                      onDownloadFile: () {
+                                        context.read<FileExplorerBloc>().add(
+                                          OnDownloadFile(
+                                            fileName: state.selectedFile!.name,
+                                          ),
+                                        );
+                                      },
+                                      onDeleteFile: () {
+                                        context.read<FileExplorerBloc>().add(
+                                          OnDeleteFile(
+                                            fileName: state.selectedFile!.name,
+                                          ),
+                                        );
+                                      },
                                     )
                                   : SizedBox.shrink(),
                             );

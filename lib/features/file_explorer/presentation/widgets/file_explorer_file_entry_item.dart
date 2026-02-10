@@ -29,9 +29,17 @@ class FileExplorerFileEntryItem extends StatelessWidget {
     required this.onNewDirectory,
   });
 
-  Widget _buildHighlightedText(String text, String? query, TextStyle? style) {
+  Widget _buildHighlightedText(
+    String text,
+    String? query,
+    TextStyle? style, {
+    required Color textColor,
+  }) {
     if (query == null || query.isEmpty) {
-      return Text(text, style: style);
+      return Text(
+        text,
+        style: (style ?? const TextStyle()).copyWith(color: textColor),
+      );
     }
 
     final lowerText = text.toLowerCase();
@@ -39,12 +47,17 @@ class FileExplorerFileEntryItem extends StatelessWidget {
     final matches = <TextSpan>[];
     int currentIndex = 0;
 
+    // Create base style with proper text color
+    final baseStyle = (style ?? const TextStyle()).copyWith(color: textColor);
+
     while (currentIndex < text.length) {
       final matchIndex = lowerText.indexOf(lowerQuery, currentIndex);
 
       if (matchIndex == -1) {
         // No more matches, add remaining text
-        matches.add(TextSpan(text: text.substring(currentIndex), style: style));
+        matches.add(
+          TextSpan(text: text.substring(currentIndex), style: baseStyle),
+        );
         break;
       }
 
@@ -53,7 +66,7 @@ class FileExplorerFileEntryItem extends StatelessWidget {
         matches.add(
           TextSpan(
             text: text.substring(currentIndex, matchIndex),
-            style: style,
+            style: baseStyle,
           ),
         );
       }
@@ -62,25 +75,19 @@ class FileExplorerFileEntryItem extends StatelessWidget {
       matches.add(
         TextSpan(
           text: text.substring(matchIndex, matchIndex + query.length),
-          style:
-              style?.copyWith(
-                backgroundColor: Colors.orange,
-                color: Colors.black,
-                fontWeight: FontWeight.bold,
-              ) ??
-              TextStyle(
-                backgroundColor: Colors.orange,
-                color: Colors.black,
-                fontWeight: FontWeight.bold,
-              ),
+          style: TextStyle(
+            backgroundColor: Colors.orange,
+            color: Colors.black,
+            fontWeight: FontWeight.bold,
+          ),
         ),
       );
 
       currentIndex = matchIndex + query.length;
     }
 
-    return RichText(
-      text: TextSpan(children: matches),
+    return Text.rich(
+      TextSpan(children: matches, style: baseStyle),
       maxLines: 1,
       overflow: TextOverflow.ellipsis,
     );
@@ -125,7 +132,14 @@ class FileExplorerFileEntryItem extends StatelessWidget {
             title: Row(
               spacing: 8,
               children: [
-                _buildHighlightedText(file.name, searchQuery, null),
+                _buildHighlightedText(
+                  file.name,
+                  searchQuery,
+                  null,
+                  textColor: isSelected
+                      ? Theme.of(context).colorScheme.surface
+                      : Theme.of(context).colorScheme.onSurface,
+                ),
 
                 if (file.type == FileType.file)
                   Container(

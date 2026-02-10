@@ -1,6 +1,7 @@
 import 'package:adb_dart/adb_dart.dart';
 import 'package:android_tools/features/file_explorer/core/int_extensions.dart';
 import 'package:android_tools/features/file_explorer/presentation/file_preview/file_preview_bloc.dart';
+import 'package:android_tools/features/file_explorer/presentation/file_preview/widgets/file_preview_action_button.dart';
 import 'package:android_tools/features/file_explorer/presentation/file_preview/widgets/image_preview_widget.dart';
 import 'package:android_tools/features/file_explorer/presentation/file_preview/widgets/text_preview_widget.dart';
 import 'package:android_tools/features/file_explorer/presentation/widgets/file_entry_extensions.dart';
@@ -10,11 +11,15 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 class FilePreviewScreen extends StatelessWidget {
   final FileEntry fileEntry;
   final String currentPath;
+  final void Function() onDownloadFile;
+  final void Function() onDeleteFile;
 
   const FilePreviewScreen({
     super.key,
     required this.fileEntry,
     required this.currentPath,
+    required this.onDownloadFile,
+    required this.onDeleteFile,
   });
 
   @override
@@ -22,7 +27,7 @@ class FilePreviewScreen extends StatelessWidget {
     return BlocProvider(
       create: (context) => FilePreviewBloc()
         ..add(
-          OnFilePreviewAppearing(
+          OnFilePreviewAppearingEvent(
             fileEntry: fileEntry,
             currentPath: currentPath,
           ),
@@ -95,6 +100,35 @@ class FilePreviewScreen extends StatelessWidget {
                         Text(
                           fileEntry.permissions,
                           style: Theme.of(context).textTheme.bodyMedium,
+                        ),
+
+                        Divider(
+                          color: Theme.of(
+                            context,
+                          ).colorScheme.onSurface.withAlpha(60),
+                        ),
+
+                        Row(
+                          children: [
+                            Expanded(
+                              child: Wrap(
+                                alignment: WrapAlignment.center,
+                                spacing: 8,
+                                children: [
+                                  FilePreviewActionButton(
+                                    onPressed: onDownloadFile,
+                                    icon: Icons.download,
+                                    text: 'Download',
+                                  ),
+                                  FilePreviewActionButton(
+                                    onPressed: onDeleteFile,
+                                    icon: Icons.delete,
+                                    text: 'Delete',
+                                  ),
+                                ],
+                              ),
+                            ),
+                          ],
                         ),
                       ],
                     ),

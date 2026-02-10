@@ -1,4 +1,4 @@
-name: Build & Release macOS
+name: Build & Release
 
 on:
   push:
@@ -12,8 +12,12 @@ env:
   GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
 
 jobs:
-  release:
-    runs-on: macos-latest
+  prepare-release:
+    runs-on: ubuntu-latest
+    outputs:
+      version: ${{ steps.version.outputs.version }}
+      build: ${{ steps.version.outputs.build }}
+      tag: ${{ steps.version.outputs.tag }}
 
     steps:
       - name: Checkout repository
@@ -29,6 +33,22 @@ jobs:
           echo "version=$VERSION" >> $GITHUB_OUTPUT
           echo "build=$BUILD" >> $GITHUB_OUTPUT
           echo "tag=$VERSION" >> $GITHUB_OUTPUT
+
+      - name: Create GitHub Release
+        uses: softprops/action-gh-release@v1
+        with:
+          tag_name: ${{ steps.version.outputs.tag }}
+          name: ${{ steps.version.outputs.version }}
+          draft: true
+          generate_release_notes: true
+
+  build-macos:
+    needs: prepare-release
+    runs-on: macos-latest
+
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
 
       - name: Set up Flutter
         uses: subosito/flutter-action@v2
@@ -61,7 +81,7 @@ jobs:
       - name: Create ZIP from .app
         run: |
           cd build/macos/Build/Products/Release
-          zip -r "../../../../../AndroidTools-${{ steps.version.outputs.version }}.zip" "Android Tools.app"
+          zip -r "../../../../../AndroidTools-${{ needs.prepare-release.outputs.version }}-macos.zip" "Android Tools.app"
 
       - name: Install Sparkle tools
         run: |
@@ -75,7 +95,7 @@ jobs:
         env:
           SPARKLE_PRIVATE_KEY_CONTENT: ${{ secrets.SPARKLE_PRIVATE_KEY }}
         run: |
-          ZIP_PATH="AndroidTools-${{ steps.version.outputs.version }}.zip"
+          ZIP_PATH="AndroidTools-${{ needs.prepare-release.outputs.version }}-macos.zip"
           SIGN_TOOL="./sparkle_dist/bin/sign_update"
 
           echo "--- Preparing key ---"
@@ -100,14 +120,14 @@ jobs:
         run: |
           set -e
 
-          ZIP=AndroidTools-${{ steps.version.outputs.version }}.zip
+          ZIP=AndroidTools-${{ needs.prepare-release.outputs.version }}-macos.zip
 
-          export VERSION=${{ steps.version.outputs.version }}
-          export BUILD=${{ steps.version.outputs.build }}
+          export VERSION=${{ needs.prepare-release.outputs.version }}
+          export BUILD=${{ needs.prepare-release.outputs.build }}
           export SIGNATURE=${{ steps.sparkle.outputs.signature }}
           export FILE_SIZE=$(stat -f%z "$ZIP")
           export PUB_DATE=$(date -R)
-          export DOWNLOAD_URL=https://github.com/ThomasBernard03/AndroidTools/releases/download/$VERSION/AndroidTools-$VERSION.zip
+          export DOWNLOAD_URL=https://github.com/ThomasBernard03/AndroidTools/releases/download/$VERSION/AndroidTools-$VERSION-macos.zip
           export RELEASE_NOTES_URL=https://github.com/ThomasBernard03/AndroidTools/releases/tag/$VERSION
 
           NEW_ITEM=$(envsubst < appcast/items/macos.item.xml.tpl)
@@ -127,14 +147,63 @@ jobs:
           git config user.name github-actions
           git config user.email github-actions@github.com
           git add appcast.xml
-          git diff --quiet --cached || git commit -m "chore(appcast): macOS ${{ steps.version.outputs.version }}"
+          git diff --quiet --cached || git commit -m "chore(appcast): macOS ${{ needs.prepare-release.outputs.version }}"
           git push
 
-      - name: Create GitHub Release
+      - name: Upload macOS artifacts to release
         uses: softprops/action-gh-release@v1
         with:
-          tag_name: ${{ steps.version.outputs.tag }}
-          name: ${{ steps.version.outputs.version }}
+          tag_name: ${{ needs.prepare-release.outputs.tag }}
           files: |
-            AndroidTools-${{ steps.version.outputs.version }}.zip
-            AndroidTools-${{ steps.version.outputs.version }}.zip.sig
+            AndroidTools-${{ needs.prepare-release.outputs.version }}-macos.zip
+
+  build-windows:
+    needs: prepare-release
+    runs-on: windows-latest
+
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+
+      - name: Set up Flutter
+        uses: subosito/flutter-action@v2
+        with:
+          flutter-version: "3.38.9"
+          channel: "stable"
+
+      - name: Build Windows app
+        run: |
+          flutter clean
+          flutter pub get
+          dart run build_runner build -d
+          flutter build windows --release `
+            --dart-define=SENTRY_DSN=${{ vars.SENTRY_DSN }} `
+            --dart-define=GIT_REPOSITORY_URL=${{ vars.REPOSITORY_URL }} `
+            --dart-define=AUTO_UPDATER_FEED_URL=${{ vars.APP_CAST_FILE_PATH }} `
+            --dart-define=ISSUE_URL=${{ vars.ISSUE_URL }} `
+            --obfuscate `
+            --split-debug-info=build/debug-info
+
+      - name: Create ZIP from Windows build
+        shell: pwsh
+        run: |
+          $version = "${{ needs.prepare-release.outputs.version }}"
+          Compress-Archive -Path "build\windows\x64\runner\Release\*" -DestinationPath "AndroidTools-$version-windows.zip"
+
+      - name: Upload Windows artifacts to release
+        uses: softprops/action-gh-release@v1
+        with:
+          tag_name: ${{ needs.prepare-release.outputs.tag }}
+          files: |
+            AndroidTools-${{ needs.prepare-release.outputs.version }}-windows.zip
+
+  finalize-release:
+    needs: [prepare-release, build-macos, build-windows]
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Publish Release
+        uses: softprops/action-gh-release@v1
+        with:
+          tag_name: ${{ needs.prepare-release.outputs.tag }}
+          draft: false

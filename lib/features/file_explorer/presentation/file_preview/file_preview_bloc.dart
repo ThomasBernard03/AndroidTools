@@ -27,7 +27,7 @@ class FilePreviewBloc extends Bloc<FilePreviewEvent, FilePreviewState> {
       _currentDevice = device;
     });
 
-    on<OnFilePreviewAppearing>((event, emit) async {
+    on<OnFilePreviewAppearingEvent>((event, emit) async {
       if (_currentDevice == null) {
         _logger.w("Device is null, can't preview file");
         emit(
