@@ -16,17 +16,31 @@ class Constants {
   }
 
   static String getAdbPath() {
-    final execDir = Directory(Platform.resolvedExecutable).parent;
-    final contents = execDir.parent;
-    final resources = Directory("${contents.path}/Resources");
-    return "${resources.path}/adb";
+    if (Platform.isMacOS) {
+      final execDir = Directory(Platform.resolvedExecutable).parent;
+      final contents = execDir.parent;
+      final resources = Directory("${contents.path}/Resources");
+      return "${resources.path}/adb";
+    } else if (Platform.isWindows) {
+      final execDir = Directory(Platform.resolvedExecutable).parent;
+      return "${execDir.path}/adb.exe";
+    } else {
+      throw UnsupportedError('Platform not supported');
+    }
   }
 
   static String getAaptPath() {
-    final execDir = Directory(Platform.resolvedExecutable).parent;
-    final contents = execDir.parent;
-    final resources = Directory("${contents.path}/Resources");
-    return "${resources.path}/aapt";
+    if (Platform.isMacOS) {
+      final execDir = Directory(Platform.resolvedExecutable).parent;
+      final contents = execDir.parent;
+      final resources = Directory("${contents.path}/Resources");
+      return "${resources.path}/aapt";
+    } else if (Platform.isWindows) {
+      final execDir = Directory(Platform.resolvedExecutable).parent;
+      return "${execDir.path}/aapt.exe";
+    } else {
+      throw UnsupportedError('Platform not supported');
+    }
   }
 
   static const environmentGitRepositoryUrl = "GIT_REPOSITORY_URL";
