@@ -9,14 +9,6 @@ class DeviceInformationRepositoryImpl implements DeviceInformationRepository {
   DeviceInformationRepositoryImpl(this._shellDatasource);
 
   @override
-  Future<StorageInfo?> getDeviceStorageInformation(String deviceId) async {
-    final adbPath = _shellDatasource.getAdbPath();
-    final adbClient = AdbClient(adbExecutablePath: adbPath);
-    final info = await adbClient.getStorageInfo(deviceId);
-    return info.firstOrNull;
-  }
-
-  @override
   Future<DeviceInformationEntity> getDeviceInformation(String deviceId) async {
     final adbPath = _shellDatasource.getAdbPath();
     final adbClient = AdbClient(adbExecutablePath: adbPath);
@@ -36,19 +28,5 @@ class DeviceInformationRepositoryImpl implements DeviceInformationRepository {
     final adbPath = _shellDatasource.getAdbPath();
     final adbClient = AdbClient(adbExecutablePath: adbPath);
     return adbClient.getBatteryInfo(deviceId);
-  }
-
-  @override
-  Future<DisplayInfo?> getDeviceDisplayInformation(String deviceId) {
-    final adbPath = _shellDatasource.getAdbPath();
-    final adbClient = AdbClient(adbExecutablePath: adbPath);
-    return adbClient.getDisplayInfo(deviceId);
-  }
-
-  @override
-  Future<NetworkInfo?> getDeviceNetworkInformation(String deviceId) {
-    final adbPath = _shellDatasource.getAdbPath();
-    final adbClient = AdbClient(adbExecutablePath: adbPath);
-    return adbClient.getNetworkInfo(deviceId);
   }
 }
