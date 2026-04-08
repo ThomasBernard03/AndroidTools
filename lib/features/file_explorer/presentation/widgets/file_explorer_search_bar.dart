@@ -25,11 +25,8 @@ class FileExplorerSearchBar extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Container(
-      color: Color(0xFF1E1E1E),
-      padding: EdgeInsets.symmetric(
-        horizontal: 16,
-        vertical: 8,
-      ),
+      color: Theme.of(context).colorScheme.surfaceContainerLow,
+      padding: EdgeInsets.symmetric(horizontal: 16, vertical: 8),
       child: Row(
         children: [
           Expanded(
@@ -37,27 +34,11 @@ class FileExplorerSearchBar extends StatelessWidget {
               controller: controller,
               focusNode: focusNode,
               autofocus: true,
-              style: TextStyle(
-                color: Colors.white,
-              ),
               decoration: InputDecoration(
                 hintText: 'Rechercher...',
-                hintStyle: TextStyle(
-                  color: Colors.white54,
-                ),
                 border: OutlineInputBorder(
                   borderSide: BorderSide(
-                    color: Colors.white24,
-                  ),
-                ),
-                enabledBorder: OutlineInputBorder(
-                  borderSide: BorderSide(
-                    color: Colors.white24,
-                  ),
-                ),
-                focusedBorder: OutlineInputBorder(
-                  borderSide: BorderSide(
-                    color: Colors.blue,
+                    color: Theme.of(context).colorScheme.primary,
                   ),
                 ),
                 contentPadding: EdgeInsets.symmetric(
@@ -69,7 +50,7 @@ class FileExplorerSearchBar extends StatelessWidget {
                     ? '0/0'
                     : '${currentMatchIndex + 1}/$matchCount',
                 suffixStyle: TextStyle(
-                  color: Colors.white70,
+                  color: Theme.of(context).colorScheme.outline,
                 ),
               ),
               onChanged: (_) => onChanged(),
@@ -77,30 +58,21 @@ class FileExplorerSearchBar extends StatelessWidget {
           ),
           SizedBox(width: 8),
           IconButton(
-            icon: Icon(
-              Icons.keyboard_arrow_up,
-              color: Colors.white,
-            ),
+            icon: Icon(Icons.keyboard_arrow_up),
             onPressed: matchCount == 0 ? null : onPrevious,
             tooltip: 'Précédent (Shift+Enter)',
             padding: EdgeInsets.all(4),
             constraints: BoxConstraints(),
           ),
           IconButton(
-            icon: Icon(
-              Icons.keyboard_arrow_down,
-              color: Colors.white,
-            ),
+            icon: Icon(Icons.keyboard_arrow_down),
             onPressed: matchCount == 0 ? null : onNext,
             tooltip: 'Suivant (Enter)',
             padding: EdgeInsets.all(4),
             constraints: BoxConstraints(),
           ),
           IconButton(
-            icon: Icon(
-              Icons.close,
-              color: Colors.white,
-            ),
+            icon: Icon(Icons.close),
             onPressed: onClose,
             tooltip: 'Fermer (Escape)',
             padding: EdgeInsets.all(4),

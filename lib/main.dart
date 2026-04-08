@@ -2,6 +2,7 @@ import 'package:android_tools/features/file_explorer/core/file_explorer_module.d
 import 'package:android_tools/features/home/presentation/home_screen.dart';
 import 'package:android_tools/features/information/core/information_module.dart';
 import 'package:android_tools/features/logcat/core/logcat_module.dart';
+import 'package:android_tools/features/settings/presentation/settings_bloc.dart';
 import 'package:android_tools/shared/core/constants.dart';
 import 'package:android_tools/shared/core/shared_module.dart';
 import 'package:android_tools/shared/core/string_extensions.dart';
@@ -9,6 +10,7 @@ import 'package:android_tools/shared/presentation/themes.dart';
 import 'package:auto_updater/auto_updater.dart';
 import 'package:bitsdojo_window/bitsdojo_window.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:get_it/get_it.dart';
 import 'package:logger/logger.dart';
 import 'package:sentry_flutter/sentry_flutter.dart';
@@ -77,12 +79,20 @@ class MyApp extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return MaterialApp(
-      debugShowCheckedModeBanner: false,
-      title: 'Flutter Demo',
-      theme: Themes.darkTheme,
-      darkTheme: Themes.darkTheme,
-      home: HomeScreen(),
+    return BlocProvider(
+      create: (context) => SettingsBloc()..add(OnLoadThemeMode()),
+      child: BlocBuilder<SettingsBloc, SettingsState>(
+        builder: (context, state) {
+          return MaterialApp(
+            debugShowCheckedModeBanner: false,
+            title: 'Android Tools',
+            theme: Themes.lightTheme,
+            darkTheme: Themes.darkTheme,
+            themeMode: state.themeMode,
+            home: HomeScreen(),
+          );
+        },
+      ),
     );
   }
 }

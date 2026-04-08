@@ -224,7 +224,7 @@ class _FileExplorerScreenState extends State<FileExplorerScreen> {
           return KeyEventResult.ignored;
         },
         child: Scaffold(
-          backgroundColor: Color(0xff000000),
+          backgroundColor: Theme.of(context).colorScheme.surfaceContainerLowest,
           appBar: PreferredSize(
             preferredSize: Size.fromHeight(kToolbarHeight),
             child: BlocBuilder<FileExplorerBloc, FileExplorerState>(
@@ -410,7 +410,10 @@ class _FileExplorerScreenState extends State<FileExplorerScreen> {
                           ),
                         ),
                         // Divider
-                        Container(width: 1, color: Color(0xFF2A2A2A)),
+                        Container(
+                          width: 1,
+                          color: Theme.of(context).colorScheme.outline,
+                        ),
                         // Right panel: File Preview
                         BlocBuilder<FileExplorerBloc, FileExplorerState>(
                           builder: (context, state) {

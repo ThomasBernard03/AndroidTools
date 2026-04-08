@@ -30,6 +30,7 @@ class FileExplorerFileEntryItem extends StatelessWidget {
   });
 
   Widget _buildHighlightedText(
+    BuildContext context,
     String text,
     String? query,
     TextStyle? style, {
@@ -77,7 +78,7 @@ class FileExplorerFileEntryItem extends StatelessWidget {
           text: text.substring(matchIndex, matchIndex + query.length),
           style: TextStyle(
             backgroundColor: Colors.orange,
-            color: Colors.black,
+            color: Theme.of(context).colorScheme.onSurface,
             fontWeight: FontWeight.bold,
           ),
         ),
@@ -124,7 +125,7 @@ class FileExplorerFileEntryItem extends StatelessWidget {
           child: ListTile(
             selectedColor: Theme.of(context).colorScheme.surface,
             selectedTileColor: Theme.of(context).colorScheme.onSurface,
-            tileColor: Color(0xff000000),
+            tileColor: Theme.of(context).colorScheme.surfaceContainerLow,
             enabled:
                 file.type == FileType.directory || file.type == FileType.file,
             selected: isSelected,
@@ -133,6 +134,7 @@ class FileExplorerFileEntryItem extends StatelessWidget {
               spacing: 8,
               children: [
                 _buildHighlightedText(
+                  context,
                   file.name,
                   searchQuery,
                   null,
@@ -145,7 +147,7 @@ class FileExplorerFileEntryItem extends StatelessWidget {
                   Container(
                     decoration: BoxDecoration(
                       shape: BoxShape.circle,
-                      color: Color(0xFF6E6E6E),
+                      color: Theme.of(context).colorScheme.outline,
                     ),
                     height: 6,
                     width: 6,

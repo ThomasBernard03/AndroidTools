@@ -25,7 +25,9 @@ class NavigationRailItem extends StatelessWidget {
               text,
               style: TextStyle(
                 fontSize: 14,
-                color: selected ? Colors.white : Color(0xFFA9AEB2),
+                color: selected
+                    ? Theme.of(context).colorScheme.onSurface
+                    : Color(0xFFA9AEB2),
                 fontWeight: selected ? FontWeight.bold : null,
               ),
             ),

@@ -28,7 +28,7 @@ class _ApplicationInstallerScreenState
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      backgroundColor: Color(0xFF151515),
+      backgroundColor: Theme.of(context).colorScheme.surfaceContainerLowest,
       appBar: PreferredSize(
         preferredSize: Size.fromHeight(kToolbarHeight),
         child: MoveWindow(

@@ -37,7 +37,7 @@ class _HomeScreenState extends State<HomeScreen> {
                   child: SizedBox(
                     width: 250,
                     child: Container(
-                      color: Color(0xFF181E25),
+                      color: Theme.of(context).colorScheme.surfaceContainerLow,
                       child: Padding(
                         padding: const EdgeInsets.symmetric(
                           horizontal: 16,

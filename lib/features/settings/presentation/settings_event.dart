@@ -19,3 +19,11 @@ class OnMaxHistorySizeChanged extends SettingsEvent {
 
   OnMaxHistorySizeChanged(this.size);
 }
+
+class OnLoadThemeMode extends SettingsEvent {}
+
+class OnThemeModeChanged extends SettingsEvent {
+  final ThemeMode themeMode;
+
+  OnThemeModeChanged(this.themeMode);
+}

@@ -5,9 +5,11 @@ import 'package:android_tools/shared/core/constants.dart';
 import 'package:android_tools/shared/data/datasources/local/app_database.dart';
 import 'package:android_tools/shared/data/datasources/local/application_local_datasource.dart';
 import 'package:android_tools/shared/data/datasources/shell/shell_datasource.dart';
+import 'package:android_tools/shared/data/helpers/settings_helper_shared_pref_impl.dart';
 import 'package:android_tools/shared/data/repositories/application_repository_impl.dart';
 import 'package:android_tools/shared/data/repositories/device_repository_impl.dart';
 import 'package:android_tools/shared/data/repositories/package_repository_impl.dart';
+import 'package:android_tools/shared/domain/helpers/settings_helper.dart';
 import 'package:android_tools/shared/domain/repositories/application_repository.dart';
 import 'package:android_tools/shared/domain/repositories/device_repository.dart';
 import 'package:android_tools/shared/domain/repositories/package_repository.dart';
@@ -33,6 +35,9 @@ class SharedModule {
     getIt.registerLazySingleton(() => AppDatabase());
     getIt.registerLazySingleton(
       () => ApplicationLocalDatasource(getIt.get()),
+    );
+    getIt.registerLazySingleton<SettingsHelper>(
+      () => SettingsHelperSharedPrefImpl(),
     );
 
     _registerRepositories();

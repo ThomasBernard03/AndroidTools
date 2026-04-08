@@ -28,6 +28,7 @@ class _LogcatAppbarState extends State<LogcatAppbar> {
           },
         ),
         backgroundColor: Theme.of(context).colorScheme.surface,
+        surfaceTintColor: Theme.of(context).scaffoldBackgroundColor,
         actions: [
           Row(
             spacing: 8,
