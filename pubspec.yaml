@@ -33,6 +33,7 @@ dependencies:
   auto_updater: ^1.0.0
   intl: ^0.20.2
   flutter_monaco: ^1.4.0
+  pdfx: ^2.7.0
   drift: ^2.30.1
   drift_flutter: ^0.2.8
   shared_preferences: ^2.3.4

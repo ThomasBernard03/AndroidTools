@@ -9,6 +9,7 @@
 #include <auto_updater_windows/auto_updater_windows_plugin_c_api.h>
 #include <bitsdojo_window_windows/bitsdojo_window_plugin.h>
 #include <desktop_drop/desktop_drop_plugin.h>
+#include <pdfx/pdfx_plugin.h>
 #include <sentry_flutter/sentry_flutter_plugin.h>
 #include <sqlite3_flutter_libs/sqlite3_flutter_libs_plugin.h>
 #include <url_launcher_windows/url_launcher_windows.h>
@@ -21,6 +22,8 @@ void RegisterPlugins(flutter::PluginRegistry* registry) {
       registry->GetRegistrarForPlugin("BitsdojoWindowPlugin"));
   DesktopDropPluginRegisterWithRegistrar(
       registry->GetRegistrarForPlugin("DesktopDropPlugin"));
+  PdfxPluginRegisterWithRegistrar(
+      registry->GetRegistrarForPlugin("PdfxPlugin"));
   SentryFlutterPluginRegisterWithRegistrar(
       registry->GetRegistrarForPlugin("SentryFlutterPlugin"));
   Sqlite3FlutterLibsPluginRegisterWithRegistrar(

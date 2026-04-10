@@ -11,6 +11,8 @@ PODS:
   - FlutterMacOS (1.0.0)
   - package_info_plus (0.0.1):
     - FlutterMacOS
+  - pdfx (1.0.0):
+    - FlutterMacOS
   - Sentry/HybridSDK (8.56.2)
   - sentry_flutter (9.12.0):
     - Flutter
@@ -58,6 +60,7 @@ DEPENDENCIES:
   - file_picker (from `Flutter/ephemeral/.symlinks/plugins/file_picker/macos`)
   - FlutterMacOS (from `Flutter/ephemeral`)
   - package_info_plus (from `Flutter/ephemeral/.symlinks/plugins/package_info_plus/macos`)
+  - pdfx (from `Flutter/ephemeral/.symlinks/plugins/pdfx/macos`)
   - sentry_flutter (from `Flutter/ephemeral/.symlinks/plugins/sentry_flutter/macos`)
   - shared_preferences_foundation (from `Flutter/ephemeral/.symlinks/plugins/shared_preferences_foundation/darwin`)
   - sqlite3_flutter_libs (from `Flutter/ephemeral/.symlinks/plugins/sqlite3_flutter_libs/darwin`)
@@ -83,6 +86,8 @@ EXTERNAL SOURCES:
     :path: Flutter/ephemeral
   package_info_plus:
     :path: Flutter/ephemeral/.symlinks/plugins/package_info_plus/macos
+  pdfx:
+    :path: Flutter/ephemeral/.symlinks/plugins/pdfx/macos
   sentry_flutter:
     :path: Flutter/ephemeral/.symlinks/plugins/sentry_flutter/macos
   shared_preferences_foundation:
@@ -101,6 +106,7 @@ SPEC CHECKSUMS:
   file_picker: 7584aae6fa07a041af2b36a2655122d42f578c1a
   FlutterMacOS: d0db08ddef1a9af05a5ec4b724367152bb0500b1
   package_info_plus: f0052d280d17aa382b932f399edf32507174e870
+  pdfx: 1e79f57f7a6ce2f4a4c30f21fa54d3dc82441b51
   Sentry: b53951377b78e21a734f5dc8318e333dbfc682d7
   sentry_flutter: 26f4615de8bdc741318397fdc78ba3e4e08df07f
   shared_preferences_foundation: 7036424c3d8ec98dfe75ff1667cb0cd531ec82bb

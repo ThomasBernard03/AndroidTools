@@ -1,4 +1,5 @@
 import 'package:android_tools/features/file_explorer/presentation/file_preview/file_preview_bloc.dart';
+import 'package:android_tools/features/file_explorer/presentation/file_preview/widgets/pdf_preview_widget.dart';
 import 'package:flutter/material.dart';
 
 class FilePreviewContent extends StatelessWidget {
@@ -80,6 +81,8 @@ class FilePreviewContent extends StatelessWidget {
         return _buildTextPreview(context);
       case PreviewType.image:
         return _buildImagePreview(context);
+      case PreviewType.pdf:
+        return _buildPdfPreview(context);
       case PreviewType.video:
         return _buildVideoPreview(context);
       case PreviewType.audio:
@@ -126,6 +129,17 @@ class FilePreviewContent extends StatelessWidget {
           ),
         ],
       ),
+    );
+  }
+
+  Widget _buildPdfPreview(BuildContext context) {
+    if (state.localFilePath == null) {
+      return const Center(child: Text('No PDF file path available'));
+    }
+
+    return PdfPreviewWidget(
+      pdfPath: state.localFilePath!,
+      fileName: state.fileEntry?.name ?? 'document.pdf',
     );
   }
 

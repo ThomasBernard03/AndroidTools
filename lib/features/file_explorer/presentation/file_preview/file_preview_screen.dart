@@ -3,6 +3,7 @@ import 'package:android_tools/features/file_explorer/core/int_extensions.dart';
 import 'package:android_tools/features/file_explorer/presentation/file_preview/file_preview_bloc.dart';
 import 'package:android_tools/features/file_explorer/presentation/file_preview/widgets/file_preview_action_button.dart';
 import 'package:android_tools/features/file_explorer/presentation/file_preview/widgets/image_preview_widget.dart';
+import 'package:android_tools/features/file_explorer/presentation/file_preview/widgets/pdf_preview_widget.dart';
 import 'package:android_tools/features/file_explorer/presentation/file_preview/widgets/text_preview_widget.dart';
 import 'package:android_tools/features/file_explorer/presentation/widgets/file_entry_extensions.dart';
 import 'package:flutter/material.dart';
@@ -150,6 +151,8 @@ class FilePreviewScreen extends StatelessWidget {
         return _buildTextPreview(state);
       case PreviewType.image:
         return _buildImagePreview(state);
+      case PreviewType.pdf:
+        return _buildPdfPreview(state);
       case PreviewType.video:
         return _buildVideoPreview(context, state);
       case PreviewType.audio:
@@ -173,6 +176,17 @@ class FilePreviewScreen extends StatelessWidget {
 
     return ImagePreviewWidget(
       imagePath: state.localFilePath!,
+      fileName: fileEntry.name,
+    );
+  }
+
+  Widget _buildPdfPreview(FilePreviewState state) {
+    if (state.localFilePath == null) {
+      return const Center(child: Text('No PDF file path available'));
+    }
+
+    return PdfPreviewWidget(
+      pdfPath: state.localFilePath!,
       fileName: fileEntry.name,
     );
   }

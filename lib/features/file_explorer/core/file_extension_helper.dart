@@ -72,4 +72,8 @@ class FileExtensionHelper {
 
     return audioExtensions.contains(extension);
   }
+
+  static bool isPdfExtension(String extension) {
+    return extension == '.pdf';
+  }
 }
