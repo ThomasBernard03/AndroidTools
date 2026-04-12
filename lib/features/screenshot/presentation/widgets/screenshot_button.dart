@@ -1,4 +1,4 @@
-import 'package:android_tools/features/screenshot/presentation/screenshot_capture_bloc.dart';
+import 'package:android_tools/features/screenshot/presentation/screenshot_preview_bloc.dart';
 import 'package:android_tools/features/screenshot/presentation/screenshot_preview_screen.dart';
 import 'package:android_tools/shared/domain/entities/device_entity.dart';
 import 'package:flutter/material.dart';
@@ -17,7 +17,7 @@ class ScreenshotButton extends StatefulWidget {
 }
 
 class _ScreenshotButtonState extends State<ScreenshotButton> {
-  final _bloc = ScreenshotCaptureBloc();
+  final _bloc = ScreenshotPreviewBloc();
 
   @override
   void dispose() {
@@ -29,19 +29,18 @@ class _ScreenshotButtonState extends State<ScreenshotButton> {
   Widget build(BuildContext context) {
     return BlocProvider.value(
       value: _bloc,
-      child: BlocConsumer<ScreenshotCaptureBloc, ScreenshotCaptureState>(
+      child: BlocConsumer<ScreenshotPreviewBloc, ScreenshotPreviewState>(
         listener: (context, state) {
           // Handle success state - navigate to preview
-          if (state.status == ScreenshotCaptureStatus.success) {
-            if (state.screenshot != null &&
-                widget.device != null &&
-                context.mounted) {
+          if (state.status == ScreenshotStatus.success &&
+              state.screenshot != null) {
+            if (context.mounted) {
               Navigator.push(
                 context,
                 MaterialPageRoute(
                   builder: (_) => ScreenshotPreviewScreen(
                     screenshot: state.screenshot!,
-                    device: widget.device!,
+                    device: state.device!,
                   ),
                 ),
               );
@@ -52,7 +51,7 @@ class _ScreenshotButtonState extends State<ScreenshotButton> {
           }
 
           // Handle error state - show error message
-          if (state.status == ScreenshotCaptureStatus.error) {
+          if (state.status == ScreenshotStatus.error) {
             if (state.errorMessage != null && context.mounted) {
               ScaffoldMessenger.of(context).showSnackBar(
                 SnackBar(
@@ -67,14 +66,17 @@ class _ScreenshotButtonState extends State<ScreenshotButton> {
           }
         },
         builder: (context, state) {
-          final isCapturing = state.status == ScreenshotCaptureStatus.capturing;
+          final isCapturing = state.status == ScreenshotStatus.capturing;
 
           return IconButton(
             onPressed: widget.device != null && !isCapturing
                 ? () {
-                    context
-                        .read<ScreenshotCaptureBloc>()
-                        .add(OnCaptureScreenshot(widget.device!.deviceId));
+                    context.read<ScreenshotPreviewBloc>().add(
+                          OnCaptureScreenshot(
+                            deviceId: widget.device!.deviceId,
+                            device: widget.device!,
+                          ),
+                        );
                   }
                 : null,
             icon: isCapturing

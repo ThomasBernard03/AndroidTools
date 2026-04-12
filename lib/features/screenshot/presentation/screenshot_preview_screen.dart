@@ -21,15 +21,14 @@ class ScreenshotPreviewScreen extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return BlocProvider(
-      create: (context) => ScreenshotPreviewBloc(
-        screenshot: screenshot,
-        device: device,
-      ),
+      create: (context) =>
+          ScreenshotPreviewBloc(screenshot: screenshot, device: device),
       child: Scaffold(
         appBar: PreferredSize(
           preferredSize: Size.fromHeight(kToolbarHeight),
           child: MoveWindow(
             child: AppBar(
+              automaticallyImplyLeading: false,
               backgroundColor: Colors.transparent,
               surfaceTintColor: Colors.transparent,
               title: Text(
@@ -41,14 +40,12 @@ class ScreenshotPreviewScreen extends StatelessWidget {
         ),
         body: BlocConsumer<ScreenshotPreviewBloc, ScreenshotPreviewState>(
           listener: (context, state) {
-            if (state.successMessage != null) {
-              ScaffoldMessenger.of(context).showSnackBar(
-                SnackBar(
-                  content: Text(state.successMessage!),
-                  backgroundColor: Colors.green,
-                ),
-              );
+            // Close screen after successful save or copy
+            if (state.successMessage != null && context.mounted) {
+              Navigator.of(context).pop();
             }
+
+            // Show error messages only
             if (state.errorMessage != null) {
               ScaffoldMessenger.of(context).showSnackBar(
                 SnackBar(
@@ -59,7 +56,9 @@ class ScreenshotPreviewScreen extends StatelessWidget {
             }
           },
           builder: (context, state) {
-            if (state.status == ScreenshotStatus.loading) {
+            if (state.status == ScreenshotStatus.loading ||
+                state.screenshot == null ||
+                state.device == null) {
               return Center(
                 child: CircularProgressIndicator(
                   color: Theme.of(context).colorScheme.onSurface,
@@ -71,7 +70,7 @@ class ScreenshotPreviewScreen extends StatelessWidget {
               children: [
                 Expanded(
                   child: ScreenshotPreviewWidget(
-                    imagePath: state.screenshot.filePath,
+                    imagePath: state.screenshot!.filePath,
                   ),
                 ),
                 Padding(
@@ -79,18 +78,17 @@ class ScreenshotPreviewScreen extends StatelessWidget {
                   child: Column(
                     children: [
                       Text(
-                        'Size: ${state.screenshot.width} x ${state.screenshot.height}',
+                        'Size: ${state.screenshot!.width} x ${state.screenshot!.height}',
                         style: Theme.of(context).textTheme.bodyMedium,
                       ),
                       Text(
-                        'Captured: ${DateFormat('yyyy-MM-dd HH:mm:ss').format(state.screenshot.timestamp)}',
+                        'Captured: ${DateFormat('yyyy-MM-dd HH:mm:ss').format(state.screenshot!.timestamp)}',
                         style: Theme.of(context).textTheme.bodyMedium,
                       ),
                       Divider(
-                        color: Theme.of(context)
-                            .colorScheme
-                            .onSurface
-                            .withAlpha(60),
+                        color: Theme.of(
+                          context,
+                        ).colorScheme.onSurface.withAlpha(60),
                       ),
                       Row(
                         mainAxisAlignment: MainAxisAlignment.center,
@@ -100,27 +98,27 @@ class ScreenshotPreviewScreen extends StatelessWidget {
                             icon: Icons.save,
                             text: 'Save As',
                             onPressed: () {
-                              context
-                                  .read<ScreenshotPreviewBloc>()
-                                  .add(OnSaveScreenshot());
+                              context.read<ScreenshotPreviewBloc>().add(
+                                OnSaveScreenshot(),
+                              );
                             },
                           ),
                           ScreenshotActionButton(
                             icon: Icons.copy,
                             text: 'Copy',
                             onPressed: () {
-                              context
-                                  .read<ScreenshotPreviewBloc>()
-                                  .add(OnCopyToClipboard());
+                              context.read<ScreenshotPreviewBloc>().add(
+                                OnCopyToClipboard(),
+                              );
                             },
                           ),
                           ScreenshotActionButton(
                             icon: Icons.delete,
                             text: 'Delete',
                             onPressed: () {
-                              context
-                                  .read<ScreenshotPreviewBloc>()
-                                  .add(OnDeleteScreenshot());
+                              context.read<ScreenshotPreviewBloc>().add(
+                                OnDeleteScreenshot(),
+                              );
                               Navigator.of(context).pop();
                             },
                           ),
