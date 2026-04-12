@@ -114,6 +114,26 @@ class SettingsBloc extends Bloc<SettingsEvent, SettingsState> {
         _logger.e("Error updating theme mode: $e");
       }
     });
+
+    on<OnLoadCrashReportingSetting>((event, emit) async {
+      try {
+        final disabled = await _settingsHelper.getCrashReportingDisabled();
+        emit(state.copyWith(crashReportingDisabled: disabled));
+      } catch (e) {
+        _logger.e("Error loading crash reporting setting: $e");
+        emit(state.copyWith(crashReportingDisabled: false));
+      }
+    });
+
+    on<OnCrashReportingToggled>((event, emit) async {
+      try {
+        await _settingsHelper.setCrashReportingDisabled(event.disabled);
+        emit(state.copyWith(crashReportingDisabled: event.disabled));
+        _logger.i("Crash reporting ${event.disabled ? 'disabled' : 'enabled'}");
+      } catch (e) {
+        _logger.e("Error updating crash reporting setting: $e");
+      }
+    });
   }
 
   ThemeMode _stringToThemeMode(String value) {

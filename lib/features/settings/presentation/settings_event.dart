@@ -27,3 +27,11 @@ class OnThemeModeChanged extends SettingsEvent {
 
   OnThemeModeChanged(this.themeMode);
 }
+
+class OnLoadCrashReportingSetting extends SettingsEvent {}
+
+class OnCrashReportingToggled extends SettingsEvent {
+  final bool disabled;
+
+  OnCrashReportingToggled(this.disabled);
+}

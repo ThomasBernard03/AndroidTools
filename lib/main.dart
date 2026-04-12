@@ -7,6 +7,7 @@ import 'package:android_tools/features/settings/presentation/settings_bloc.dart'
 import 'package:android_tools/shared/core/constants.dart';
 import 'package:android_tools/shared/core/shared_module.dart';
 import 'package:android_tools/shared/core/string_extensions.dart';
+import 'package:android_tools/shared/domain/helpers/settings_helper.dart';
 import 'package:android_tools/shared/presentation/themes.dart';
 import 'package:auto_updater/auto_updater.dart';
 import 'package:bitsdojo_window/bitsdojo_window.dart';
@@ -27,7 +28,16 @@ Future<void> main(List<String> args) async {
   ScreenshotModule.configureDependencies();
   await getIt.allReady();
   final logger = await getIt.getAsync<Logger>();
+  final settingsHelper = getIt.get<SettingsHelper>();
   logger.i("==== Starting application ====");
+
+  // Load crash reporting preference early
+  final crashReportingDisabled = await settingsHelper
+      .getCrashReportingDisabled();
+  logger.i(
+    "Crash reporting ${crashReportingDisabled ? 'disabled' : 'enabled'} by user preference",
+  );
+
   const sentryDsn = String.fromEnvironment(
     Constants.environmentSentryDsn,
     defaultValue: '',
@@ -62,12 +72,23 @@ Future<void> main(List<String> args) async {
     }
   }
 
-  await SentryFlutter.init((options) {
-    options.dsn = sentryDsn;
-    options.enableLogs = true;
-    options.replay.sessionSampleRate = 0.1;
-    options.replay.onErrorSampleRate = 1.0;
-  }, appRunner: () => runApp(SentryWidget(child: MyApp())));
+  // Conditionally initialize Sentry based on user preference
+  if (!crashReportingDisabled && sentryDsn.isNotEmpty) {
+    logger.i("Initializing Sentry for crash reporting");
+    await SentryFlutter.init((options) {
+      options.dsn = sentryDsn;
+      options.enableLogs = true;
+      options.replay.sessionSampleRate = 0.1;
+      options.replay.onErrorSampleRate = 1.0;
+    }, appRunner: () => runApp(SentryWidget(child: MyApp())));
+  } else {
+    if (crashReportingDisabled) {
+      logger.i(
+        "Skipping Sentry initialization - crash reporting disabled by user",
+      );
+    }
+    runApp(MyApp());
+  }
 
   doWhenWindowReady(() {
     appWindow.minSize = Size(800, 50);

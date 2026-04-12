@@ -16,6 +16,7 @@ class _SettingsScreenState extends State<SettingsScreen> {
     super.initState();
     WidgetsBinding.instance.addPostFrameCallback((_) {
       context.read<SettingsBloc>().add(OnLoadMaxHistorySize());
+      context.read<SettingsBloc>().add(OnLoadCrashReportingSetting());
     });
   }
 
@@ -196,6 +197,52 @@ class _SettingsScreenState extends State<SettingsScreen> {
                               ),
                             ),
                           ],
+                        ),
+                      ),
+                    ],
+                  ),
+
+                  Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: [
+                      Text("Privacy"),
+                      Card(
+                        clipBehavior: Clip.hardEdge,
+                        color: Theme.of(context).colorScheme.surface,
+                        child: SwitchListTile(
+                          secondary: Icon(Icons.privacy_tip),
+                          title: Text("Disable crash reporting"),
+                          subtitle: Text(
+                            "Prevent sending anonymous crash reports to help improve the app. Requires restart.",
+                          ),
+                          value: state.crashReportingDisabled,
+                          onChanged: (value) {
+                            showDialog(
+                              context: context,
+                              builder: (dialogContext) => AlertDialog(
+                                title: Text("Restart Required"),
+                                content: Text(
+                                  "Crash reporting changes will take effect after restarting the application.\n\n"
+                                  "Do you want to change this setting?",
+                                ),
+                                actions: [
+                                  TextButton(
+                                    onPressed: () => Navigator.of(dialogContext).pop(),
+                                    child: Text("Cancel"),
+                                  ),
+                                  TextButton(
+                                    onPressed: () {
+                                      Navigator.of(dialogContext).pop();
+                                      context.read<SettingsBloc>().add(
+                                        OnCrashReportingToggled(value),
+                                      );
+                                    },
+                                    child: Text("Change Setting"),
+                                  ),
+                                ],
+                              ),
+                            );
+                          },
                         ),
                       ),
                     ],
