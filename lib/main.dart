@@ -2,6 +2,7 @@ import 'package:android_tools/features/file_explorer/core/file_explorer_module.d
 import 'package:android_tools/features/home/presentation/home_screen.dart';
 import 'package:android_tools/features/information/core/information_module.dart';
 import 'package:android_tools/features/logcat/core/logcat_module.dart';
+import 'package:android_tools/features/screenshot/core/screenshot_module.dart';
 import 'package:android_tools/features/settings/presentation/settings_bloc.dart';
 import 'package:android_tools/shared/core/constants.dart';
 import 'package:android_tools/shared/core/shared_module.dart';
@@ -23,6 +24,7 @@ Future<void> main(List<String> args) async {
   SharedModule.configureDependencies();
   InformationModule.configureDependencies();
   FileExplorerModule.configureDependencies();
+  ScreenshotModule.configureDependencies();
   await getIt.allReady();
   final logger = await getIt.getAsync<Logger>();
   logger.i("==== Starting application ====");

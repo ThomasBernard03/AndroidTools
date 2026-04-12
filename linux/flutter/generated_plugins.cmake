@@ -5,8 +5,10 @@
 list(APPEND FLUTTER_PLUGIN_LIST
   bitsdojo_window_linux
   desktop_drop
+  irondash_engine_context
   sentry_flutter
   sqlite3_flutter_libs
+  super_native_extensions
   url_launcher_linux
 )
 

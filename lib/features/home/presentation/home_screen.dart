@@ -5,7 +5,6 @@ import 'package:android_tools/features/home/presentation/widgets/navigation_rail
 import 'package:android_tools/features/information/presentation/information_screen.dart';
 import 'package:android_tools/features/logcat/presentation/logcat_screen.dart';
 import 'package:android_tools/features/settings/presentation/settings_screen.dart';
-import 'package:bitsdojo_window/bitsdojo_window.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 
@@ -33,109 +32,100 @@ class _HomeScreenState extends State<HomeScreen> {
           return Scaffold(
             body: Row(
               children: [
-                MoveWindow(
-                  child: SizedBox(
-                    width: 250,
-                    child: Container(
-                      color: Theme.of(context).colorScheme.surfaceContainerLow,
-                      child: Padding(
-                        padding: const EdgeInsets.symmetric(
-                          horizontal: 16,
-                          vertical: 8,
-                        ),
-                        child: Column(
-                          spacing: 12,
-                          children: [
-                            SizedBox.fromSize(size: Size(0, 20)),
-                            Text(
-                              "Android Tools",
-                              style: TextStyle(
-                                fontFamily: 'Nothing',
-                                fontSize: 18,
-                              ),
-                            ),
-                            if (state.devices.isNotEmpty)
-                              DropdownButtonFormField(
-                                icon: Icon(Icons.keyboard_arrow_down),
-                                style: Theme.of(context).textTheme.bodyMedium,
-                                initialValue: state.selectedDevice,
-                                items: state.devices
-                                    .map(
-                                      (device) => DropdownMenuItem(
-                                        value: device,
-                                        child: Text(device.name),
-                                      ),
-                                    )
-                                    .toList(),
-                                onChanged: (device) {
-                                  if (device == null) return;
-                                  context.read<HomeBloc>().add(
-                                    OnDeviceSelected(device: device),
-                                  );
-                                },
-                                decoration: InputDecoration.collapsed(
-                                  hintText: "",
-                                ),
-                              ),
-
-                            NavigationRailItem(
-                              selected: _selectedIndex == 0,
-                              text: "Device information",
-                              onTap: () => setState(() {
-                                _selectedIndex = 0;
-                              }),
-                            ),
-                            NavigationRailItem(
-                              selected: _selectedIndex == 1,
-                              text: "Application installer",
-                              onTap: () => setState(() {
-                                _selectedIndex = 1;
-                              }),
-                            ),
-                            NavigationRailItem(
-                              selected: _selectedIndex == 2,
-                              text: "Logcat",
-                              onTap: () => setState(() {
-                                _selectedIndex = 2;
-                              }),
-                            ),
-                            NavigationRailItem(
-                              selected: _selectedIndex == 3,
-                              text: "File explorer",
-                              onTap: () => setState(() {
-                                _selectedIndex = 3;
-                              }),
-                            ),
-
-                            Spacer(),
-
-                            Divider(color: Color(0xFF484A4C)),
-
-                            TextButton(
-                              style: ButtonStyle(
-                                foregroundColor: WidgetStatePropertyAll(
-                                  Theme.of(context).colorScheme.onSurface,
-                                ),
-                              ),
-                              onPressed: () => setState(() {
-                                _selectedIndex = 4;
-                              }),
-                              child: Row(
-                                mainAxisAlignment: MainAxisAlignment.center,
-                                spacing: 8,
-                                children: [
-                                  Icon(Icons.settings_outlined),
-                                  Text("APP SETTINGS"),
-                                ],
+                SizedBox(
+                  width: 250,
+                  child: Container(
+                    color: Theme.of(context).colorScheme.surfaceContainerLow,
+                    child: Padding(
+                      padding: const EdgeInsets.symmetric(
+                        horizontal: 16,
+                        vertical: 8,
+                      ),
+                      child: Column(
+                        spacing: 12,
+                        children: [
+                          SizedBox.fromSize(size: Size(0, 20)),
+                          if (state.devices.isNotEmpty)
+                            DropdownButtonFormField(
+                              icon: Icon(Icons.keyboard_arrow_down),
+                              style: Theme.of(context).textTheme.bodyMedium,
+                              initialValue: state.selectedDevice,
+                              items: state.devices
+                                  .map(
+                                    (device) => DropdownMenuItem(
+                                      value: device,
+                                      child: Text(device.name),
+                                    ),
+                                  )
+                                  .toList(),
+                              onChanged: (device) {
+                                if (device == null) return;
+                                context.read<HomeBloc>().add(
+                                  OnDeviceSelected(device: device),
+                                );
+                              },
+                              decoration: InputDecoration.collapsed(
+                                hintText: "",
                               ),
                             ),
 
-                            Text(
-                              state.version,
-                              style: TextStyle(fontFamily: "Nothing"),
+                          NavigationRailItem(
+                            selected: _selectedIndex == 0,
+                            text: "Device information",
+                            onTap: () => setState(() {
+                              _selectedIndex = 0;
+                            }),
+                          ),
+                          NavigationRailItem(
+                            selected: _selectedIndex == 1,
+                            text: "Application installer",
+                            onTap: () => setState(() {
+                              _selectedIndex = 1;
+                            }),
+                          ),
+                          NavigationRailItem(
+                            selected: _selectedIndex == 2,
+                            text: "Logcat",
+                            onTap: () => setState(() {
+                              _selectedIndex = 2;
+                            }),
+                          ),
+                          NavigationRailItem(
+                            selected: _selectedIndex == 3,
+                            text: "File explorer",
+                            onTap: () => setState(() {
+                              _selectedIndex = 3;
+                            }),
+                          ),
+
+                          Spacer(),
+
+                          Divider(color: Color(0xFF484A4C)),
+
+                          TextButton(
+                            style: ButtonStyle(
+                              foregroundColor: WidgetStatePropertyAll(
+                                Theme.of(context).colorScheme.onSurface,
+                              ),
                             ),
-                          ],
-                        ),
+                            onPressed: () => setState(() {
+                              _selectedIndex = 4;
+                            }),
+                            child: Row(
+                              mainAxisAlignment: MainAxisAlignment.center,
+                              spacing: 8,
+                              children: [
+                                Icon(Icons.settings_outlined),
+                                Text("APP SETTINGS"),
+                              ],
+                            ),
+                          ),
+
+                          Text(
+                            state.version,
+                            style: TextStyle(fontFamily: "Nothing"),
+                          ),
+                        ],
                       ),
                     ),
                   ),

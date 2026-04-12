@@ -11,8 +11,10 @@ dependencies:
   sentry_flutter: ^9.9.0
   flutter:
     sdk: flutter
-  adb_dart: ^1.2.4
+  adb_dart: ^1.2.5
   aapt_dart: ^1.0.0
+  super_clipboard: ^0.8.0
+  image: ^4.0.0
   # adb_dart:
   #   path: ../../adb_dart
   cupertino_icons: ^1.0.8
@@ -96,8 +98,8 @@ sentry:
 msix_config:
   display_name: Android Tools
   publisher_display_name: Thomas Bernard
+  publisher: CN=Thomas Bernard
   identity_name: ThomasBernard.AndroidTools
   msix_version: 1.0.0.0
   logo_path: windows/runner/resources/app_icon.ico
   capabilities: internetClient
-  install_certificate: false

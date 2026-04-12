@@ -1,6 +1,7 @@
 import 'package:android_tools/features/information/presentation/information_bloc.dart';
 import 'package:android_tools/features/information/presentation/widgets/device_preview.dart';
 import 'package:android_tools/features/information/presentation/widgets/information_recap_item.dart';
+import 'package:android_tools/features/screenshot/presentation/widgets/screenshot_button.dart';
 import 'package:android_tools/shared/presentation/refresh_device_button.dart';
 import 'package:bitsdojo_window/bitsdojo_window.dart';
 import 'package:flutter/material.dart';
@@ -20,6 +21,7 @@ class InformationScreen extends StatelessWidget {
           preferredSize: Size.fromHeight(kToolbarHeight),
           child: MoveWindow(
             child: AppBar(
+              centerTitle: true,
               backgroundColor: Colors.transparent,
               surfaceTintColor: Colors.transparent,
               title: BlocBuilder<InformationBloc, InformationState>(
@@ -31,6 +33,11 @@ class InformationScreen extends StatelessWidget {
                 },
               ),
               actions: [
+                BlocBuilder<InformationBloc, InformationState>(
+                  builder: (context, state) {
+                    return ScreenshotButton(device: state.device);
+                  },
+                ),
                 BlocBuilder<InformationBloc, InformationState>(
                   builder: (context, state) {
                     return IconButton(
