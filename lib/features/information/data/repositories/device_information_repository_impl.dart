@@ -12,7 +12,13 @@ class DeviceInformationRepositoryImpl implements DeviceInformationRepository {
   Future<DeviceInformationEntity> getDeviceInformation(String deviceId) async {
     final adbPath = _shellDatasource.getAdbPath();
     final adbClient = AdbClient(adbExecutablePath: adbPath);
+
     final properties = await adbClient.getProperties(deviceId);
+
+    DisplayInfo? displayInfo;
+    try {
+      displayInfo = await adbClient.getDisplayInfo(deviceId);
+    } catch (_) {}
 
     return DeviceInformationEntity(
       manufacturer: properties['ro.product.manufacturer'] ?? "",
@@ -20,6 +26,8 @@ class DeviceInformationRepositoryImpl implements DeviceInformationRepository {
       version: properties['ro.build.version.release'] ?? "",
       serialNumber: properties['ro.serialno'] ?? "",
       rawInformation: properties,
+      screenWidth: displayInfo?.widthPixels,
+      screenHeight: displayInfo?.heightPixels,
     );
   }
 

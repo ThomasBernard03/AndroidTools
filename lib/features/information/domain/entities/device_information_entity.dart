@@ -3,6 +3,8 @@ class DeviceInformationEntity {
   final String model;
   final String version;
   final String serialNumber;
+  final int? screenWidth;
+  final int? screenHeight;
 
   final Map<String, String> rawInformation;
 
@@ -12,5 +14,7 @@ class DeviceInformationEntity {
     required this.version,
     required this.serialNumber,
     required this.rawInformation,
+    this.screenWidth,
+    this.screenHeight,
   });
 }
