@@ -4,6 +4,7 @@ import 'package:android_tools/features/file_explorer/presentation/widgets/file_e
 import 'package:android_tools/features/file_explorer/presentation/widgets/file_explorer_menus.dart';
 import 'package:android_tools/features/file_explorer/presentation/widgets/file_entry_extensions.dart';
 import 'package:flutter/material.dart';
+import 'package:intl/intl.dart';
 
 class FileExplorerFileEntryItem extends StatelessWidget {
   final FileEntry file;
@@ -94,6 +95,21 @@ class FileExplorerFileEntryItem extends StatelessWidget {
     );
   }
 
+  Widget? _buildSubtitle(BuildContext context) {
+    final parts = <String>[];
+    if (file.size != null) parts.add(file.size!.toReadableBytes());
+    if (file.date != null) parts.add(DateFormat('dd MMM yyyy HH:mm').format(file.date!));
+    if (parts.isEmpty) return null;
+    return Text(
+      parts.join('  ·  '),
+      style: Theme.of(context).textTheme.bodySmall?.copyWith(
+        color: isSelected
+            ? Theme.of(context).colorScheme.surface.withValues(alpha: 0.7)
+            : Theme.of(context).colorScheme.onSurfaceVariant,
+      ),
+    );
+  }
+
   @override
   Widget build(BuildContext context) {
     return AbsorbPointer(
@@ -119,44 +135,29 @@ class FileExplorerFileEntryItem extends StatelessWidget {
         child: Card(
           margin: EdgeInsets.zero,
           clipBehavior: Clip.hardEdge,
+          color: Colors.transparent,
+          elevation: 0,
           shape: RoundedRectangleBorder(
             borderRadius: BorderRadiusGeometry.all(Radius.circular(12)),
           ),
           child: ListTile(
             selectedColor: Theme.of(context).colorScheme.surface,
             selectedTileColor: Theme.of(context).colorScheme.onSurface,
-            tileColor: Theme.of(context).colorScheme.surfaceContainerLow,
+            tileColor: Colors.transparent,
             enabled:
                 file.type == FileType.directory || file.type == FileType.file,
             selected: isSelected,
             leading: file.icon(),
-            title: Row(
-              spacing: 8,
-              children: [
-                _buildHighlightedText(
-                  context,
-                  file.name,
-                  searchQuery,
-                  null,
-                  textColor: isSelected
-                      ? Theme.of(context).colorScheme.surface
-                      : Theme.of(context).colorScheme.onSurface,
-                ),
-
-                if (file.type == FileType.file)
-                  Container(
-                    decoration: BoxDecoration(
-                      shape: BoxShape.circle,
-                      color: Theme.of(context).colorScheme.outline,
-                    ),
-                    height: 6,
-                    width: 6,
-                  ),
-
-                if (file.type == FileType.file)
-                  Text(file.size?.toReadableBytes() ?? ""),
-              ],
+            title: _buildHighlightedText(
+              context,
+              file.name,
+              searchQuery,
+              null,
+              textColor: isSelected
+                  ? Theme.of(context).colorScheme.surface
+                  : Theme.of(context).colorScheme.onSurface,
             ),
+            subtitle: _buildSubtitle(context),
             onTap: onTap,
           ),
         ),
