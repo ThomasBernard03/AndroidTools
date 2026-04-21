@@ -4,8 +4,6 @@ import 'package:android_tools/features/information/presentation/widgets/device_s
 import 'package:android_tools/features/screenshot/presentation/widgets/screenshot_button.dart';
 import 'package:flutter/material.dart';
 
-
-
 /// Header de l'écran device info : DeviceStatCard pleine largeur avec le bouton
 /// screenshot intégré, puis les cartes secondaires (batterie, …) en dessous.
 ///
@@ -33,9 +31,7 @@ class StatHeader extends StatelessWidget {
             manufacturer: info?.manufacturer ?? '',
             serial: info?.serialNumber ?? '',
             androidVersion: info?.version ?? '',
-            actions: [
-              ScreenshotButton(device: state.device),
-            ],
+            actions: [ScreenshotButton(device: state.device)],
           ),
         ),
         if (battery != null)

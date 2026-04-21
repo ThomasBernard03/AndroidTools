@@ -2,7 +2,6 @@ import 'package:adb_dart/adb_dart.dart';
 import 'package:android_tools/features/information/presentation/widgets/stat_card_shell.dart';
 import 'package:flutter/material.dart';
 
-/// Carte compacte affichant le niveau de batterie, son état et la température.
 class BatteryStatCard extends StatelessWidget {
   final BatteryInfo battery;
 
@@ -56,7 +55,6 @@ class BatteryStatCard extends StatelessWidget {
                 style: TextStyle(
                   fontSize: 28,
                   fontWeight: FontWeight.w700,
-                  color: color,
                   height: 1,
                 ),
               ),
@@ -64,17 +62,11 @@ class BatteryStatCard extends StatelessWidget {
                 padding: const EdgeInsets.only(bottom: 3),
                 child: Text(
                   '%',
-                  style: TextStyle(
-                    fontSize: 13,
-                    fontWeight: FontWeight.w600,
-                    color: color.withValues(alpha: 0.7),
-                  ),
+                  style: TextStyle(fontSize: 13, fontWeight: FontWeight.w600),
                 ),
               ),
             ],
           ),
-          // Row + Expanded : garantit une contrainte de largeur bornée
-          // pour LinearProgressIndicator quel que soit le contexte parent.
           Row(
             children: [
               Expanded(

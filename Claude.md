@@ -86,3 +86,15 @@ Never edit files ending in `.g.dart` or `.mapper.dart`. Regenerate with `build_r
 ### Widget Files
 
 **One widget per file.** Each `StatelessWidget` or `StatefulWidget` class must live in its own file under the `widgets/` subfolder of the relevant presentation layer. Private helper classes (non-widget) used exclusively within a widget may remain in the same file, but every public widget must have its own dedicated file.
+
+## Coding Standards
+
+### Comments
+
+**All comments must be written in English.** This includes:
+- Inline comments (`//`)
+- Block comments (`/* */`)
+- Documentation comments (`///`)
+- TODO/FIXME annotations
+
+This ensures consistency and maintainability across the codebase.

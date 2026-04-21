@@ -1,3 +1,4 @@
+import 'package:android_tools/features/information/core/android_version_helper.dart';
 import 'package:android_tools/features/information/presentation/widgets/meta_chip.dart';
 import 'package:android_tools/features/information/presentation/widgets/stat_card_shell.dart';
 import 'package:flutter/material.dart';
@@ -32,13 +33,18 @@ class DeviceStatCard extends StatelessWidget {
         spacing: 16,
         children: [
           Container(
-            width: 44,
-            height: 44,
+            width: 56,
+            height: 56,
             decoration: BoxDecoration(
-              color: primary.withValues(alpha: 0.12),
+              color: dim.withValues(alpha: 0.3),
               borderRadius: BorderRadius.circular(10),
             ),
-            child: Icon(Icons.phone_android, color: primary, size: 22),
+            child: Padding(
+              padding: const EdgeInsets.all(2),
+              child: androidVersion.isNotEmpty
+                  ? getAndroidVersionLogo(androidVersion)
+                  : Icon(Icons.phone_android, color: primary, size: 24),
+            ),
           ),
           Expanded(
             child: Column(
