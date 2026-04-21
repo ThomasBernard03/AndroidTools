@@ -67,28 +67,38 @@ class _ScreenshotButtonState extends State<ScreenshotButton> {
         },
         builder: (context, state) {
           final isCapturing = state.status == ScreenshotStatus.capturing;
+          final primary = Theme.of(context).colorScheme.primary;
 
-          return IconButton(
+          return OutlinedButton.icon(
             onPressed: widget.device != null && !isCapturing
                 ? () {
                     context.read<ScreenshotPreviewBloc>().add(
-                          OnCaptureScreenshot(
-                            deviceId: widget.device!.deviceId,
-                            device: widget.device!,
-                          ),
-                        );
+                      OnCaptureScreenshot(
+                        deviceId: widget.device!.deviceId,
+                        device: widget.device!,
+                      ),
+                    );
                   }
                 : null,
+            style: OutlinedButton.styleFrom(
+              foregroundColor: primary,
+              side: BorderSide(color: primary.withValues(alpha: 0.5)),
+              padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 6),
+              minimumSize: Size.zero,
+              tapTargetSize: MaterialTapTargetSize.shrinkWrap,
+              textStyle: const TextStyle(fontSize: 12, fontWeight: FontWeight.w600),
+            ),
             icon: isCapturing
                 ? SizedBox(
-                    width: 20,
-                    height: 20,
+                    width: 14,
+                    height: 14,
                     child: CircularProgressIndicator(
                       strokeWidth: 2,
-                      color: Theme.of(context).colorScheme.onSurface,
+                      color: primary,
                     ),
                   )
-                : const Icon(Icons.photo_camera_outlined),
+                : const Icon(Icons.photo_camera_outlined, size: 15),
+            label: Text(isCapturing ? 'Capturing…' : 'Screenshot'),
           );
         },
       ),

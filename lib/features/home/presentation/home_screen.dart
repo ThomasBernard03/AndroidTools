@@ -8,6 +8,7 @@ import 'package:android_tools/features/screenshot/presentation/screenshot_previe
 import 'package:android_tools/features/screenshot/presentation/screenshot_preview_screen.dart';
 import 'package:android_tools/features/settings/presentation/settings_screen.dart';
 import 'package:android_tools/shared/domain/entities/device_entity.dart';
+import 'package:bitsdojo_window/bitsdojo_window.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 
@@ -53,6 +54,14 @@ class _HomeScreenState extends State<HomeScreen> with WidgetsBindingObserver {
       child: BlocBuilder<HomeBloc, HomeState>(
         builder: (context, state) {
           return Scaffold(
+            appBar: PreferredSize(
+              preferredSize: Size.fromHeight(kToolbarHeight),
+              child: MoveWindow(
+                child: Container(
+                  color: Theme.of(context).colorScheme.surfaceContainerLow,
+                ),
+              ),
+            ),
             body: Row(
               children: [
                 SizedBox(
@@ -233,7 +242,9 @@ class _DeviceBox extends StatelessWidget {
             height: 7,
             decoration: BoxDecoration(
               shape: BoxShape.circle,
-              color: hasDevice ? const Color(0xFF4CAF50) : const Color(0xFF6B707A),
+              color: hasDevice
+                  ? const Color(0xFF4CAF50)
+                  : const Color(0xFF6B707A),
               boxShadow: hasDevice
                   ? [
                       BoxShadow(
