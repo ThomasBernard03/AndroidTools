@@ -1,6 +1,7 @@
 import 'package:android_tools/features/screenshot/presentation/screenshot_preview_bloc.dart';
 import 'package:android_tools/features/screenshot/presentation/screenshot_preview_screen.dart';
 import 'package:android_tools/shared/domain/entities/device_entity.dart';
+import 'package:android_tools/shared/presentation/widgets/action_button.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 
@@ -67,10 +68,9 @@ class _ScreenshotButtonState extends State<ScreenshotButton> {
         },
         builder: (context, state) {
           final isCapturing = state.status == ScreenshotStatus.capturing;
-          final primary = Theme.of(context).colorScheme.primary;
 
-          return OutlinedButton.icon(
-            onPressed: widget.device != null && !isCapturing
+          return ActionButton(
+            onPressed: widget.device != null
                 ? () {
                     context.read<ScreenshotPreviewBloc>().add(
                       OnCaptureScreenshot(
@@ -80,25 +80,10 @@ class _ScreenshotButtonState extends State<ScreenshotButton> {
                     );
                   }
                 : null,
-            style: OutlinedButton.styleFrom(
-              foregroundColor: primary,
-              side: BorderSide(color: primary.withValues(alpha: 0.5)),
-              padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 6),
-              minimumSize: Size.zero,
-              tapTargetSize: MaterialTapTargetSize.shrinkWrap,
-              textStyle: const TextStyle(fontSize: 12, fontWeight: FontWeight.w600),
-            ),
-            icon: isCapturing
-                ? SizedBox(
-                    width: 14,
-                    height: 14,
-                    child: CircularProgressIndicator(
-                      strokeWidth: 2,
-                      color: primary,
-                    ),
-                  )
-                : const Icon(Icons.photo_camera_outlined, size: 15),
-            label: Text(isCapturing ? 'Capturing…' : 'Screenshot'),
+            icon: Icons.photo_camera_outlined,
+            label: 'Screenshot',
+            isLoading: isCapturing,
+            loadingLabel: 'Capturing…',
           );
         },
       ),

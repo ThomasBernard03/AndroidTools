@@ -1,3 +1,4 @@
+import 'package:android_tools/features/apk_inspector/presentation/apk_inspector_screen.dart';
 import 'package:android_tools/features/application_installer/presentation/application_installer_screen.dart';
 import 'package:android_tools/features/file_explorer/presentation/file_explorer_screen.dart';
 import 'package:android_tools/features/home/presentation/home_bloc.dart';
@@ -170,6 +171,14 @@ class _HomeScreenState extends State<HomeScreen> with WidgetsBindingObserver {
                             shortcut: "⌘5",
                             onTap: () => setState(() => _selectedIndex = 4),
                           ),
+                          const SizedBox(height: 2),
+                          NavigationRailItem(
+                            selected: _selectedIndex == 5,
+                            text: "APK Inspector",
+                            icon: Icons.inventory_2_outlined,
+                            shortcut: "⌘6",
+                            onTap: () => setState(() => _selectedIndex = 5),
+                          ),
 
                           const Spacer(),
 
@@ -182,10 +191,10 @@ class _HomeScreenState extends State<HomeScreen> with WidgetsBindingObserver {
                           const SizedBox(height: 8),
 
                           NavigationRailItem(
-                            selected: _selectedIndex == 5,
+                            selected: _selectedIndex == 6,
                             text: "Settings",
                             icon: Icons.settings_outlined,
-                            onTap: () => setState(() => _selectedIndex = 5),
+                            onTap: () => setState(() => _selectedIndex = 6),
                           ),
 
                           const SizedBox(height: 8),
@@ -201,7 +210,8 @@ class _HomeScreenState extends State<HomeScreen> with WidgetsBindingObserver {
                     2 => LogcatScreen(),
                     3 => FileExplorerScreen(),
                     4 => _CaptureScreen(device: state.selectedDevice),
-                    5 => SettingsScreen(),
+                    5 => ApkInspectorScreen(),
+                    6 => SettingsScreen(),
                     _ => Placeholder(),
                   },
                 ),
