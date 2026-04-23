@@ -1,5 +1,5 @@
 import 'package:adb_dart/adb_dart.dart';
-import 'package:android_tools/features/information/presentation/widgets/stat_card_shell.dart';
+import 'package:android_tools/shared/presentation/widgets/info_card.dart';
 import 'package:flutter/material.dart';
 
 class BatteryStatCard extends StatelessWidget {
@@ -20,7 +20,7 @@ class BatteryStatCard extends StatelessWidget {
     final statusText = battery.isPlugged ? 'Charging' : 'Discharging';
     final tempText = '${battery.temperature.toStringAsFixed(1)} °C';
 
-    return StatCardShell(
+    return InfoCard(
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         spacing: 10,

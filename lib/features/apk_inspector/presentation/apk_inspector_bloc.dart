@@ -1,8 +1,10 @@
 import 'dart:async';
 
 import 'package:android_tools/features/apk_inspector/domain/entities/apk_info.dart';
+import 'package:android_tools/features/apk_inspector/domain/usecases/get_recent_apks_usecase.dart';
 import 'package:android_tools/features/apk_inspector/domain/usecases/install_apk_usecase.dart';
 import 'package:android_tools/features/apk_inspector/domain/usecases/parse_apk_usecase.dart';
+import 'package:android_tools/features/apk_inspector/domain/usecases/save_recent_apk_usecase.dart';
 import 'package:android_tools/main.dart';
 import 'package:dart_mappable/dart_mappable.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
@@ -16,12 +18,18 @@ part 'apk_inspector_bloc.mapper.dart';
 class ApkInspectorBloc extends Bloc<ApkInspectorEvent, ApkInspectorState> {
   final ParseApkUsecase _parseApkUsecase = getIt.get();
   final InstallApkUsecase _installApkUsecase = getIt.get();
+  final GetRecentApksUsecase _getRecentApksUsecase = getIt.get();
+  final SaveRecentApkUsecase _saveRecentApkUsecase = getIt.get();
   final Logger _logger = getIt.get();
 
   ApkInspectorBloc() : super(ApkInspectorState.initial()) {
     on<OnSelectApkFile>(_onSelectApkFile);
     on<OnResetView>(_onResetView);
     on<OnInstallApk>(_onInstallApk);
+    on<OnLoadRecentApks>(_onLoadRecentApks);
+    on<OnSelectRecentApk>(_onSelectRecentApk);
+
+    add(OnLoadRecentApks());
   }
 
   Future<void> _onSelectApkFile(
@@ -62,6 +70,17 @@ class ApkInspectorBloc extends Bloc<ApkInspectorEvent, ApkInspectorState> {
       ));
 
       _logger.i('APK parsed successfully: ${apkInfo.packageName}');
+
+      // Save to recent APKs
+      try {
+        await _saveRecentApkUsecase(apkInfo);
+        _logger.d('Saved APK to recent history');
+
+        final updatedRecentApks = await _getRecentApksUsecase();
+        emit(state.copyWith(recentApks: updatedRecentApks));
+      } catch (e) {
+        _logger.w('Failed to save recent APK: $e');
+      }
     } catch (e, stackTrace) {
       _logger.e('Error parsing APK', error: e, stackTrace: stackTrace);
 
@@ -79,7 +98,12 @@ class ApkInspectorBloc extends Bloc<ApkInspectorEvent, ApkInspectorState> {
   ) {
     _logger.i('Resetting APK Inspector view');
 
-    emit(ApkInspectorState.initial());
+    emit(state.copyWith(
+      status: ApkInspectorStatus.idle,
+      apkInfo: null,
+      progress: 0.0,
+      errorMessage: null,
+    ));
   }
 
   Future<void> _onInstallApk(
@@ -130,5 +154,29 @@ class ApkInspectorBloc extends Bloc<ApkInspectorEvent, ApkInspectorState> {
         progress: 0.0,
       ));
     }
+  }
+
+  Future<void> _onLoadRecentApks(
+    OnLoadRecentApks event,
+    Emitter<ApkInspectorState> emit,
+  ) async {
+    _logger.d('Loading recent APKs');
+
+    try {
+      final recentApks = await _getRecentApksUsecase();
+      emit(state.copyWith(recentApks: recentApks));
+      _logger.d('Loaded ${recentApks.length} recent APKs');
+    } catch (e, stackTrace) {
+      _logger.e('Error loading recent APKs', error: e, stackTrace: stackTrace);
+    }
+  }
+
+  Future<void> _onSelectRecentApk(
+    OnSelectRecentApk event,
+    Emitter<ApkInspectorState> emit,
+  ) async {
+    _logger.i('Selected recent APK: ${event.apkPath}');
+
+    add(OnSelectApkFile(apkPath: event.apkPath));
   }
 }

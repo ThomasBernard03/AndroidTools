@@ -1,4 +1,5 @@
 import 'package:android_tools/features/apk_inspector/domain/entities/apk_permission.dart';
+import 'package:android_tools/shared/presentation/widgets/info_panel.dart';
 import 'package:flutter/material.dart';
 
 /// Panel displaying APK permissions
@@ -18,89 +19,51 @@ class PermissionsPanel extends StatelessWidget {
     final normalCount = permissions.where((p) => p.level == 'normal').length;
     final signatureCount = permissions.where((p) => p.level == 'signature').length;
 
-    return Container(
-      decoration: BoxDecoration(
-        color: colorScheme.surfaceContainer,
-        border: Border.all(
-          color: colorScheme.surfaceContainerHighest.withValues(alpha: 0.15),
-        ),
-        borderRadius: BorderRadius.circular(8),
+    return InfoPanel(
+      title: 'Permissions',
+      trailing: Text(
+        '${permissions.length} total',
+        style: Theme.of(context).textTheme.labelSmall?.copyWith(
+              color: colorScheme.surfaceContainerHighest,
+              fontFamily: 'monospace',
+            ),
       ),
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
-          // Header
-          Container(
-            padding: const EdgeInsets.symmetric(horizontal: 14, vertical: 10),
-            decoration: BoxDecoration(
-              border: Border(
-                bottom: BorderSide(
-                  color: colorScheme.surfaceContainerHighest.withValues(alpha: 0.15),
-                ),
+          // Legend
+          Row(
+            children: [
+              _PermissionLegend(
+                color: const Color(0xFFEF6F6C),
+                count: dangerousCount,
+                label: 'Dangerous',
               ),
-            ),
-            child: Row(
-              children: [
-                Text(
-                  'Permissions',
-                  style: Theme.of(context).textTheme.titleSmall?.copyWith(
-                        fontWeight: FontWeight.w600,
-                      ),
-                ),
-                const Spacer(),
-                Text(
-                  '${permissions.length} total',
-                  style: Theme.of(context).textTheme.labelSmall?.copyWith(
-                        color: colorScheme.surfaceContainerHighest,
-                        fontFamily: 'monospace',
-                      ),
-                ),
-              ],
-            ),
+              const SizedBox(width: 12),
+              _PermissionLegend(
+                color: colorScheme.onSurfaceVariant,
+                count: normalCount,
+                label: 'Normal',
+              ),
+              const SizedBox(width: 12),
+              _PermissionLegend(
+                color: const Color(0xFF5AA9FF),
+                count: signatureCount,
+                label: 'Signature',
+              ),
+            ],
           ),
 
-          // Content
-          Padding(
-            padding: const EdgeInsets.fromLTRB(14, 6, 14, 12),
-            child: Column(
-              crossAxisAlignment: CrossAxisAlignment.start,
-              children: [
-                // Legend
-                Row(
-                  children: [
-                    _PermissionLegend(
-                      color: const Color(0xFFEF6F6C),
-                      count: dangerousCount,
-                      label: 'Dangerous',
-                    ),
-                    const SizedBox(width: 12),
-                    _PermissionLegend(
-                      color: colorScheme.onSurfaceVariant,
-                      count: normalCount,
-                      label: 'Normal',
-                    ),
-                    const SizedBox(width: 12),
-                    _PermissionLegend(
-                      color: const Color(0xFF5AA9FF),
-                      count: signatureCount,
-                      label: 'Signature',
-                    ),
-                  ],
-                ),
+          const SizedBox(height: 10),
 
-                const SizedBox(height: 10),
-
-                // Permission list
-                ...permissions.map((permission) {
-                  final color = _getPermissionColor(permission.level);
-                  return _PermissionRow(
-                    permission: permission,
-                    color: color,
-                  );
-                }),
-              ],
-            ),
-          ),
+          // Permission list
+          ...permissions.map((permission) {
+            final color = _getPermissionColor(permission.level);
+            return _PermissionRow(
+              permission: permission,
+              color: color,
+            );
+          }),
         ],
       ),
     );

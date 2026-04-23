@@ -19,3 +19,13 @@ class OnInstallApk extends ApkInspectorEvent {
 
   OnInstallApk({required this.deviceId});
 }
+
+/// Event triggered to load recent APKs
+class OnLoadRecentApks extends ApkInspectorEvent {}
+
+/// Event triggered when user selects a recent APK from the list
+class OnSelectRecentApk extends ApkInspectorEvent {
+  final String apkPath;
+
+  OnSelectRecentApk({required this.apkPath});
+}

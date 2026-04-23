@@ -1,6 +1,6 @@
 import 'package:android_tools/features/information/core/android_version_helper.dart';
-import 'package:android_tools/features/information/presentation/widgets/meta_chip.dart';
-import 'package:android_tools/features/information/presentation/widgets/stat_card_shell.dart';
+import 'package:android_tools/shared/presentation/widgets/info_badge.dart';
+import 'package:android_tools/shared/presentation/widgets/info_card.dart';
 import 'package:flutter/material.dart';
 
 /// Carte pleine-largeur affichant le nom du device, son statut connecté,
@@ -28,7 +28,7 @@ class DeviceStatCard extends StatelessWidget {
     final dim = Theme.of(context).colorScheme.surfaceContainerHighest;
     final primary = Theme.of(context).colorScheme.primary;
 
-    return StatCardShell(
+    return InfoCard(
       child: Row(
         spacing: 16,
         children: [
@@ -77,11 +77,18 @@ class DeviceStatCard extends StatelessWidget {
                   spacing: 12,
                   children: [
                     if (serial.isNotEmpty)
-                      MetaChip(label: serial, icon: Icons.tag),
+                      InfoBadge(
+                        label: serial,
+                        icon: Icons.tag,
+                        iconSize: 11,
+                        color: dim,
+                      ),
                     if (androidVersion.isNotEmpty)
-                      MetaChip(
+                      InfoBadge(
                         label: 'Android $androidVersion',
                         icon: Icons.android,
+                        iconSize: 11,
+                        color: dim,
                       ),
                   ],
                 ),

@@ -1,4 +1,5 @@
 import 'package:android_tools/features/apk_inspector/domain/entities/apk_info.dart';
+import 'package:android_tools/shared/presentation/widgets/info_panel.dart';
 import 'package:flutter/material.dart';
 
 /// Panel displaying APK manifest information
@@ -12,53 +13,18 @@ class ManifestPanel extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final colorScheme = Theme.of(context).colorScheme;
-
-    return Container(
-      decoration: BoxDecoration(
-        color: colorScheme.surfaceContainer,
-        border: Border.all(
-          color: colorScheme.surfaceContainerHighest.withValues(alpha: 0.15),
-        ),
-        borderRadius: BorderRadius.circular(8),
-      ),
+    return InfoPanel(
+      title: 'Manifest',
       child: Column(
-        crossAxisAlignment: CrossAxisAlignment.start,
         children: [
-          // Header
-          Container(
-            padding: const EdgeInsets.symmetric(horizontal: 14, vertical: 10),
-            decoration: BoxDecoration(
-              border: Border(
-                bottom: BorderSide(
-                  color: colorScheme.surfaceContainerHighest.withValues(alpha: 0.15),
-                ),
-              ),
-            ),
-            child: Text(
-              'Manifest',
-              style: Theme.of(context).textTheme.titleSmall?.copyWith(
-                    fontWeight: FontWeight.w600,
-                  ),
-            ),
-          ),
-
-          // Content
-          Padding(
-            padding: const EdgeInsets.fromLTRB(14, 6, 14, 12),
-            child: Column(
-              children: [
-                _KeyValueRow(label: 'Package', value: apkInfo.packageName),
-                _KeyValueRow(label: 'Version name', value: apkInfo.version),
-                _KeyValueRow(label: 'Version code', value: apkInfo.versionCode.toString()),
-                _KeyValueRow(label: 'Min SDK', value: '${apkInfo.minSdk} (Android ${_getAndroidVersion(apkInfo.minSdk)})'),
-                _KeyValueRow(label: 'Target SDK', value: '${apkInfo.targetSdk} (Android ${_getAndroidVersion(apkInfo.targetSdk)})'),
-                _KeyValueRow(label: 'Compile SDK', value: apkInfo.compileSdk.toString()),
-                _KeyValueRow(label: 'ABIs', value: apkInfo.abis.join(', ')),
-                _KeyValueRow(label: 'Locales', value: '${apkInfo.localesCount} languages'),
-              ],
-            ),
-          ),
+          _KeyValueRow(label: 'Package', value: apkInfo.packageName),
+          _KeyValueRow(label: 'Version name', value: apkInfo.version),
+          _KeyValueRow(label: 'Version code', value: apkInfo.versionCode.toString()),
+          _KeyValueRow(label: 'Min SDK', value: '${apkInfo.minSdk} (Android ${_getAndroidVersion(apkInfo.minSdk)})'),
+          _KeyValueRow(label: 'Target SDK', value: '${apkInfo.targetSdk} (Android ${_getAndroidVersion(apkInfo.targetSdk)})'),
+          _KeyValueRow(label: 'Compile SDK', value: apkInfo.compileSdk.toString()),
+          _KeyValueRow(label: 'ABIs', value: apkInfo.abis.join(', ')),
+          _KeyValueRow(label: 'Locales', value: '${apkInfo.localesCount} languages'),
         ],
       ),
     );

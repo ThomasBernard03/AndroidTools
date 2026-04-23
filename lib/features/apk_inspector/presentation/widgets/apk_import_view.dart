@@ -1,5 +1,6 @@
 import 'package:android_tools/features/apk_inspector/presentation/apk_inspector_bloc.dart';
 import 'package:android_tools/features/apk_inspector/presentation/widgets/apk_drop_zone.dart';
+import 'package:android_tools/features/apk_inspector/presentation/widgets/recent_apk_item.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 
@@ -68,7 +69,7 @@ class ApkImportView extends StatelessWidget {
 
                 const SizedBox(width: 16),
 
-                // Recent APKs area (empty for now)
+                // Recent APKs area
                 Container(
                   width: 260,
                   decoration: BoxDecoration(
@@ -93,13 +94,38 @@ class ApkImportView extends StatelessWidget {
                         ),
                       ),
                       Expanded(
-                        child: Center(
-                          child: Text(
-                            'No recent APKs',
-                            style: Theme.of(context).textTheme.bodySmall?.copyWith(
-                                  color: colorScheme.surfaceContainerHighest.withValues(alpha: 0.6),
+                        child: BlocBuilder<ApkInspectorBloc, ApkInspectorState>(
+                          builder: (context, state) {
+                            if (state.recentApks.isEmpty) {
+                              return Center(
+                                child: Text(
+                                  'No recent APKs',
+                                  style: Theme.of(context).textTheme.bodySmall?.copyWith(
+                                        color: colorScheme.surfaceContainerHighest.withValues(alpha: 0.6),
+                                      ),
                                 ),
-                          ),
+                              );
+                            }
+
+                            return ListView.separated(
+                              itemCount: state.recentApks.length,
+                              separatorBuilder: (context, index) => Divider(
+                                height: 1,
+                                color: colorScheme.surfaceContainerHighest.withValues(alpha: 0.1),
+                              ),
+                              itemBuilder: (context, index) {
+                                final apk = state.recentApks[index];
+                                return RecentApkItem(
+                                  apkInfo: apk,
+                                  onTap: () {
+                                    context.read<ApkInspectorBloc>().add(
+                                          OnSelectRecentApk(apkPath: apk.filePath),
+                                        );
+                                  },
+                                );
+                              },
+                            );
+                          },
                         ),
                       ),
                     ],

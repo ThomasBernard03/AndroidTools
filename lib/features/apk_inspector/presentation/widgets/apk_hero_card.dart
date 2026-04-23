@@ -1,5 +1,7 @@
 import 'package:android_tools/features/apk_inspector/domain/entities/apk_info.dart';
 import 'package:android_tools/features/apk_inspector/presentation/apk_inspector_bloc.dart';
+import 'package:android_tools/shared/presentation/widgets/info_badge.dart';
+import 'package:android_tools/shared/presentation/widgets/info_card.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 
@@ -18,14 +20,7 @@ class ApkHeroCard extends StatelessWidget {
   Widget build(BuildContext context) {
     final colorScheme = Theme.of(context).colorScheme;
 
-    return Container(
-      decoration: BoxDecoration(
-        color: colorScheme.surfaceContainer,
-        border: Border.all(
-          color: colorScheme.surfaceContainerHighest.withValues(alpha: 0.15),
-        ),
-        borderRadius: BorderRadius.circular(8),
-      ),
+    return InfoCard(
       padding: const EdgeInsets.all(18),
       child: Row(
         crossAxisAlignment: CrossAxisAlignment.start,
@@ -81,27 +76,27 @@ class ApkHeroCard extends StatelessWidget {
                   runSpacing: 6,
                   children: [
                     if (apkInfo.signature != null)
-                      _Badge(
+                      InfoBadge(
                         label: 'signed ${apkInfo.signature!.scheme}',
                         icon: Icons.check,
                         color: const Color(0xFF3FCF8E),
                       ),
-                    _Badge(
+                    InfoBadge(
                       label: 'min SDK ${apkInfo.minSdk}',
                       color: const Color(0xFF5AA9FF),
                     ),
-                    _Badge(
+                    InfoBadge(
                       label: 'target ${apkInfo.targetSdk}',
                       color: const Color(0xFF5AA9FF),
                     ),
-                    _Badge(
+                    InfoBadge(
                       label: apkInfo.isDebuggable ? 'debuggable' : 'release',
                       color: apkInfo.isDebuggable
                           ? const Color(0xFFE8B339)
                           : const Color(0xFF3FCF8E),
                     ),
-                    _Badge(label: '${apkInfo.sizeInMB} MB'),
-                    _Badge(label: '${apkInfo.abis.length} ABIs'),
+                    InfoBadge(label: '${apkInfo.sizeInMB} MB'),
+                    InfoBadge(label: '${apkInfo.abis.length} ABIs'),
                   ],
                 ),
               ],
@@ -203,51 +198,3 @@ class ApkHeroCard extends StatelessWidget {
   }
 }
 
-/// Badge widget for displaying metadata chips
-class _Badge extends StatelessWidget {
-  final String label;
-  final IconData? icon;
-  final Color? color;
-
-  const _Badge({
-    required this.label,
-    this.icon,
-    this.color,
-  });
-
-  @override
-  Widget build(BuildContext context) {
-    final colorScheme = Theme.of(context).colorScheme;
-    final badgeColor = color ?? colorScheme.onSurfaceVariant;
-
-    return Container(
-      padding: const EdgeInsets.symmetric(horizontal: 7, vertical: 2),
-      decoration: BoxDecoration(
-        color: color != null ? color!.withValues(alpha: 0.1) : colorScheme.surfaceContainerHigh,
-        border: Border.all(
-          color: color != null
-              ? color!.withValues(alpha: 0.4)
-              : colorScheme.surfaceContainerHighest.withValues(alpha: 0.3),
-        ),
-        borderRadius: BorderRadius.circular(4),
-      ),
-      child: Row(
-        mainAxisSize: MainAxisSize.min,
-        children: [
-          if (icon != null) ...[
-            Icon(icon, size: 10, color: badgeColor),
-            const SizedBox(width: 4),
-          ],
-          Text(
-            label,
-            style: TextStyle(
-              fontSize: 11,
-              fontFamily: 'monospace',
-              color: badgeColor,
-            ),
-          ),
-        ],
-      ),
-    );
-  }
-}

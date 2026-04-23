@@ -1,4 +1,5 @@
 import 'package:android_tools/features/apk_inspector/domain/entities/apk_info.dart';
+import 'package:android_tools/shared/presentation/widgets/info_panel.dart';
 import 'package:flutter/material.dart';
 
 /// Panel displaying APK components information
@@ -12,81 +13,46 @@ class ComponentsPanel extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final colorScheme = Theme.of(context).colorScheme;
-
-    return Container(
-      decoration: BoxDecoration(
-        color: colorScheme.surfaceContainer,
-        border: Border.all(
-          color: colorScheme.surfaceContainerHighest.withValues(alpha: 0.15),
-        ),
-        borderRadius: BorderRadius.circular(8),
-      ),
+    return InfoPanel(
+      title: 'Components',
       child: Column(
-        crossAxisAlignment: CrossAxisAlignment.start,
         children: [
-          // Header
+          _ComponentBar(
+            label: 'Activities',
+            count: apkInfo.activitiesCount,
+            maxCount: 50,
+          ),
+          _ComponentBar(
+            label: 'Services',
+            count: apkInfo.servicesCount,
+            maxCount: 50,
+          ),
+          _ComponentBar(
+            label: 'Receivers',
+            count: apkInfo.receiversCount,
+            maxCount: 50,
+          ),
+          _ComponentBar(
+            label: 'Providers',
+            count: apkInfo.providersCount,
+            maxCount: 50,
+          ),
+
+          // Divider
+          const SizedBox(height: 10),
           Container(
-            padding: const EdgeInsets.symmetric(horizontal: 14, vertical: 10),
-            decoration: BoxDecoration(
-              border: Border(
-                bottom: BorderSide(
-                  color: colorScheme.surfaceContainerHighest.withValues(alpha: 0.15),
-                ),
-              ),
-            ),
-            child: Text(
-              'Components',
-              style: Theme.of(context).textTheme.titleSmall?.copyWith(
-                    fontWeight: FontWeight.w600,
-                  ),
-            ),
+            height: 1,
+            color: Theme.of(context)
+                .colorScheme
+                .surfaceContainerHighest
+                .withValues(alpha: 0.15),
           ),
+          const SizedBox(height: 10),
 
-          // Content
-          Padding(
-            padding: const EdgeInsets.fromLTRB(14, 6, 14, 12),
-            child: Column(
-              children: [
-                _ComponentBar(
-                  label: 'Activities',
-                  count: apkInfo.activitiesCount,
-                  maxCount: 50,
-                ),
-                _ComponentBar(
-                  label: 'Services',
-                  count: apkInfo.servicesCount,
-                  maxCount: 50,
-                ),
-                _ComponentBar(
-                  label: 'Receivers',
-                  count: apkInfo.receiversCount,
-                  maxCount: 50,
-                ),
-                _ComponentBar(
-                  label: 'Providers',
-                  count: apkInfo.providersCount,
-                  maxCount: 50,
-                ),
-
-                // Divider
-                const SizedBox(height: 10),
-                Container(
-                  height: 1,
-                  color: Theme.of(context)
-                      .colorScheme
-                      .surfaceContainerHighest
-                      .withValues(alpha: 0.15),
-                ),
-                const SizedBox(height: 10),
-
-                // Additional info
-                _KeyValueRow(label: 'DEX files', value: apkInfo.dexFilesCount.toString()),
-                _KeyValueRow(label: 'Resources', value: apkInfo.resourcesCount.toString()),
-                _KeyValueRow(label: 'Assets', value: apkInfo.assetsCount.toString()),
-              ],
-            ),
-          ),
+          // Additional info
+          _KeyValueRow(label: 'DEX files', value: apkInfo.dexFilesCount.toString()),
+          _KeyValueRow(label: 'Resources', value: apkInfo.resourcesCount.toString()),
+          _KeyValueRow(label: 'Assets', value: apkInfo.assetsCount.toString()),
         ],
       ),
     );
