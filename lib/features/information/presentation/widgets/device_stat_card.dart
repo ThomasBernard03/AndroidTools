@@ -1,17 +1,18 @@
 import 'package:android_tools/features/information/core/android_version_helper.dart';
+import 'package:android_tools/features/information/presentation/widgets/connected_badge.dart';
 import 'package:android_tools/shared/presentation/widgets/info_badge.dart';
 import 'package:android_tools/shared/presentation/widgets/info_card.dart';
 import 'package:flutter/material.dart';
 
-/// Carte pleine-largeur affichant le nom du device, son statut connecté,
-/// le fabricant, quelques métadonnées, et des actions optionnelles (ex: screenshot).
+/// Full-width card displaying the device name, connection status,
+/// manufacturer, metadata, and optional actions (e.g., screenshot).
 class DeviceStatCard extends StatelessWidget {
   final String deviceName;
   final String manufacturer;
   final String serial;
   final String androidVersion;
 
-  /// Boutons affichés à droite du titre (après le badge Connected).
+  /// Buttons displayed to the right of the title (after the Connected badge).
   final List<Widget> actions;
 
   const DeviceStatCard({
@@ -64,7 +65,7 @@ class DeviceStatCard extends StatelessWidget {
                         overflow: TextOverflow.ellipsis,
                       ),
                     ),
-                    _ConnectedBadge(),
+                    ConnectedBadge(),
                     if (actions.isNotEmpty) ...actions,
                   ],
                 ),
@@ -93,44 +94,6 @@ class DeviceStatCard extends StatelessWidget {
                   ],
                 ),
               ],
-            ),
-          ),
-        ],
-      ),
-    );
-  }
-}
-
-class _ConnectedBadge extends StatelessWidget {
-  @override
-  Widget build(BuildContext context) {
-    return Container(
-      padding: const EdgeInsets.symmetric(horizontal: 7, vertical: 2),
-      decoration: BoxDecoration(
-        color: const Color(0xFF4CAF50).withValues(alpha: 0.12),
-        borderRadius: BorderRadius.circular(20),
-        border: Border.all(
-          color: const Color(0xFF4CAF50).withValues(alpha: 0.4),
-        ),
-      ),
-      child: Row(
-        spacing: 5,
-        mainAxisSize: MainAxisSize.min,
-        children: [
-          Container(
-            width: 6,
-            height: 6,
-            decoration: const BoxDecoration(
-              shape: BoxShape.circle,
-              color: Color(0xFF4CAF50),
-            ),
-          ),
-          const Text(
-            'Connected',
-            style: TextStyle(
-              fontSize: 10,
-              fontWeight: FontWeight.w600,
-              color: Color(0xFF4CAF50),
             ),
           ),
         ],

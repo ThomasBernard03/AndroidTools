@@ -1,4 +1,6 @@
 import 'package:android_tools/features/apk_inspector/domain/entities/apk_permission.dart';
+import 'package:android_tools/features/apk_inspector/presentation/widgets/permission_legend.dart';
+import 'package:android_tools/features/apk_inspector/presentation/widgets/permission_row.dart';
 import 'package:android_tools/shared/presentation/widgets/info_panel.dart';
 import 'package:flutter/material.dart';
 
@@ -34,19 +36,19 @@ class PermissionsPanel extends StatelessWidget {
           // Legend
           Row(
             children: [
-              _PermissionLegend(
+              PermissionLegend(
                 color: const Color(0xFFEF6F6C),
                 count: dangerousCount,
                 label: 'Dangerous',
               ),
               const SizedBox(width: 12),
-              _PermissionLegend(
+              PermissionLegend(
                 color: colorScheme.onSurfaceVariant,
                 count: normalCount,
                 label: 'Normal',
               ),
               const SizedBox(width: 12),
-              _PermissionLegend(
+              PermissionLegend(
                 color: const Color(0xFF5AA9FF),
                 count: signatureCount,
                 label: 'Signature',
@@ -59,7 +61,7 @@ class PermissionsPanel extends StatelessWidget {
           // Permission list
           ...permissions.map((permission) {
             final color = _getPermissionColor(permission.level);
-            return _PermissionRow(
+            return PermissionRow(
               permission: permission,
               color: color,
             );
@@ -75,111 +77,5 @@ class PermissionsPanel extends StatelessWidget {
       'signature' => const Color(0xFF5AA9FF),
       _ => const Color(0xFF6B707A),
     };
-  }
-}
-
-/// Permission legend item
-class _PermissionLegend extends StatelessWidget {
-  final Color color;
-  final int count;
-  final String label;
-
-  const _PermissionLegend({
-    required this.color,
-    required this.count,
-    required this.label,
-  });
-
-  @override
-  Widget build(BuildContext context) {
-    final colorScheme = Theme.of(context).colorScheme;
-
-    return Row(
-      mainAxisSize: MainAxisSize.min,
-      children: [
-        Container(
-          width: 6,
-          height: 6,
-          decoration: BoxDecoration(
-            shape: BoxShape.circle,
-            color: color,
-          ),
-        ),
-        const SizedBox(width: 4),
-        Text(
-          count.toString(),
-          style: Theme.of(context).textTheme.bodySmall?.copyWith(
-                fontFamily: 'monospace',
-                fontWeight: FontWeight.w600,
-              ),
-        ),
-        const SizedBox(width: 4),
-        Text(
-          label,
-          style: Theme.of(context).textTheme.bodySmall?.copyWith(
-                color: colorScheme.surfaceContainerHighest,
-              ),
-        ),
-      ],
-    );
-  }
-}
-
-/// Individual permission row
-class _PermissionRow extends StatelessWidget {
-  final ApkPermission permission;
-  final Color color;
-
-  const _PermissionRow({
-    required this.permission,
-    required this.color,
-  });
-
-  @override
-  Widget build(BuildContext context) {
-    final colorScheme = Theme.of(context).colorScheme;
-
-    return Container(
-      padding: const EdgeInsets.symmetric(vertical: 5),
-      decoration: BoxDecoration(
-        border: Border(
-          bottom: BorderSide(
-            color: colorScheme.surfaceContainerHighest.withValues(alpha: 0.15),
-          ),
-        ),
-      ),
-      child: Row(
-        children: [
-          Container(
-            width: 5,
-            height: 5,
-            decoration: BoxDecoration(
-              shape: BoxShape.circle,
-              color: color,
-            ),
-          ),
-          const SizedBox(width: 8),
-          Expanded(
-            child: Text(
-              permission.name,
-              style: Theme.of(context).textTheme.bodySmall?.copyWith(
-                    fontFamily: 'monospace',
-                    color: colorScheme.onSurfaceVariant,
-                  ),
-              overflow: TextOverflow.ellipsis,
-            ),
-          ),
-          const SizedBox(width: 8),
-          Text(
-            permission.level.toUpperCase(),
-            style: Theme.of(context).textTheme.labelSmall?.copyWith(
-                  color: color,
-                  letterSpacing: 0.5,
-                  fontSize: 10,
-                ),
-          ),
-        ],
-      ),
-    );
   }
 }

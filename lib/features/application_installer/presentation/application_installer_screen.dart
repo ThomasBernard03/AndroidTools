@@ -1,4 +1,5 @@
 import 'package:android_tools/features/application_installer/presentation/application_installer_bloc.dart';
+import 'package:android_tools/main.dart';
 import 'package:bitsdojo_window/bitsdojo_window.dart';
 import 'package:desktop_drop/desktop_drop.dart';
 import 'package:file_picker/file_picker.dart';
@@ -16,7 +17,7 @@ class ApplicationInstallerScreen extends StatefulWidget {
 
 class _ApplicationInstallerScreenState
     extends State<ApplicationInstallerScreen> {
-  final bloc = ApplicationInstallerBloc();
+  final bloc = getIt<ApplicationInstallerBloc>();
   bool isDropping = false;
 
   @override

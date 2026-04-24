@@ -1,4 +1,5 @@
 import 'package:android_tools/features/apk_inspector/domain/entities/apk_info.dart';
+import 'package:android_tools/features/apk_inspector/presentation/widgets/manifest_key_value_row.dart';
 import 'package:android_tools/shared/presentation/widgets/info_panel.dart';
 import 'package:flutter/material.dart';
 
@@ -17,14 +18,14 @@ class ManifestPanel extends StatelessWidget {
       title: 'Manifest',
       child: Column(
         children: [
-          _KeyValueRow(label: 'Package', value: apkInfo.packageName),
-          _KeyValueRow(label: 'Version name', value: apkInfo.version),
-          _KeyValueRow(label: 'Version code', value: apkInfo.versionCode.toString()),
-          _KeyValueRow(label: 'Min SDK', value: '${apkInfo.minSdk} (Android ${_getAndroidVersion(apkInfo.minSdk)})'),
-          _KeyValueRow(label: 'Target SDK', value: '${apkInfo.targetSdk} (Android ${_getAndroidVersion(apkInfo.targetSdk)})'),
-          _KeyValueRow(label: 'Compile SDK', value: apkInfo.compileSdk.toString()),
-          _KeyValueRow(label: 'ABIs', value: apkInfo.abis.join(', ')),
-          _KeyValueRow(label: 'Locales', value: '${apkInfo.localesCount} languages'),
+          ManifestKeyValueRow(label: 'Package', value: apkInfo.packageName),
+          ManifestKeyValueRow(label: 'Version name', value: apkInfo.version),
+          ManifestKeyValueRow(label: 'Version code', value: apkInfo.versionCode.toString()),
+          ManifestKeyValueRow(label: 'Min SDK', value: '${apkInfo.minSdk} (Android ${_getAndroidVersion(apkInfo.minSdk)})'),
+          ManifestKeyValueRow(label: 'Target SDK', value: '${apkInfo.targetSdk} (Android ${_getAndroidVersion(apkInfo.targetSdk)})'),
+          ManifestKeyValueRow(label: 'Compile SDK', value: apkInfo.compileSdk.toString()),
+          ManifestKeyValueRow(label: 'ABIs', value: apkInfo.abis.join(', ')),
+          ManifestKeyValueRow(label: 'Locales', value: '${apkInfo.localesCount} languages'),
         ],
       ),
     );
@@ -45,53 +46,5 @@ class ManifestPanel extends StatelessWidget {
       22 || 21 => '5',
       _ => sdkVersion.toString(),
     };
-  }
-}
-
-/// Key-value row widget for manifest details
-class _KeyValueRow extends StatelessWidget {
-  final String label;
-  final String value;
-
-  const _KeyValueRow({
-    required this.label,
-    required this.value,
-  });
-
-  @override
-  Widget build(BuildContext context) {
-    final colorScheme = Theme.of(context).colorScheme;
-
-    return Container(
-      padding: const EdgeInsets.symmetric(vertical: 6),
-      decoration: BoxDecoration(
-        border: Border(
-          bottom: BorderSide(
-            color: colorScheme.surfaceContainerHighest.withValues(alpha: 0.15),
-          ),
-        ),
-      ),
-      child: Row(
-        children: [
-          Text(
-            label,
-            style: Theme.of(context).textTheme.bodySmall?.copyWith(
-                  color: colorScheme.surfaceContainerHighest,
-                ),
-          ),
-          const SizedBox(width: 10),
-          Expanded(
-            child: Text(
-              value,
-              style: Theme.of(context).textTheme.bodySmall?.copyWith(
-                    fontFamily: 'monospace',
-                  ),
-              textAlign: TextAlign.right,
-              overflow: TextOverflow.ellipsis,
-            ),
-          ),
-        ],
-      ),
-    );
   }
 }

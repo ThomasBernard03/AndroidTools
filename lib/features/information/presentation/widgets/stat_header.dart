@@ -4,12 +4,12 @@ import 'package:android_tools/features/information/presentation/widgets/device_s
 import 'package:android_tools/features/screenshot/presentation/widgets/screenshot_button.dart';
 import 'package:flutter/material.dart';
 
-/// Header de l'écran device info : DeviceStatCard pleine largeur avec le bouton
-/// screenshot intégré, puis les cartes secondaires (batterie, …) en dessous.
+/// Header of the device info screen: Full-width DeviceStatCard with integrated
+/// screenshot button, followed by secondary cards (battery, etc.) below.
 ///
-/// Note : ne pas envelopper ce widget dans MoveWindow — il vit à l'intérieur
-/// d'un ListView qui lui donne une hauteur non bornée, incompatible avec
-/// la Column interne de MoveWindow (mainAxisSize: max).
+/// Note: Do not wrap this widget in MoveWindow — it lives inside a ListView
+/// that provides unbounded height, incompatible with MoveWindow's internal
+/// Column (mainAxisSize: max).
 class StatHeader extends StatelessWidget {
   final InformationState state;
 

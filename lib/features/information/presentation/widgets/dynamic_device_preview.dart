@@ -1,3 +1,4 @@
+import 'package:android_tools/features/information/presentation/widgets/side_button.dart';
 import 'package:flutter/material.dart';
 
 class DynamicDevicePreview extends StatelessWidget {
@@ -137,32 +138,14 @@ class DynamicDevicePreview extends StatelessWidget {
               top: 80,
               child: Column(
                 spacing: 10,
-                children: [_SideButton(height: 28), _SideButton(height: 28)],
+                children: [SideButton(height: 28), SideButton(height: 28)],
               ),
             ),
 
             // Power button (right)
-            Positioned(right: -2, top: 100, child: _SideButton(height: 46)),
+            Positioned(right: -2, top: 100, child: SideButton(height: 46)),
           ],
         ),
-      ),
-    );
-  }
-}
-
-class _SideButton extends StatelessWidget {
-  final double height;
-
-  const _SideButton({required this.height});
-
-  @override
-  Widget build(BuildContext context) {
-    return Container(
-      width: 4,
-      height: height,
-      decoration: BoxDecoration(
-        color: const Color(0xFF2C2C2E),
-        borderRadius: BorderRadius.circular(2),
       ),
     );
   }

@@ -1,4 +1,5 @@
 import 'package:android_tools/features/apk_inspector/domain/entities/apk_signature.dart';
+import 'package:android_tools/features/apk_inspector/presentation/widgets/manifest_key_value_row.dart';
 import 'package:android_tools/shared/presentation/widgets/info_panel.dart';
 import 'package:flutter/material.dart';
 
@@ -39,12 +40,12 @@ class SignaturePanel extends StatelessWidget {
       ),
       child: Column(
         children: [
-          _KeyValueRow(label: 'Scheme', value: signature.scheme),
-          _KeyValueRow(label: 'Algorithm', value: signature.algorithm),
-          _KeyValueRow(label: 'Key size', value: '${signature.keySize}-bit'),
-          _KeyValueRow(label: 'Issuer', value: signature.issuer),
-          _KeyValueRow(label: 'Valid from', value: signature.validFrom),
-          _KeyValueRow(label: 'Valid to', value: signature.validTo),
+          ManifestKeyValueRow(label: 'Scheme', value: signature.scheme),
+          ManifestKeyValueRow(label: 'Algorithm', value: signature.algorithm),
+          ManifestKeyValueRow(label: 'Key size', value: '${signature.keySize}-bit'),
+          ManifestKeyValueRow(label: 'Issuer', value: signature.issuer),
+          ManifestKeyValueRow(label: 'Valid from', value: signature.validFrom),
+          ManifestKeyValueRow(label: 'Valid to', value: signature.validTo),
 
           // SHA-256 fingerprint box
           const SizedBox(height: 10),
@@ -76,54 +77,6 @@ class SignaturePanel extends StatelessWidget {
                       ),
                 ),
               ],
-            ),
-          ),
-        ],
-      ),
-    );
-  }
-}
-
-/// Key-value row widget for signature details
-class _KeyValueRow extends StatelessWidget {
-  final String label;
-  final String value;
-
-  const _KeyValueRow({
-    required this.label,
-    required this.value,
-  });
-
-  @override
-  Widget build(BuildContext context) {
-    final colorScheme = Theme.of(context).colorScheme;
-
-    return Container(
-      padding: const EdgeInsets.symmetric(vertical: 6),
-      decoration: BoxDecoration(
-        border: Border(
-          bottom: BorderSide(
-            color: colorScheme.surfaceContainerHighest.withValues(alpha: 0.15),
-          ),
-        ),
-      ),
-      child: Row(
-        children: [
-          Text(
-            label,
-            style: Theme.of(context).textTheme.bodySmall?.copyWith(
-                  color: colorScheme.surfaceContainerHighest,
-                ),
-          ),
-          const SizedBox(width: 10),
-          Expanded(
-            child: Text(
-              value,
-              style: Theme.of(context).textTheme.bodySmall?.copyWith(
-                    fontFamily: 'monospace',
-                  ),
-              textAlign: TextAlign.right,
-              overflow: TextOverflow.ellipsis,
             ),
           ),
         ],

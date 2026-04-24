@@ -1,4 +1,5 @@
 import 'package:android_tools/features/apk_inspector/presentation/apk_inspector_bloc.dart';
+import 'package:android_tools/features/apk_inspector/presentation/widgets/parsing_step.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 
@@ -82,23 +83,23 @@ class ApkParsingView extends StatelessWidget {
                       const SizedBox(height: 14),
 
                       // Step checklist
-                      _ParsingStep(
+                      ParsingStep(
                         label: 'Extracting AndroidManifest.xml',
                         isComplete: true,
                       ),
-                      _ParsingStep(
+                      ParsingStep(
                         label: 'Parsing resources.arsc',
                         isComplete: progress > 0.3,
                       ),
-                      _ParsingStep(
+                      ParsingStep(
                         label: 'Verifying signature (v2+v3)',
                         isComplete: progress > 0.55,
                       ),
-                      _ParsingStep(
+                      ParsingStep(
                         label: 'Listing permissions & components',
                         isComplete: progress > 0.8,
                       ),
-                      _ParsingStep(
+                      ParsingStep(
                         label: 'Building summary',
                         isComplete: progress >= 1.0,
                       ),
@@ -110,46 +111,6 @@ class ApkParsingView extends StatelessWidget {
           ],
         );
       },
-    );
-  }
-}
-
-/// Individual parsing step indicator
-class _ParsingStep extends StatelessWidget {
-  final String label;
-  final bool isComplete;
-
-  const _ParsingStep({
-    required this.label,
-    required this.isComplete,
-  });
-
-  @override
-  Widget build(BuildContext context) {
-    final colorScheme = Theme.of(context).colorScheme;
-
-    return Padding(
-      padding: const EdgeInsets.symmetric(vertical: 4),
-      child: Row(
-        children: [
-          Text(
-            isComplete ? '✓' : '…',
-            style: Theme.of(context).textTheme.bodyMedium?.copyWith(
-                  fontFamily: 'monospace',
-                  color: colorScheme.onSurfaceVariant,
-                ),
-          ),
-          const SizedBox(width: 8),
-          Text(
-            label,
-            style: Theme.of(context).textTheme.bodySmall?.copyWith(
-                  fontFamily: 'monospace',
-                  color: colorScheme.onSurfaceVariant,
-                  height: 1.7,
-                ),
-          ),
-        ],
-      ),
     );
   }
 }

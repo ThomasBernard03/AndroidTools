@@ -1,3 +1,4 @@
+import 'package:android_tools/shared/presentation/widgets/info_card.dart';
 import 'package:desktop_drop/desktop_drop.dart';
 import 'package:file_picker/file_picker.dart';
 import 'package:flutter/material.dart';
@@ -8,10 +9,7 @@ import 'package:flutter/material.dart';
 class ApkDropZone extends StatefulWidget {
   final Function(String apkPath) onApkSelected;
 
-  const ApkDropZone({
-    super.key,
-    required this.onApkSelected,
-  });
+  const ApkDropZone({super.key, required this.onApkSelected});
 
   @override
   State<ApkDropZone> createState() => _ApkDropZoneState();
@@ -54,20 +52,17 @@ class _ApkDropZoneState extends State<ApkDropZone> {
           widget.onApkSelected(file.path);
         }
       },
-      child: Container(
-        decoration: BoxDecoration(
-          border: Border.all(
-            color: _isDragging
-                ? colorScheme.primary
-                : colorScheme.surfaceContainerHighest.withValues(alpha: 0.3),
-            width: 2,
-            strokeAlign: BorderSide.strokeAlignInside,
-          ),
-          borderRadius: BorderRadius.circular(10),
-          color: _isDragging
-              ? colorScheme.primary.withValues(alpha: 0.1)
-              : colorScheme.surfaceContainer,
-        ),
+      child: InfoCard(
+        padding: EdgeInsets.zero,
+        borderColor: _isDragging
+            ? colorScheme.primary
+            : colorScheme.surfaceContainerHighest.withValues(alpha: 0.3),
+        borderWidth: 2,
+        strokeAlign: BorderSide.strokeAlignInside,
+        borderRadius: 10,
+        backgroundColor: _isDragging
+            ? colorScheme.primary.withValues(alpha: 0.1)
+            : colorScheme.surfaceContainer,
         child: Column(
           mainAxisAlignment: MainAxisAlignment.center,
           children: [
@@ -90,16 +85,16 @@ class _ApkDropZoneState extends State<ApkDropZone> {
             const SizedBox(height: 16),
             Text(
               'Drop an APK here',
-              style: Theme.of(context).textTheme.titleMedium?.copyWith(
-                    fontWeight: FontWeight.w600,
-                  ),
+              style: Theme.of(
+                context,
+              ).textTheme.titleMedium?.copyWith(fontWeight: FontWeight.w600),
             ),
             const SizedBox(height: 4),
             Text(
               'or browse a file from your computer',
               style: Theme.of(context).textTheme.bodySmall?.copyWith(
-                    color: colorScheme.surfaceContainerHighest,
-                  ),
+                color: colorScheme.surfaceContainerHighest,
+              ),
             ),
             const SizedBox(height: 18),
             FilledButton.icon(
@@ -117,10 +112,12 @@ class _ApkDropZoneState extends State<ApkDropZone> {
             Text(
               'accepts .apk · .apks · .aab',
               style: Theme.of(context).textTheme.labelSmall?.copyWith(
-                    color: colorScheme.surfaceContainerHighest.withValues(alpha: 0.6),
-                    fontFamily: 'monospace',
-                    fontSize: 10.5,
-                  ),
+                color: colorScheme.surfaceContainerHighest.withValues(
+                  alpha: 0.6,
+                ),
+                fontFamily: 'monospace',
+                fontSize: 10.5,
+              ),
             ),
           ],
         ),

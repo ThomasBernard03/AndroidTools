@@ -2,13 +2,13 @@ import 'package:android_tools/features/apk_inspector/presentation/apk_inspector_
 import 'package:android_tools/features/application_installer/presentation/application_installer_screen.dart';
 import 'package:android_tools/features/file_explorer/presentation/file_explorer_screen.dart';
 import 'package:android_tools/features/home/presentation/home_bloc.dart';
+import 'package:android_tools/features/home/presentation/widgets/capture_screen.dart';
+import 'package:android_tools/features/home/presentation/widgets/device_box.dart';
 import 'package:android_tools/features/home/presentation/widgets/navigation_rail_item.dart';
 import 'package:android_tools/features/information/presentation/information_screen.dart';
 import 'package:android_tools/features/logcat/presentation/logcat_screen.dart';
-import 'package:android_tools/features/screenshot/presentation/screenshot_preview_bloc.dart';
-import 'package:android_tools/features/screenshot/presentation/screenshot_preview_screen.dart';
 import 'package:android_tools/features/settings/presentation/settings_screen.dart';
-import 'package:android_tools/shared/domain/entities/device_entity.dart';
+import 'package:android_tools/main.dart';
 import 'package:bitsdojo_window/bitsdojo_window.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
@@ -21,7 +21,7 @@ class HomeScreen extends StatefulWidget {
 }
 
 class _HomeScreenState extends State<HomeScreen> with WidgetsBindingObserver {
-  final _homeBloc = HomeBloc();
+  final _homeBloc = getIt<HomeBloc>();
   int _selectedIndex = 0;
 
   @override
@@ -118,7 +118,7 @@ class _HomeScreenState extends State<HomeScreen> with WidgetsBindingObserver {
                           const SizedBox(height: 12),
 
                           // Device box
-                          _DeviceBox(state: state),
+                          DeviceBox(state: state),
 
                           const SizedBox(height: 16),
 
@@ -209,232 +209,13 @@ class _HomeScreenState extends State<HomeScreen> with WidgetsBindingObserver {
                     1 => ApplicationInstallerScreen(),
                     2 => LogcatScreen(),
                     3 => FileExplorerScreen(),
-                    4 => _CaptureScreen(device: state.selectedDevice),
+                    4 => CaptureScreen(device: state.selectedDevice),
                     5 => ApkInspectorScreen(),
                     6 => SettingsScreen(),
                     _ => Placeholder(),
                   },
                 ),
               ],
-            ),
-          );
-        },
-      ),
-    );
-  }
-}
-
-class _DeviceBox extends StatelessWidget {
-  final HomeState state;
-  const _DeviceBox({required this.state});
-
-  @override
-  Widget build(BuildContext context) {
-    final hasDevice = state.selectedDevice != null;
-    final devices = state.devices;
-
-    return Container(
-      decoration: BoxDecoration(
-        color: Theme.of(context).colorScheme.surfaceContainer,
-        borderRadius: BorderRadius.circular(8),
-        border: Border.all(
-          color: Theme.of(
-            context,
-          ).colorScheme.surfaceContainerHighest.withValues(alpha: 0.2),
-        ),
-      ),
-      padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 8),
-      child: Row(
-        spacing: 8,
-        children: [
-          Container(
-            width: 7,
-            height: 7,
-            decoration: BoxDecoration(
-              shape: BoxShape.circle,
-              color: hasDevice
-                  ? const Color(0xFF4CAF50)
-                  : const Color(0xFF6B707A),
-              boxShadow: hasDevice
-                  ? [
-                      BoxShadow(
-                        color: const Color(0xFF4CAF50).withValues(alpha: 0.5),
-                        blurRadius: 4,
-                      ),
-                    ]
-                  : null,
-            ),
-          ),
-          Expanded(
-            child: devices.isEmpty
-                ? Text(
-                    "No device",
-                    style: TextStyle(
-                      fontSize: 13,
-                      color: Theme.of(
-                        context,
-                      ).colorScheme.surfaceContainerHighest,
-                    ),
-                  )
-                : DropdownButtonHideUnderline(
-                    child: DropdownButton<DeviceEntity>(
-                      isDense: true,
-                      isExpanded: true,
-                      icon: const Icon(Icons.keyboard_arrow_down, size: 16),
-                      style: TextStyle(
-                        fontSize: 13,
-                        color: Theme.of(context).colorScheme.onSurface,
-                      ),
-                      value: state.selectedDevice,
-                      items: devices
-                          .map(
-                            (device) => DropdownMenuItem<DeviceEntity>(
-                              value: device,
-                              child: Text(
-                                device.name,
-                                overflow: TextOverflow.ellipsis,
-                              ),
-                            ),
-                          )
-                          .toList(),
-                      onChanged: (device) {
-                        if (device == null) return;
-                        // Find HomeBloc in the widget tree
-                        context.read<HomeBloc>().add(
-                          OnDeviceSelected(device: device),
-                        );
-                      },
-                    ),
-                  ),
-          ),
-        ],
-      ),
-    );
-  }
-}
-
-class _CaptureScreen extends StatefulWidget {
-  final DeviceEntity? device;
-  const _CaptureScreen({this.device});
-
-  @override
-  State<_CaptureScreen> createState() => _CaptureScreenState();
-}
-
-class _CaptureScreenState extends State<_CaptureScreen> {
-  late final ScreenshotPreviewBloc _bloc;
-
-  @override
-  void initState() {
-    super.initState();
-    _bloc = ScreenshotPreviewBloc();
-  }
-
-  @override
-  void dispose() {
-    _bloc.close();
-    super.dispose();
-  }
-
-  @override
-  Widget build(BuildContext context) {
-    return BlocProvider.value(
-      value: _bloc,
-      child: BlocConsumer<ScreenshotPreviewBloc, ScreenshotPreviewState>(
-        listener: (context, state) {
-          if (state.status == ScreenshotStatus.success &&
-              state.screenshot != null &&
-              context.mounted) {
-            Navigator.push(
-              context,
-              MaterialPageRoute(
-                builder: (_) => ScreenshotPreviewScreen(
-                  screenshot: state.screenshot!,
-                  device: state.device!,
-                ),
-              ),
-            );
-            _bloc.add(OnResetState());
-          }
-          if (state.status == ScreenshotStatus.error &&
-              state.errorMessage != null &&
-              context.mounted) {
-            ScaffoldMessenger.of(context).showSnackBar(
-              SnackBar(
-                content: Text(state.errorMessage!),
-                backgroundColor: Colors.red,
-              ),
-            );
-            _bloc.add(OnResetState());
-          }
-        },
-        builder: (context, captureState) {
-          final device = widget.device;
-          final isCapturing = captureState.status == ScreenshotStatus.capturing;
-
-          return Scaffold(
-            backgroundColor: Colors.transparent,
-            body: Center(
-              child: ConstrainedBox(
-                constraints: const BoxConstraints(maxWidth: 400),
-                child: Card(
-                  color: Theme.of(context).colorScheme.surfaceContainer,
-                  child: Padding(
-                    padding: const EdgeInsets.all(24),
-                    child: Column(
-                      mainAxisSize: MainAxisSize.min,
-                      spacing: 16,
-                      children: [
-                        Icon(
-                          Icons.camera_alt_outlined,
-                          size: 48,
-                          color: Theme.of(context).colorScheme.primary,
-                        ),
-                        Text(
-                          "Capture",
-                          style: Theme.of(context).textTheme.titleMedium,
-                        ),
-                        Text(
-                          device == null
-                              ? "No device connected"
-                              : "Capture a screenshot of ${device.name}",
-                          style: TextStyle(
-                            color: Theme.of(
-                              context,
-                            ).colorScheme.surfaceContainerHighest,
-                          ),
-                          textAlign: TextAlign.center,
-                        ),
-                        FilledButton.icon(
-                          onPressed: device != null && !isCapturing
-                              ? () {
-                                  context.read<ScreenshotPreviewBloc>().add(
-                                    OnCaptureScreenshot(
-                                      deviceId: device.deviceId,
-                                      device: device,
-                                    ),
-                                  );
-                                }
-                              : null,
-                          icon: isCapturing
-                              ? const SizedBox(
-                                  width: 16,
-                                  height: 16,
-                                  child: CircularProgressIndicator(
-                                    strokeWidth: 2,
-                                    color: Colors.white,
-                                  ),
-                                )
-                              : const Icon(Icons.photo_camera_outlined),
-                          label: Text(
-                            isCapturing ? "Capturing…" : "Take Screenshot",
-                          ),
-                        ),
-                      ],
-                    ),
-                  ),
-                ),
-              ),
             ),
           );
         },

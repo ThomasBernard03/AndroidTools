@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 
-/// Carte de détail avec un titre en header et des lignes clé/valeur.
+/// Detail card with a header title and key/value rows.
 class InfoCard extends StatelessWidget {
   final String title;
   final List<(String, String)> rows;

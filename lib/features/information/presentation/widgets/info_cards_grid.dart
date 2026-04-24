@@ -1,8 +1,8 @@
 import 'package:flutter/material.dart';
 
-/// Grille responsive de cartes de détail.
-/// Toutes les cartes tiennent sur la même ligne si la place le permet,
-/// sinon elles passent à la ligne suivante. Largeur minimale par carte : 240 px.
+/// Responsive grid of detail cards.
+/// All cards fit on the same line if space permits,
+/// otherwise they wrap to the next line. Minimum width per card: 240 px.
 class InfoCardsGrid extends StatelessWidget {
   final List<Widget> cards;
 
