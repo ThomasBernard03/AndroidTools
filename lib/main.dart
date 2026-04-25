@@ -1,5 +1,4 @@
 import 'package:android_tools/features/apk_inspector/core/apk_inspector_module.dart';
-import 'package:android_tools/features/application_installer/core/application_installer_module.dart';
 import 'package:android_tools/features/file_explorer/core/file_explorer_module.dart';
 import 'package:android_tools/features/home/core/home_module.dart';
 import 'package:android_tools/features/home/presentation/home_screen.dart';
@@ -33,7 +32,6 @@ Future<void> main(List<String> args) async {
   ApkInspectorModule.configureDependencies();
   HomeModule.configureDependencies();
   SettingsModule.configureDependencies();
-  ApplicationInstallerModule.configureDependencies();
   await getIt.allReady();
   final logger = await getIt.getAsync<Logger>();
   final settingsHelper = getIt.get<SettingsHelper>();

@@ -1,5 +1,4 @@
 import 'package:android_tools/features/apk_inspector/presentation/apk_inspector_screen.dart';
-import 'package:android_tools/features/application_installer/presentation/application_installer_screen.dart';
 import 'package:android_tools/features/file_explorer/presentation/file_explorer_screen.dart';
 import 'package:android_tools/features/home/presentation/home_bloc.dart';
 import 'package:android_tools/features/home/presentation/widgets/capture_screen.dart';
@@ -142,42 +141,34 @@ class _HomeScreenState extends State<HomeScreen> with WidgetsBindingObserver {
                           const SizedBox(height: 2),
                           NavigationRailItem(
                             selected: _selectedIndex == 1,
-                            text: "Apps",
-                            icon: Icons.widgets_outlined,
+                            text: "Logcat",
+                            icon: Icons.terminal,
                             shortcut: "⌘2",
                             onTap: () => setState(() => _selectedIndex = 1),
                           ),
                           const SizedBox(height: 2),
                           NavigationRailItem(
                             selected: _selectedIndex == 2,
-                            text: "Logcat",
-                            icon: Icons.terminal,
+                            text: "Files",
+                            icon: Icons.folder_outlined,
                             shortcut: "⌘3",
                             onTap: () => setState(() => _selectedIndex = 2),
                           ),
                           const SizedBox(height: 2),
                           NavigationRailItem(
                             selected: _selectedIndex == 3,
-                            text: "Files",
-                            icon: Icons.folder_outlined,
+                            text: "Capture",
+                            icon: Icons.camera_alt_outlined,
                             shortcut: "⌘4",
                             onTap: () => setState(() => _selectedIndex = 3),
                           ),
                           const SizedBox(height: 2),
                           NavigationRailItem(
                             selected: _selectedIndex == 4,
-                            text: "Capture",
-                            icon: Icons.camera_alt_outlined,
-                            shortcut: "⌘5",
-                            onTap: () => setState(() => _selectedIndex = 4),
-                          ),
-                          const SizedBox(height: 2),
-                          NavigationRailItem(
-                            selected: _selectedIndex == 5,
                             text: "APK Inspector",
                             icon: Icons.inventory_2_outlined,
-                            shortcut: "⌘6",
-                            onTap: () => setState(() => _selectedIndex = 5),
+                            shortcut: "⌘5",
+                            onTap: () => setState(() => _selectedIndex = 4),
                           ),
 
                           const Spacer(),
@@ -191,10 +182,10 @@ class _HomeScreenState extends State<HomeScreen> with WidgetsBindingObserver {
                           const SizedBox(height: 8),
 
                           NavigationRailItem(
-                            selected: _selectedIndex == 6,
+                            selected: _selectedIndex == 5,
                             text: "Settings",
                             icon: Icons.settings_outlined,
-                            onTap: () => setState(() => _selectedIndex = 6),
+                            onTap: () => setState(() => _selectedIndex = 5),
                           ),
 
                           const SizedBox(height: 8),
@@ -206,12 +197,11 @@ class _HomeScreenState extends State<HomeScreen> with WidgetsBindingObserver {
                 Expanded(
                   child: switch (_selectedIndex) {
                     0 => InformationScreen(),
-                    1 => ApplicationInstallerScreen(),
-                    2 => LogcatScreen(),
-                    3 => FileExplorerScreen(),
-                    4 => CaptureScreen(device: state.selectedDevice),
-                    5 => ApkInspectorScreen(),
-                    6 => SettingsScreen(),
+                    1 => LogcatScreen(),
+                    2 => FileExplorerScreen(),
+                    3 => CaptureScreen(device: state.selectedDevice),
+                    4 => ApkInspectorScreen(),
+                    5 => SettingsScreen(),
                     _ => Placeholder(),
                   },
                 ),

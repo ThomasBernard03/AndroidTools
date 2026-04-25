@@ -4,6 +4,18 @@ All notable changes to Android Tools will be documented in this file.
 
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 
+
+## [2026.04.1] - WIP
+
+### Improvements
+- Update flutter version to 3.41.6
+- Add light mode
+- Can preview PDF
+- Can take screenshots
+- Can disable crash reporting
+- Refresh devices when app is resumed
+
+
 ## [2026.02.3] - 2026-02-10
 
 ### Improvements

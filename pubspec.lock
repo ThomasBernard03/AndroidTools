@@ -13,18 +13,18 @@ packages:
     dependency: "direct main"
     description:
       name: aapt_dart
-      sha256: "4db40690193703c7069aae90eb52d4de26824781b7b3397699118604d8de6f8d"
+      sha256: "80affe91a16a94dc1d8493552b791c93b8a76ed7478afd93b7f82313331a5996"
       url: "https://pub.dev"
     source: hosted
-    version: "1.0.0"
+    version: "1.1.0"
   adb_dart:
     dependency: "direct main"
     description:
       name: adb_dart
-      sha256: "7029a420d6074d99fb1e8691f89439e8913a3d60769c19d5b07fce4766e3d5a0"
+      sha256: cc7815a521da191344a11cfe9a931ba975cd94c25888f878871040f0aedb85a3
       url: "https://pub.dev"
     source: hosted
-    version: "1.2.5"
+    version: "1.3.0"
   analyzer:
     dependency: transitive
     description:
