@@ -1,6 +1,7 @@
 import 'package:android_tools/features/screenshot/presentation/screenshot_preview_bloc.dart';
 import 'package:android_tools/features/screenshot/presentation/screenshot_preview_screen.dart';
 import 'package:android_tools/shared/domain/entities/device_entity.dart';
+import 'package:android_tools/shared/presentation/widgets/action_button.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 
@@ -68,27 +69,21 @@ class _ScreenshotButtonState extends State<ScreenshotButton> {
         builder: (context, state) {
           final isCapturing = state.status == ScreenshotStatus.capturing;
 
-          return IconButton(
-            onPressed: widget.device != null && !isCapturing
+          return ActionButton(
+            onPressed: widget.device != null
                 ? () {
                     context.read<ScreenshotPreviewBloc>().add(
-                          OnCaptureScreenshot(
-                            deviceId: widget.device!.deviceId,
-                            device: widget.device!,
-                          ),
-                        );
+                      OnCaptureScreenshot(
+                        deviceId: widget.device!.deviceId,
+                        device: widget.device!,
+                      ),
+                    );
                   }
                 : null,
-            icon: isCapturing
-                ? SizedBox(
-                    width: 20,
-                    height: 20,
-                    child: CircularProgressIndicator(
-                      strokeWidth: 2,
-                      color: Theme.of(context).colorScheme.onSurface,
-                    ),
-                  )
-                : const Icon(Icons.photo_camera_outlined),
+            icon: Icons.photo_camera_outlined,
+            label: 'Screenshot',
+            isLoading: isCapturing,
+            loadingLabel: 'Capturing…',
           );
         },
       ),

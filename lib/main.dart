@@ -1,8 +1,11 @@
+import 'package:android_tools/features/apk_inspector/core/apk_inspector_module.dart';
 import 'package:android_tools/features/file_explorer/core/file_explorer_module.dart';
+import 'package:android_tools/features/home/core/home_module.dart';
 import 'package:android_tools/features/home/presentation/home_screen.dart';
 import 'package:android_tools/features/information/core/information_module.dart';
 import 'package:android_tools/features/logcat/core/logcat_module.dart';
 import 'package:android_tools/features/screenshot/core/screenshot_module.dart';
+import 'package:android_tools/features/settings/core/settings_module.dart';
 import 'package:android_tools/features/settings/presentation/settings_bloc.dart';
 import 'package:android_tools/shared/core/constants.dart';
 import 'package:android_tools/shared/core/shared_module.dart';
@@ -26,6 +29,9 @@ Future<void> main(List<String> args) async {
   InformationModule.configureDependencies();
   FileExplorerModule.configureDependencies();
   ScreenshotModule.configureDependencies();
+  ApkInspectorModule.configureDependencies();
+  HomeModule.configureDependencies();
+  SettingsModule.configureDependencies();
   await getIt.allReady();
   final logger = await getIt.getAsync<Logger>();
   final settingsHelper = getIt.get<SettingsHelper>();
@@ -103,7 +109,7 @@ class MyApp extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return BlocProvider(
-      create: (context) => SettingsBloc()..add(OnLoadThemeMode()),
+      create: (context) => getIt<SettingsBloc>()..add(OnLoadThemeMode()),
       child: BlocBuilder<SettingsBloc, SettingsState>(
         builder: (context, state) {
           return MaterialApp(

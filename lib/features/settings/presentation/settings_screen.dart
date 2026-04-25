@@ -15,7 +15,6 @@ class _SettingsScreenState extends State<SettingsScreen> {
   void initState() {
     super.initState();
     WidgetsBinding.instance.addPostFrameCallback((_) {
-      context.read<SettingsBloc>().add(OnLoadMaxHistorySize());
       context.read<SettingsBloc>().add(OnLoadCrashReportingSetting());
     });
   }
@@ -248,91 +247,6 @@ class _SettingsScreenState extends State<SettingsScreen> {
                     ],
                   ),
 
-                  Column(
-                    crossAxisAlignment: CrossAxisAlignment.start,
-                    children: [
-                      Text("Installed application history"),
-
-                      Card(
-                        clipBehavior: Clip.hardEdge,
-                        color: Theme.of(context).colorScheme.surface,
-                        child: Column(
-                          children: [
-                            Padding(
-                              padding: const EdgeInsets.all(16.0),
-                              child: Column(
-                                crossAxisAlignment: CrossAxisAlignment.start,
-                                children: [
-                                  Row(
-                                    mainAxisAlignment:
-                                        MainAxisAlignment.spaceBetween,
-                                    children: [
-                                      Text(
-                                        "Max history size",
-                                        style: TextStyle(fontSize: 16),
-                                      ),
-                                      Text(
-                                        "${state.maxHistorySize}",
-                                        style: TextStyle(
-                                          fontSize: 16,
-                                          fontWeight: FontWeight.bold,
-                                        ),
-                                      ),
-                                    ],
-                                  ),
-                                  SizedBox(height: 8),
-                                  Slider(
-                                    value: state.maxHistorySize.toDouble(),
-                                    min: 0,
-                                    max: 10,
-                                    divisions: 10,
-                                    label: state.maxHistorySize.toString(),
-                                    onChanged: (value) {
-                                      context.read<SettingsBloc>().add(
-                                        OnMaxHistorySizeChanged(value.toInt()),
-                                      );
-                                    },
-                                  ),
-                                  Text(
-                                    "Maximum number of installed applications to keep in history (0-10)",
-                                    style: TextStyle(
-                                      fontSize: 12,
-                                      color: Colors.grey,
-                                    ),
-                                  ),
-                                ],
-                              ),
-                            ),
-                            Padding(
-                              padding: const EdgeInsets.symmetric(
-                                horizontal: 16.0,
-                                vertical: 0,
-                              ),
-                              child: Divider(
-                                color: Theme.of(context).colorScheme.outline,
-                                height: 1,
-                              ),
-                            ),
-                            ListTile(
-                              leading: Icon(
-                                Icons.delete_forever,
-                                color: Colors.red,
-                              ),
-                              title: Text(
-                                "Clear installed applications history",
-                              ),
-                              subtitle: Text(
-                                "Remove all installed applications history and cached APK files",
-                              ),
-                              onTap: () => context.read<SettingsBloc>().add(
-                                OnClearInstalledApplicationHistory(),
-                              ),
-                            ),
-                          ],
-                        ),
-                      ),
-                    ],
-                  ),
                 ],
               ),
             ],

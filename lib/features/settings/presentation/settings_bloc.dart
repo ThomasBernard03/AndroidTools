@@ -1,7 +1,6 @@
 import 'package:android_tools/main.dart';
 import 'package:android_tools/shared/core/constants.dart';
 import 'package:android_tools/shared/domain/helpers/settings_helper.dart';
-import 'package:android_tools/shared/domain/repositories/application_repository.dart';
 import 'package:auto_updater/auto_updater.dart';
 import 'package:dart_mappable/dart_mappable.dart';
 import 'package:flutter/material.dart';
@@ -15,7 +14,6 @@ part 'settings_bloc.mapper.dart';
 
 class SettingsBloc extends Bloc<SettingsEvent, SettingsState> {
   final Logger _logger = getIt.get();
-  final ApplicationRepository _applicationRepository = getIt.get();
   final SettingsHelper _settingsHelper = getIt.get();
 
   SettingsBloc() : super(SettingsState()) {
@@ -63,35 +61,6 @@ class SettingsBloc extends Bloc<SettingsEvent, SettingsState> {
 
       final uri = Uri.parse(issueUrl);
       await launchUrl(uri);
-    });
-
-    on<OnClearInstalledApplicationHistory>((event, emit) async {
-      _logger.i("Clearing installed application history");
-      try {
-        await _applicationRepository.clearInstalledApplicationHistory();
-        _logger.i("Installed application history cleared successfully");
-      } catch (e) {
-        _logger.e("Error clearing installed application history: $e");
-      }
-    });
-
-    on<OnLoadMaxHistorySize>((event, emit) async {
-      try {
-        final size = await _applicationRepository.getMaxHistorySize();
-        emit(state.copyWith(maxHistorySize: size));
-      } catch (e) {
-        _logger.e("Error loading max history size: $e");
-      }
-    });
-
-    on<OnMaxHistorySizeChanged>((event, emit) async {
-      try {
-        await _applicationRepository.setMaxHistorySize(event.size);
-        emit(state.copyWith(maxHistorySize: event.size));
-        _logger.i("Max history size updated to ${event.size}");
-      } catch (e) {
-        _logger.e("Error updating max history size: $e");
-      }
     });
 
     on<OnLoadThemeMode>((event, emit) async {

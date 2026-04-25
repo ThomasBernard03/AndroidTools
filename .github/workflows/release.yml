@@ -83,18 +83,19 @@ jobs:
           VERSION="${{ needs.prepare-release.outputs.version }}"
           DMG_NAME="AndroidTools-$VERSION-macos.dmg"
 
-          # Create a temporary directory for DMG contents
-          mkdir -p dmg_temp
-          cp -R "build/macos/Build/Products/Release/Android Tools.app" dmg_temp/
+          brew install create-dmg
 
-          # Create DMG using hdiutil
-          hdiutil create -volname "Android Tools" \
-            -srcfolder dmg_temp \
-            -ov -format UDZO \
-            "$DMG_NAME"
-
-          # Clean up
-          rm -rf dmg_temp
+          create-dmg \
+            --volname "Android Tools" \
+            --window-pos 200 120 \
+            --window-size 580 380 \
+            --background "assets/dmg_background.png" \
+            --icon-size 128 \
+            --icon "Android Tools.app" 150 185 \
+            --hide-extension "Android Tools.app" \
+            --app-drop-link 430 185 \
+            "$DMG_NAME" \
+            "build/macos/Build/Products/Release/Android Tools.app"
 
       - name: Install Sparkle tools
         run: |
