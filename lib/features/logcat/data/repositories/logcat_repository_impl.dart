@@ -1,5 +1,4 @@
 import 'dart:async';
-import 'dart:io';
 
 import 'package:adb_dart/adb_dart.dart';
 import 'package:android_tools/features/logcat/domain/entities/process_entity.dart';
@@ -36,43 +35,19 @@ class LogcatRepositoryImpl implements LogcatRepository {
   @override
   Future<List<ProcessEntity>> getProcesses(String deviceId) async {
     try {
-      final adbPath = _shellDatasource.getAdbPath();
+      final adbClient = AdbClient(
+        adbExecutablePath: _shellDatasource.getAdbPath(),
+      );
 
-      final result = await Process.run(adbPath, [
-        '-s',
-        deviceId,
-        'shell',
-        'sh',
-        '-c',
-        'ps -A',
-      ]);
+      final processes = await adbClient.getProcesses(deviceId);
 
-      final output = result.stdout.toString().trim();
-      if (output.isEmpty) return [];
-
-      final lines = output.split('\n');
-      final processes = <ProcessEntity>[];
-
-      for (final line in lines) {
-        if (line.trim().isEmpty) continue;
-        if (line.contains('PID') || line.contains('USER')) continue;
-
-        final parts = line.split(RegExp(r'\s+'));
-        if (parts.length < 2) continue;
-
-        // PID
-        final pid = int.tryParse(parts[1]);
-        if (pid == null) continue;
-
-        final processName = parts.last;
-
-        // Filtrer les process inutiles
-        if (_shouldIgnoreProcess(processName)) continue;
-
-        processes.add(ProcessEntity(processId: pid, packageName: processName));
-      }
-
-      return processes;
+      return processes
+          .where((p) => !_shouldIgnoreProcess(p.packageName))
+          .map((p) => ProcessEntity(
+                processId: p.processId,
+                packageName: p.packageName,
+              ))
+          .toList();
     } catch (e) {
       _logger.w('Exception getting processes: $e');
       return [];
@@ -80,14 +55,14 @@ class LogcatRepositoryImpl implements LogcatRepository {
   }
 
   bool _shouldIgnoreProcess(String name) {
-    // 1. Threads noyau
+    // Kernel threads
     if (name.startsWith('[') && name.endsWith(']')) return true;
 
-    // 2. HAL / vendor
+    // HAL / vendor processes
     if (name.startsWith('vendor.')) return true;
     if (name.startsWith('android.hardware.')) return true;
 
-    // 3. Binaires natifs connus (non exhaustif, mais efficace)
+    // Known native binaries that are not apps
     const ignoreList = [
       'init',
       'logd',
@@ -104,8 +79,7 @@ class LogcatRepositoryImpl implements LogcatRepository {
     ];
     if (ignoreList.contains(name)) return true;
 
-    // 4. Ce ne sont PAS des apps → noms sans point
-    // (ex: kworker, netd, system_server…)
+    // Non-app processes have no dot in their name (e.g., kworker, netd)
     if (!name.contains('.')) return true;
 
     return false;

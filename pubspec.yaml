@@ -2,7 +2,7 @@ name: android_tools
 description: "A new Flutter project."
 publish_to: 'none' # Remove this line if you wish to publish to pub.dev
 
-version: 2026.02.3+29
+version: 2026.04.1+30
 
 environment:
   sdk: ^3.10.8
@@ -11,10 +11,10 @@ dependencies:
   sentry_flutter: ^9.9.0
   flutter:
     sdk: flutter
-  adb_dart: ^1.2.4
-  aapt_dart: ^1.0.0
-  # adb_dart:
-  #   path: ../../adb_dart
+  adb_dart: ^1.3.0
+  aapt_dart: ^1.1.0
+  super_clipboard: ^0.8.0
+  image: ^4.0.0
   cupertino_icons: ^1.0.8
   path_provider: ^2.1.5
   dart_mappable: ^4.6.1
@@ -33,8 +33,10 @@ dependencies:
   auto_updater: ^1.0.0
   intl: ^0.20.2
   flutter_monaco: ^1.4.0
+  pdfx: ^2.7.0
   drift: ^2.30.1
   drift_flutter: ^0.2.8
+  shared_preferences: ^2.3.4
 
 dev_dependencies:
   sentry_dart_plugin: ^3.2.0
@@ -94,8 +96,8 @@ sentry:
 msix_config:
   display_name: Android Tools
   publisher_display_name: Thomas Bernard
+  publisher: CN=Thomas Bernard
   identity_name: ThomasBernard.AndroidTools
   msix_version: 1.0.0.0
   logo_path: windows/runner/resources/app_icon.ico
   capabilities: internetClient
-  install_certificate: false

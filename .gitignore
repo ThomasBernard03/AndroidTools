@@ -34,3 +34,9 @@ keystore.jks
 keystore.properties
 *.aab
 *.apk
+
+# Windows MSIX certificates
+CERTIFICATE.pfx
+CERTIFICATE.cer
+Install.ps1
+AndroidTools-Windows-Package/

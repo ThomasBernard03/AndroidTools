@@ -13,11 +13,14 @@ class FileExplorerBreadcrumb extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final parts = currentPath.split("/").where((part) => part.isNotEmpty).toList();
+    final parts = currentPath
+        .split("/")
+        .where((part) => part.isNotEmpty)
+        .toList();
     final breadcrumbItems = ["/", ...parts];
 
     return Container(
-      color: Color(0xFF1A1D1C),
+      color: Theme.of(context).colorScheme.surfaceContainerHigh,
       child: SizedBox(
         height: 30,
         child: ListView.separated(
@@ -27,7 +30,7 @@ class FileExplorerBreadcrumb extends StatelessWidget {
             return Icon(
               Icons.chevron_right_rounded,
               size: 12,
-              color: Color.fromARGB(255, 98, 99, 99),
+              color: Theme.of(context).colorScheme.outline,
             );
           },
           itemBuilder: (context, index) {

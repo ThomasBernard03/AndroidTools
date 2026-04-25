@@ -6,8 +6,11 @@ list(APPEND FLUTTER_PLUGIN_LIST
   auto_updater_windows
   bitsdojo_window_windows
   desktop_drop
+  irondash_engine_context
+  pdfx
   sentry_flutter
   sqlite3_flutter_libs
+  super_native_extensions
   url_launcher_windows
   webview_windows
 )

@@ -1,0 +1,86 @@
+import 'package:android_tools/features/apk_inspector/domain/entities/apk_signature.dart';
+import 'package:android_tools/features/apk_inspector/presentation/widgets/manifest_key_value_row.dart';
+import 'package:android_tools/shared/presentation/widgets/info_panel.dart';
+import 'package:flutter/material.dart';
+
+/// Panel displaying APK signature information
+class SignaturePanel extends StatelessWidget {
+  final ApkSignature signature;
+
+  const SignaturePanel({
+    super.key,
+    required this.signature,
+  });
+
+  @override
+  Widget build(BuildContext context) {
+    final colorScheme = Theme.of(context).colorScheme;
+
+    return InfoPanel(
+      title: 'Signature',
+      trailing: Row(
+        children: [
+          Container(
+            width: 5,
+            height: 5,
+            decoration: const BoxDecoration(
+              shape: BoxShape.circle,
+              color: Color(0xFF3FCF8E),
+            ),
+          ),
+          const SizedBox(width: 4),
+          Text(
+            'verified',
+            style: Theme.of(context).textTheme.labelSmall?.copyWith(
+                  color: const Color(0xFF3FCF8E),
+                  fontFamily: 'monospace',
+                ),
+          ),
+        ],
+      ),
+      child: Column(
+        children: [
+          ManifestKeyValueRow(label: 'Scheme', value: signature.scheme),
+          ManifestKeyValueRow(label: 'Algorithm', value: signature.algorithm),
+          ManifestKeyValueRow(label: 'Key size', value: '${signature.keySize}-bit'),
+          ManifestKeyValueRow(label: 'Issuer', value: signature.issuer),
+          ManifestKeyValueRow(label: 'Valid from', value: signature.validFrom),
+          ManifestKeyValueRow(label: 'Valid to', value: signature.validTo),
+
+          // SHA-256 fingerprint box
+          const SizedBox(height: 10),
+          Container(
+            padding: const EdgeInsets.all(8),
+            decoration: BoxDecoration(
+              color: colorScheme.surfaceContainerHigh,
+              border: Border.all(
+                color: colorScheme.surfaceContainerHighest.withValues(alpha: 0.15),
+              ),
+              borderRadius: BorderRadius.circular(4),
+            ),
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                Text(
+                  'SHA-256 FINGERPRINT',
+                  style: Theme.of(context).textTheme.labelSmall?.copyWith(
+                        color: colorScheme.surfaceContainerHighest,
+                        letterSpacing: 0.5,
+                      ),
+                ),
+                const SizedBox(height: 4),
+                SelectableText(
+                  signature.sha256,
+                  style: Theme.of(context).textTheme.bodySmall?.copyWith(
+                        fontFamily: 'monospace',
+                        height: 1.55,
+                      ),
+                ),
+              ],
+            ),
+          ),
+        ],
+      ),
+    );
+  }
+}

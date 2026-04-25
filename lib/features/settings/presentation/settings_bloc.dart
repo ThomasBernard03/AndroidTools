@@ -1,8 +1,9 @@
 import 'package:android_tools/main.dart';
 import 'package:android_tools/shared/core/constants.dart';
-import 'package:android_tools/shared/domain/repositories/application_repository.dart';
+import 'package:android_tools/shared/domain/helpers/settings_helper.dart';
 import 'package:auto_updater/auto_updater.dart';
 import 'package:dart_mappable/dart_mappable.dart';
+import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:logger/logger.dart';
 import 'package:url_launcher/url_launcher.dart';
@@ -13,7 +14,7 @@ part 'settings_bloc.mapper.dart';
 
 class SettingsBloc extends Bloc<SettingsEvent, SettingsState> {
   final Logger _logger = getIt.get();
-  final ApplicationRepository _applicationRepository = getIt.get();
+  final SettingsHelper _settingsHelper = getIt.get();
 
   SettingsBloc() : super(SettingsState()) {
     on<OnOpenLogDirectory>((event, emit) async {
@@ -62,33 +63,57 @@ class SettingsBloc extends Bloc<SettingsEvent, SettingsState> {
       await launchUrl(uri);
     });
 
-    on<OnClearInstalledApplicationHistory>((event, emit) async {
-      _logger.i("Clearing installed application history");
+    on<OnLoadThemeMode>((event, emit) async {
       try {
-        await _applicationRepository.clearInstalledApplicationHistory();
-        _logger.i("Installed application history cleared successfully");
+        final themeString = await _settingsHelper.getThemeMode();
+        final themeMode = _stringToThemeMode(themeString);
+        emit(state.copyWith(themeMode: themeMode));
       } catch (e) {
-        _logger.e("Error clearing installed application history: $e");
+        _logger.e("Error loading theme mode: $e");
+        emit(state.copyWith(themeMode: ThemeMode.system));
       }
     });
 
-    on<OnLoadMaxHistorySize>((event, emit) async {
+    on<OnThemeModeChanged>((event, emit) async {
       try {
-        final size = await _applicationRepository.getMaxHistorySize();
-        emit(state.copyWith(maxHistorySize: size));
+        await _settingsHelper.setThemeMode(event.themeMode.name);
+        emit(state.copyWith(themeMode: event.themeMode));
+        _logger.i("Theme mode updated to ${event.themeMode.name}");
       } catch (e) {
-        _logger.e("Error loading max history size: $e");
+        _logger.e("Error updating theme mode: $e");
       }
     });
 
-    on<OnMaxHistorySizeChanged>((event, emit) async {
+    on<OnLoadCrashReportingSetting>((event, emit) async {
       try {
-        await _applicationRepository.setMaxHistorySize(event.size);
-        emit(state.copyWith(maxHistorySize: event.size));
-        _logger.i("Max history size updated to ${event.size}");
+        final disabled = await _settingsHelper.getCrashReportingDisabled();
+        emit(state.copyWith(crashReportingDisabled: disabled));
       } catch (e) {
-        _logger.e("Error updating max history size: $e");
+        _logger.e("Error loading crash reporting setting: $e");
+        emit(state.copyWith(crashReportingDisabled: false));
       }
     });
+
+    on<OnCrashReportingToggled>((event, emit) async {
+      try {
+        await _settingsHelper.setCrashReportingDisabled(event.disabled);
+        emit(state.copyWith(crashReportingDisabled: event.disabled));
+        _logger.i("Crash reporting ${event.disabled ? 'disabled' : 'enabled'}");
+      } catch (e) {
+        _logger.e("Error updating crash reporting setting: $e");
+      }
+    });
+  }
+
+  ThemeMode _stringToThemeMode(String value) {
+    switch (value) {
+      case 'light':
+        return ThemeMode.light;
+      case 'dark':
+        return ThemeMode.dark;
+      case 'system':
+      default:
+        return ThemeMode.system;
+    }
   }
 }

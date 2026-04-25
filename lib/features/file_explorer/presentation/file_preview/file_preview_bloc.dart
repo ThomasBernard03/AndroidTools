@@ -132,6 +132,11 @@ class FilePreviewBloc extends Bloc<FilePreviewEvent, FilePreviewState> {
       return PreviewType.audio;
     }
 
+    // PDF extension
+    if (FileExtensionHelper.isPdfExtension(extension)) {
+      return PreviewType.pdf;
+    }
+
     return PreviewType.unsupported;
   }
 }

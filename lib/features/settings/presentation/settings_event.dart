@@ -10,12 +10,18 @@ class OnCreateIssue extends SettingsEvent {}
 
 class OnCheckForUpdates extends SettingsEvent {}
 
-class OnClearInstalledApplicationHistory extends SettingsEvent {}
+class OnLoadThemeMode extends SettingsEvent {}
 
-class OnLoadMaxHistorySize extends SettingsEvent {}
+class OnThemeModeChanged extends SettingsEvent {
+  final ThemeMode themeMode;
 
-class OnMaxHistorySizeChanged extends SettingsEvent {
-  final int size;
+  OnThemeModeChanged(this.themeMode);
+}
 
-  OnMaxHistorySizeChanged(this.size);
+class OnLoadCrashReportingSetting extends SettingsEvent {}
+
+class OnCrashReportingToggled extends SettingsEvent {
+  final bool disabled;
+
+  OnCrashReportingToggled(this.disabled);
 }

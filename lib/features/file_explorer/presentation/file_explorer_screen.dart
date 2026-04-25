@@ -224,7 +224,7 @@ class _FileExplorerScreenState extends State<FileExplorerScreen> {
           return KeyEventResult.ignored;
         },
         child: Scaffold(
-          backgroundColor: Color(0xff000000),
+          backgroundColor: Theme.of(context).colorScheme.surfaceContainerLowest,
           appBar: PreferredSize(
             preferredSize: Size.fromHeight(kToolbarHeight),
             child: BlocBuilder<FileExplorerBloc, FileExplorerState>(
@@ -409,39 +409,37 @@ class _FileExplorerScreenState extends State<FileExplorerScreen> {
                             ),
                           ),
                         ),
-                        // Divider
-                        Container(width: 1, color: Color(0xFF2A2A2A)),
-                        // Right panel: File Preview
-                        BlocBuilder<FileExplorerBloc, FileExplorerState>(
-                          builder: (context, state) {
-                            return Expanded(
-                              flex: 1,
-                              child: state.selectedFile != null
-                                  ? FilePreviewScreen(
-                                      key: ValueKey(
-                                        '${state.path}/${state.selectedFile!.name}',
-                                      ),
-                                      fileEntry: state.selectedFile!,
-                                      currentPath: state.path,
-                                      onDownloadFile: () {
-                                        context.read<FileExplorerBloc>().add(
-                                          OnDownloadFile(
-                                            fileName: state.selectedFile!.name,
-                                          ),
-                                        );
-                                      },
-                                      onDeleteFile: () {
-                                        context.read<FileExplorerBloc>().add(
-                                          OnDeleteFile(
-                                            fileName: state.selectedFile!.name,
-                                          ),
-                                        );
-                                      },
-                                    )
-                                  : SizedBox.shrink(),
-                            );
-                          },
-                        ),
+                        // Divider + Right panel: File Preview
+                        if (state.selectedFile != null) ...[
+                          Container(
+                            width: 1,
+                            color: Theme.of(context).colorScheme.outline,
+                          ),
+                          Expanded(
+                            flex: 1,
+                            child: FilePreviewScreen(
+                              key: ValueKey(
+                                '${state.path}/${state.selectedFile!.name}',
+                              ),
+                              fileEntry: state.selectedFile!,
+                              currentPath: state.path,
+                              onDownloadFile: () {
+                                context.read<FileExplorerBloc>().add(
+                                  OnDownloadFile(
+                                    fileName: state.selectedFile!.name,
+                                  ),
+                                );
+                              },
+                              onDeleteFile: () {
+                                context.read<FileExplorerBloc>().add(
+                                  OnDeleteFile(
+                                    fileName: state.selectedFile!.name,
+                                  ),
+                                );
+                              },
+                            ),
+                          ),
+                        ],
                       ],
                     ),
                   ),
