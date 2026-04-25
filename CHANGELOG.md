@@ -5,15 +5,28 @@ All notable changes to Android Tools will be documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 
 
-## [2026.04.1] - WIP
+## [2026.04.1] - 2026-04-25
+
+### New Features
+- **APK Inspector** - Analyse APK files without installing them: view metadata, permissions, manifest, components, and signatures
+- APK Inspector keeps a history of recently inspected APK files
 
 ### Improvements
+- New application design (home screen, navigation rail, information screen, logcat)
+- Redesigned device information screen with stat cards (battery, storage, RAM…)
+- Display Android version logo on the information screen
 - Update flutter version to 3.41.6
 - Add light mode
 - Can preview PDF
 - Can take screenshots
 - Can disable crash reporting
 - Refresh devices when app is resumed
+
+### Removed
+- Application Installer feature (superseded by APK Inspector)
+
+### Distribution
+- New dark gradient background for the macOS DMG installer
 
 
 ## [2026.02.3] - 2026-02-10
