@@ -115,7 +115,9 @@ class ApkHeroCard extends StatelessWidget {
                   children: [
                     if (state.status == ApkInspectorStatus.ready) ...[
                       Text(
-                        'Install on device',
+                        state.selectedDevice != null
+                            ? 'Install on ${state.selectedDevice!.name}'
+                            : 'No device selected',
                         style: Theme.of(context).textTheme.labelSmall?.copyWith(
                               color: colorScheme.surfaceContainerHighest,
                             ),
@@ -125,12 +127,15 @@ class ApkHeroCard extends StatelessWidget {
                         mainAxisAlignment: MainAxisAlignment.end,
                         children: [
                           FilledButton(
-                            onPressed: () {
-                              // TODO: Get actual device ID
-                              context.read<ApkInspectorBloc>().add(
-                                    OnInstallApk(deviceId: 'device-id'),
-                                  );
-                            },
+                            onPressed: state.selectedDevice != null
+                                ? () {
+                                    context.read<ApkInspectorBloc>().add(
+                                          OnInstallApk(
+                                            deviceId: state.selectedDevice!.deviceId,
+                                          ),
+                                        );
+                                  }
+                                : null,
                             child: const Text('Install APK'),
                           ),
                         ],
@@ -138,17 +143,17 @@ class ApkHeroCard extends StatelessWidget {
                     ],
                     if (state.status == ApkInspectorStatus.installing) ...[
                       Text(
-                        'Installing… ${(state.progress * 100).round()}%',
+                        'Installing…',
                         style: Theme.of(context).textTheme.labelSmall?.copyWith(
                               color: colorScheme.surfaceContainerHighest,
                             ),
                       ),
-                      const SizedBox(height: 6),
-                      SizedBox(
-                        width: 220,
-                        child: LinearProgressIndicator(
-                          value: state.progress,
-                          minHeight: 4,
+                      const SizedBox(height: 8),
+                      const SizedBox(
+                        width: 24,
+                        height: 24,
+                        child: CircularProgressIndicator(
+                          strokeWidth: 2.5,
                         ),
                       ),
                     ],
@@ -185,6 +190,36 @@ class ApkHeroCard extends StatelessWidget {
                             ),
                           ),
                         ],
+                      ),
+                    ],
+                    if (state.status == ApkInspectorStatus.error && state.errorMessage != null) ...[
+                      Container(
+                        padding: const EdgeInsets.all(8),
+                        decoration: BoxDecoration(
+                          color: colorScheme.error.withValues(alpha: 0.1),
+                          borderRadius: BorderRadius.circular(4),
+                        ),
+                        child: Row(
+                          mainAxisSize: MainAxisSize.min,
+                          crossAxisAlignment: CrossAxisAlignment.start,
+                          children: [
+                            Icon(
+                              Icons.error_outline,
+                              color: colorScheme.error,
+                              size: 16,
+                            ),
+                            const SizedBox(width: 6),
+                            Expanded(
+                              child: Text(
+                                state.errorMessage!,
+                                style: Theme.of(context).textTheme.bodySmall?.copyWith(
+                                      color: colorScheme.error,
+                                      fontWeight: FontWeight.w500,
+                                    ),
+                              ),
+                            ),
+                          ],
+                        ),
                       ),
                     ],
                   ],

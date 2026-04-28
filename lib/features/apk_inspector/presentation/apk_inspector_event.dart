@@ -29,3 +29,6 @@ class OnSelectRecentApk extends ApkInspectorEvent {
 
   OnSelectRecentApk({required this.apkPath});
 }
+
+/// Event triggered when the screen appears to start listening to device changes
+class OnScreenAppearing extends ApkInspectorEvent {}

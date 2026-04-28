@@ -6,6 +6,8 @@ import 'package:android_tools/features/apk_inspector/domain/usecases/install_apk
 import 'package:android_tools/features/apk_inspector/domain/usecases/parse_apk_usecase.dart';
 import 'package:android_tools/features/apk_inspector/domain/usecases/save_recent_apk_usecase.dart';
 import 'package:android_tools/main.dart';
+import 'package:android_tools/shared/domain/entities/device_entity.dart';
+import 'package:android_tools/shared/domain/usecases/listen_selected_device_usecase.dart';
 import 'package:dart_mappable/dart_mappable.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:logger/logger.dart';
@@ -20,6 +22,7 @@ class ApkInspectorBloc extends Bloc<ApkInspectorEvent, ApkInspectorState> {
   final InstallApkUsecase _installApkUsecase = getIt.get();
   final GetRecentApksUsecase _getRecentApksUsecase = getIt.get();
   final SaveRecentApkUsecase _saveRecentApkUsecase = getIt.get();
+  final ListenSelectedDeviceUsecase _listenSelectedDeviceUsecase = getIt.get();
   final Logger _logger = getIt.get();
 
   ApkInspectorBloc() : super(ApkInspectorState.initial()) {
@@ -28,8 +31,10 @@ class ApkInspectorBloc extends Bloc<ApkInspectorEvent, ApkInspectorState> {
     on<OnInstallApk>(_onInstallApk);
     on<OnLoadRecentApks>(_onLoadRecentApks);
     on<OnSelectRecentApk>(_onSelectRecentApk);
+    on<OnScreenAppearing>(_onScreenAppearing);
 
     add(OnLoadRecentApks());
+    add(OnScreenAppearing());
   }
 
   Future<void> _onSelectApkFile(
@@ -39,35 +44,16 @@ class ApkInspectorBloc extends Bloc<ApkInspectorEvent, ApkInspectorState> {
     _logger.i('Selected APK file: ${event.apkPath}');
 
     // Start parsing
-    emit(state.copyWith(
-      status: ApkInspectorStatus.parsing,
-      progress: 0.0,
-      errorMessage: null,
-    ));
+    emit(
+      state.copyWith(status: ApkInspectorStatus.parsing, errorMessage: null),
+    );
 
     try {
-      // Simulate progress updates for better UX
-      final progressTimer = Timer.periodic(
-        const Duration(milliseconds: 150),
-        (timer) {
-          if (state.progress < 0.9) {
-            emit(state.copyWith(progress: state.progress + 0.1));
-          }
-        },
-      );
-
       // Parse the APK
       final apkInfo = await _parseApkUsecase(event.apkPath);
 
-      // Cancel progress timer
-      progressTimer.cancel();
-
       // Emit ready state with parsed info
-      emit(state.copyWith(
-        status: ApkInspectorStatus.ready,
-        apkInfo: apkInfo,
-        progress: 1.0,
-      ));
+      emit(state.copyWith(status: ApkInspectorStatus.ready, apkInfo: apkInfo));
 
       _logger.i('APK parsed successfully: ${apkInfo.packageName}');
 
@@ -84,26 +70,25 @@ class ApkInspectorBloc extends Bloc<ApkInspectorEvent, ApkInspectorState> {
     } catch (e, stackTrace) {
       _logger.e('Error parsing APK', error: e, stackTrace: stackTrace);
 
-      emit(state.copyWith(
-        status: ApkInspectorStatus.error,
-        errorMessage: 'Failed to parse APK: ${e.toString()}',
-        progress: 0.0,
-      ));
+      emit(
+        state.copyWith(
+          status: ApkInspectorStatus.error,
+          errorMessage: 'Failed to parse APK: ${e.toString()}',
+        ),
+      );
     }
   }
 
-  void _onResetView(
-    OnResetView event,
-    Emitter<ApkInspectorState> emit,
-  ) {
+  void _onResetView(OnResetView event, Emitter<ApkInspectorState> emit) {
     _logger.i('Resetting APK Inspector view');
 
-    emit(state.copyWith(
-      status: ApkInspectorStatus.idle,
-      apkInfo: null,
-      progress: 0.0,
-      errorMessage: null,
-    ));
+    emit(
+      state.copyWith(
+        status: ApkInspectorStatus.idle,
+        apkInfo: null,
+        errorMessage: null,
+      ),
+    );
   }
 
   Future<void> _onInstallApk(
@@ -117,42 +102,59 @@ class ApkInspectorBloc extends Bloc<ApkInspectorEvent, ApkInspectorState> {
 
     _logger.i('Installing APK to device: ${event.deviceId}');
 
-    emit(state.copyWith(
-      status: ApkInspectorStatus.installing,
-      progress: 0.0,
-    ));
+    emit(state.copyWith(status: ApkInspectorStatus.installing));
 
     try {
-      // Simulate progress for installation
-      final progressTimer = Timer.periodic(
-        const Duration(milliseconds: 200),
-        (timer) {
-          if (state.progress < 0.9) {
-            emit(state.copyWith(progress: state.progress + 0.08));
-          }
-        },
-      );
-
       // Install the APK
       await _installApkUsecase(state.apkInfo!.filePath, event.deviceId);
 
-      // Cancel progress timer
-      progressTimer.cancel();
-
-      emit(state.copyWith(
-        status: ApkInspectorStatus.installed,
-        progress: 1.0,
-      ));
+      emit(state.copyWith(status: ApkInspectorStatus.installed));
 
       _logger.i('APK installed successfully');
+
+      // Reset to ready state after 2 seconds to show the install button again
+      await Future.delayed(const Duration(seconds: 2));
+      if (!emit.isDone && state.status == ApkInspectorStatus.installed) {
+        emit(state.copyWith(status: ApkInspectorStatus.ready));
+      }
     } catch (e, stackTrace) {
       _logger.e('Error installing APK', error: e, stackTrace: stackTrace);
 
-      emit(state.copyWith(
-        status: ApkInspectorStatus.error,
-        errorMessage: 'Failed to install APK: ${e.toString()}',
-        progress: 0.0,
-      ));
+      if (!emit.isDone) {
+        // Extract user-friendly error message
+        String errorMessage = e.toString();
+        if (errorMessage.contains('INSTALL_FAILED_INSUFFICIENT_STORAGE')) {
+          errorMessage = 'Insufficient storage on device';
+        } else if (errorMessage.contains('INSTALL_FAILED_ALREADY_EXISTS')) {
+          errorMessage = 'App already installed';
+        } else if (errorMessage.contains('device') &&
+            errorMessage.contains('not found')) {
+          errorMessage = 'Device not found';
+        } else if (errorMessage.contains('Failed to install APK:')) {
+          // Keep only the part after "Failed to install APK:"
+          errorMessage = errorMessage
+              .substring(errorMessage.indexOf('Failed to install APK:') + 22)
+              .trim();
+        }
+
+        emit(
+          state.copyWith(
+            status: ApkInspectorStatus.error,
+            errorMessage: errorMessage,
+          ),
+        );
+
+        // Reset to ready state after 3 seconds to show the install button again
+        await Future.delayed(const Duration(seconds: 3));
+        if (!emit.isDone && state.status == ApkInspectorStatus.error) {
+          emit(
+            state.copyWith(
+              status: ApkInspectorStatus.ready,
+              errorMessage: null,
+            ),
+          );
+        }
+      }
     }
   }
 
@@ -178,5 +180,18 @@ class ApkInspectorBloc extends Bloc<ApkInspectorEvent, ApkInspectorState> {
     _logger.i('Selected recent APK: ${event.apkPath}');
 
     add(OnSelectApkFile(apkPath: event.apkPath));
+  }
+
+  Future<void> _onScreenAppearing(
+    OnScreenAppearing event,
+    Emitter<ApkInspectorState> emit,
+  ) async {
+    await emit.onEach<DeviceEntity?>(
+      _listenSelectedDeviceUsecase(),
+      onData: (device) {
+        emit(state.copyWith(selectedDevice: device));
+        _logger.d('Selected device updated: ${device?.deviceId ?? "none"}');
+      },
+    );
   }
 }

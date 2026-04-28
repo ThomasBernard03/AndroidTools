@@ -26,16 +26,16 @@ enum ApkInspectorStatus {
 class ApkInspectorState with ApkInspectorStateMappable {
   final ApkInspectorStatus status;
   final ApkInfo? apkInfo;
-  final double progress;
   final String? errorMessage;
   final List<ApkInfo> recentApks;
+  final DeviceEntity? selectedDevice;
 
   const ApkInspectorState({
     this.status = ApkInspectorStatus.idle,
     this.apkInfo,
-    this.progress = 0.0,
     this.errorMessage,
     this.recentApks = const [],
+    this.selectedDevice,
   });
 
   factory ApkInspectorState.initial() => const ApkInspectorState();
