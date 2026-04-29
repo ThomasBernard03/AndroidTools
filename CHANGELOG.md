@@ -5,6 +5,16 @@ All notable changes to Android Tools will be documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 
 
+## [2026.04.2] - 2026-04-29
+
+### Improvements
+- Add support for Android 17 (added Android 17 logo in device information)
+- Enhanced README documentation with feature screenshots
+
+### Fixes
+- Fix app installation in APK Inspector
+- Improve APK parsing and installation flow stability
+
 ## [2026.04.1] - 2026-04-25
 
 ### New Features
