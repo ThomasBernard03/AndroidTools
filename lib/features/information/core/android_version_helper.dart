@@ -7,6 +7,8 @@ Widget getAndroidVersionLogo(String version, {double? size}) {
 
   Widget logo;
   switch (version) {
+    case "17":
+      logo = SvgPicture.asset("${basePath}android_17.svg");
     case "16":
       logo = SvgPicture.asset("${basePath}android_16.svg");
       break;

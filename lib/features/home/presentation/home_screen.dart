@@ -55,7 +55,7 @@ class _HomeScreenState extends State<HomeScreen> with WidgetsBindingObserver {
         builder: (context, state) {
           return Scaffold(
             appBar: PreferredSize(
-              preferredSize: Size.fromHeight(kToolbarHeight),
+              preferredSize: Size.fromHeight(40),
               child: MoveWindow(
                 child: Container(
                   color: Theme.of(context).colorScheme.surfaceContainerLow,
