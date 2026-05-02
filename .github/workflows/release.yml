@@ -93,10 +93,32 @@ jobs:
           # Install Sentry CLI
           curl -sL https://sentry.io/get-cli/ | bash
 
-          # Upload debug symbols
-          sentry-cli debug-files upload \
-            --include-sources \
+          VERSION="${{ needs.prepare-release.outputs.version }}"
+
+          # Create a new release in Sentry
+          echo "📦 Creating Sentry release $VERSION..."
+          sentry-cli releases new "$VERSION" \
+            --org "$SENTRY_ORG" \
+            --project "$SENTRY_PROJECT"
+
+          # Associate commits with the release
+          echo "🔗 Associating commits with release..."
+          sentry-cli releases set-commits "$VERSION" \
+            --org "$SENTRY_ORG" \
+            --auto
+
+          # Upload Flutter debug symbols
+          echo "📤 Uploading debug symbols..."
+          sentry-cli upload-dif \
+            --org "$SENTRY_ORG" \
+            --project "$SENTRY_PROJECT" \
             build/debug-info
+
+          # Finalize the release
+          echo "✅ Finalizing Sentry release..."
+          sentry-cli releases finalize "$VERSION" \
+            --org "$SENTRY_ORG" \
+            --project "$SENTRY_PROJECT"
 
       - name: Create DMG installer
         run: |
