@@ -109,10 +109,30 @@ jobs:
 
           # Upload Flutter debug symbols
           echo "📤 Uploading debug symbols..."
-          sentry-cli upload-dif \
-            --org "$SENTRY_ORG" \
-            --project "$SENTRY_PROJECT" \
-            build/debug-info
+
+          # Check if debug info directory exists and has files
+          if [ -d "build/debug-info" ] && [ "$(ls -A build/debug-info)" ]; then
+            echo "Found debug symbols in build/debug-info"
+            ls -lh build/debug-info
+
+            sentry-cli debug-files upload \
+              --org "$SENTRY_ORG" \
+              --project "$SENTRY_PROJECT" \
+              --type dartaot \
+              build/debug-info
+          else
+            echo "⚠️ No debug symbols found in build/debug-info"
+          fi
+
+          # Also upload macOS dSYM files if they exist
+          DSYM_PATH="build/macos/Build/Products/Release/Android Tools.app.dSYM"
+          if [ -d "$DSYM_PATH" ]; then
+            echo "Found macOS dSYM files"
+            sentry-cli debug-files upload \
+              --org "$SENTRY_ORG" \
+              --project "$SENTRY_PROJECT" \
+              "$DSYM_PATH"
+          fi
 
           # Finalize the release
           echo "✅ Finalizing Sentry release..."
