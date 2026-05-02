@@ -62,7 +62,7 @@ jobs:
           flutter pub get
           dart run build_runner build -d
           flutter build macos --release \
-            --dart-define=SENTRY_DSN=${{ vars.SENTRY_DSN }} \
+            --dart-define=SENTRY_DSN=${{ secrets.SENTRY_DSN }} \
             --dart-define=GIT_REPOSITORY_URL=${{ vars.REPOSITORY_URL }} \
             --dart-define=AUTO_UPDATER_FEED_URL=${{ vars.APP_CAST_FILE_PATH }} \
             --dart-define=ISSUE_URL=${{ vars.ISSUE_URL }} \
@@ -77,6 +77,21 @@ jobs:
 
           echo "✅ Application signed successfully"
           codesign -d --entitlements - "build/macos/Build/Products/Release/Android Tools.app" 2>&1 | head -10
+
+      - name: Upload debug symbols to Sentry
+        if: secrets.SENTRY_DSN != ''
+        env:
+          SENTRY_AUTH_TOKEN: ${{ secrets.SENTRY_AUTH_TOKEN }}
+          SENTRY_ORG: ${{ secrets.SENTRY_ORG }}
+          SENTRY_PROJECT: ${{ secrets.SENTRY_PROJECT }}
+        run: |
+          # Install Sentry CLI
+          curl -sL https://sentry.io/get-cli/ | bash
+
+          # Upload debug symbols
+          sentry-cli debug-files upload \
+            --include-sources \
+            build/debug-info
 
       - name: Create DMG installer
         run: |
@@ -171,66 +186,8 @@ jobs:
           files: |
             AndroidTools-${{ needs.prepare-release.outputs.version }}-macos.dmg
 
-  build-windows:
-    needs: prepare-release
-    runs-on: windows-latest
-
-    steps:
-      - name: Checkout repository
-        uses: actions/checkout@v4
-
-      - name: Set up Flutter
-        uses: subosito/flutter-action@v2
-        with:
-          flutter-version: "3.41.6"
-          channel: "stable"
-
-      - name: Build Windows app
-        run: |
-          flutter clean
-          flutter pub get
-          dart run build_runner build -d
-          flutter build windows --release `
-            --dart-define=SENTRY_DSN=${{ vars.SENTRY_DSN }} `
-            --dart-define=GIT_REPOSITORY_URL=${{ vars.REPOSITORY_URL }} `
-            --dart-define=AUTO_UPDATER_FEED_URL=${{ vars.APP_CAST_FILE_PATH }} `
-            --dart-define=ISSUE_URL=${{ vars.ISSUE_URL }} `
-            --obfuscate `
-            --split-debug-info=build/debug-info
-
-      - name: Create MSIX installer
-        shell: pwsh
-        run: |
-          $version = "${{ needs.prepare-release.outputs.version }}"
-          # Update MSIX version in pubspec.yaml (format: major.minor.build.revision)
-          # Each part must be 0-65535, convert to int to remove leading zeros
-          $versionParts = $version -split '\.'
-          $major = [int]$versionParts[0]
-          $minor = [int]$versionParts[1]
-          $build = [int]"${{ needs.prepare-release.outputs.build }}"
-          $msixVersion = "$major.$minor.$build.0"
-
-          Write-Host "Using MSIX version: $msixVersion"
-          (Get-Content pubspec.yaml) -replace 'msix_version: .*', "msix_version: $msixVersion" | Set-Content pubspec.yaml
-
-          # Generate MSIX
-          dart run msix:create
-
-      - name: Rename MSIX file
-        shell: pwsh
-        run: |
-          $version = "${{ needs.prepare-release.outputs.version }}"
-          Move-Item -Path "build/windows/x64/runner/Release/android_tools.msix" -Destination "AndroidTools-$version-windows.msix"
-
-      - name: Upload Windows artifacts to release
-        uses: softprops/action-gh-release@v1
-        with:
-          tag_name: ${{ needs.prepare-release.outputs.tag }}
-          files: |
-            AndroidTools-${{ needs.prepare-release.outputs.version }}-windows.msix
-
   finalize-release:
-    needs: [prepare-release, build-macos, build-windows]
+    needs: [prepare-release, build-macos]
     runs-on: ubuntu-latest
 
     steps:

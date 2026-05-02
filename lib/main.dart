@@ -83,9 +83,9 @@ Future<void> main(List<String> args) async {
     logger.i("Initializing Sentry for crash reporting");
     await SentryFlutter.init((options) {
       options.dsn = sentryDsn;
-      options.enableLogs = true;
       options.replay.sessionSampleRate = 0.1;
       options.replay.onErrorSampleRate = 1.0;
+      options.attachScreenshot = true;
     }, appRunner: () => runApp(SentryWidget(child: MyApp())));
   } else {
     if (crashReportingDisabled) {

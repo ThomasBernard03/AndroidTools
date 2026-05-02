@@ -2,15 +2,14 @@ import 'dart:async';
 
 import 'package:adb_dart/adb_dart.dart';
 import 'package:android_tools/features/logcat/domain/entities/process_entity.dart';
-import 'package:android_tools/shared/data/datasources/shell/shell_datasource.dart';
 import 'package:android_tools/features/logcat/domain/repositories/logcat_repository.dart';
 import 'package:logger/logger.dart';
 
 class LogcatRepositoryImpl implements LogcatRepository {
   final Logger _logger;
-  final ShellDatasource _shellDatasource;
+  final AdbClient _adbClient;
 
-  LogcatRepositoryImpl(this._logger, this._shellDatasource);
+  LogcatRepositoryImpl(this._logger, this._adbClient);
 
   @override
   Stream<Iterable<String>> listenLogcat(
@@ -18,28 +17,18 @@ class LogcatRepositoryImpl implements LogcatRepository {
     LogcatLevel? level,
     int? processId,
   ) {
-    final adbClient = AdbClient(
-      adbExecutablePath: _shellDatasource.getAdbPath(),
-    );
-    return adbClient.listenLogcat(deviceId, level: level, processId: processId);
+    return _adbClient.listenLogcat(deviceId, level: level, processId: processId);
   }
 
   @override
   Future<void> clearLogcat(String deviceId) async {
-    final adbClient = AdbClient(
-      adbExecutablePath: _shellDatasource.getAdbPath(),
-    );
-    adbClient.clearLogcat(deviceId);
+    _adbClient.clearLogcat(deviceId);
   }
 
   @override
   Future<List<ProcessEntity>> getProcesses(String deviceId) async {
     try {
-      final adbClient = AdbClient(
-        adbExecutablePath: _shellDatasource.getAdbPath(),
-      );
-
-      final processes = await adbClient.getProcesses(deviceId);
+      final processes = await _adbClient.getProcesses(deviceId);
 
       return processes
           .where((p) => !_shouldIgnoreProcess(p.packageName))

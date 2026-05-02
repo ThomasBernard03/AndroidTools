@@ -95,7 +95,6 @@ Coming soon! Star this repository to get notified when they're available.
 
 ## 📋 Prerequisites
 
-- **ADB (Android Debug Bridge)** must be installed and available in your PATH
 - **USB Debugging** enabled on your Android device
 - **macOS 10.14+** (for macOS users)
 
