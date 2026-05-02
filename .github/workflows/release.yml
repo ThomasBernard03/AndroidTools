@@ -79,12 +79,17 @@ jobs:
           codesign -d --entitlements - "build/macos/Build/Products/Release/Android Tools.app" 2>&1 | head -10
 
       - name: Upload debug symbols to Sentry
-        if: ${{ secrets.SENTRY_DSN }}
         env:
           SENTRY_AUTH_TOKEN: ${{ secrets.SENTRY_AUTH_TOKEN }}
           SENTRY_ORG: ${{ secrets.SENTRY_ORG }}
           SENTRY_PROJECT: ${{ secrets.SENTRY_PROJECT }}
         run: |
+          # Check if Sentry credentials are available
+          if [ -z "$SENTRY_AUTH_TOKEN" ] || [ -z "$SENTRY_ORG" ] || [ -z "$SENTRY_PROJECT" ]; then
+            echo "⚠️ Sentry credentials not configured, skipping debug symbols upload"
+            exit 0
+          fi
+
           # Install Sentry CLI
           curl -sL https://sentry.io/get-cli/ | bash
 
