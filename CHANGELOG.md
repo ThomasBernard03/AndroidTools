@@ -5,6 +5,23 @@ All notable changes to Android Tools will be documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 
 
+## [2026.05.1] - 2026-05-01
+
+### Fixes
+- Fix application crashes when an Android device disconnects during property retrieval
+- Fix ADB daemon startup conflicts caused by multiple concurrent ADB client instances
+- Improve error handling for device connection/disconnection race conditions
+- Prevent "ADB server didn't ACK" errors on application startup
+- Add better error handling for UTF-8 decoding errors from ADB output
+
+### Technical Improvements
+- Refactor ADB client architecture to use a single shared instance across all features
+- Add synchronization mechanism to prevent concurrent device refresh operations
+- Optimize device repository to avoid redundant ADB client instantiations
+- Configure automatic upload of debug symbols to Sentry for better crash reporting
+- Add comprehensive error messages for UTF-8 format exceptions
+
+
 ## [2026.04.2] - 2026-04-29
 
 ### Improvements
