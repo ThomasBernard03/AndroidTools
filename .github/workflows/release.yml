@@ -49,6 +49,8 @@ jobs:
     steps:
       - name: Checkout repository
         uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
 
       - name: Set up Flutter
         uses: subosito/flutter-action@v2
@@ -105,7 +107,8 @@ jobs:
           echo "🔗 Associating commits with release..."
           sentry-cli releases set-commits "$VERSION" \
             --org "$SENTRY_ORG" \
-            --auto
+            --auto \
+            --ignore-missing
 
           # Upload Flutter debug symbols
           echo "📤 Uploading debug symbols..."
