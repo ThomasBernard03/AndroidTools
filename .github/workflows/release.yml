@@ -118,10 +118,11 @@ jobs:
             echo "Found debug symbols in build/debug-info"
             ls -lh build/debug-info
 
+            # Flutter generates Breakpad symbol files (.symbols)
             sentry-cli debug-files upload \
               --org "$SENTRY_ORG" \
               --project "$SENTRY_PROJECT" \
-              --type dartaot \
+              --type breakpad \
               build/debug-info
           else
             echo "⚠️ No debug symbols found in build/debug-info"
