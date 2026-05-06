@@ -4,7 +4,7 @@
 
 ### A powerful desktop application for managing Android devices
 
-[![Version](https://img.shields.io/badge/version-2026.04.2-blue.svg)](https://github.com/ThomasBernard03/AndroidTools/releases)
+[![Version](https://img.shields.io/badge/version-2026.05.2-blue.svg)](https://github.com/ThomasBernard03/AndroidTools/releases)
 [![Flutter](https://img.shields.io/badge/Flutter-3.41.6-02569B?logo=flutter)](https://flutter.dev)
 [![License](https://img.shields.io/badge/license-MIT-green.svg)](LICENSE)
 [![Platform](https://img.shields.io/badge/platform-macOS%20%7C%20-lightgrey.svg)](https://github.com/ThomasBernard03/AndroidTools)
