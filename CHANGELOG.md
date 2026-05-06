@@ -4,6 +4,11 @@ All notable changes to Android Tools will be documented in this file.
 
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 
+## [2026.05.6] - 2026-05-06
+
+### Fixes
+- Remove uselesss shortcut in menu
+
 
 ## [2026.05.1] - 2026-05-01
 

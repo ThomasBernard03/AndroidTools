@@ -131,45 +131,40 @@ class _HomeScreenState extends State<HomeScreen> with WidgetsBindingObserver {
                           const SizedBox(height: 12),
 
                           // Navigation items
-                          NavigationRailItem(
-                            selected: _selectedIndex == 0,
-                            text: "Device",
-                            icon: Icons.memory_outlined,
-                            shortcut: "⌘1",
-                            onTap: () => setState(() => _selectedIndex = 0),
-                          ),
+                           NavigationRailItem(
+                             selected: _selectedIndex == 0,
+                             text: "Device",
+                             icon: Icons.memory_outlined,
+                             onTap: () => setState(() => _selectedIndex = 0),
+                           ),
                           const SizedBox(height: 2),
-                          NavigationRailItem(
-                            selected: _selectedIndex == 1,
-                            text: "Logcat",
-                            icon: Icons.terminal,
-                            shortcut: "⌘2",
-                            onTap: () => setState(() => _selectedIndex = 1),
-                          ),
+                           NavigationRailItem(
+                             selected: _selectedIndex == 1,
+                             text: "Logcat",
+                             icon: Icons.terminal,
+                             onTap: () => setState(() => _selectedIndex = 1),
+                           ),
                           const SizedBox(height: 2),
-                          NavigationRailItem(
-                            selected: _selectedIndex == 2,
-                            text: "Files",
-                            icon: Icons.folder_outlined,
-                            shortcut: "⌘3",
-                            onTap: () => setState(() => _selectedIndex = 2),
-                          ),
+                           NavigationRailItem(
+                             selected: _selectedIndex == 2,
+                             text: "Files",
+                             icon: Icons.folder_outlined,
+                             onTap: () => setState(() => _selectedIndex = 2),
+                           ),
                           const SizedBox(height: 2),
-                          NavigationRailItem(
-                            selected: _selectedIndex == 3,
-                            text: "Capture",
-                            icon: Icons.camera_alt_outlined,
-                            shortcut: "⌘4",
-                            onTap: () => setState(() => _selectedIndex = 3),
-                          ),
+                           NavigationRailItem(
+                             selected: _selectedIndex == 3,
+                             text: "Capture",
+                             icon: Icons.camera_alt_outlined,
+                             onTap: () => setState(() => _selectedIndex = 3),
+                           ),
                           const SizedBox(height: 2),
-                          NavigationRailItem(
-                            selected: _selectedIndex == 4,
-                            text: "APK Inspector",
-                            icon: Icons.inventory_2_outlined,
-                            shortcut: "⌘5",
-                            onTap: () => setState(() => _selectedIndex = 4),
-                          ),
+                           NavigationRailItem(
+                             selected: _selectedIndex == 4,
+                             text: "APK Inspector",
+                             icon: Icons.inventory_2_outlined,
+                             onTap: () => setState(() => _selectedIndex = 4),
+                           ),
 
                           const Spacer(),
 

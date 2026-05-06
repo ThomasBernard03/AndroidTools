@@ -4,7 +4,6 @@ class NavigationRailItem extends StatelessWidget {
   final bool selected;
   final String text;
   final IconData? icon;
-  final String? shortcut;
   final void Function()? onTap;
 
   const NavigationRailItem({
@@ -12,7 +11,6 @@ class NavigationRailItem extends StatelessWidget {
     required this.selected,
     required this.text,
     this.icon,
-    this.shortcut,
     this.onTap,
   });
 
@@ -55,11 +53,7 @@ class NavigationRailItem extends StatelessWidget {
                 ),
               ),
             ),
-            if (shortcut != null)
-              Text(
-                shortcut!,
-                style: TextStyle(fontSize: 11, color: dimColor),
-              ),
+
           ],
         ),
       ),
