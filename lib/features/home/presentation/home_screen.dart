@@ -55,10 +55,36 @@ class _HomeScreenState extends State<HomeScreen> with WidgetsBindingObserver {
         builder: (context, state) {
           return Scaffold(
             appBar: PreferredSize(
-              preferredSize: Size.fromHeight(40),
+              preferredSize: Size.fromHeight(kToolbarHeight),
               child: MoveWindow(
                 child: Container(
+                  width: double.infinity,
                   color: Theme.of(context).colorScheme.surfaceContainerLow,
+                  child: Row(
+                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                    children: [
+                      Row(
+                        children: [
+                          SizedBox(width: 100),
+                          // Device box
+                          DeviceBox(state: state),
+                        ],
+                      ),
+
+                      Padding(
+                        padding: const EdgeInsets.symmetric(horizontal: 16.0),
+                        child: Text(
+                          state.version,
+                          style: TextStyle(
+                            fontSize: 11,
+                            color: Theme.of(
+                              context,
+                            ).colorScheme.surfaceContainerHighest,
+                          ),
+                        ),
+                      ),
+                    ],
+                  ),
                 ),
               ),
             ),
@@ -76,95 +102,41 @@ class _HomeScreenState extends State<HomeScreen> with WidgetsBindingObserver {
                       child: Column(
                         crossAxisAlignment: CrossAxisAlignment.start,
                         children: [
-                          const SizedBox(height: 16),
-
-                          // Brand section
-                          Padding(
-                            padding: const EdgeInsets.symmetric(horizontal: 4),
-                            child: Row(
-                              spacing: 8,
-                              children: [
-                                Icon(
-                                  Icons.android,
-                                  size: 20,
-                                  color: Theme.of(context).colorScheme.primary,
-                                ),
-                                Expanded(
-                                  child: Text(
-                                    "AndroidTools",
-                                    style: TextStyle(
-                                      fontSize: 14,
-                                      fontWeight: FontWeight.w600,
-                                      color: Theme.of(
-                                        context,
-                                      ).colorScheme.onSurface,
-                                    ),
-                                  ),
-                                ),
-                                Text(
-                                  state.version,
-                                  style: TextStyle(
-                                    fontSize: 11,
-                                    color: Theme.of(
-                                      context,
-                                    ).colorScheme.surfaceContainerHighest,
-                                  ),
-                                ),
-                              ],
-                            ),
-                          ),
-
-                          const SizedBox(height: 12),
-
-                          // Device box
-                          DeviceBox(state: state),
-
-                          const SizedBox(height: 16),
-
-                          Divider(
-                            color: Theme.of(
-                              context,
-                            ).colorScheme.surfaceContainer,
-                            height: 1,
-                          ),
-
-                          const SizedBox(height: 12),
-
                           // Navigation items
-                           NavigationRailItem(
-                             selected: _selectedIndex == 0,
-                             text: "Device",
-                             icon: Icons.memory_outlined,
-                             onTap: () => setState(() => _selectedIndex = 0),
-                           ),
+                          NavigationRailItem(
+                            selected: _selectedIndex == 0,
+                            text: "Device",
+                            icon: Icons.memory_outlined,
+                            onTap: () => setState(() => _selectedIndex = 0),
+                          ),
                           const SizedBox(height: 2),
-                           NavigationRailItem(
-                             selected: _selectedIndex == 1,
-                             text: "Logcat",
-                             icon: Icons.terminal,
-                             onTap: () => setState(() => _selectedIndex = 1),
-                           ),
+                          NavigationRailItem(
+                            selected: _selectedIndex == 1,
+                            text: "Logcat",
+                            icon: Icons.terminal,
+                            onTap: () => setState(() => _selectedIndex = 1),
+                          ),
                           const SizedBox(height: 2),
-                           NavigationRailItem(
-                             selected: _selectedIndex == 2,
-                             text: "Files",
-                             icon: Icons.folder_outlined,
-                             onTap: () => setState(() => _selectedIndex = 2),
-                           ),
+                          NavigationRailItem(
+                            selected: _selectedIndex == 2,
+                            text: "Files",
+                            icon: Icons.folder_outlined,
+                            onTap: () => setState(() => _selectedIndex = 2),
+                          ),
                           const SizedBox(height: 2),
-                           NavigationRailItem(
-                             selected: _selectedIndex == 3,
-                             text: "Capture",
-                             icon: Icons.camera_alt_outlined,
-                             onTap: () => setState(() => _selectedIndex = 3),
-                           ),
+                          NavigationRailItem(
+                            selected: _selectedIndex == 3,
+                            text: "Capture",
+                            icon: Icons.camera_alt_outlined,
+                            onTap: () => setState(() => _selectedIndex = 3),
+                          ),
                           const SizedBox(height: 2),
-                           NavigationRailItem(
-                             selected: _selectedIndex == 4,
-                             text: "APK Inspector",
-                             icon: Icons.inventory_2_outlined,
-                             onTap: () => setState(() => _selectedIndex = 4),
-                           ),
+                          NavigationRailItem(
+                            selected: _selectedIndex == 4,
+                            text: "APK Inspector",
+                            icon: Icons.inventory_2_outlined,
+                            onTap: () => setState(() => _selectedIndex = 4),
+                          ),
 
                           const Spacer(),
 

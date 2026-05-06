@@ -23,42 +23,42 @@ class DeviceBox extends StatelessWidget {
         ),
       ),
       padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 8),
-      child: Row(
-        spacing: 8,
-        children: [
-          Container(
-            width: 7,
-            height: 7,
-            decoration: BoxDecoration(
-              shape: BoxShape.circle,
-              color: hasDevice
-                  ? const Color(0xFF4CAF50)
-                  : const Color(0xFF6B707A),
-              boxShadow: hasDevice
-                  ? [
-                      BoxShadow(
-                        color: const Color(0xFF4CAF50).withValues(alpha: 0.5),
-                        blurRadius: 4,
-                      ),
-                    ]
-                  : null,
+      child: SizedBox(
+        width: 250,
+        child: Row(
+          spacing: 8,
+          children: [
+            Container(
+              width: 7,
+              height: 7,
+              decoration: BoxDecoration(
+                shape: BoxShape.circle,
+                color: hasDevice
+                    ? const Color(0xFF4CAF50)
+                    : const Color(0xFF6B707A),
+                boxShadow: hasDevice
+                    ? [
+                        BoxShadow(
+                          color: const Color(0xFF4CAF50).withValues(alpha: 0.5),
+                          blurRadius: 4,
+                        ),
+                      ]
+                    : null,
+              ),
             ),
-          ),
-          Expanded(
-            child: devices.isEmpty
-                ? Text(
-                    "No device",
-                    style: TextStyle(
-                      fontSize: 13,
-                      color: Theme.of(
-                        context,
-                      ).colorScheme.surfaceContainerHighest,
-                    ),
-                  )
-                : DropdownButtonHideUnderline(
-                    child: DropdownButton<DeviceEntity>(
+            Expanded(
+              child: devices.isEmpty
+                  ? Text(
+                      "No device",
+                      style: TextStyle(
+                        fontSize: 13,
+                        color: Theme.of(
+                          context,
+                        ).colorScheme.surfaceContainerHighest,
+                      ),
+                    )
+                  : DropdownButton<DeviceEntity>(
                       isDense: true,
-                      isExpanded: true,
                       icon: const Icon(Icons.keyboard_arrow_down, size: 16),
                       style: TextStyle(
                         fontSize: 13,
@@ -84,9 +84,9 @@ class DeviceBox extends StatelessWidget {
                         );
                       },
                     ),
-                  ),
-          ),
-        ],
+            ),
+          ],
+        ),
       ),
     );
   }
