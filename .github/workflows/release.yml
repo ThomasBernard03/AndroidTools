@@ -154,12 +154,12 @@ jobs:
           create-dmg \
             --volname "Android Tools" \
             --window-pos 200 120 \
-            --window-size 580 380 \
+            --window-size 608 384 \
             --background "assets/dmg_background.png" \
             --icon-size 128 \
-            --icon "Android Tools.app" 150 185 \
+            --icon "Android Tools.app" 176 192 \
             --hide-extension "Android Tools.app" \
-            --app-drop-link 430 185 \
+            --app-drop-link 432 192 \
             "$DMG_NAME" \
             "build/macos/Build/Products/Release/Android Tools.app"
 
