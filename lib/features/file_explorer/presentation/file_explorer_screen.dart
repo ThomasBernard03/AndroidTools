@@ -9,7 +9,7 @@ import 'package:android_tools/features/file_explorer/presentation/widgets/file_e
 import 'package:android_tools/features/file_explorer/presentation/widgets/file_explorer_drop_target.dart';
 import 'package:android_tools/features/file_explorer/presentation/widgets/file_explorer_menus.dart';
 import 'package:android_tools/features/file_explorer/presentation/widgets/file_explorer_breadcrumb.dart';
-import 'package:android_tools/features/file_explorer/presentation/widgets/file_explorer_search_bar.dart';
+import 'package:android_tools/features/file_explorer/presentation/widgets/resizable_divider.dart';
 import 'package:file_picker/file_picker.dart' as file_picker;
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
@@ -37,10 +37,25 @@ class _FileExplorerScreenState extends State<FileExplorerScreen> {
   int _currentMatchIndex = -1;
   String? _currentPath;
 
+  // Panel resizing
+  double _leftPanelWidth = 0.5; // Fraction of total width (0.0 to 1.0)
+
   @override
   void initState() {
     super.initState();
     bloc.add(OnAppearing());
+
+    // Restore focus to search field when it loses focus
+    _searchFocusNode.addListener(() {
+      if (_showSearch && !_searchFocusNode.hasFocus) {
+        // Re-request focus after a short delay to avoid conflicts
+        Future.microtask(() {
+          if (_showSearch && mounted) {
+            _searchFocusNode.requestFocus();
+          }
+        });
+      }
+    });
   }
 
   @override
@@ -126,7 +141,7 @@ class _FileExplorerScreenState extends State<FileExplorerScreen> {
     if (matchIndex < 0 || matchIndex >= _matchingIndexes.length) return;
 
     final fileIndex = _matchingIndexes[matchIndex];
-    const itemHeight = 48.0;
+    const itemHeight = 64.0;
     final targetOffset = fileIndex * itemHeight;
 
     _scrollController.animateTo(
@@ -236,6 +251,15 @@ class _FileExplorerScreenState extends State<FileExplorerScreen> {
                       : () {
                           context.read<FileExplorerBloc>().add(OnGoBack());
                         },
+                  showSearch: _showSearch,
+                  searchController: _searchController,
+                  searchFocusNode: _searchFocusNode,
+                  matchCount: _matchingIndexes.length,
+                  currentMatchIndex: _currentMatchIndex,
+                  onSearchNext: _goToNextMatch,
+                  onSearchPrevious: _goToPreviousMatch,
+                  onSearchClose: _closeSearch,
+                  onSearchChanged: _updateMatches,
                 );
               },
             ),
@@ -252,195 +276,210 @@ class _FileExplorerScreenState extends State<FileExplorerScreen> {
                     },
                   ),
                   Expanded(
-                    child: Row(
-                      children: [
-                        // Left panel: File Explorer
-                        Expanded(
-                          flex: 1,
-                          child: FileExplorerDropTarget(
-                            onFileDropped: (details) {
-                              final firstFile = details.files
-                                  .map((f) => f.path)
-                                  .firstOrNull;
-                              if (firstFile != null) {
-                                context.read<FileExplorerBloc>().add(
-                                  OnUploadFile(file: firstFile),
-                                );
+                    child: BlocBuilder<FileExplorerBloc, FileExplorerState>(
+                      builder: (context, state) {
+                        final fileExplorerContent = FileExplorerDropTarget(
+                          onFileDropped: (details) {
+                            final firstFile = details.files
+                                .map((f) => f.path)
+                                .firstOrNull;
+                            if (firstFile != null) {
+                              context.read<FileExplorerBloc>().add(
+                                OnUploadFile(file: firstFile),
+                              );
+                            }
+                          },
+                          child: BlocBuilder<FileExplorerBloc, FileExplorerState>(
+                            builder: (context, state) {
+                              // Check if path has changed and update search results
+                              if (_currentPath != state.path) {
+                                _currentPath = state.path;
+                                // Update matches on next frame to avoid calling setState during build
+                                WidgetsBinding.instance.addPostFrameCallback((
+                                  _,
+                                ) {
+                                  if (_showSearch && mounted) {
+                                    _updateMatches();
+                                  }
+                                });
                               }
-                            },
-                            child: BlocBuilder<FileExplorerBloc, FileExplorerState>(
-                              builder: (context, state) {
-                                // Check if path has changed and update search results
-                                if (_currentPath != state.path) {
-                                  _currentPath = state.path;
-                                  // Update matches on next frame to avoid calling setState during build
-                                  WidgetsBinding.instance.addPostFrameCallback((
-                                    _,
-                                  ) {
-                                    if (_showSearch && mounted) {
-                                      _updateMatches();
-                                    }
-                                  });
-                                }
 
-                                return Column(
-                                  children: [
-                                    if (_showSearch)
-                                      FileExplorerSearchBar(
-                                        controller: _searchController,
-                                        focusNode: _searchFocusNode,
-                                        matchCount: _matchingIndexes.length,
-                                        currentMatchIndex: _currentMatchIndex,
-                                        onNext: _goToNextMatch,
-                                        onPrevious: _goToPreviousMatch,
-                                        onClose: _closeSearch,
-                                        onChanged: _updateMatches,
-                                      ),
-                                    Expanded(
-                                      child: GestureDetector(
-                                        behavior: HitTestBehavior.deferToChild,
-                                        onSecondaryTapDown: (details) {
-                                          FileExplorerMenus.showGeneralMenu(
-                                            context,
-                                            details,
-                                          ).then((value) async {
-                                            if (value ==
-                                                FileEntryMenuResult.upload) {
-                                              if (context.mounted) {
-                                                onUploadFiles(context);
-                                              }
-                                              return;
+                              return Column(
+                                children: [
+                                  Expanded(
+                                    child: GestureDetector(
+                                      behavior: HitTestBehavior.deferToChild,
+                                      onSecondaryTapDown: (details) {
+                                        FileExplorerMenus.showGeneralMenu(
+                                          context,
+                                          details,
+                                        ).then((value) async {
+                                          if (value ==
+                                              FileEntryMenuResult.upload) {
+                                            if (context.mounted) {
+                                              onUploadFiles(context);
                                             }
-                                            if (value ==
-                                                FileEntryMenuResult.refresh) {
-                                              if (context.mounted) {
-                                                context
-                                                    .read<FileExplorerBloc>()
-                                                    .add(OnRefreshFiles());
-                                              }
-                                              return;
+                                            return;
+                                          }
+                                          if (value ==
+                                              FileEntryMenuResult.refresh) {
+                                            if (context.mounted) {
+                                              context
+                                                  .read<FileExplorerBloc>()
+                                                  .add(OnRefreshFiles());
                                             }
-                                            if (value ==
-                                                FileEntryMenuResult
-                                                    .newDirectory) {
-                                              if (context.mounted) {
-                                                await onShowCreateDirectoryDialog(
-                                                  context,
-                                                );
-                                              }
-                                              return;
+                                            return;
+                                          }
+                                          if (value ==
+                                              FileEntryMenuResult
+                                                  .newDirectory) {
+                                            if (context.mounted) {
+                                              await onShowCreateDirectoryDialog(
+                                                context,
+                                              );
                                             }
-                                          });
-                                        },
-                                        child: ListView.builder(
-                                          controller: _scrollController,
-                                          padding: EdgeInsets.all(16),
-                                          itemCount: state.files.length,
-                                          itemBuilder: (context, index) {
-                                            final file = state.files.elementAt(
-                                              index,
-                                            );
-                                            final query =
-                                                _showSearch &&
-                                                    _searchController
-                                                        .text
-                                                        .isNotEmpty
-                                                ? _searchController.text
-                                                : null;
+                                            return;
+                                          }
+                                        });
+                                      },
+                                      child: ListView.builder(
+                                        controller: _scrollController,
+                                        padding: EdgeInsets.all(16),
+                                        itemCount: state.files.length,
+                                        itemBuilder: (context, index) {
+                                          final file = state.files.elementAt(
+                                            index,
+                                          );
+                                          final query =
+                                              _showSearch &&
+                                                  _searchController
+                                                      .text
+                                                      .isNotEmpty
+                                              ? _searchController.text
+                                              : null;
 
-                                            return FileExplorerFileEntryItem(
-                                              file: file,
-                                              isSelected:
-                                                  state.selectedFile == file,
-                                              searchQuery: query,
-                                              onDownloadFile: () => context
+                                          return FileExplorerFileEntryItem(
+                                            file: file,
+                                            isSelected:
+                                                state.selectedFile == file,
+                                            searchQuery: query,
+                                            onDownloadFile: () => context
+                                                .read<FileExplorerBloc>()
+                                                .add(
+                                                  OnDownloadFile(
+                                                    fileName: file.name,
+                                                  ),
+                                                ),
+                                            onDeleteFile: () => context
+                                                .read<FileExplorerBloc>()
+                                                .add(
+                                                  OnDeleteFile(
+                                                    fileName: file.name,
+                                                  ),
+                                                ),
+                                            onTap: () {
+                                              context
                                                   .read<FileExplorerBloc>()
                                                   .add(
-                                                    OnDownloadFile(
-                                                      fileName: file.name,
-                                                    ),
-                                                  ),
-                                              onDeleteFile: () => context
-                                                  .read<FileExplorerBloc>()
-                                                  .add(
-                                                    OnDeleteFile(
-                                                      fileName: file.name,
-                                                    ),
-                                                  ),
-                                              onTap: () {
-                                                context
-                                                    .read<FileExplorerBloc>()
-                                                    .add(
-                                                      OnFileEntryTapped(
-                                                        fileEntry: file,
-                                                      ),
-                                                    );
-
-                                                // Trigger preview for files
-                                                if (file.type ==
-                                                    FileType.file) {
-                                                  previewBloc.add(
-                                                    OnFilePreviewAppearingEvent(
+                                                    OnFileEntryTapped(
                                                       fileEntry: file,
-                                                      currentPath: state.path,
                                                     ),
                                                   );
-                                                }
-                                              },
-                                              onUploadFile: () async {
-                                                await onUploadFiles(context);
-                                              },
-                                              onRefresh: () => context
-                                                  .read<FileExplorerBloc>()
-                                                  .add(OnRefreshFiles()),
-                                              onNewDirectory: () async {
-                                                await onShowCreateDirectoryDialog(
-                                                  context,
+
+                                              // Trigger preview for files
+                                              if (file.type == FileType.file) {
+                                                previewBloc.add(
+                                                  OnFilePreviewAppearingEvent(
+                                                    fileEntry: file,
+                                                    currentPath: state.path,
+                                                  ),
                                                 );
-                                              },
-                                            );
-                                          },
-                                        ),
+                                              }
+                                            },
+                                            onUploadFile: () async {
+                                              await onUploadFiles(context);
+                                            },
+                                            onRefresh: () => context
+                                                .read<FileExplorerBloc>()
+                                                .add(OnRefreshFiles()),
+                                            onNewDirectory: () async {
+                                              await onShowCreateDirectoryDialog(
+                                                context,
+                                              );
+                                            },
+                                          );
+                                        },
                                       ),
                                     ),
-                                  ],
-                                );
-                              },
-                            ),
-                          ),
-                        ),
-                        // Divider + Right panel: File Preview
-                        if (state.selectedFile != null) ...[
-                          Container(
-                            width: 1,
-                            color: Theme.of(context).colorScheme.outline,
-                          ),
-                          Expanded(
-                            flex: 1,
-                            child: FilePreviewScreen(
-                              key: ValueKey(
-                                '${state.path}/${state.selectedFile!.name}',
-                              ),
-                              fileEntry: state.selectedFile!,
-                              currentPath: state.path,
-                              onDownloadFile: () {
-                                context.read<FileExplorerBloc>().add(
-                                  OnDownloadFile(
-                                    fileName: state.selectedFile!.name,
                                   ),
-                                );
-                              },
-                              onDeleteFile: () {
-                                context.read<FileExplorerBloc>().add(
-                                  OnDeleteFile(
-                                    fileName: state.selectedFile!.name,
-                                  ),
-                                );
-                              },
-                            ),
+                                ],
+                              );
+                            },
                           ),
-                        ],
-                      ],
+                        );
+
+                        // No preview: full width file explorer
+                        if (state.selectedFile == null) {
+                          return fileExplorerContent;
+                        }
+
+                        // With preview: resizable panels
+                        return LayoutBuilder(
+                          builder: (context, constraints) {
+                            const dividerWidth = 8.0;
+                            final leftWidth =
+                                constraints.maxWidth * _leftPanelWidth;
+                            final rightWidth =
+                                constraints.maxWidth - leftWidth - dividerWidth;
+
+                            return Row(
+                              children: [
+                                SizedBox(
+                                  width: leftWidth,
+                                  child: fileExplorerContent,
+                                ),
+                                ResizableDivider(
+                                  onResize: (delta) {
+                                    setState(() {
+                                      final newWidth =
+                                          _leftPanelWidth +
+                                          (delta / constraints.maxWidth);
+                                      _leftPanelWidth = newWidth.clamp(
+                                        0.2,
+                                        0.8,
+                                      );
+                                    });
+                                  },
+                                ),
+                                SizedBox(
+                                  width: rightWidth,
+                                  child: FilePreviewScreen(
+                                    key: ValueKey(
+                                      '${state.path}/${state.selectedFile!.name}',
+                                    ),
+                                    fileEntry: state.selectedFile!,
+                                    currentPath: state.path,
+                                    onDownloadFile: () {
+                                      context.read<FileExplorerBloc>().add(
+                                        OnDownloadFile(
+                                          fileName: state.selectedFile!.name,
+                                        ),
+                                      );
+                                    },
+                                    onDeleteFile: () {
+                                      context.read<FileExplorerBloc>().add(
+                                        OnDeleteFile(
+                                          fileName: state.selectedFile!.name,
+                                        ),
+                                      );
+                                    },
+                                  ),
+                                ),
+                              ],
+                            );
+                          },
+                        );
+                      },
                     ),
                   ),
                   BlocBuilder<FileExplorerBloc, FileExplorerState>(
