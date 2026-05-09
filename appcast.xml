@@ -7,6 +7,19 @@
     <language>en</language>
 
     <item>
+      <title>Version 2026.05.3</title>
+      <sparkle:version>34</sparkle:version>
+      <sparkle:shortVersionString>2026.05.3</sparkle:shortVersionString>
+      <sparkle:releaseNotesLink>https://github.com/ThomasBernard03/AndroidTools/blob/main/CHANGELOG.md</sparkle:releaseNotesLink>
+      <pubDate>Sat, 09 May 2026 12:49:41 +0000</pubDate>
+      <enclosure
+        url="https://github.com/ThomasBernard03/AndroidTools/releases/download/2026.05.3/AndroidTools-2026.05.3-macos.dmg"
+        sparkle:edSignature="Nbr94yMNnsCB7hfD63Hcnj+BgvcHkVwqIHXQC7v70LOxOmtI42J59ySO23t1Oyv9ZtOLuwLkUBZe8CMnCb4/Bg=="
+        sparkle:os="macos"
+        length="37610866"
+        type="application/octet-stream" />
+    </item>
+    <item>
       <title>Version 2026.05.2</title>
       <sparkle:version>33</sparkle:version>
       <sparkle:shortVersionString>2026.05.2</sparkle:shortVersionString>
