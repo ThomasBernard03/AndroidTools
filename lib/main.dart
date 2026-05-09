@@ -86,6 +86,8 @@ Future<void> main(List<String> args) async {
       options.replay.sessionSampleRate = 0.1;
       options.replay.onErrorSampleRate = 1.0;
       options.attachScreenshot = true;
+      options.privacy.maskAllImages = false;
+      options.privacy.maskAllText = false;
     }, appRunner: () => runApp(SentryWidget(child: MyApp())));
   } else {
     if (crashReportingDisabled) {

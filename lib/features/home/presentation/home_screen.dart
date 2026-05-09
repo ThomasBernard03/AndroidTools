@@ -133,7 +133,7 @@ class _HomeScreenState extends State<HomeScreen> with WidgetsBindingObserver {
                           const SizedBox(height: 2),
                           NavigationRailItem(
                             selected: _selectedIndex == 4,
-                            text: "APK Inspector",
+                            text: "APK",
                             icon: Icons.inventory_2_outlined,
                             onTap: () => setState(() => _selectedIndex = 4),
                           ),

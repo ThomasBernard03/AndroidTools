@@ -208,7 +208,7 @@ jobs:
           export FILE_SIZE=$(stat -f%z "$DMG")
           export PUB_DATE=$(date -R)
           export DOWNLOAD_URL=https://github.com/ThomasBernard03/AndroidTools/releases/download/$VERSION/AndroidTools-$VERSION-macos.dmg
-          export RELEASE_NOTES_URL=https://github.com/ThomasBernard03/AndroidTools/releases/tag/$VERSION
+          export RELEASE_NOTES_URL=https://github.com/ThomasBernard03/AndroidTools/blob/main/CHANGELOG.md
 
           NEW_ITEM=$(envsubst < appcast/items/macos.item.xml.tpl)
 

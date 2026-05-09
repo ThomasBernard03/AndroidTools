@@ -65,6 +65,7 @@ class DeviceBox extends StatelessWidget {
                         color: Theme.of(context).colorScheme.onSurface,
                       ),
                       value: state.selectedDevice,
+                      underline: SizedBox(),
                       items: devices
                           .map(
                             (device) => DropdownMenuItem<DeviceEntity>(

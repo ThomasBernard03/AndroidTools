@@ -4,6 +4,16 @@ All notable changes to Android Tools will be documented in this file.
 
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 
+## [2026.05.3] - 2026-05-09
+
+### Improvements
+- Display texts and images in sentry crashes
+- Remove underline decoration in device picker
+- Rename feature "APK inspector" to "APK"
+
+### Fixes
+- Can copy content from text file previews
+
 ## [2026.05.2] - 2026-05-06
 
 ### Improvements
