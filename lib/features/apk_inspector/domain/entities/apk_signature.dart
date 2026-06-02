@@ -26,6 +26,9 @@ class ApkSignature with ApkSignatureMappable {
   /// Key size in bits (e.g., 2048)
   final int keySize;
 
+  /// Whether the APK is signed with the Android debug keystore
+  final bool isDebugKeystore;
+
   const ApkSignature({
     required this.scheme,
     required this.sha256,
@@ -34,5 +37,6 @@ class ApkSignature with ApkSignatureMappable {
     required this.validTo,
     required this.algorithm,
     required this.keySize,
+    this.isDebugKeystore = false,
   });
 }

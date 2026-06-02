@@ -75,12 +75,19 @@ class ApkHeroCard extends StatelessWidget {
                   spacing: 6,
                   runSpacing: 6,
                   children: [
-                    if (apkInfo.signature != null)
+                    if (apkInfo.signature != null) ...[
                       InfoBadge(
                         label: 'signed ${apkInfo.signature!.scheme}',
                         icon: Icons.check,
                         color: const Color(0xFF3FCF8E),
                       ),
+                      if (apkInfo.signature!.isDebugKeystore)
+                        InfoBadge(
+                          label: 'debug keystore',
+                          icon: Icons.warning_amber_rounded,
+                          color: const Color(0xFFE8B339),
+                        ),
+                    ],
                     InfoBadge(
                       label: 'min SDK ${apkInfo.minSdk}',
                       color: const Color(0xFF5AA9FF),

@@ -114,12 +114,11 @@ class ApkReportView extends StatelessWidget {
                           spacing: 12,
                           runSpacing: 12,
                           children: [
-                            // Signature panel (if available)
-                            if (apkInfo.signature != null)
-                              SizedBox(
-                                width: (availableWidth - (12 * (columns - 1))) / columns,
-                                child: SignaturePanel(signature: apkInfo.signature!),
-                              ),
+                            // Signature panel
+                            SizedBox(
+                              width: (availableWidth - (12 * (columns - 1))) / columns,
+                              child: SignaturePanel(signature: apkInfo.signature),
+                            ),
 
                             // Manifest panel
                             SizedBox(
