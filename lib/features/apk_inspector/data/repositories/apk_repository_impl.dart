@@ -52,6 +52,9 @@ class ApkRepositoryImpl implements ApkRepository {
     try {
       final signatureInfo = await _aaptClient.getApkSignature(apkPath);
       if (signatureInfo != null) {
+        final isDebugKeystore = _isAndroidDebugKeystore(
+          issuer: signatureInfo.issuer,
+        );
         signature = ApkSignature(
           scheme: signatureInfo.scheme,
           sha256: signatureInfo.sha256,
@@ -60,6 +63,7 @@ class ApkRepositoryImpl implements ApkRepository {
           validTo: signatureInfo.validTo,
           algorithm: signatureInfo.algorithm,
           keySize: signatureInfo.keySize,
+          isDebugKeystore: isDebugKeystore,
         );
       }
     } catch (e) {
@@ -170,5 +174,9 @@ class ApkRepositoryImpl implements ApkRepository {
       _logger.w('Could not count assets: $e');
       return 0;
     }
+  }
+
+  bool _isAndroidDebugKeystore({required String issuer}) {
+    return issuer.contains('Android Debug');
   }
 }
