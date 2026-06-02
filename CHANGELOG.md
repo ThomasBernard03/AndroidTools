@@ -4,6 +4,15 @@ All notable changes to Android Tools will be documented in this file.
 
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 
+## [2026.06.1] - 2026-06-02
+
+### Improvements
+- Display warning if APK is not signed
+- Display warning if APK is signed with Android debug key
+
+### Technical Improvements
+- Update Flutter version to 3.44.0
+
 ## [2026.05.3] - 2026-05-09
 
 ### Improvements
