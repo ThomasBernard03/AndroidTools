@@ -2,6 +2,11 @@
 withDefaults(defineProps<{ name: keyof typeof paths; size?: number }>(), { size: 16 })
 
 const paths = {
+  folder: 'M3 7V5a1 1 0 0 1 1-1h5l2 3h9a1 1 0 0 1 1 1v11a1 1 0 0 1-1 1H4a1 1 0 0 1-1-1V7Z',
+  file: 'M14 2H5v20h14V7l-5-5Zm0 0v5h5M8 12h8m-8 4h6',
+  up: 'M12 20V4m-6 6 6-6 6 6',
+  close: 'm6 6 12 12M6 18 18 6',
+  link: 'm10 13 4-4m-6 7-1 1a4 4 0 0 1-6-6l4-4a4 4 0 0 1 6 0m2 1 1-1a4 4 0 0 1 6 6l-4 4a4 4 0 0 1-6 0',
   package: 'm12 3 9 5v8l-9 5-9-5V8l9-5Zm0 9 9-4m-9 4L3 8m9 4v9M7.5 5.5l9 5v4',
   upload: 'M12 16V3m-5 5 5-5 5 5M4 15v5h16v-5',
   phone:

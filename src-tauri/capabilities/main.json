@@ -7,6 +7,8 @@
     "allow-list-devices",
     "allow-get-device-info",
     "allow-analyze-apk",
+    "allow-list-files",
+    "allow-preview-file",
     "dialog:allow-open",
     "core:event:allow-listen",
     "core:event:allow-unlisten"

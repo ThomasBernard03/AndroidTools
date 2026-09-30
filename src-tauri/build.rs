@@ -4,6 +4,8 @@ fn main() {
             "list_devices",
             "get_device_info",
             "analyze_apk",
+            "list_files",
+            "preview_file",
         ]),
     ))
     .expect("Unable to build Tauri application metadata");

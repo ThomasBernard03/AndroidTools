@@ -11,10 +11,19 @@ Application desktop **Rust + Tauri 2 + Vue 3 / TypeScript + Tailwind CSS 4** pou
 - États de chargement, liste vide, erreurs USB, nouvelle tentative et déconnexion.
 - Identité ADB persistante propre à l’application.
 - Analyse APK par glisser-déposer ou sélection de fichier : manifeste XML décodé, permissions, certificats et empreintes SHA-1/SHA-256.
+- Explorateur de fichiers en lecture seule : stockage partagé, racine Android, données privées des applications debuggables et aperçu texte.
 
 La communication utilise **`adb_client` en USB direct**, sans exécutable `adb`, serveur ADB ou Android SDK à installer. `rusb` sert à identifier précisément chaque connexion USB ; le protocole ADB est pris en charge par `adb_client`. La bibliothèque native `libusb` est compilée avec la feature `vendored`, sans exécutable annexe à distribuer.
 
-La partie appareils cible les téléphones physiques en USB. L’explorateur de fichiers, logcat, l’installation d’APK, les émulateurs et la connexion réseau ne sont pas encore implémentés.
+La partie appareils cible les téléphones physiques en USB. Logcat, l’installation d’APK, les émulateurs et la connexion réseau ne sont pas encore implémentés.
+
+## Explorateur de fichiers
+
+Sélectionnez un téléphone, puis ouvrez **Explorateur de fichiers**. Les raccourcis donnent accès au stockage partagé (`/sdcard`), à la racine Android et aux données des applications (`/data/data`). Un clic sur un dossier l’ouvre ; le fil d’Ariane et le bouton parent permettent de remonter. La recherche filtre le dossier courant, y compris les fichiers cachés. **Actualiser** relit son contenu.
+
+Comme dans l’ancienne version Flutter, `/data` et `/data/data` sont des emplacements virtuels : la liste des packages vient du gestionnaire Android, puis les lectures dans `/data/data/<package>` passent par **`run-as`**. Tous les packages de l’utilisateur principal (0) sont listés, mais leurs données ne sont accessibles que si l’application est debuggable et autorise `run-as`. Les refus d’accès sont affichés avec les détails Android. Les profils secondaires/professionnels ne sont pas pris en charge.
+
+Les fichiers ordinaires disposent d’un aperçu texte UTF-8 limité aux **256 premiers Kio** ; les fichiers binaires sont signalés. Les liens symboliques et fichiers spéciaux sont affichés mais ne sont pas ouverts. Cette première version est en lecture seule : transfert, suppression, création de dossiers et aperçus image/PDF restent à implémenter. Les répertoires système restent soumis aux permissions Android. La lecture des métadonnées utilise les commandes Android `stat` et `head` via ADB USB, sans exécutable externe sur l’ordinateur.
 
 ## Analyse APK
 
@@ -121,12 +130,17 @@ src/
     types.ts                      Contrats TypeScript
     useDevices.ts                 Sélection, actualisation manuelle et état asynchrone
     components/                   Composants Vue de présentation
+  features/files/
+    api.ts                        Commandes typées de liste et d’aperçu
+    useFiles.ts                   Navigation et lectures USB regroupées
+    components/                   Explorateur et aperçu texte
 
 src-tauri/
   src/commands.rs                 Commandes IPC, exécutées en spawn_blocking
   src/apk/                        Analyse APK, permissions et certificats (sans Tauri)
   src/devices/
     usb.rs                        Énumération et lecture via adb_client
+    files.rs                      Navigation, run-as et parsing des fichiers
     identity.rs                   Persistance de l’identité ADB
     properties.rs                 Décodage de getprop
     models.rs                     Réponses sérialisables
@@ -134,7 +148,7 @@ src-tauri/
   capabilities/main.json          Permissions de la fenêtre locale
 ```
 
-Les opérations USB et l’analyse des APK n’occupent pas le thread d’interface. Les lectures sont sérialisées ; les changements rapides de sélection sont regroupés et les réponses obsolètes sont ignorées. La liste des appareils est chargée à l’ouverture, puis uniquement sur demande : actualisez-la après un branchement ou un débranchement. Seules des commandes métier sont exposées : le frontend ne peut pas envoyer de commande shell arbitraire. La navigation entre les deux vues utilise un état Vue local, sans routeur ni store global.
+Les opérations USB et l’analyse des APK n’occupent pas le thread d’interface. Les lectures sont sérialisées ; les changements rapides de sélection sont regroupés et les réponses obsolètes sont ignorées. La liste des appareils est chargée à l’ouverture, puis uniquement sur demande : actualisez-la après un branchement ou un débranchement. Seules des commandes métier sont exposées : le frontend ne peut pas envoyer de commande shell arbitraire. La navigation entre les vues utilise un état Vue local, sans routeur ni store global.
 
 ## Vérifications
 

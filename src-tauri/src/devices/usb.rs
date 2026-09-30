@@ -30,6 +30,18 @@ impl DeviceService {
     }
 
     pub fn get_info(&self, device_id: &str) -> Result<DeviceInfo, ServiceError> {
+        let output = self.shell(device_id, "getprop")?;
+        let output = String::from_utf8(output).map_err(|error| {
+            ServiceError::new(
+                "invalid_response",
+                "Les propriétés Android ne sont pas encodées correctement.",
+                error.to_string(),
+            )
+        })?;
+        parse_device_info(device_id, &output)
+    }
+
+    pub(super) fn shell(&self, device_id: &str, command: &str) -> Result<Vec<u8>, ServiceError> {
         // A USB interface can only have one owner. Keep key creation and ADB sessions serialized.
         let _guard = self
             .connection
@@ -44,22 +56,15 @@ impl DeviceService {
         let mut device = ADBUSBDevice::new_from_transport(transport, Some(self.key_path.clone()))?;
         let mut stdout = LimitedOutput::default();
         let mut stderr = LimitedOutput::default();
-        let exit_code = device.shell_command(&"getprop", Some(&mut stdout), Some(&mut stderr))?;
+        let exit_code = device.shell_command(&command, Some(&mut stdout), Some(&mut stderr))?;
         if exit_code.is_some_and(|code| code != 0) {
             return Err(ServiceError::new(
                 "shell",
-                "La lecture des propriétés Android a échoué.",
+                "L’opération Android a échoué. Vérifiez les droits d’accès et réessayez.",
                 String::from_utf8_lossy(&stderr.0).into_owned(),
             ));
         }
-        let output = String::from_utf8(stdout.0).map_err(|error| {
-            ServiceError::new(
-                "invalid_response",
-                "Les propriétés Android ne sont pas encodées correctement.",
-                error.to_string(),
-            )
-        })?;
-        parse_device_info(device_id, &output)
+        Ok(stdout.0)
     }
 }
 

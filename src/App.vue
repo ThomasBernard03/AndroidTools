@@ -7,8 +7,9 @@ import DeviceEmptyState from './features/devices/components/DeviceEmptyState.vue
 import DeviceSelector from './features/devices/components/DeviceSelector.vue'
 import ErrorNotice from './components/ErrorNotice.vue'
 import { useDevices } from './features/devices/useDevices'
+import FileExplorer from './features/files/components/FileExplorer.vue'
 
-const view = ref<'devices' | 'apk'>('devices')
+const view = ref<'devices' | 'apk' | 'files'>('devices')
 
 const {
   devices,
@@ -69,6 +70,16 @@ const {
         </button>
         <button
           type="button"
+          :aria-current="view === 'files' ? 'page' : undefined"
+          class="flex w-full items-center gap-2.5 rounded-md border border-transparent px-2.5 py-2 font-medium transition-colors hover:bg-white/9"
+          :class="view === 'files' ? 'bg-white/6 text-ink' : 'text-secondary'"
+          @click="view = 'files'"
+        >
+          <UiIcon name="folder" :class="view === 'files' ? 'text-accent' : 'text-muted'" />
+          Explorateur de fichiers
+        </button>
+        <button
+          type="button"
           :aria-current="view === 'apk' ? 'page' : undefined"
           class="flex w-full items-center gap-2.5 rounded-md border border-transparent px-2.5 py-2 font-medium transition-colors hover:bg-white/9"
           :class="view === 'apk' ? 'bg-white/6 text-ink' : 'text-secondary'"
@@ -110,13 +121,18 @@ const {
         class="sticky top-0 z-10 flex h-12 shrink-0 items-center justify-between gap-3 border-b border-line bg-surface/95 px-5 backdrop-blur-sm lg:px-7"
       >
         <div aria-label="Emplacement actuel" class="flex min-w-0 items-center gap-2.5 text-xs">
-          <UiIcon :name="view === 'apk' ? 'package' : 'phone'" class="text-muted" />
+          <UiIcon
+            :name="view === 'apk' ? 'package' : view === 'files' ? 'folder' : 'phone'"
+            class="text-muted"
+          />
           <span class="text-secondary">{{ view === 'apk' ? 'Applications' : 'Appareils' }}</span>
           <UiIcon name="chevron" :size="12" class="text-muted" />
           <span class="truncate">{{
             view === 'apk'
               ? 'Analyse APK'
-              : (info?.model ?? selectedDevice?.name ?? 'Vue d’ensemble')
+              : view === 'files'
+                ? 'Explorateur de fichiers'
+                : (info?.model ?? selectedDevice?.name ?? 'Vue d’ensemble')
           }}</span>
         </div>
         <span class="status-badge shrink-0"
@@ -127,6 +143,7 @@ const {
       </header>
 
       <ApkView v-show="view === 'apk'" @open="view = 'apk'" />
+      <FileExplorer v-if="view === 'files'" :device-id="selectedDevice?.id ?? ''" />
       <div
         v-show="view === 'devices'"
         class="mx-auto flex w-full max-w-5xl flex-1 flex-col px-6 py-8 lg:px-10 lg:py-10"
