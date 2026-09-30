@@ -2,6 +2,7 @@
 import { ref } from 'vue'
 import UiIcon from './components/UiIcon.vue'
 import ApkView from './features/apk/components/ApkView.vue'
+import AndroidVersionIcon from './features/devices/components/AndroidVersionIcon.vue'
 import DeviceDetails from './features/devices/components/DeviceDetails.vue'
 import DeviceEmptyState from './features/devices/components/DeviceEmptyState.vue'
 import DeviceSelector from './features/devices/components/DeviceSelector.vue'
@@ -188,7 +189,7 @@ const {
             <div
               class="flex size-12 shrink-0 items-center justify-center rounded-xl border border-accent/15 bg-accent/8 text-accent"
             >
-              <UiIcon name="phone" :size="25" />
+              <AndroidVersionIcon :version="info?.androidVersion" />
             </div>
             <div class="min-w-0 flex-1">
               <h3 id="device-heading" class="break-words text-base font-semibold tracking-tight">
