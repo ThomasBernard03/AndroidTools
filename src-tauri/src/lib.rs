@@ -14,6 +14,7 @@ pub fn run() {
         })
         .invoke_handler(tauri::generate_handler![
             commands::list_devices,
+            commands::stop_adb_server,
             commands::get_device_info,
             commands::list_files,
             commands::preview_file,

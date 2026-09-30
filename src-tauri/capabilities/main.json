@@ -5,6 +5,7 @@
   "windows": ["main"],
   "permissions": [
     "allow-list-devices",
+    "allow-stop-adb-server",
     "allow-get-device-info",
     "allow-analyze-apk",
     "allow-list-files",

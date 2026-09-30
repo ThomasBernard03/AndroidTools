@@ -3,6 +3,13 @@ use std::sync::Arc;
 use crate::devices::{DeviceInfo, DeviceService, DeviceSummary, ServiceError};
 
 #[tauri::command]
+pub async fn stop_adb_server() -> Result<bool, ServiceError> {
+    tauri::async_runtime::spawn_blocking(crate::devices::stop_adb_server)
+        .await
+        .map_err(|error| ServiceError::internal(error.to_string()))?
+}
+
+#[tauri::command]
 pub async fn list_files(
     device_id: String,
     path: String,

@@ -1,7 +1,7 @@
 import { defineComponent } from 'vue'
 import { flushPromises, mount } from '@vue/test-utils'
 import { afterEach, beforeEach, describe, expect, it, vi } from 'vitest'
-import { getDeviceInfo, listDevices } from './api'
+import { getDeviceInfo, listDevices, stopAdbServer } from './api'
 import { useDevices } from './useDevices'
 import type { DeviceInfo, DeviceSummary } from './types'
 
@@ -9,6 +9,7 @@ vi.mock('./api', async (importOriginal) => ({
   ...(await importOriginal<typeof import('./api')>()),
   listDevices: vi.fn(),
   getDeviceInfo: vi.fn(),
+  stopAdbServer: vi.fn(),
 }))
 
 const phone = (id: string): DeviceSummary => ({
@@ -65,6 +66,7 @@ function setup() {
 }
 
 beforeEach(() => {
+  vi.mocked(stopAdbServer).mockReset().mockResolvedValue(true)
   vi.useFakeTimers()
   vi.mocked(listDevices)
     .mockReset()
@@ -81,6 +83,62 @@ afterEach(() => {
 })
 
 describe('device selection', () => {
+  it('coalesces shutdown clicks and reconnects the latest selection, ignoring old reads', async () => {
+    const shutdown = deferred<boolean>()
+    const oldRead = deferred<DeviceInfo>()
+    vi.mocked(stopAdbServer).mockReturnValueOnce(shutdown.promise)
+    vi.mocked(getDeviceInfo).mockReturnValueOnce(oldRead.promise)
+    const state = setup()
+    await flushPromises()
+    state.selectedId.value = 'a'
+    const release = state.releaseAdb()
+    await state.releaseAdb()
+    state.selectedId.value = 'b'
+    oldRead.resolve(info('a'))
+    await flushPromises()
+    expect(state.info.value).toBeNull()
+    expect(getDeviceInfo).toHaveBeenCalledTimes(1)
+    expect(stopAdbServer).toHaveBeenCalledTimes(1)
+    shutdown.resolve(true)
+    await release
+    await flushPromises()
+    expect(state.info.value?.deviceId).toBe('b')
+    expect(state.stoppingAdb.value).toBe(false)
+  })
+
+  it('handles shutdown failure and allows another attempt', async () => {
+    vi.mocked(stopAdbServer).mockRejectedValueOnce(new Error('Timeout'))
+    const state = setup()
+    await flushPromises()
+    await state.releaseAdb()
+    expect(state.adbError.value).not.toBeNull()
+    expect(state.stoppingAdb.value).toBe(false)
+    vi.mocked(stopAdbServer).mockResolvedValueOnce(false)
+    await state.releaseAdb()
+    expect(state.adbError.value).toBeNull()
+    expect(state.adbNotice.value).toContain('Aucun serveur')
+  })
+
+  it('does not reconnect a disconnected device or act after disposal during shutdown', async () => {
+    const state = setup()
+    await flushPromises()
+    state.selectedId.value = 'a'
+    await flushPromises()
+    vi.mocked(listDevices).mockResolvedValue([])
+    await state.releaseAdb()
+    expect(state.selectedId.value).toBe('')
+    expect(getDeviceInfo).toHaveBeenCalledTimes(1)
+    const shutdown = deferred<boolean>()
+    vi.mocked(stopAdbServer).mockReturnValueOnce(shutdown.promise)
+    const release = state.releaseAdb()
+    unmount?.()
+    unmount = undefined
+    shutdown.resolve(true)
+    await release
+    expect(listDevices).toHaveBeenCalledTimes(2)
+    expect(state.adbNotice.value).toBe('')
+  })
+
   it('reads only the selected device, even for identical models', async () => {
     const state = setup()
     await flushPromises()

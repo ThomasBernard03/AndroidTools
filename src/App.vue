@@ -23,6 +23,10 @@ const {
   scanning,
   loadingInfo,
   scanned,
+  stoppingAdb,
+  adbError,
+  adbNotice,
+  releaseAdb,
   refreshDevices,
   refreshInfo,
 } = useDevices()
@@ -56,6 +60,20 @@ const {
         :scanning="scanning"
         @refresh="refreshDevices"
       />
+
+      <div class="mt-3 space-y-2 px-2">
+        <button type="button" class="button w-full" :disabled="stoppingAdb" @click="releaseAdb">
+          {{ stoppingAdb ? 'Arrêt du serveur ADB…' : 'Libérer la connexion ADB' }}
+        </button>
+        <p class="text-xs leading-5 text-muted">
+          Arrête le serveur ADB local (port 5037) et réessaie la connexion. Coupe les sessions ADB
+          des autres outils ; fermez-les s’ils relancent le serveur automatiquement.
+        </p>
+        <ErrorNotice v-if="adbError" :error="adbError" />
+        <p v-if="adbNotice" role="status" class="text-xs leading-5 text-secondary">
+          {{ adbNotice }}
+        </p>
+      </div>
 
       <nav aria-label="Navigation principale" class="mt-7 space-y-1">
         <p class="section-label mb-2 px-2">Espace de travail</p>
@@ -161,7 +179,7 @@ const {
             v-if="selectedDevice"
             type="button"
             class="button mt-1"
-            :disabled="loadingInfo"
+            :disabled="loadingInfo || stoppingAdb"
             @click="refreshInfo"
           >
             <UiIcon name="refresh" :size="13" :class="{ 'animate-spin': loadingInfo }" />

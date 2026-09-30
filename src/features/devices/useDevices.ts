@@ -1,5 +1,5 @@
 import { computed, onMounted, onScopeDispose, ref, watch } from 'vue'
-import { getDeviceInfo, listDevices, toDeviceError } from './api'
+import { getDeviceInfo, listDevices, stopAdbServer, toDeviceError } from './api'
 import type { DeviceError, DeviceInfo, DeviceSummary } from './types'
 
 export function useDevices() {
@@ -12,6 +12,9 @@ export function useDevices() {
   const scanning = ref(false)
   const loadingInfo = ref(false)
   const scanned = ref(false)
+  const stoppingAdb = ref(false)
+  const adbError = ref<DeviceError | null>(null)
+  const adbNotice = ref('')
   const selectedDevice = computed(() =>
     devices.value.find((device) => device.id === selectedId.value),
   )
@@ -51,7 +54,7 @@ export function useDevices() {
     reading = true
     try {
       // Coalesce rapid selections; never open competing USB sessions or apply stale results.
-      while (pendingRead && !disposed) {
+      while (pendingRead && !disposed && !stoppingAdb.value) {
         pendingRead = false
         const id = selectedId.value
         const version = requestVersion
@@ -73,12 +76,40 @@ export function useDevices() {
   }
 
   function refreshInfo() {
+    if (disposed) return
     requestVersion++
     info.value = null
     infoError.value = null
     loadingInfo.value = Boolean(selectedId.value)
     pendingRead = Boolean(selectedId.value)
     void drainReads()
+  }
+
+  async function releaseAdb() {
+    if (stoppingAdb.value || disposed) return
+    stoppingAdb.value = true
+    adbError.value = null
+    adbNotice.value = ''
+    requestVersion++
+    info.value = null
+    infoError.value = null
+    loadingInfo.value = false
+    pendingRead = false
+    try {
+      const stopped = await stopAdbServer()
+      if (disposed) return
+      adbNotice.value = stopped
+        ? 'Serveur ADB arrêté. Reconnexion USB en cours.'
+        : 'Aucun serveur ADB sur le port local 5037. Si l’accès reste bloqué, fermez l’autre outil et reconnectez le téléphone.'
+      await refreshDevices()
+    } catch (error) {
+      if (!disposed) adbError.value = toDeviceError(error)
+    } finally {
+      if (!disposed) {
+        stoppingAdb.value = false
+        refreshInfo()
+      }
+    }
   }
 
   watch(
@@ -107,6 +138,10 @@ export function useDevices() {
     scanning,
     loadingInfo,
     scanned,
+    stoppingAdb,
+    adbError,
+    adbNotice,
+    releaseAdb,
     refreshDevices,
     refreshInfo,
   }

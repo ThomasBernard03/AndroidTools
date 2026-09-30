@@ -21,3 +21,8 @@ export async function getDeviceInfo(deviceId: string): Promise<DeviceInfo> {
   requireDesktop()
   return invoke('get_device_info', { deviceId })
 }
+
+export async function stopAdbServer(): Promise<boolean> {
+  requireDesktop()
+  return invoke('stop_adb_server')
+}
