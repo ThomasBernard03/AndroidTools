@@ -1,10 +1,14 @@
 <script setup lang="ts">
+import { ref } from 'vue'
 import UiIcon from './components/UiIcon.vue'
+import ApkView from './features/apk/components/ApkView.vue'
 import DeviceDetails from './features/devices/components/DeviceDetails.vue'
 import DeviceEmptyState from './features/devices/components/DeviceEmptyState.vue'
 import DeviceSelector from './features/devices/components/DeviceSelector.vue'
-import ErrorNotice from './features/devices/components/ErrorNotice.vue'
+import ErrorNotice from './components/ErrorNotice.vue'
 import { useDevices } from './features/devices/useDevices'
+
+const view = ref<'devices' | 'apk'>('devices')
 
 const {
   devices,
@@ -25,7 +29,7 @@ const {
 <template>
   <div class="flex min-h-dvh flex-col md:h-dvh md:flex-row md:overflow-hidden">
     <a
-      href="#device-content"
+      href="#main-content"
       class="sr-only z-50 rounded-md bg-accent p-3 text-shell focus:not-sr-only focus:absolute focus:left-4 focus:top-4"
       >Aller au contenu</a
     >
@@ -51,16 +55,28 @@ const {
         @refresh="refreshDevices"
       />
 
-      <nav aria-label="Navigation principale" class="mt-7 hidden md:block">
+      <nav aria-label="Navigation principale" class="mt-7 space-y-1">
         <p class="section-label mb-2 px-2">Espace de travail</p>
-        <a
-          href="#device-content"
-          aria-current="page"
-          class="flex items-center gap-2.5 rounded-md border border-white/4 bg-white/6 px-2.5 py-2 font-medium text-ink transition-colors hover:bg-white/9"
+        <button
+          type="button"
+          :aria-current="view === 'devices' ? 'page' : undefined"
+          class="flex w-full items-center gap-2.5 rounded-md border border-transparent px-2.5 py-2 font-medium transition-colors hover:bg-white/9"
+          :class="view === 'devices' ? 'bg-white/6 text-ink' : 'text-secondary'"
+          @click="view = 'devices'"
         >
           <UiIcon name="grid" class="text-accent" />
           Vue d’ensemble
-        </a>
+        </button>
+        <button
+          type="button"
+          :aria-current="view === 'apk' ? 'page' : undefined"
+          class="flex w-full items-center gap-2.5 rounded-md border border-transparent px-2.5 py-2 font-medium transition-colors hover:bg-white/9"
+          :class="view === 'apk' ? 'bg-white/6 text-ink' : 'text-secondary'"
+          @click="view = 'apk'"
+        >
+          <UiIcon name="package" :class="view === 'apk' ? 'text-accent' : 'text-muted'" />Analyse
+          APK
+        </button>
       </nav>
 
       <div class="mt-auto hidden pt-12 md:block">
@@ -86,7 +102,7 @@ const {
     </aside>
 
     <main
-      id="device-content"
+      id="main-content"
       tabindex="-1"
       class="flex min-w-0 flex-1 flex-col border-t border-line bg-surface outline-none md:my-2 md:mr-2 md:overflow-y-auto md:rounded-xl md:border"
     >
@@ -94,17 +110,27 @@ const {
         class="sticky top-0 z-10 flex h-12 shrink-0 items-center justify-between gap-3 border-b border-line bg-surface/95 px-5 backdrop-blur-sm lg:px-7"
       >
         <div aria-label="Emplacement actuel" class="flex min-w-0 items-center gap-2.5 text-xs">
-          <UiIcon name="phone" class="text-muted" />
-          <span class="text-secondary">Appareils</span>
+          <UiIcon :name="view === 'apk' ? 'package' : 'phone'" class="text-muted" />
+          <span class="text-secondary">{{ view === 'apk' ? 'Applications' : 'Appareils' }}</span>
           <UiIcon name="chevron" :size="12" class="text-muted" />
           <span class="truncate">{{
-            info?.model ?? selectedDevice?.name ?? 'Vue d’ensemble'
+            view === 'apk'
+              ? 'Analyse APK'
+              : (info?.model ?? selectedDevice?.name ?? 'Vue d’ensemble')
           }}</span>
         </div>
-        <span class="status-badge shrink-0"><UiIcon name="cable" :size="12" /> USB direct</span>
+        <span class="status-badge shrink-0"
+          ><UiIcon :name="view === 'apk' ? 'shield' : 'cable'" :size="12" />{{
+            view === 'apk' ? 'Analyse locale' : 'USB direct'
+          }}</span
+        >
       </header>
 
-      <div class="mx-auto flex w-full max-w-5xl flex-1 flex-col px-6 py-8 lg:px-10 lg:py-10">
+      <ApkView v-show="view === 'apk'" @open="view = 'apk'" />
+      <div
+        v-show="view === 'devices'"
+        class="mx-auto flex w-full max-w-5xl flex-1 flex-col px-6 py-8 lg:px-10 lg:py-10"
+      >
         <div class="mb-7 flex flex-wrap items-start justify-between gap-4">
           <div>
             <p class="section-label mb-2">APPAREILS / INFORMATIONS</p>

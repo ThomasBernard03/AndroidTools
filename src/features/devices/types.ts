@@ -1,8 +1,5 @@
-export interface DeviceError {
-  code: string
-  message: string
-  details: string
-}
+import type { AppError } from '../../shared/errors'
+export type DeviceError = AppError
 
 export interface DeviceSummary {
   id: string

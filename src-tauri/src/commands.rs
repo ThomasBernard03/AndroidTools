@@ -3,6 +3,19 @@ use std::sync::Arc;
 use crate::devices::{DeviceInfo, DeviceService, DeviceSummary, ServiceError};
 
 #[tauri::command]
+pub async fn analyze_apk(path: String) -> Result<crate::apk::ApkReport, crate::apk::ApkError> {
+    tauri::async_runtime::spawn_blocking(move || crate::apk::analyze(std::path::Path::new(&path)))
+        .await
+        .map_err(|error| {
+            crate::apk::ApkError::new(
+                "analysis",
+                "L’analyse de l’APK a échoué.",
+                error.to_string(),
+            )
+        })?
+}
+
+#[tauri::command]
 pub async fn list_devices() -> Result<Vec<DeviceSummary>, ServiceError> {
     tauri::async_runtime::spawn_blocking(crate::devices::list_devices)
         .await

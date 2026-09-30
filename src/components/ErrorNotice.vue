@@ -1,8 +1,8 @@
 <script setup lang="ts">
-import type { DeviceError } from '../types'
-import UiIcon from '../../../components/UiIcon.vue'
+import type { AppError } from '../shared/errors'
+import UiIcon from './UiIcon.vue'
 
-defineProps<{ error: DeviceError }>()
+defineProps<{ error: AppError }>()
 </script>
 
 <template>

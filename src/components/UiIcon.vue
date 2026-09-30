@@ -2,6 +2,8 @@
 withDefaults(defineProps<{ name: keyof typeof paths; size?: number }>(), { size: 16 })
 
 const paths = {
+  package: 'm12 3 9 5v8l-9 5-9-5V8l9-5Zm0 9 9-4m-9 4L3 8m9 4v9M7.5 5.5l9 5v4',
+  upload: 'M12 16V3m-5 5 5-5 5 5M4 15v5h16v-5',
   phone:
     'M8 2.75h8a2 2 0 0 1 2 2v14.5a2 2 0 0 1-2 2H8a2 2 0 0 1-2-2V4.75a2 2 0 0 1 2-2Zm2 3h4m-3 12.5h2',
   grid: 'M3.75 3.75h6.5v6.5h-6.5Zm10 0h6.5v6.5h-6.5Zm-10 10h6.5v6.5h-6.5Zm10 0h6.5v6.5h-6.5Z',

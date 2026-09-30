@@ -26,6 +26,8 @@ Use `npm run format` and `cargo fmt --manifest-path src-tauri/Cargo.toml` to for
 - `src/features/devices/api.ts` is the frontend boundary for typed Tauri commands.
 - `useDevices.ts` owns device selection, initial/manual refresh, and asynchronous UI state. Components use Vue Composition API and `<script setup lang="ts">`.
 - Presentation components live in `src/features/devices/components/`, one component per file.
+- APK UI lives in `src/features/apk/`; `api.ts` owns the typed IPC, native dialog, and drag/drop boundary, and `useApk.ts` coalesces requests and disposes listeners. Shared UI and errors live in `src/components/` and `src/shared/`.
+- `src-tauri/src/apk/` uses `apk-info` to decode metadata and extract certificates without Tauri dependencies or external binaries. Certificate extraction must never be described as signature verification. Keep manifest and permissions available when signatures cannot be parsed.
 - `src-tauri/src/commands.rs` adapts IPC to the Rust device service. Blocking USB operations must run in `spawn_blocking`.
 - `src-tauri/src/devices/` owns USB enumeration, `adb_client` integration, persistent ADB identity, property parsing, and serializable models/errors. It does not depend on Tauri.
 - Keep additions simple: do not add a global state store, router, or repository/use-case layers without a concrete need.
