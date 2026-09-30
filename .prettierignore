@@ -1,0 +1,7 @@
+node_modules
+dist
+src-tauri/target
+src-tauri/gen
+src-tauri/Cargo.lock
+AGENTS.md
+.github/workflows/release.yml

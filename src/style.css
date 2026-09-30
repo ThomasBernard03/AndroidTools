@@ -1,0 +1,76 @@
+@import 'tailwindcss';
+
+@theme {
+  --font-sans: -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+  --color-shell: #111214;
+  --color-surface: #18191c;
+  --color-raised: #202125;
+  --color-hover: #27282d;
+  --color-line: #2b2c31;
+  --color-ink: #eeeef0;
+  --color-secondary: #a1a2ad;
+  --color-muted: #858793;
+  --color-accent: #a5a2ff;
+  --color-positive: #83c7a0;
+}
+
+@layer base {
+  :root {
+    color-scheme: dark;
+    font-synthesis: none;
+    text-rendering: optimizeLegibility;
+    -webkit-font-smoothing: antialiased;
+  }
+
+  body {
+    @apply m-0 min-w-80 bg-shell font-sans text-[13px] leading-5 text-ink;
+  }
+
+  button,
+  select,
+  a,
+  summary {
+    @apply focus-visible:outline-2 focus-visible:outline-offset-4 focus-visible:outline-accent;
+  }
+
+  button {
+    @apply cursor-pointer disabled:cursor-not-allowed disabled:opacity-40;
+  }
+
+  ::selection {
+    background: #5e5bc166;
+    color: #fff;
+  }
+
+  * {
+    scrollbar-width: thin;
+    scrollbar-color: #36373f transparent;
+  }
+}
+
+@layer components {
+  .button {
+    @apply inline-flex min-h-8 items-center justify-center gap-2 rounded-md border border-line bg-raised px-3 py-1.5 text-xs font-medium text-ink shadow-xs transition-colors hover:bg-hover disabled:hover:bg-raised;
+  }
+
+  .icon-button {
+    @apply inline-flex size-7 shrink-0 items-center justify-center rounded-md text-secondary transition-colors hover:bg-hover hover:text-ink;
+  }
+
+  .section-label {
+    @apply text-[11px] font-medium tracking-wide text-muted;
+  }
+
+  .status-badge {
+    @apply inline-flex items-center gap-1.5 rounded-md border border-line bg-raised/50 px-2 py-0.5 text-[11px] font-medium text-secondary;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  *,
+  *::before,
+  *::after {
+    animation: none !important;
+    transition: none !important;
+  }
+}

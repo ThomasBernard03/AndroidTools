@@ -1,100 +1,48 @@
-# CLAUDE.md
+# Repository guide
 
-This file provides guidance to Claude Code (claude.ai/code) when working with code in this repository.
+## Stack
+
+Android Tools is a desktop application using Rust, Tauri 2, Vue 3 with TypeScript, Vite, and Tailwind CSS 4. The Flutter source has been replaced. The legacy release workflow still targets Flutter and is not the build procedure for this version.
 
 ## Commands
 
 ```bash
-# Run the app
-fvm flutter run
-
-# Run with optional integrations
-fvm flutter run \
-  --dart-define=SENTRY_DSN=your_dsn \
-  --dart-define=AUTO_UPDATER_FEED_URL=your_feed_url
-
-# Code generation (required after modifying Drift tables or @MappableClass models)
-fvm dart run build_runner build -d
-
-# Clean rebuild
-fvm flutter clean && fvm flutter pub get && fvm dart run build_runner build -d
-
-# Tests
-fvm flutter test
-fvm flutter test test/path/to/specific_test.dart
-
-# Lint / format
-fvm flutter analyze
-fvm dart format .
-
-# Build macOS release
-fvm flutter build macos \
-  --dart-define=SENTRY_DSN=your_dsn \
-  --obfuscate \
-  --split-debug-info=build/debug-info
+npm ci
+npm run tauri dev
+npm run build
+npm run lint
+npm test
+npm run format:check
+cargo fmt --manifest-path src-tauri/Cargo.toml --check
+cargo test --manifest-path src-tauri/Cargo.toml
+cargo clippy --manifest-path src-tauri/Cargo.toml --all-targets -- -D warnings
+npm run tauri build
 ```
 
-## Environment Variables (dart-define)
-
-| Key | Purpose |
-|-----|---------|
-| `SENTRY_DSN` | Sentry crash reporting DSN |
-| `AUTO_UPDATER_FEED_URL` | Sparkle/auto-updater feed URL |
-| `GIT_REPOSITORY_URL` | Link to the repository (shown in UI) |
-| `ISSUE_URL` | Link to bug tracker (shown in UI) |
-
-All four are optional at runtime; missing values produce warnings in the log.
+Use `npm run format` and `cargo fmt --manifest-path src-tauri/Cargo.toml` to format changes. Node.js 24 LTS and Rust stable (minimum 1.90) are recommended. With Homebrew rustup, its `bin` directory must be in PATH.
 
 ## Architecture
 
-### Dependency Injection
+- `src/features/devices/api.ts` is the frontend boundary for typed Tauri commands.
+- `useDevices.ts` owns device selection, initial/manual refresh, and asynchronous UI state. Components use Vue Composition API and `<script setup lang="ts">`.
+- Presentation components live in `src/features/devices/components/`, one component per file.
+- `src-tauri/src/commands.rs` adapts IPC to the Rust device service. Blocking USB operations must run in `spawn_blocking`.
+- `src-tauri/src/devices/` owns USB enumeration, `adb_client` integration, persistent ADB identity, property parsing, and serializable models/errors. It does not depend on Tauri.
+- Keep additions simple: do not add a global state store, router, or repository/use-case layers without a concrete need.
 
-`getIt` (GetIt instance) is a package-level global defined in `lib/main.dart`. Every feature registers its own dependencies in a `*Module.configureDependencies()` static method called from `main()`. Modules must be registered before `await getIt.allReady()`.
+## Android integration
 
-### Feature Structure
+- Use direct USB through `adb_client`; do not bundle or execute the `adb` binary.
+- Use the specific `rusb::Device` with `USBTransport::new_from_device` to distinguish identical devices. Vendor/product IDs alone are not unique.
+- Persist the application-specific ADB key in the application data directory. Never overwrite an existing identity silently or log private keys.
+- Serialize access to USB sessions and ignore stale frontend responses after selection changes or disposal.
+- Expose specific IPC operations, not arbitrary shell execution. Register commands in `build.rs`, `lib.rs`, and the appropriate capability.
+- Keep Rust serde camelCase contracts aligned with TypeScript interfaces. Missing Android properties are nullable.
 
-Each feature under `lib/features/` follows clean architecture:
+## Generated files and verification
 
-```
-feature/
-├── core/          # Module registration + feature-specific extensions
-├── data/          # Repository implementations, data sources
-├── domain/        # Entities, repository interfaces, use cases
-└── presentation/  # BLoC (events/states), screens, widgets
-```
-
-Shared cross-feature code lives in `lib/shared/` with the same layer breakdown.
-
-### BLoC Pattern
-
-All state management uses `flutter_bloc`. BLoCs are provided via `BlocProvider` in the widget tree. The root-level `SettingsBloc` (theme mode) is provided in `MyApp` — it is the only BLoC not registered through a module.
-
-### ADB / AAPT Paths
-
-For release builds, `adb` and `aapt` binaries are bundled inside the app bundle (macOS: `Contents/Resources/`, Windows: next to the exe). `lib/shared/core/constants.dart` resolves the path at runtime based on `Platform.resolvedExecutable`. During development, ensure `adb` is in your PATH or the bundled binary is present.
-
-### Generated Files
-
-Never edit files ending in `.g.dart` or `.mapper.dart`. Regenerate with `build_runner` after:
-- Modifying a `@DriftDatabase` table or DAO
-- Adding/changing a `@MappableClass` annotated model
-
-### Database
-
-`AppDatabase` (Drift/SQLite) is a lazily-registered singleton in `SharedModule`. Tables: `install_history`, `app_settings`.
-
-### Widget Files
-
-**One widget per file.** Each `StatelessWidget` or `StatefulWidget` class must live in its own file under the `widgets/` subfolder of the relevant presentation layer. Private helper classes (non-widget) used exclusively within a widget may remain in the same file, but every public widget must have its own dedicated file.
-
-## Coding Standards
-
-### Comments
-
-**All comments must be written in English.** This includes:
-- Inline comments (`//`)
-- Block comments (`/* */`)
-- Documentation comments (`///`)
-- TODO/FIXME annotations
-
-This ensures consistency and maintainability across the codebase.
+- Keep `package-lock.json` and `src-tauri/Cargo.lock` in version control.
+- Do not edit build outputs under `dist/`, `src-tauri/target/`, `src-tauri/gen/`, or `src-tauri/permissions/autogenerated/`.
+- Generate application icons with `npm run tauri icon app-icon.svg`.
+- Test asynchronous selection/disconnection behavior and parsers without requiring a physical device. State explicitly when USB hardware has not been tested.
+- All code comments must be written in English. The current UI and user documentation are in French.
