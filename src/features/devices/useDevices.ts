@@ -24,7 +24,7 @@ export function useDevices() {
   let reading = false
   let pendingRead = false
 
-  async function refreshDevices() {
+  async function enumerateDevices() {
     if (scanning.value || disposed) return
     scanning.value = true
     try {
@@ -35,6 +35,8 @@ export function useDevices() {
       if (selectedId.value && !result.some((device) => device.id === selectedId.value)) {
         selectedId.value = ''
         notice.value = 'L’appareil sélectionné a été déconnecté.'
+      } else if (!selectedId.value && result.length > 0) {
+        selectedId.value = result[0]!.id
       }
     } catch (error) {
       if (disposed) return
@@ -85,8 +87,8 @@ export function useDevices() {
     void drainReads()
   }
 
-  async function releaseAdb() {
-    if (stoppingAdb.value || disposed) return
+  async function refreshDevices() {
+    if (stoppingAdb.value || scanning.value || disposed) return
     stoppingAdb.value = true
     adbError.value = null
     adbNotice.value = ''
@@ -98,10 +100,8 @@ export function useDevices() {
     try {
       const stopped = await stopAdbServer()
       if (disposed) return
-      adbNotice.value = stopped
-        ? 'Serveur ADB arrêté. Reconnexion USB en cours.'
-        : 'Aucun serveur ADB sur le port local 5037. Si l’accès reste bloqué, fermez l’autre outil et reconnectez le téléphone.'
-      await refreshDevices()
+      adbNotice.value = stopped ? 'Serveur ADB arrêté. Reconnexion USB en cours.' : ''
+      await enumerateDevices()
     } catch (error) {
       if (!disposed) adbError.value = toDeviceError(error)
     } finally {
@@ -121,7 +121,7 @@ export function useDevices() {
     { flush: 'sync' },
   )
 
-  onMounted(() => void refreshDevices())
+  onMounted(() => void enumerateDevices())
   onScopeDispose(() => {
     disposed = true
     requestVersion++
@@ -141,7 +141,6 @@ export function useDevices() {
     stoppingAdb,
     adbError,
     adbNotice,
-    releaseAdb,
     refreshDevices,
     refreshInfo,
   }

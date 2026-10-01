@@ -2,12 +2,18 @@ import { defineComponent } from 'vue'
 import { flushPromises, mount } from '@vue/test-utils'
 import { afterEach, beforeEach, describe, expect, it, vi } from 'vitest'
 import { PhysicalPosition } from '@tauri-apps/api/dpi'
-import { analyzeApk, chooseApk, listenForApkDrop } from './api'
+import { analyzeApk, chooseApk, listenForApkDrop, listRecentApks, removeRecentApk } from './api'
 import { useApk } from './useApk'
 import { apkReport, deferred } from './testFixtures'
 import type { ApkReport } from './types'
 
-vi.mock('./api', () => ({ analyzeApk: vi.fn(), chooseApk: vi.fn(), listenForApkDrop: vi.fn() }))
+vi.mock('./api', () => ({
+  analyzeApk: vi.fn(),
+  chooseApk: vi.fn(),
+  listenForApkDrop: vi.fn(),
+  listRecentApks: vi.fn(),
+  removeRecentApk: vi.fn(),
+}))
 
 let unmount: (() => void) | undefined
 let receiveDrop: Parameters<typeof listenForApkDrop>[0]
@@ -31,6 +37,8 @@ function setup() {
 
 beforeEach(() => {
   vi.resetAllMocks()
+  vi.mocked(listRecentApks).mockResolvedValue([])
+  vi.mocked(removeRecentApk).mockResolvedValue(undefined)
   vi.mocked(analyzeApk).mockResolvedValue(apkReport())
   vi.mocked(chooseApk).mockResolvedValue(null)
   vi.mocked(listenForApkDrop).mockImplementation(async (callback) => {
@@ -44,6 +52,61 @@ afterEach(() => {
 })
 
 describe('APK analysis lifecycle', () => {
+  it('ignores an old history load after a successful analysis', async () => {
+    const initial = deferred<string[]>()
+    vi.mocked(listRecentApks)
+      .mockReturnValueOnce(initial.promise)
+      .mockResolvedValue(['/tmp/new.apk'])
+    const state = setup()
+    state.analyzePaths(['/tmp/new.apk'])
+    await flushPromises()
+    initial.resolve(['/tmp/old.apk'])
+    await flushPromises()
+    expect(state.recentPaths.value).toEqual(['/tmp/new.apk'])
+  })
+
+  it('keeps a successful report when history cannot be saved', async () => {
+    vi.mocked(analyzeApk).mockResolvedValue({
+      ...apkReport(),
+      historyError: { code: 'history', message: 'Historique indisponible', details: '' },
+    })
+    const state = setup()
+    state.analyzePaths(['/tmp/demo.apk'])
+    await flushPromises()
+    expect(state.report.value?.fileName).toBe('demo.apk')
+    expect(state.error.value).toBeNull()
+    expect(state.historyError.value?.code).toBe('history')
+  })
+
+  it('removes a path and keeps the list on a removal failure', async () => {
+    vi.mocked(listRecentApks).mockResolvedValueOnce(['/tmp/missing.apk']).mockResolvedValue([])
+    const state = setup()
+    await flushPromises()
+    vi.mocked(removeRecentApk).mockRejectedValueOnce({
+      code: 'history',
+      message: 'Lecture seule',
+      details: '',
+    })
+    await state.removeRecent('/tmp/missing.apk')
+    expect(state.recentPaths.value).toEqual(['/tmp/missing.apk'])
+    expect(state.historyError.value?.code).toBe('history')
+    await state.removeRecent('/tmp/missing.apk')
+    expect(removeRecentApk).toHaveBeenCalledWith('/tmp/missing.apk')
+    expect(state.recentPaths.value).toEqual([])
+    expect(state.historyError.value).toBeNull()
+  })
+
+  it('ignores history loading after disposal', async () => {
+    const initial = deferred<string[]>()
+    vi.mocked(listRecentApks).mockReturnValueOnce(initial.promise)
+    const state = setup()
+    unmount?.()
+    unmount = undefined
+    initial.resolve(['/tmp/old.apk'])
+    await flushPromises()
+    expect(state.recentPaths.value).toEqual([])
+  })
+
   it('handles native drag enter, leave and drop including unicode paths', async () => {
     const state = setup()
     await flushPromises()

@@ -12,6 +12,32 @@ vi.mock('./features/devices/api', async (importOriginal) => ({
 afterEach(() => vi.resetAllMocks())
 
 describe('device screen', () => {
+  it('opens the APK tools without a connected device and preserves the forms across navigation', async () => {
+    vi.mocked(listDevices).mockResolvedValue([])
+    const wrapper = mount(App)
+    try {
+      await flushPromises()
+      const navigation = wrapper.get('nav')
+      const keystore = navigation
+        .findAll('button')
+        .find((button) => button.text() === 'Génération de keystore')!
+      const sign = navigation
+        .findAll('button')
+        .find((button) => button.text() === 'Signature d’APK')!
+      await keystore.trigger('click')
+      const alias = wrapper.findAll('form')[0]!.findAll('input')[0]!
+      await alias.setValue('my-release')
+      expect(keystore.attributes('aria-current')).toBe('page')
+      await sign.trigger('click')
+      expect(sign.attributes('aria-current')).toBe('page')
+      expect(wrapper.findAll('form')[1]!.isVisible()).toBe(true)
+      await keystore.trigger('click')
+      expect((alias.element as HTMLInputElement).value).toBe('my-release')
+    } finally {
+      wrapper.unmount()
+    }
+  })
+
   it('explains how to connect a device when the list is empty', async () => {
     vi.mocked(listDevices).mockResolvedValue([])
     const wrapper = mount(App)

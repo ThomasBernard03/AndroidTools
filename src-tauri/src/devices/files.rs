@@ -1,4 +1,6 @@
+use adb_client::ADBDeviceExt;
 use serde::Serialize;
+use std::{fs, io, path::Path};
 
 use super::{DeviceService, ServiceError};
 
@@ -48,6 +50,172 @@ pub struct FilePreview {
 }
 
 impl DeviceService {
+    pub fn create_directory(
+        &self,
+        device_id: &str,
+        path: &str,
+        name: &str,
+    ) -> Result<(), ServiceError> {
+        validate_name(name)?;
+        let path = normalize_path(path)?;
+        writable_directory(&path)?;
+        let command = at_path(&path, &format!("mkdir {}", quote(&format!("./{name}"))))?;
+        self.file_shell(device_id, &path, &command)?;
+        Ok(())
+    }
+
+    pub fn delete_entry(&self, device_id: &str, path: &str) -> Result<(), ServiceError> {
+        let path = normalize_path(path)?;
+        let (parent, name) = entry_target(&path)?;
+        let target = quote(&format!("./{name}"));
+        let command = at_path(
+            parent,
+            &format!(
+                "[ ! -L {target} ] && {{ [ -f {target} ] || [ -d {target} ]; }} && rm -r {target}"
+            ),
+        )?;
+        self.file_shell(device_id, &path, &command)?;
+        Ok(())
+    }
+
+    pub fn download_entry(
+        &self,
+        device_id: &str,
+        path: &str,
+        local: &Path,
+    ) -> Result<(), ServiceError> {
+        let path = normalize_path(path)?;
+        entry_target(&path)?;
+        self.download_tree(device_id, &path, local, 0)
+    }
+
+    fn download_tree(
+        &self,
+        device_id: &str,
+        path: &str,
+        local: &Path,
+        depth: usize,
+    ) -> Result<(), ServiceError> {
+        check_depth(depth)?;
+        let (parent, name) = entry_target(path)?;
+        let target = quote(&format!("./{name}"));
+        let command = at_path(
+            parent,
+            &format!(
+                "[ ! -L {target} ] || exit 1; if [ -d {target} ]; then printf d; elif [ -f {target} ]; then printf f; else exit 1; fi"
+            ),
+        )?;
+        let kind = self.file_shell(device_id, path, &command)?;
+        if kind == b"d" {
+            fs::create_dir(local).map_err(local_error)?;
+            for entry in self.list_files(device_id, path)?.entries {
+                validate_local_name(&entry.name)?;
+                if !matches!(entry.kind, "directory" | "file") {
+                    return Err(unsupported_entry());
+                }
+                self.download_tree(
+                    device_id,
+                    &format!("{path}/{}", entry.name),
+                    &local.join(&entry.name),
+                    depth + 1,
+                )?;
+            }
+        } else if kind == b"f" {
+            let parent_dir = local.parent().ok_or_else(invalid_path)?;
+            let mut temporary = tempfile::NamedTempFile::new_in(parent_dir).map_err(local_error)?;
+            let command = at_path(
+                parent,
+                &format!("[ -f {target} ] && [ ! -L {target} ] && cat {target}"),
+            )?;
+            self.shell_to(device_id, &command, temporary.as_file_mut())?;
+            if depth == 0 {
+                temporary.persist(local).map_err(|e| local_error(e.error))?;
+            } else {
+                temporary
+                    .persist_noclobber(local)
+                    .map_err(|e| local_error(e.error))?;
+            }
+        } else {
+            return Err(invalid_response());
+        }
+        Ok(())
+    }
+
+    pub fn upload_entry(
+        &self,
+        device_id: &str,
+        path: &str,
+        local: &Path,
+    ) -> Result<(), ServiceError> {
+        let path = normalize_path(path)?;
+        writable_directory(&path)?;
+        self.upload_tree(device_id, &path, local, 0)
+    }
+
+    fn upload_tree(
+        &self,
+        device_id: &str,
+        parent: &str,
+        local: &Path,
+        depth: usize,
+    ) -> Result<(), ServiceError> {
+        check_depth(depth)?;
+        let name = local
+            .file_name()
+            .and_then(|s| s.to_str())
+            .ok_or_else(invalid_path)?;
+        validate_name(name)?;
+        let metadata = fs::symlink_metadata(local).map_err(local_error)?;
+        let path = format!("{}/{name}", parent.trim_end_matches('/'));
+        if metadata.is_dir() {
+            self.create_directory(device_id, parent, name)?;
+            for entry in fs::read_dir(local).map_err(local_error)? {
+                self.upload_tree(
+                    device_id,
+                    &path,
+                    &entry.map_err(local_error)?.path(),
+                    depth + 1,
+                )?;
+            }
+        } else if metadata.is_file() {
+            let mut input = fs::File::open(local).map_err(local_error)?;
+            // Stage through sync, then inherit stdin through run-as for private directories.
+            self.with_device(device_id, |device| {
+                let mut output = Vec::new();
+                Self::run_shell(
+                    device,
+                    "mktemp /data/local/tmp/android-tools.XXXXXXXXXX",
+                    &mut output,
+                )?;
+                let stage = std::str::from_utf8(&output)
+                    .map_err(|_| invalid_response())?
+                    .trim();
+                if !stage
+                    .strip_prefix("/data/local/tmp/android-tools.")
+                    .is_some_and(|suffix| {
+                        !suffix.is_empty() && suffix.bytes().all(|b| b.is_ascii_alphanumeric())
+                    })
+                {
+                    return Err(invalid_response());
+                }
+                let result = (|| {
+                    device.push(&mut input, &stage)?;
+                    Self::run_shell(
+                        device,
+                        &upload_command(parent, name, stage)?,
+                        &mut io::sink(),
+                    )
+                })();
+                let cleanup =
+                    Self::run_shell(device, &format!("rm -f {}", quote(stage)), &mut io::sink());
+                result.and(cleanup)
+            })?;
+        } else {
+            return Err(unsupported_entry());
+        }
+        Ok(())
+    }
+
     pub fn list_files(&self, device_id: &str, path: &str) -> Result<FileListing, ServiceError> {
         let path = normalize_path(path)?;
         let mut entries = if path == "/data" {
@@ -112,6 +280,71 @@ fn invalid_path() -> ServiceError {
         "Le chemin Android est invalide.",
         "Expected an absolute path without parent traversal or NUL bytes",
     )
+}
+
+fn upload_command(parent: &str, name: &str, stage: &str) -> Result<String, ServiceError> {
+    validate_name(name)?;
+    let target = quote(&format!("./{name}"));
+    let write = at_path(
+        parent,
+        &format!("[ ! -e {target} ] && [ ! -L {target} ] || exit 1; set -C; cat > {target}"),
+    )?;
+    Ok(format!("sh -c {} < {}", quote(&write), quote(stage)))
+}
+
+fn local_error(error: io::Error) -> ServiceError {
+    ServiceError::new(
+        "file_transfer",
+        "Le transfert a échoué. Vérifiez les droits et l’espace disponible. Un transfert de dossier peut être partiel ; choisissez une nouvelle destination pour réessayer.",
+        error.to_string(),
+    )
+}
+
+fn unsupported_entry() -> ServiceError {
+    ServiceError::new(
+        "unsupported_file",
+        "Le transfert contient un lien symbolique ou un fichier spécial non pris en charge. Les éléments précédents ont pu être transférés.",
+        "Only regular files and directories can be transferred",
+    )
+}
+
+fn check_depth(depth: usize) -> Result<(), ServiceError> {
+    if depth > 128 {
+        return Err(invalid_path());
+    }
+    Ok(())
+}
+
+fn validate_name(name: &str) -> Result<(), ServiceError> {
+    if name.is_empty() || matches!(name, "." | "..") || name.contains(['/', '\0']) {
+        return Err(invalid_path());
+    }
+    Ok(())
+}
+
+fn validate_local_name(name: &str) -> Result<(), ServiceError> {
+    validate_name(name)?;
+    if name.contains('\\') || name.contains(':') || Path::new(name).components().count() != 1 {
+        return Err(invalid_path());
+    }
+    Ok(())
+}
+
+fn writable_directory(path: &str) -> Result<(), ServiceError> {
+    if matches!(path, "/data" | "/data/data") {
+        return Err(invalid_path());
+    }
+    Ok(())
+}
+
+fn entry_target(path: &str) -> Result<(&str, &str), ServiceError> {
+    let (parent, name) = path.rsplit_once('/').ok_or_else(invalid_path)?;
+    validate_name(name)?;
+    writable_directory(parent)?;
+    if path == "/data" {
+        return Err(invalid_path());
+    }
+    Ok((if parent.is_empty() { "/" } else { parent }, name))
 }
 
 fn invalid_response() -> ServiceError {
@@ -255,8 +488,69 @@ fn decode_preview(bytes: &[u8]) -> Result<FilePreview, ServiceError> {
 }
 
 #[cfg(test)]
+#[allow(clippy::unwrap_used)]
 mod tests {
     use super::*;
+
+    #[cfg(unix)]
+    #[test]
+    fn upload_stream_preserves_binary_data_and_refuses_collisions() {
+        let directory = tempfile::tempdir().unwrap();
+        let parent = directory.path().to_str().unwrap();
+        let source = directory.path().join("source ' file");
+        let bytes = b"binary\0\xff\r\ncontent";
+        fs::write(&source, bytes).unwrap();
+        let name = "-a ' ; $(exit 99)\n.bin";
+        let command = upload_command(parent, name, source.to_str().unwrap()).unwrap();
+        let run = |command: &str| {
+            std::process::Command::new("sh")
+                .args(["-c", command])
+                .output()
+                .unwrap()
+                .status
+                .success()
+        };
+        assert!(run(&command));
+        assert_eq!(fs::read(directory.path().join(name)).unwrap(), bytes);
+        fs::write(&source, b"replacement").unwrap();
+        assert!(!run(&command));
+        assert_eq!(fs::read(directory.path().join(name)).unwrap(), bytes);
+        std::os::unix::fs::symlink(
+            directory.path().join("missing"),
+            directory.path().join("link"),
+        )
+        .unwrap();
+        assert!(!run(&upload_command(
+            parent,
+            "link",
+            source.to_str().unwrap()
+        )
+        .unwrap()));
+        assert!(!directory.path().join("missing").exists());
+        assert!(!run(
+            &upload_command(parent, "new", "/nonexistent/source").unwrap()
+        ));
+        assert!(!directory.path().join("new").exists());
+    }
+
+    #[test]
+    fn validates_mutation_targets_and_transfer_names() {
+        for path in ["/", "/data", "/data/data", "/data/data/com.example"] {
+            assert!(entry_target(path).is_err(), "{path}");
+        }
+        assert_eq!(
+            entry_target("/data/data/com.example/files/a").unwrap(),
+            ("/data/data/com.example/files", "a")
+        );
+        for name in ["", ".", "..", "a/b", "a\0b"] {
+            assert!(validate_name(name).is_err());
+        }
+        for name in ["../escape", "a\\b", "C:escape"] {
+            assert!(validate_local_name(name).is_err());
+        }
+        assert!(validate_name("a ' ; $(id)\n.txt").is_ok());
+        assert!(check_depth(129).is_err());
+    }
 
     #[test]
     fn parses_metadata_without_splitting_names() {

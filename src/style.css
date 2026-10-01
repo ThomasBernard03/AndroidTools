@@ -51,6 +51,10 @@
 }
 
 @layer components {
+  .form-input {
+    @apply rounded-md border border-line bg-shell px-3 py-2 text-ink disabled:opacity-50;
+  }
+
   .button {
     @apply inline-flex min-h-8 items-center justify-center gap-2 rounded-md border border-line bg-raised px-3 py-1.5 text-xs font-medium text-ink shadow-xs transition-colors hover:bg-hover disabled:hover:bg-raised;
   }

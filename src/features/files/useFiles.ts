@@ -1,6 +1,15 @@
 import { computed, onScopeDispose, ref, watch, type Ref } from 'vue'
 import { toAppError, type AppError } from '../../shared/errors'
-import { listFiles, previewFile } from './api'
+import {
+  listFiles,
+  previewFile,
+  downloadEntry,
+  uploadEntry,
+  createDirectory,
+  deleteEntry,
+  chooseUpload,
+  chooseDownload,
+} from './api'
 import type { FileEntry, FilePreview } from './types'
 
 export function useFiles(deviceId: Readonly<Ref<string>>) {
@@ -14,10 +23,29 @@ export function useFiles(deviceId: Readonly<Ref<string>>) {
   const previewError = ref<AppError | null>(null)
   const loadingPreview = ref(false)
 
-  const filteredEntries = computed(() => {
+  const matches = computed(() => {
     const query = search.value.trim().toLocaleLowerCase()
-    return entries.value.filter((entry) => entry.name.toLocaleLowerCase().includes(query))
+    return query
+      ? entries.value.filter((entry) => entry.name.toLocaleLowerCase().includes(query))
+      : []
   })
+  const matchIndex = ref(0)
+  const activeMatch = computed(() => matches.value[matchIndex.value]?.name)
+  watch(
+    matches,
+    () => {
+      matchIndex.value = 0
+    },
+    { flush: 'sync' },
+  )
+  function moveMatch(delta: number) {
+    if (matches.value.length)
+      matchIndex.value = (matchIndex.value + delta + matches.value.length) % matches.value.length
+  }
+  const operating = ref(false)
+  const operationError = ref<AppError | null>(null)
+  const operationMessage = ref('')
+  const writable = computed(() => !['/data', '/data/data'].includes(path.value))
   const breadcrumbs = computed(() => {
     const parts = path.value.split('/').filter(Boolean)
     return [
@@ -34,6 +62,70 @@ export function useFiles(deviceId: Readonly<Ref<string>>) {
   let running = false
   let disposed = false
   let version = 0
+  let locationVersion = 0
+
+  async function operate(
+    action: (id: string, directory: string, current: () => boolean) => Promise<boolean>,
+    message: string,
+    reload = true,
+  ) {
+    if (disposed || operating.value || loading.value || !deviceId.value) return false
+    const id = deviceId.value
+    const directory = path.value
+    const token = locationVersion
+    const current = () => !disposed && token === locationVersion
+    operating.value = true
+    operationError.value = null
+    operationMessage.value = ''
+    try {
+      const done = await action(id, directory, current)
+      if (current() && done) {
+        if (reload) refresh()
+        operationMessage.value = message
+      }
+      return done && !disposed && deviceId.value === id
+    } catch (reason) {
+      if (current()) operationError.value = toAppError(reason)
+      return false
+    } finally {
+      operating.value = false
+    }
+  }
+
+  const childPath = (directory: string, name: string) =>
+    `${directory === '/' ? '' : directory}/${name}`
+  function download(entry: FileEntry) {
+    return operate(
+      async (id, directory, current) => {
+        const localPath = await chooseDownload(entry)
+        if (!localPath || !current()) return false
+        await downloadEntry(id, childPath(directory, entry.name), localPath)
+        return true
+      },
+      'Téléchargement terminé.',
+      false,
+    )
+  }
+  function upload(directory: boolean) {
+    return operate(async (id, path, current) => {
+      const localPath = await chooseUpload(directory)
+      if (!localPath || !current()) return false
+      await uploadEntry(id, path, localPath)
+      return true
+    }, 'Envoi terminé.')
+  }
+  function mkdir(name: string) {
+    return operate(async (id, path) => {
+      await createDirectory(id, path, name)
+      return true
+    }, 'Dossier créé.')
+  }
+  function remove(entry: FileEntry) {
+    return operate(async (id, directory) => {
+      await deleteEntry(id, childPath(directory, entry.name))
+      return true
+    }, 'Élément supprimé.')
+  }
 
   async function drain() {
     if (running || disposed) return
@@ -83,6 +175,9 @@ export function useFiles(deviceId: Readonly<Ref<string>>) {
 
   function navigate(destination: string) {
     if (disposed) return
+    locationVersion++
+    operationError.value = null
+    operationMessage.value = ''
     closePreview()
     path.value = destination
     entries.value = []
@@ -127,7 +222,18 @@ export function useFiles(deviceId: Readonly<Ref<string>>) {
     path,
     entries,
     search,
-    filteredEntries,
+    matches,
+    matchIndex,
+    activeMatch,
+    moveMatch,
+    operating,
+    operationError,
+    operationMessage,
+    writable,
+    download,
+    upload,
+    mkdir,
+    remove,
     breadcrumbs,
     privatePackage,
     error,

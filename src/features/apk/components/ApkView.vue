@@ -5,12 +5,25 @@ import ErrorNotice from '../../../components/ErrorNotice.vue'
 import ApkSignatures from './ApkSignatures.vue'
 import ApkPermissions from './ApkPermissions.vue'
 import ApkManifest from './ApkManifest.vue'
+import ApkHistory from './ApkHistory.vue'
 import { useApk } from '../useApk'
 
 const emit = defineEmits<{ open: [] }>()
-const { report, error, dropError, loading, choosing, dragging, fileName, selectFile } = useApk(() =>
-  emit('open'),
-)
+const {
+  report,
+  error,
+  dropError,
+  loading,
+  choosing,
+  dragging,
+  fileName,
+  selectFile,
+  recentPaths,
+  historyError,
+  removing,
+  removeRecent,
+  analyzePaths,
+} = useApk(() => emit('open'))
 const section = ref<'signature' | 'manifest' | 'permissions'>('signature')
 watch(report, () => {
   section.value = 'signature'
@@ -43,6 +56,13 @@ watch(report, () => {
     </header>
     <ErrorNotice v-if="dropError" :error="dropError" class="mb-5" />
     <ErrorNotice v-if="error" :error="error" class="mb-5" />
+    <ErrorNotice v-if="historyError" :error="historyError" class="mb-5" />
+    <ApkHistory
+      :paths="recentPaths"
+      :removing="removing"
+      @open="analyzePaths([$event])"
+      @remove="removeRecent"
+    />
     <div v-if="loading" role="status" class="rounded-lg border border-line px-6 py-16 text-center">
       <UiIcon name="refresh" :size="24" class="mx-auto mb-4 animate-spin text-accent" />
       <p class="font-medium">Analyse de l’APK…</p>

@@ -1,5 +1,5 @@
 import { onMounted, onScopeDispose, shallowRef, ref } from 'vue'
-import { analyzeApk, chooseApk, listenForApkDrop } from './api'
+import { analyzeApk, chooseApk, listenForApkDrop, listRecentApks, removeRecentApk } from './api'
 import { toAppError, type AppError } from '../../shared/errors'
 import type { ApkReport } from './types'
 
@@ -11,11 +11,40 @@ export function useApk(onOpen: () => void) {
   const choosing = ref(false)
   const dragging = ref(false)
   const fileName = ref('')
+  const recentPaths = ref<string[]>([])
+  const historyError = ref<AppError | null>(null)
+  const removing = ref(false)
+  let historyVersion = 0
   let disposed = false
   let version = 0
   let processing = false
   let pendingPath: string | null = null
   let unlisten: (() => void) | undefined
+
+  async function refreshHistory() {
+    const current = ++historyVersion
+    try {
+      const paths = await listRecentApks()
+      if (!disposed && current === historyVersion) recentPaths.value = paths
+    } catch (cause) {
+      if (!disposed && current === historyVersion) historyError.value = toAppError(cause)
+    }
+  }
+
+  async function removeRecent(path: string) {
+    if (disposed || removing.value) return
+    removing.value = true
+    historyError.value = null
+    historyVersion++
+    try {
+      await removeRecentApk(path)
+      if (!disposed) await refreshHistory()
+    } catch (cause) {
+      if (!disposed) historyError.value = toAppError(cause)
+    } finally {
+      if (!disposed) removing.value = false
+    }
+  }
 
   async function drain() {
     if (processing) return
@@ -28,7 +57,11 @@ export function useApk(onOpen: () => void) {
         pendingPath = null
         try {
           const result = await analyzeApk(path)
-          if (!disposed && current === version) report.value = result
+          if (!disposed) {
+            if (current === version) report.value = result
+            historyError.value = result.historyError ?? null
+            void refreshHistory()
+          }
         } catch (cause) {
           if (!disposed && current === version) error.value = toAppError(cause)
         } finally {
@@ -77,6 +110,10 @@ export function useApk(onOpen: () => void) {
     }
   }
 
+  onMounted(() => {
+    void refreshHistory()
+  })
+
   onMounted(async () => {
     try {
       const stop = await listenForApkDrop((event) => {
@@ -110,6 +147,10 @@ export function useApk(onOpen: () => void) {
   })
   return {
     report,
+    recentPaths,
+    historyError,
+    removing,
+    removeRecent,
     error,
     dropError,
     loading,

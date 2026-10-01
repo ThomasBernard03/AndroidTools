@@ -42,6 +42,16 @@ impl DeviceService {
     }
 
     pub(super) fn shell(&self, device_id: &str, command: &str) -> Result<Vec<u8>, ServiceError> {
+        let mut stdout = LimitedOutput::default();
+        self.shell_to(device_id, command, &mut stdout)?;
+        Ok(stdout.0)
+    }
+
+    pub(super) fn with_device<T>(
+        &self,
+        device_id: &str,
+        action: impl FnOnce(&mut ADBUSBDevice) -> Result<T, ServiceError>,
+    ) -> Result<T, ServiceError> {
         // A USB interface can only have one owner. Keep key creation and ADB sessions serialized.
         let _guard = self
             .connection
@@ -54,9 +64,25 @@ impl DeviceService {
         ensure_private_key(&self.key_path)?;
         let transport = USBTransport::new_from_device(usb_device);
         let mut device = ADBUSBDevice::new_from_transport(transport, Some(self.key_path.clone()))?;
-        let mut stdout = LimitedOutput::default();
+        action(&mut device)
+    }
+
+    pub(super) fn shell_to(
+        &self,
+        device_id: &str,
+        command: &str,
+        stdout: &mut dyn Write,
+    ) -> Result<(), ServiceError> {
+        self.with_device(device_id, |device| Self::run_shell(device, command, stdout))
+    }
+
+    pub(super) fn run_shell(
+        device: &mut ADBUSBDevice,
+        command: &str,
+        stdout: &mut dyn Write,
+    ) -> Result<(), ServiceError> {
         let mut stderr = LimitedOutput::default();
-        let exit_code = device.shell_command(&command, Some(&mut stdout), Some(&mut stderr))?;
+        let exit_code = device.shell_command(&command, Some(stdout), Some(&mut stderr))?;
         if exit_code.is_some_and(|code| code != 0) {
             return Err(ServiceError::new(
                 "shell",
@@ -64,7 +90,7 @@ impl DeviceService {
                 String::from_utf8_lossy(&stderr.0).into_owned(),
             ));
         }
-        Ok(stdout.0)
+        Ok(())
     }
 }
 

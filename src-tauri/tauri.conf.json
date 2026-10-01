@@ -1,8 +1,8 @@
 {
   "$schema": "https://schema.tauri.app/config/2",
   "productName": "Android Tools",
-  "version": "0.1.0",
-  "identifier": "com.thomasbernard.androidtools",
+  "version": "2026.6.2",
+  "identifier": "com.example.androidTools",
   "build": {
     "beforeDevCommand": "npm run dev",
     "devUrl": "http://127.0.0.1:1420",
@@ -34,6 +34,10 @@
       "icons/icon.icns",
       "icons/icon.ico"
     ],
+    "macOS": {
+      "bundleVersion": "36",
+      "minimumSystemVersion": "10.13"
+    },
     "category": "DeveloperTool",
     "shortDescription": "Inspect connected Android devices"
   }

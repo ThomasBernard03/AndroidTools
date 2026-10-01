@@ -9,17 +9,33 @@ rust-version = "1.90"
 name = "android_tools_lib"
 crate-type = ["staticlib", "cdylib", "rlib"]
 
+[features]
+macos-updater = ["dep:tauri-plugin-sparkle-updater"]
+
+[target.'cfg(target_os = "macos")'.dependencies]
+tauri-plugin-sparkle-updater = { version = "=0.3.0", optional = true }
+
 [build-dependencies]
 tauri-build = { version = "2", features = [] }
 
 [dependencies]
 apk-info = "=1.0.13"
+apksig = { version = "=0.4.0", default-features = false, features = ["signing"] }
+jks = { version = "=0.3.3", default-features = false, features = ["rand"] }
+# The 0.3 series pins a prerelease cms incompatible with apk-info's cms dependency.
+p12-keystore = "=0.2.1"
+rcgen = "0.14"
+time = "0.3"
+x509-parser = "0.18"
+zip = { version = "4", default-features = false, features = ["deflate"] }
 roxmltree = "0.21"
+rusqlite = { version = "0.38", features = ["bundled"] }
 tauri-plugin-dialog = "2"
 adb_client = { version = "=3.2.3", default-features = false, features = ["usb"] }
 rsa = "0.9"
 rusb = { version = "0.9", features = ["vendored"] }
 serde = { version = "1", features = ["derive"] }
+serde_json = "1"
 tauri = { version = "2", features = [] }
 tempfile = "3"
 
@@ -27,6 +43,4 @@ tempfile = "3"
 unwrap_used = "warn"
 
 [dev-dependencies]
-zip = { version = "4", default-features = false, features = ["deflate"] }
-rcgen = "0.14"
 sha2 = "0.10"

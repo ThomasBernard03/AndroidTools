@@ -11,7 +11,9 @@ Application desktop **Rust + Tauri 2 + Vue 3 / TypeScript + Tailwind CSS 4** pou
 - États de chargement, liste vide, erreurs USB, nouvelle tentative et déconnexion.
 - Identité ADB persistante propre à l’application.
 - Analyse APK par glisser-déposer ou sélection de fichier : manifeste XML décodé, permissions, certificats et empreintes SHA-1/SHA-256.
-- Explorateur de fichiers en lecture seule : stockage partagé, racine Android, données privées des applications debuggables et aperçu texte.
+- Rubrique **APK** : analyse, génération de keystore PKCS#12 et signature APK v2 intégrées en Rust, sans JDK ni SDK Android à installer.
+- Historique persistant des 10 derniers chemins APK analysés, avec réouverture et retrait individuel.
+- Explorateur de fichiers : stockage partagé, racine Android, données privées des applications debuggables, aperçu texte, transferts et gestion des dossiers.
 
 La communication utilise **`adb_client` en USB direct**, sans exécutable `adb`, serveur ADB ou Android SDK à installer. `rusb` sert à identifier précisément chaque connexion USB ; le protocole ADB est pris en charge par `adb_client`. La bibliothèque native `libusb` est compilée avec la feature `vendored`, sans exécutable annexe à distribuer.
 
@@ -19,15 +21,24 @@ La partie appareils cible les téléphones physiques en USB. Logcat, l’install
 
 ## Explorateur de fichiers
 
-Sélectionnez un téléphone, puis ouvrez **Explorateur de fichiers**. Les raccourcis donnent accès au stockage partagé (`/sdcard`), à la racine Android et aux données des applications (`/data/data`). Un clic sur un dossier l’ouvre ; le fil d’Ariane et le bouton parent permettent de remonter. La recherche filtre le dossier courant, y compris les fichiers cachés. **Actualiser** relit son contenu.
+Sélectionnez un téléphone, puis ouvrez **Explorateur de fichiers**. Les raccourcis donnent accès au stockage partagé (`/sdcard`), à la racine Android et aux données des applications (`/data/data`). Un clic sur un dossier l’ouvre ; le fil d’Ariane et le bouton parent permettent de remonter. La recherche conserve tous les éléments affichés et fait défiler la liste vers la première correspondance, y compris parmi les fichiers cachés. **Précédent / Suivant** permettent de parcourir les résultats en boucle ; **Entrée / Maj+Entrée** font de même depuis le champ de recherche. **Actualiser** relit son contenu.
 
 Comme dans l’ancienne version Flutter, `/data` et `/data/data` sont des emplacements virtuels : la liste des packages vient du gestionnaire Android, puis les lectures dans `/data/data/<package>` passent par **`run-as`**. Tous les packages de l’utilisateur principal (0) sont listés, mais leurs données ne sont accessibles que si l’application est debuggable et autorise `run-as`. Les refus d’accès sont affichés avec les détails Android. Les profils secondaires/professionnels ne sont pas pris en charge.
 
-Les fichiers ordinaires disposent d’un aperçu texte UTF-8 limité aux **256 premiers Kio** ; les fichiers binaires sont signalés. Les liens symboliques et fichiers spéciaux sont affichés mais ne sont pas ouverts. Cette première version est en lecture seule : transfert, suppression, création de dossiers et aperçus image/PDF restent à implémenter. Les répertoires système restent soumis aux permissions Android. La lecture des métadonnées utilise les commandes Android `stat` et `head` via ADB USB, sans exécutable externe sur l’ordinateur.
+Les fichiers ordinaires disposent d’un aperçu texte UTF-8 limité aux **256 premiers Kio** ; les fichiers binaires sont signalés. Les liens symboliques et fichiers spéciaux sont affichés mais ne sont pas ouverts ni transférés. Les répertoires système restent soumis aux permissions Android. La lecture des métadonnées utilise les commandes Android `stat` et `head` via ADB USB, sans exécutable externe sur l’ordinateur.
+
+- **Télécharger** enregistre un fichier sur l’ordinateur ou copie récursivement un dossier dans le répertoire choisi. Pour un dossier, la destination ne doit pas déjà exister.
+- **Envoyer un fichier / Envoyer un dossier** copie l’élément sélectionné dans le dossier Android courant, avec son nom d’origine. Les éléments existants ne sont pas écrasés. Les dossiers vides sont conservés.
+- **Nouveau dossier** crée un dossier dans l’emplacement courant.
+- **Supprimer** demande confirmation puis supprime l’élément et, pour un dossier, tout son contenu.
+
+Ces actions sont disponibles dans les dossiers accessibles, y compris les données privées via `run-as`, mais pas dans les listes virtuelles `/data` et `/data/data`. Un transfert interrompu peut laisser un dossier partiellement copié ; choisissez une nouvelle destination pour réessayer. L’envoi utilise un fichier temporaire dans `/data/local/tmp`, supprimé à la fin de l’opération lorsque l’appareil reste accessible.
 
 ## Analyse APK
 
-Ouvrez **Analyse APK** dans la barre latérale, puis déposez un fichier `.apk` depuis le Finder/l’explorateur ou utilisez **Choisir un APK**. Un dépôt dans la fenêtre ouvre automatiquement cette vue. Aucun téléphone, SDK Android, `aapt` ou `apksigner` n’est nécessaire.
+Ouvrez **APK → Analyse APK** dans la barre latérale, puis déposez un fichier `.apk` depuis le Finder/l’explorateur ou utilisez **Choisir un APK**. Un dépôt dans la fenêtre ouvre automatiquement cette vue. Aucun téléphone, SDK Android, `aapt` ou `apksigner` n’est nécessaire.
+
+La section **APK récents** conserve les chemins des 10 derniers fichiers analysés avec succès, du plus récent au plus ancien, même après redémarrage. Réanalyser un chemin le remonte en tête sans doublon. Cliquez sur une entrée pour relire le fichier ; s’il a été déplacé ou supprimé, une erreur de lecture est affichée. **Retirer** supprime uniquement l’entrée de l’historique. Les chemins sont stockés dans `apk-history.sqlite`, une base SQLite du dossier de données de l’application (`~/Library/Application Support/com.thomasbernard.androidtools/` sur macOS). Une erreur de sauvegarde de l’historique est signalée sans masquer le résultat de l’analyse.
 
 - **Résumé** : nom de l’application, package, version, taille et SDK minimum/cible lorsqu’ils sont renseignés.
 - **Signature** : schémas v1, v2, v3 et v3.1 reconnus, sujets et émetteurs des certificats, dates, numéro de série, algorithme et empreintes SHA-1/SHA-256.
@@ -37,6 +48,29 @@ Ouvrez **Analyse APK** dans la barre latérale, puis déposez un fichier `.apk` 
 L’analyse utilise la bibliothèque Rust `apk-info`. Les certificats sont **extraits, pas vérifiés cryptographiquement** : leur présence ne garantit ni l’intégrité de l’APK ni son acceptation par Android. Un fichier sans certificat reconnu est présenté comme tel, et non comme formellement non signé. Le schéma v4 (fichier `.idsig` externe) n’est pas analysé. Si plusieurs blocs v1 existent, la bibliothèque ne décode que le premier ; cette limite est signalée dans les résultats.
 
 Une erreur de lecture des signatures laisse accessibles le manifeste et les permissions. Un seul APK est analysé à la fois ; les dépôts successifs privilégient le dernier fichier demandé. Les fichiers restent sur l’ordinateur, ne sont ni exécutés ni installés. Les métadonnées décompressées de plus de 64 Mio sont refusées. Les conteneurs `.aab`, `.apkm` et `.xapk` ne sont pas pris en charge par cette vue.
+
+## Génération de keystore
+
+Dans **APK → Génération de keystore**, renseignez l’alias, le nom du certificat, sa validité et un mot de passe d’au moins six caractères. L’organisation et le code pays sont facultatifs. Choisissez ensuite un nouveau fichier `.p12` dans le dialogue d’enregistrement.
+
+La validité affiche le nombre de jours, son équivalent approximatif en années et la date d’expiration. Le bouton **Générer un mot de passe** remplit automatiquement les deux champs avec un mot de passe aléatoire de 24 caractères. Un fichier compagnon `<nom>.p12.json` est enregistré dans le même dossier : alias, mots de passe du keystore et de la clé, identité du certificat, durée et dates de création et d’expiration (UTC). Les mots de passe y figurent en clair ; conservez les deux fichiers en lieu sûr. Aucun fichier existant n’est remplacé.
+
+La génération utilise `rsa`, `rcgen` et `p12-keystore` : clé **RSA 3072 bits**, certificat X.509 auto-signé et keystore **PKCS#12 chiffré en AES-256** avec MAC SHA-256. La clé et le keystore partagent le même mot de passe. Le chemin et l’alias générés préremplissent le formulaire de signature pendant la session. Conservez le fichier, son alias et son mot de passe pour signer les mises à jour de votre application.
+
+## Signature d’APK
+
+Dans **APK → Signature d’APK**, choisissez un APK, un keystore, l’alias et les mots de passe, puis un nouveau fichier de sortie. Le traitement se fait en Rust avec `zip`, `apksig`, `p12-keystore` et `jks` :
+
+1. Lecture de la clé RSA et contrôle de sa correspondance avec le certificat.
+2. Retrait des anciennes signatures et du certificat de source stamp, puis alignement des entrées non compressées sur 4 octets et des bibliothèques `.so` sur **16 Kio**.
+3. Signature **APK v2 RSA/SHA-256**.
+4. Vérification de la signature et comparaison de l’empreinte du contenu avant publication du résultat.
+
+Cette signature cible **Android 7.0 et ultérieur (API 24+)**. Les schémas v1, v3 et v4 ne sont pas générés ; le manifeste et son SDK minimum restent inchangés. Un APK déclarant un SDK minimum inférieur à 24 ne pourra donc plus être installé sur ces anciennes versions après cette signature. Les clés EC/DSA et la rotation de clés ne sont pas prises en charge.
+
+Les keystores JKS et PKCS#12 sont acceptés (16 Mio maximum). Pour PKCS#12, la clé et le keystore doivent partager le même mot de passe. JKS accepte des mots de passe distincts, limités aux caractères ASCII par la bibliothèque utilisée. Les APK sont limités à 2 Gio et aux méthodes ZIP stockée/Deflate.
+
+Les opérations s’exécutent hors du thread d’interface. Le fichier source est conservé et aucun fichier existant n’est écrasé. Les fichiers temporaires sont nettoyés automatiquement ; les sorties ont des permissions `0600` sur Unix. Le mot de passe généré ou saisi lors de la création du keystore est enregistré dans son fichier compagnon ; les champs de mot de passe sont vidés après chaque opération. Aucun outil externe n’est exécuté pour générer ou signer.
 
 ## Démarrage sur macOS
 
@@ -138,6 +172,7 @@ src/
 src-tauri/
   src/commands.rs                 Commandes IPC, exécutées en spawn_blocking
   src/apk/                        Analyse APK, permissions et certificats (sans Tauri)
+  src/apk_tools.rs                 Keystores, alignement, signature et vérification APK v2
   src/devices/
     usb.rs                        Énumération et lecture via adb_client
     files.rs                      Navigation, run-as et parsing des fichiers
@@ -165,6 +200,16 @@ cargo clippy --manifest-path src-tauri/Cargo.toml --all-targets -- -D warnings
 Les tests automatisés couvrent le parsing des propriétés, la persistance des clés, la sélection, les réponses obsolètes, les erreurs, les déconnexions et l’actualisation manuelle. Ils ne remplacent pas un essai USB sur un téléphone physique.
 
 Les tests APK génèrent des archives temporaires avec un véritable manifeste AXML binaire et un certificat X.509 dans un bloc v2. Ils vérifient également les archives invalides, les permissions, les erreurs partielles, le cycle de vie des événements de dépôt et les analyses successives. Les données de test ne constituent pas une application Android installable et les signatures ne sont pas vérifiées.
+
+Les tests de **signature** génèrent un keystore et signent réellement une archive de test. Ils couvrent PKCS#12, JKS avec mots de passe distincts, la re-signature, les erreurs de mot de passe, l’alignement, la conservation du fichier source, le refus d’écrasement et la détection d’un contenu altéré. Un test facultatif contrôle également l’interopérabilité avec les outils officiels (uniquement requis pour ce test) :
+
+```bash
+ANDROID_TOOLS_APKSIGNER="$ANDROID_HOME/build-tools/36.1.0/apksigner" \
+ANDROID_TOOLS_ZIPALIGN="$ANDROID_HOME/build-tools/36.1.0/zipalign" \
+cargo test --manifest-path src-tauri/Cargo.toml native_signatures_are_compatible_with_android_tools -- --ignored --nocapture
+```
+
+Adaptez la version des Build Tools et rendez `keytool` accessible dans le `PATH`. Ce test vérifie la signature à partir de l’API 24 et ne remplace pas un essai d’installation sur un appareil.
 
 Pour un essai matériel : branchez deux appareils (idéalement du même modèle), vérifiez que chacun affiche ses propres informations, changez de sélection pendant une lecture, refusez puis acceptez une autorisation et débranchez l’appareil sélectionné. Vérifiez également le cas où un serveur ADB occupe déjà l’interface.
 

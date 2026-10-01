@@ -83,7 +83,7 @@ afterEach(() => {
 })
 
 describe('device selection', () => {
-  it('coalesces shutdown clicks and reconnects the latest selection, ignoring old reads', async () => {
+  it('coalesces refresh clicks and reconnects the latest selection, ignoring old reads', async () => {
     const shutdown = deferred<boolean>()
     const oldRead = deferred<DeviceInfo>()
     vi.mocked(stopAdbServer).mockReturnValueOnce(shutdown.promise)
@@ -91,16 +91,17 @@ describe('device selection', () => {
     const state = setup()
     await flushPromises()
     state.selectedId.value = 'a'
-    const release = state.releaseAdb()
-    await state.releaseAdb()
+    const refresh = state.refreshDevices()
+    await state.refreshDevices()
     state.selectedId.value = 'b'
     oldRead.resolve(info('a'))
     await flushPromises()
     expect(state.info.value).toBeNull()
     expect(getDeviceInfo).toHaveBeenCalledTimes(1)
     expect(stopAdbServer).toHaveBeenCalledTimes(1)
+    expect(listDevices).toHaveBeenCalledTimes(1)
     shutdown.resolve(true)
-    await release
+    await refresh
     await flushPromises()
     expect(state.info.value?.deviceId).toBe('b')
     expect(state.stoppingAdb.value).toBe(false)
@@ -110,13 +111,13 @@ describe('device selection', () => {
     vi.mocked(stopAdbServer).mockRejectedValueOnce(new Error('Timeout'))
     const state = setup()
     await flushPromises()
-    await state.releaseAdb()
+    await state.refreshDevices()
     expect(state.adbError.value).not.toBeNull()
     expect(state.stoppingAdb.value).toBe(false)
     vi.mocked(stopAdbServer).mockResolvedValueOnce(false)
-    await state.releaseAdb()
+    await state.refreshDevices()
     expect(state.adbError.value).toBeNull()
-    expect(state.adbNotice.value).toContain('Aucun serveur')
+    expect(state.adbNotice.value).toBe('')
   })
 
   it('does not reconnect a disconnected device or act after disposal during shutdown', async () => {
@@ -125,16 +126,16 @@ describe('device selection', () => {
     state.selectedId.value = 'a'
     await flushPromises()
     vi.mocked(listDevices).mockResolvedValue([])
-    await state.releaseAdb()
+    await state.refreshDevices()
     expect(state.selectedId.value).toBe('')
     expect(getDeviceInfo).toHaveBeenCalledTimes(1)
     const shutdown = deferred<boolean>()
     vi.mocked(stopAdbServer).mockReturnValueOnce(shutdown.promise)
-    const release = state.releaseAdb()
+    const refresh = state.refreshDevices()
     unmount?.()
     unmount = undefined
     shutdown.resolve(true)
-    await release
+    await refresh
     expect(listDevices).toHaveBeenCalledTimes(2)
     expect(state.adbNotice.value).toBe('')
   })
@@ -142,12 +143,28 @@ describe('device selection', () => {
   it('reads only the selected device, even for identical models', async () => {
     const state = setup()
     await flushPromises()
-    expect(getDeviceInfo).not.toHaveBeenCalled()
+    expect(state.selectedId.value).toBe('a')
+    expect(getDeviceInfo).toHaveBeenCalledExactlyOnceWith('a')
+    expect(state.info.value?.deviceId).toBe('a')
     state.selectedId.value = 'b'
     await flushPromises()
     expect(getDeviceInfo).toHaveBeenCalledWith('b')
     expect(state.info.value?.deviceId).toBe('b')
     expect(state.loadingInfo.value).toBe(false)
+  })
+
+  it('selects a device detected on refresh when none was selected', async () => {
+    vi.mocked(listDevices).mockResolvedValueOnce([])
+    const state = setup()
+    await flushPromises()
+    expect(state.selectedId.value).toBe('')
+    expect(getDeviceInfo).not.toHaveBeenCalled()
+
+    await state.refreshDevices()
+    await flushPromises()
+    expect(state.selectedId.value).toBe('a')
+    expect(getDeviceInfo).toHaveBeenCalledExactlyOnceWith('a')
+    expect(state.info.value?.deviceId).toBe('a')
   })
 
   it('coalesces rapid selections and ignores stale results', async () => {
@@ -211,7 +228,7 @@ describe('device selection', () => {
     state.selectedId.value = 'a'
     await flushPromises()
     expect(state.infoError.value?.code).toBe('timeout')
-    state.refreshInfo()
+    await state.refreshDevices()
     await flushPromises()
     expect(state.infoError.value).toBeNull()
     expect(state.info.value?.deviceId).toBe('a')
@@ -224,10 +241,13 @@ describe('device selection', () => {
     await flushPromises()
     await vi.advanceTimersByTimeAsync(15000)
     expect(listDevices).toHaveBeenCalledTimes(1)
+    expect(stopAdbServer).not.toHaveBeenCalled()
     await state.refreshDevices()
+    await flushPromises()
+    expect(stopAdbServer).toHaveBeenCalledTimes(1)
     expect(listDevices).toHaveBeenCalledTimes(2)
     expect(state.selectedId.value).toBe('b')
-    expect(getDeviceInfo).toHaveBeenCalledTimes(1)
+    expect(getDeviceInfo).toHaveBeenCalledTimes(3)
     unmount?.()
     unmount = undefined
     await vi.advanceTimersByTimeAsync(10000)

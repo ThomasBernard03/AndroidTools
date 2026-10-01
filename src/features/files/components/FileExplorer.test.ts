@@ -1,12 +1,84 @@
 import { flushPromises, mount } from '@vue/test-utils'
 import { afterEach, describe, expect, it, vi } from 'vitest'
-import { listFiles, previewFile } from '../api'
+import { listFiles, previewFile, createDirectory, deleteEntry } from '../api'
 import FileExplorer from './FileExplorer.vue'
 
-vi.mock('../api', () => ({ listFiles: vi.fn(), previewFile: vi.fn() }))
+vi.mock('../api', () => ({
+  listFiles: vi.fn(),
+  previewFile: vi.fn(),
+  createDirectory: vi.fn(),
+  deleteEntry: vi.fn(),
+}))
 afterEach(() => vi.resetAllMocks())
 
 describe('file explorer screen', () => {
+  it('scrolls through matches while keeping all rows visible', async () => {
+    vi.mocked(listFiles).mockResolvedValue({
+      path: '/sdcard',
+      entries: ['alpha', 'beta', 'alphabet'].map((name) => ({
+        name,
+        kind: 'file',
+        size: 0,
+        modifiedAt: null,
+        permissions: null,
+      })),
+    })
+    const wrapper = mount(FileExplorer, { props: { deviceId: 'a' } })
+    try {
+      await flushPromises()
+      const rows = wrapper.findAll('tbody tr')
+      const scrolls = rows.map((row) => {
+        const scroll = vi.fn()
+        Object.defineProperty(row.element, 'scrollIntoView', { value: scroll, configurable: true })
+        return scroll
+      })
+      await wrapper.get('input[type="search"]').setValue('alph')
+      expect(wrapper.findAll('tbody tr')).toHaveLength(3)
+      expect(scrolls[0]).toHaveBeenCalledOnce()
+      await wrapper.get('[aria-label="Correspondance suivante"]').trigger('click')
+      expect(scrolls[2]).toHaveBeenCalledOnce()
+      await wrapper.get('[aria-label="Correspondance précédente"]').trigger('click')
+      expect(scrolls[0]).toHaveBeenCalledTimes(2)
+      await wrapper.get('input[type="search"]').setValue('absent')
+      expect(wrapper.findAll('tbody tr')).toHaveLength(3)
+      expect(
+        wrapper.get('[aria-label="Correspondance suivante"]').attributes('disabled'),
+      ).toBeDefined()
+    } finally {
+      wrapper.unmount()
+    }
+  })
+
+  it('creates a folder and deletes an entry through the visible controls', async () => {
+    vi.mocked(listFiles).mockResolvedValue({
+      path: '/sdcard',
+      entries: [
+        { name: 'folder', kind: 'directory', size: null, modifiedAt: null, permissions: null },
+      ],
+    })
+    const wrapper = mount(FileExplorer, { props: { deviceId: 'a' } })
+    try {
+      await flushPromises()
+      await wrapper
+        .findAll('button')
+        .find((button) => button.text() === 'Nouveau dossier')!
+        .trigger('click')
+      await wrapper.get('[aria-label="Nom du nouveau dossier"]').setValue('new folder')
+      await wrapper.get('form').trigger('submit')
+      await flushPromises()
+      expect(createDirectory).toHaveBeenCalledWith('a', '/sdcard', 'new folder')
+      await wrapper.get('[aria-label="Supprimer folder"]').trigger('click')
+      expect(deleteEntry).not.toHaveBeenCalled()
+      await wrapper
+        .findAll('button')
+        .find((button) => button.text() === 'Confirmer la suppression')!
+        .trigger('click')
+      await flushPromises()
+      expect(deleteEntry).toHaveBeenCalledWith('a', '/sdcard/folder')
+    } finally {
+      wrapper.unmount()
+    }
+  })
   it('asks for a device without reading USB', () => {
     const wrapper = mount(FileExplorer, { props: { deviceId: '' } })
     try {
@@ -57,6 +129,7 @@ describe('file explorer screen', () => {
       expect(listFiles).toHaveBeenLastCalledWith('a', '/data/data/com.example')
       await wrapper.get('input[type="search"]').setValue('missing')
       expect(wrapper.text()).toContain('Aucun élément')
+      expect(wrapper.findAll('tbody tr')).toHaveLength(1)
       await wrapper.get('input[type="search"]').setValue('prefs')
       await click('prefs.xml')
       expect(previewFile).toHaveBeenLastCalledWith('a', '/data/data/com.example/prefs.xml')

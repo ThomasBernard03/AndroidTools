@@ -1,5 +1,6 @@
 <script setup lang="ts">
-import { toRef } from 'vue'
+import { ref, toRef, watch } from 'vue'
+import type { FileEntry } from '../types'
 import UiIcon from '../../../components/UiIcon.vue'
 import ErrorNotice from '../../../components/ErrorNotice.vue'
 import FilePreview from './FilePreview.vue'
@@ -11,7 +12,18 @@ const {
   path,
   entries,
   search,
-  filteredEntries,
+  matches,
+  matchIndex,
+  activeMatch,
+  moveMatch,
+  operating,
+  operationError,
+  operationMessage,
+  writable,
+  download,
+  upload,
+  mkdir,
+  remove,
   breadcrumbs,
   privatePackage,
   error,
@@ -26,6 +38,37 @@ const {
   openEntry,
   closePreview,
 } = useFiles(toRef(props, 'deviceId'))
+
+const table = ref<HTMLElement | null>(null)
+const folderName = ref('')
+const creatingFolder = ref(false)
+const deleting = ref<FileEntry | null>(null)
+watch([path, () => props.deviceId], () => {
+  creatingFolder.value = false
+  folderName.value = ''
+  deleting.value = null
+})
+watch(
+  [activeMatch, search],
+  ([name]) => {
+    if (name) {
+      const row = Array.from(table.value?.querySelectorAll<HTMLElement>('[data-name]') ?? []).find(
+        (row) => row.dataset.name === name,
+      )
+      row?.scrollIntoView?.({ block: 'nearest', behavior: 'smooth' })
+    }
+  },
+  { flush: 'post' },
+)
+async function submitFolder() {
+  if (await mkdir(folderName.value)) {
+    creatingFolder.value = false
+    folderName.value = ''
+  }
+}
+async function confirmDelete() {
+  if (deleting.value && (await remove(deleting.value))) deleting.value = null
+}
 
 const locations = [
   { name: 'Stockage partagé', path: '/sdcard', icon: 'folder' },
@@ -102,11 +145,71 @@ const kinds = {
             <span class="font-mono">run-as</span> donnent accès à leurs données privées.
           </template>
           <template v-else
-            >Exploration en lecture seule. Ouvrez un dossier pour naviguer ou un fichier pour
-            afficher son aperçu texte.</template
+            >Ouvrez un dossier pour naviguer ou un fichier pour afficher son aperçu texte.</template
           >
         </div>
       </div>
+
+      <div class="mb-4 flex flex-wrap gap-2">
+        <button
+          class="button"
+          :disabled="loading || operating || !writable || !!error"
+          @click="upload(false)"
+        >
+          Envoyer un fichier
+        </button>
+        <button
+          class="button"
+          :disabled="loading || operating || !writable || !!error"
+          @click="upload(true)"
+        >
+          Envoyer un dossier
+        </button>
+        <button
+          class="button"
+          :disabled="loading || operating || !writable || !!error"
+          @click="creatingFolder = !creatingFolder"
+        >
+          Nouveau dossier
+        </button>
+      </div>
+      <form v-if="creatingFolder" class="mb-4 flex gap-2" @submit.prevent="submitFolder">
+        <input
+          v-model="folderName"
+          aria-label="Nom du nouveau dossier"
+          required
+          pattern="[^/]+"
+          class="rounded-md border border-line bg-surface px-3 py-1.5 text-xs"
+          :disabled="operating"
+        />
+        <button
+          class="button"
+          :disabled="operating || !folderName || folderName === '.' || folderName === '..'"
+        >
+          Créer
+        </button>
+        <button type="button" class="button" :disabled="operating" @click="creatingFolder = false">
+          Annuler
+        </button>
+      </form>
+      <div v-if="deleting" class="mb-4 rounded-lg border border-line p-4" role="alert">
+        <p class="mb-3 text-xs">
+          Supprimer « {{ deleting.name }} »{{
+            deleting.kind === 'directory' ? ' et tout son contenu' : ''
+          }}
+          ?
+        </p>
+        <div class="flex gap-2">
+          <button class="button" :disabled="operating" @click="confirmDelete">
+            Confirmer la suppression
+          </button>
+          <button class="button" :disabled="operating" @click="deleting = null">Annuler</button>
+        </div>
+      </div>
+      <ErrorNotice v-if="operationError" :error="operationError" class="mb-4" />
+      <p v-if="operating || operationMessage" role="status" class="mb-4 text-xs text-secondary">
+        {{ operating ? 'Opération en cours…' : operationMessage }}
+      </p>
 
       <section
         aria-label="Fichiers du dossier"
@@ -149,7 +252,31 @@ const kinds = {
             aria-label="Rechercher dans ce dossier"
             placeholder="Rechercher dans ce dossier…"
             class="min-w-0 rounded-md border border-line bg-surface px-3 py-1.5 text-xs placeholder:text-muted"
+            @keydown.enter.prevent="moveMatch($event.shiftKey ? -1 : 1)"
           />
+          <template v-if="search.trim()">
+            <span role="status" class="text-xs text-secondary">{{
+              matches.length
+                ? `${matchIndex + 1} / ${matches.length}`
+                : 'Aucun élément ne correspond à votre recherche.'
+            }}</span>
+            <button
+              class="button"
+              :disabled="!matches.length"
+              aria-label="Correspondance précédente"
+              @click="moveMatch(-1)"
+            >
+              Précédent
+            </button>
+            <button
+              class="button"
+              :disabled="!matches.length"
+              aria-label="Correspondance suivante"
+              @click="moveMatch(1)"
+            >
+              Suivant
+            </button>
+          </template>
         </div>
 
         <div v-if="loading" role="status" class="py-16 text-center text-secondary">
@@ -160,18 +287,10 @@ const kinds = {
           <ErrorNotice :error="error" />
           <button type="button" class="button" @click="refresh">Réessayer</button>
         </div>
-        <p
-          v-else-if="!filteredEntries.length"
-          role="status"
-          class="px-5 py-16 text-center text-secondary"
-        >
-          {{
-            search.trim()
-              ? 'Aucun élément ne correspond à votre recherche.'
-              : 'Ce dossier est vide.'
-          }}
+        <p v-else-if="!entries.length" role="status" class="px-5 py-16 text-center text-secondary">
+          Ce dossier est vide.
         </p>
-        <div v-else class="overflow-x-auto">
+        <div v-else ref="table" class="max-h-[60vh] overflow-auto">
           <table class="w-full text-left text-xs">
             <thead class="border-b border-line text-[11px] text-muted">
               <tr>
@@ -179,14 +298,20 @@ const kinds = {
                 <th scope="col" class="px-4 py-2.5 font-medium">Taille</th>
                 <th scope="col" class="px-4 py-2.5 font-medium">Modification</th>
                 <th scope="col" class="px-4 py-2.5 font-medium">Droits</th>
+                <th scope="col" class="px-4 py-2.5 font-medium">Actions</th>
               </tr>
             </thead>
             <tbody class="divide-y divide-line/60">
               <tr
-                v-for="entry in filteredEntries"
+                v-for="entry in entries"
                 :key="entry.name"
+                :data-name="entry.name"
                 class="hover:bg-raised/50"
-                :class="{ 'bg-accent/5': selectedEntry?.name === entry.name }"
+                :class="{
+                  'bg-accent/5': selectedEntry?.name === entry.name,
+                  'bg-accent/15 outline outline-accent/40 -outline-offset-1':
+                    activeMatch === entry.name,
+                }"
               >
                 <td class="px-4 py-2.5">
                   <button
@@ -218,6 +343,29 @@ const kinds = {
                   {{ formatDate(entry.modifiedAt) }}
                 </td>
                 <td class="px-4 py-2.5 font-mono text-muted">{{ entry.permissions ?? '—' }}</td>
+                <td class="px-4 py-2.5">
+                  <div
+                    v-if="writable && (entry.kind === 'file' || entry.kind === 'directory')"
+                    class="flex gap-2"
+                  >
+                    <button
+                      class="button"
+                      :disabled="operating"
+                      :aria-label="`Télécharger ${entry.name}`"
+                      @click="download(entry)"
+                    >
+                      Télécharger
+                    </button>
+                    <button
+                      class="button"
+                      :disabled="operating"
+                      :aria-label="`Supprimer ${entry.name}`"
+                      @click="deleting = entry"
+                    >
+                      Supprimer
+                    </button>
+                  </div>
+                </td>
               </tr>
             </tbody>
           </table>
@@ -226,10 +374,7 @@ const kinds = {
           v-if="!loading && !error"
           class="border-t border-line px-4 py-2 text-[11px] text-muted"
         >
-          {{ filteredEntries.length }} / {{ entries.length }} élément{{
-            entries.length > 1 ? 's' : ''
-          }}
-          · Lecture seule
+          {{ entries.length }} élément{{ entries.length > 1 ? 's' : '' }}
         </footer>
       </section>
 

@@ -171,6 +171,214 @@ fn analyze_bytes(bytes: &[u8]) -> Result<ApkReport, ApkError> {
 }
 
 #[test]
+fn keystore_preserves_existing_companion() {
+    let dir = tempfile::tempdir().unwrap();
+    let output = dir.path().join("release.p12");
+    let information = dir.path().join("release.p12.json");
+    fs::write(&information, b"existing information").unwrap();
+    let result = crate::apk_tools::generate_keystore(crate::apk_tools::KeystoreRequest {
+        output_path: output.to_string_lossy().into_owned(),
+        alias: "release".into(),
+        password: "secret123".into(),
+        common_name: "Test".into(),
+        organization: String::new(),
+        country: String::new(),
+        validity_days: 365,
+    });
+    assert!(result.is_err());
+    assert!(!output.exists());
+    assert_eq!(fs::read(information).unwrap(), b"existing information");
+}
+
+fn signing_roundtrip(check_official_tools: bool) {
+    use crate::apk_tools::{
+        KeystoreRequest, SignRequest, generate_keystore, sign_apk, verify_generated_apk,
+    };
+    let dir = tempfile::tempdir().unwrap();
+    let apk = dir.path().join("démo unsigned.apk");
+    let keystore = dir.path().join("release key.p12");
+    let output = dir.path().join("signed.apk");
+    let mut writer = ZipWriter::new(Cursor::new(Vec::new()));
+    writer
+        .start_file(
+            "AndroidManifest.xml",
+            SimpleFileOptions::default().compression_method(zip::CompressionMethod::Deflated),
+        )
+        .unwrap();
+    writer.write_all(&binary_manifest()).unwrap();
+    writer
+        .start_file(
+            "lib/arm64-v8a/libdemo.so",
+            SimpleFileOptions::default().compression_method(zip::CompressionMethod::Stored),
+        )
+        .unwrap();
+    writer.write_all(&vec![42; 2 * 1024 * 1024 + 71]).unwrap();
+    writer
+        .start_file("META-INF/OLD.RSA", SimpleFileOptions::default())
+        .unwrap();
+    writer.write_all(b"old signature").unwrap();
+    writer
+        .start_file("META-INF/services/test", SimpleFileOptions::default())
+        .unwrap();
+    writer.write_all(b"keep me").unwrap();
+    let original = writer.finish().unwrap().into_inner();
+    fs::write(&apk, &original).unwrap();
+    generate_keystore(KeystoreRequest {
+        output_path: keystore.to_string_lossy().into_owned(),
+        alias: "release".into(),
+        password: "test password $ & 123".into(),
+        common_name: "Android Tools Test".into(),
+        organization: "Test".into(),
+        country: "FR".into(),
+        validity_days: 10000,
+    })
+    .unwrap();
+    let request = |password: &str| SignRequest {
+        apk_path: apk.to_string_lossy().into_owned(),
+        keystore_path: keystore.to_string_lossy().into_owned(),
+        output_path: output.to_string_lossy().into_owned(),
+        alias: "release".into(),
+        store_password: password.into(),
+        key_password: String::new(),
+    };
+    let information_path = dir.path().join("release key.p12.json");
+    let information: serde_json::Value =
+        serde_json::from_slice(&fs::read(&information_path).unwrap()).unwrap();
+    assert_eq!(information["keystoreFile"], "release key.p12");
+    assert_eq!(information["alias"], "release");
+    assert_eq!(information["storePassword"], "test password $ & 123");
+    assert_eq!(information["keyPassword"], information["storePassword"]);
+    assert_eq!(information["commonName"], "Android Tools Test");
+    assert_eq!(information["validityDays"], 10000);
+    assert!(
+        information["expiresAtUtc"].as_str().unwrap()
+            > information["createdAtUtc"].as_str().unwrap()
+    );
+    #[cfg(unix)]
+    {
+        use std::os::unix::fs::PermissionsExt;
+        assert_eq!(
+            fs::metadata(&information_path)
+                .unwrap()
+                .permissions()
+                .mode()
+                & 0o777,
+            0o600
+        );
+    }
+    assert!(sign_apk(request("incorrect password")).is_err());
+    assert!(!output.exists());
+    sign_apk(request("test password $ & 123")).unwrap();
+    assert!(output.is_file());
+    assert_eq!(fs::read(&apk).unwrap(), original);
+    assert!(sign_apk(request("test password $ & 123")).is_err());
+    let store =
+        p12_keystore::KeyStore::from_pkcs12(&fs::read(&keystore).unwrap(), "test password $ & 123")
+            .unwrap();
+    let (_, chain) = store.private_key_chain().unwrap();
+    let cert = chain.chain()[0].as_der();
+    verify_generated_apk(&output, cert).unwrap();
+    let mut signed = zip::ZipArchive::new(fs::File::open(&output).unwrap()).unwrap();
+    assert!(signed.by_name("META-INF/OLD.RSA").is_err());
+    assert!(signed.by_name("META-INF/services/test").is_ok());
+    let data_offset = signed
+        .by_name("lib/arm64-v8a/libdemo.so")
+        .unwrap()
+        .data_start();
+    assert_eq!(data_offset % 16384, 0);
+    drop(signed);
+
+    let resigned = dir.path().join("resigned.apk");
+    let mut resign = request("test password $ & 123");
+    resign.apk_path = output.to_string_lossy().into_owned();
+    resign.output_path = resigned.to_string_lossy().into_owned();
+    sign_apk(resign).unwrap();
+    verify_generated_apk(&resigned, cert).unwrap();
+
+    let mut jks = jks::KeyStore::new();
+    jks.set_private_key_entry(
+        "release",
+        jks::PrivateKeyEntry {
+            creation_time: std::time::SystemTime::now(),
+            private_key: chain.key().to_vec(),
+            certificate_chain: vec![jks::Certificate {
+                cert_type: "X509".into(),
+                content: cert.to_vec(),
+            }],
+        },
+        b"key-password",
+    )
+    .unwrap();
+    let jks_path = dir.path().join("release.jks");
+    jks.store(fs::File::create(&jks_path).unwrap(), b"store-password")
+        .unwrap();
+    let mut jks_request = request("store-password");
+    jks_request.keystore_path = jks_path.to_string_lossy().into_owned();
+    jks_request.key_password = "key-password".into();
+    jks_request.output_path = dir
+        .path()
+        .join("jks-signed.apk")
+        .to_string_lossy()
+        .into_owned();
+    sign_apk(jks_request).unwrap();
+
+    if check_official_tools {
+        let apksigner =
+            std::env::var("ANDROID_TOOLS_APKSIGNER").expect("Set ANDROID_TOOLS_APKSIGNER");
+        let zipalign = std::env::var("ANDROID_TOOLS_ZIPALIGN").expect("Set ANDROID_TOOLS_ZIPALIGN");
+        assert!(
+            std::process::Command::new(apksigner)
+                .args(["verify", "--verbose", "--min-sdk-version", "24"])
+                .arg(&output)
+                .status()
+                .unwrap()
+                .success()
+        );
+        assert!(
+            std::process::Command::new(zipalign)
+                .args(["-c", "-P", "16", "4"])
+                .arg(&output)
+                .status()
+                .unwrap()
+                .success()
+        );
+        assert!(
+            std::process::Command::new("keytool")
+                .args(["-list", "-keystore"])
+                .arg(&keystore)
+                .args([
+                    "-storepass:env",
+                    "ANDROID_TOOLS_TEST_PASSWORD",
+                    "-alias",
+                    "release"
+                ])
+                .env("ANDROID_TOOLS_TEST_PASSWORD", "test password $ & 123")
+                .status()
+                .unwrap()
+                .success()
+        );
+    }
+
+    use std::io::{Seek, SeekFrom};
+    let mut tampered = fs::OpenOptions::new().write(true).open(&output).unwrap();
+    tampered.seek(SeekFrom::Start(data_offset)).unwrap();
+    tampered.write_all(&[0]).unwrap();
+    drop(tampered);
+    assert!(verify_generated_apk(&output, cert).is_err());
+}
+
+#[test]
+fn native_keystore_and_apk_signing_roundtrip() {
+    signing_roundtrip(false);
+}
+
+#[test]
+#[ignore = "Requires keytool, ANDROID_TOOLS_APKSIGNER and ANDROID_TOOLS_ZIPALIGN"]
+fn native_signatures_are_compatible_with_android_tools() {
+    signing_roundtrip(true);
+}
+
+#[test]
 fn decodes_binary_manifest_and_permissions_from_an_apk() {
     let report = analyze_bytes(&archive(&[("AndroidManifest.xml", &binary_manifest())])).unwrap();
     assert_eq!(report.package_name.as_deref(), Some("com.example.demo"));

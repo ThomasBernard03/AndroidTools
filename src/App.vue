@@ -1,7 +1,9 @@
 <script setup lang="ts">
-import { ref } from 'vue'
+import { computed, ref } from 'vue'
+import { version as appVersion } from '../src-tauri/tauri.conf.json'
 import UiIcon from './components/UiIcon.vue'
 import ApkView from './features/apk/components/ApkView.vue'
+import ApkToolsView from './features/apk/components/ApkToolsView.vue'
 import AndroidVersionIcon from './features/devices/components/AndroidVersionIcon.vue'
 import DeviceDetails from './features/devices/components/DeviceDetails.vue'
 import DeviceEmptyState from './features/devices/components/DeviceEmptyState.vue'
@@ -9,8 +11,19 @@ import DeviceSelector from './features/devices/components/DeviceSelector.vue'
 import ErrorNotice from './components/ErrorNotice.vue'
 import { useDevices } from './features/devices/useDevices'
 import FileExplorer from './features/files/components/FileExplorer.vue'
+import LogcatView from './features/logcat/components/LogcatView.vue'
 
-const view = ref<'devices' | 'apk' | 'files'>('devices')
+const view = ref<'devices' | 'apk' | 'files' | 'logcat' | 'keystore' | 'sign'>('devices')
+const apkSection = computed(() => ['apk', 'keystore', 'sign'].includes(view.value))
+const toolsOpened = ref(false)
+const apkTools = [
+  { id: 'keystore', label: 'Génération de keystore' },
+  { id: 'sign', label: 'Signature d’APK' },
+] as const
+function openTool(tool: 'keystore' | 'sign') {
+  toolsOpened.value = true
+  view.value = tool
+}
 
 const {
   devices,
@@ -26,9 +39,7 @@ const {
   stoppingAdb,
   adbError,
   adbNotice,
-  releaseAdb,
   refreshDevices,
-  refreshInfo,
 } = useDevices()
 </script>
 
@@ -57,18 +68,11 @@ const {
       <DeviceSelector
         v-model="selectedId"
         :devices="devices"
-        :scanning="scanning"
+        :scanning="scanning || stoppingAdb"
         @refresh="refreshDevices"
       />
 
-      <div class="mt-3 space-y-2 px-2">
-        <button type="button" class="button w-full" :disabled="stoppingAdb" @click="releaseAdb">
-          {{ stoppingAdb ? 'Arrêt du serveur ADB…' : 'Libérer la connexion ADB' }}
-        </button>
-        <p class="text-xs leading-5 text-muted">
-          Arrête le serveur ADB local (port 5037) et réessaie la connexion. Coupe les sessions ADB
-          des autres outils ; fermez-les s’ils relancent le serveur automatiquement.
-        </p>
+      <div v-if="adbError || adbNotice" class="mt-3 space-y-2 px-2">
         <ErrorNotice v-if="adbError" :error="adbError" />
         <p v-if="adbNotice" role="status" class="text-xs leading-5 text-secondary">
           {{ adbNotice }}
@@ -99,6 +103,17 @@ const {
         </button>
         <button
           type="button"
+          :aria-current="view === 'logcat' ? 'page' : undefined"
+          class="flex w-full items-center gap-2.5 rounded-md border border-transparent px-2.5 py-2 font-medium transition-colors hover:bg-white/9"
+          :class="view === 'logcat' ? 'bg-white/6 text-ink' : 'text-secondary'"
+          @click="view = 'logcat'"
+        >
+          <UiIcon name="code" :class="view === 'logcat' ? 'text-accent' : 'text-muted'" />
+          Logcat
+        </button>
+        <p class="section-label mb-2 px-2 pt-5">APK</p>
+        <button
+          type="button"
           :aria-current="view === 'apk' ? 'page' : undefined"
           class="flex w-full items-center gap-2.5 rounded-md border border-transparent px-2.5 py-2 font-medium transition-colors hover:bg-white/9"
           :class="view === 'apk' ? 'bg-white/6 text-ink' : 'text-secondary'"
@@ -107,28 +122,22 @@ const {
           <UiIcon name="package" :class="view === 'apk' ? 'text-accent' : 'text-muted'" />Analyse
           APK
         </button>
+        <button
+          v-for="tool in apkTools"
+          :key="tool.id"
+          type="button"
+          :aria-current="view === tool.id ? 'page' : undefined"
+          class="flex w-full items-center gap-2.5 rounded-md border border-transparent px-2.5 py-2 text-left font-medium transition-colors hover:bg-white/9"
+          :class="view === tool.id ? 'bg-white/6 text-ink' : 'text-secondary'"
+          @click="openTool(tool.id)"
+        >
+          <UiIcon name="shield" :class="view === tool.id ? 'text-accent' : 'text-muted'" />{{
+            tool.label
+          }}
+        </button>
       </nav>
 
-      <div class="mt-auto hidden pt-12 md:block">
-        <div class="px-2 pb-5">
-          <div class="mb-2 flex items-center gap-2 text-xs text-secondary">
-            <UiIcon name="cable" :size="14" /> Connexion directe
-          </div>
-          <p class="text-xs leading-5 text-muted">
-            Vos appareils, en local.<br />Aucun serveur ADB nécessaire.
-          </p>
-        </div>
-        <div
-          class="flex items-center gap-2 border-t border-line/70 px-2 pt-3 text-[11px] text-muted"
-        >
-          <span
-            class="size-1.5 rounded-full"
-            :class="listError ? 'bg-amber-400' : 'bg-positive'"
-            aria-hidden="true"
-          ></span>
-          {{ listError ? 'Détection indisponible' : 'Actualisation manuelle' }}
-        </div>
-      </div>
+      <footer class="mt-auto px-2 pt-6 text-xs text-muted">Version {{ appVersion }}</footer>
     </aside>
 
     <main
@@ -141,28 +150,40 @@ const {
       >
         <div aria-label="Emplacement actuel" class="flex min-w-0 items-center gap-2.5 text-xs">
           <UiIcon
-            :name="view === 'apk' ? 'package' : view === 'files' ? 'folder' : 'phone'"
+            :name="apkSection ? 'package' : view === 'files' ? 'folder' : 'phone'"
             class="text-muted"
           />
-          <span class="text-secondary">{{ view === 'apk' ? 'Applications' : 'Appareils' }}</span>
+          <span class="text-secondary">{{ apkSection ? 'APK' : 'Appareils' }}</span>
           <UiIcon name="chevron" :size="12" class="text-muted" />
           <span class="truncate">{{
-            view === 'apk'
-              ? 'Analyse APK'
-              : view === 'files'
-                ? 'Explorateur de fichiers'
-                : (info?.model ?? selectedDevice?.name ?? 'Vue d’ensemble')
+            view === 'keystore'
+              ? 'Génération de keystore'
+              : view === 'sign'
+                ? 'Signature d’APK'
+                : view === 'apk'
+                  ? 'Analyse APK'
+                  : view === 'files'
+                    ? 'Explorateur de fichiers'
+                    : view === 'logcat'
+                      ? 'Logcat'
+                      : (info?.model ?? selectedDevice?.name ?? 'Vue d’ensemble')
           }}</span>
         </div>
         <span class="status-badge shrink-0"
-          ><UiIcon :name="view === 'apk' ? 'shield' : 'cable'" :size="12" />{{
-            view === 'apk' ? 'Analyse locale' : 'USB direct'
+          ><UiIcon :name="apkSection ? 'shield' : 'cable'" :size="12" />{{
+            apkSection ? 'Traitement local' : 'USB direct'
           }}</span
         >
       </header>
 
       <ApkView v-show="view === 'apk'" @open="view = 'apk'" />
+      <ApkToolsView
+        v-if="toolsOpened"
+        v-show="view === 'keystore' || view === 'sign'"
+        :mode="view === 'keystore' ? 'keystore' : 'sign'"
+      />
       <FileExplorer v-if="view === 'files'" :device-id="selectedDevice?.id ?? ''" />
+      <LogcatView v-if="view === 'logcat'" :device-id="selectedDevice?.id ?? ''" />
       <div
         v-show="view === 'devices'"
         class="mx-auto flex w-full max-w-5xl flex-1 flex-col px-6 py-8 lg:px-10 lg:py-10"
@@ -179,8 +200,8 @@ const {
             v-if="selectedDevice"
             type="button"
             class="button mt-1"
-            :disabled="loadingInfo || stoppingAdb"
-            @click="refreshInfo"
+            :disabled="loadingInfo || stoppingAdb || scanning"
+            @click="refreshDevices"
           >
             <UiIcon name="refresh" :size="13" :class="{ 'animate-spin': loadingInfo }" />
             {{ infoError ? 'Réessayer' : 'Relire les informations' }}

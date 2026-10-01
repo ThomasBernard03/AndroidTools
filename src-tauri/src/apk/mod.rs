@@ -1,3 +1,4 @@
+pub mod history;
 mod models;
 mod permissions;
 mod signatures;

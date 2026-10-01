@@ -1,11 +1,29 @@
 import { effectScope, ref } from 'vue'
 import { flushPromises } from '@vue/test-utils'
 import { afterEach, beforeEach, describe, expect, it, vi } from 'vitest'
-import { listFiles, previewFile } from './api'
+import {
+  listFiles,
+  previewFile,
+  chooseUpload,
+  chooseDownload,
+  uploadEntry,
+  downloadEntry,
+  createDirectory,
+  deleteEntry,
+} from './api'
 import { useFiles } from './useFiles'
 import type { FileEntry, FileListing, FilePreview } from './types'
 
-vi.mock('./api', () => ({ listFiles: vi.fn(), previewFile: vi.fn() }))
+vi.mock('./api', () => ({
+  listFiles: vi.fn(),
+  previewFile: vi.fn(),
+  chooseUpload: vi.fn(),
+  chooseDownload: vi.fn(),
+  uploadEntry: vi.fn(),
+  downloadEntry: vi.fn(),
+  createDirectory: vi.fn(),
+  deleteEntry: vi.fn(),
+}))
 
 const file: FileEntry = {
   name: 'settings.xml',
@@ -37,6 +55,7 @@ function setup(id = 'a') {
 }
 
 beforeEach(() => {
+  vi.resetAllMocks()
   vi.mocked(listFiles)
     .mockReset()
     .mockImplementation(async (_id, path) => listing(path))
@@ -96,7 +115,7 @@ describe('file navigation', () => {
     expect(listFiles).toHaveBeenCalledTimes(1)
   })
 
-  it('retries a denied directory and filters without further USB calls', async () => {
+  it('retries a denied directory and searches without hiding entries or further USB calls', async () => {
     const { state } = setup()
     await flushPromises()
     vi.mocked(listFiles).mockRejectedValueOnce({
@@ -112,8 +131,84 @@ describe('file navigation', () => {
     await flushPromises()
     expect(state.error.value).toBeNull()
     state.search.value = 'XML'
-    expect(state.filteredEntries.value).toEqual([file])
+    expect(state.matches.value).toEqual([file])
+    expect(state.entries.value).toEqual([folder, file])
+    expect(state.activeMatch.value).toBe(file.name)
     expect(listFiles).toHaveBeenCalledTimes(3)
+  })
+
+  it('cycles matches in both directions and resets for a new query', async () => {
+    const { state } = setup()
+    await flushPromises()
+    state.search.value = 's'
+    expect(state.activeMatch.value).toBe(folder.name)
+    state.moveMatch(-1)
+    expect(state.activeMatch.value).toBe(file.name)
+    state.moveMatch(1)
+    expect(state.activeMatch.value).toBe(folder.name)
+    state.search.value = 'missing'
+    state.moveMatch(1)
+    expect(state.activeMatch.value).toBeUndefined()
+    expect(state.entries.value).toHaveLength(2)
+  })
+
+  it('transfers entries and refreshes after mutations', async () => {
+    const { state } = setup()
+    await flushPromises()
+    vi.mocked(chooseUpload).mockResolvedValue('/local/folder')
+    await state.upload(true)
+    await flushPromises()
+    expect(uploadEntry).toHaveBeenCalledWith('a', '/sdcard', '/local/folder')
+    vi.mocked(chooseDownload).mockResolvedValue('/local/settings.xml')
+    await state.download(file)
+    expect(downloadEntry).toHaveBeenCalledWith('a', '/sdcard/settings.xml', '/local/settings.xml')
+    await state.mkdir('new folder')
+    await flushPromises()
+    expect(createDirectory).toHaveBeenCalledWith('a', '/sdcard', 'new folder')
+    await state.remove(folder)
+    await flushPromises()
+    expect(deleteEntry).toHaveBeenCalledWith('a', '/sdcard/shared_prefs')
+    expect(listFiles).toHaveBeenCalledTimes(4)
+  })
+
+  it('cancels dialogs and discards selections after navigation or device changes', async () => {
+    const { state, deviceId } = setup()
+    await flushPromises()
+    vi.mocked(chooseUpload).mockResolvedValue(null)
+    await state.upload(false)
+    expect(uploadEntry).not.toHaveBeenCalled()
+    for (const change of [
+      () => state.navigate('/other'),
+      () => {
+        deviceId.value = 'b'
+      },
+      () => stop(),
+    ]) {
+      const dialog = deferred<string | null>()
+      vi.mocked(chooseUpload).mockReturnValueOnce(dialog.promise)
+      const operation = state.upload(false)
+      change()
+      dialog.resolve('/local/file')
+      await operation
+      await flushPromises()
+    }
+    expect(uploadEntry).not.toHaveBeenCalled()
+  })
+
+  it('prevents duplicate mutations and ignores stale failures after disconnection', async () => {
+    const { state, deviceId } = setup()
+    await flushPromises()
+    const pending = deferred<void>()
+    vi.mocked(deleteEntry).mockReturnValueOnce(pending.promise)
+    const operation = state.remove(file)
+    await state.remove(file)
+    expect(deleteEntry).toHaveBeenCalledTimes(1)
+    deviceId.value = ''
+    pending.reject(new Error('disconnected'))
+    await operation
+    expect(state.operationError.value).toBeNull()
+    expect(state.operating.value).toBe(false)
+    expect(state.entries.value).toEqual([])
   })
 
   it('discards previews when navigating, closing or changing devices', async () => {
