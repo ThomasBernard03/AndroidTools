@@ -4,7 +4,8 @@
     "targets": ["app", "dmg"],
     "macOS": {
       "frameworks": ["Sparkle.framework"],
-      "signingIdentity": "-"
+      "signingIdentity": "-",
+      "hardenedRuntime": false
     }
   }
 }

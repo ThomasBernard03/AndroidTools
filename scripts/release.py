@@ -96,6 +96,14 @@ def sign():
         if not re.search(r"cmd LC_RPATH\s+cmdsize \d+\s+path @executable_path/\.\./Frameworks \(offset \d+\)",
                          result.stdout):
             raise ValueError(f"Missing bundled framework runtime path for {architecture}")
+        result = subprocess.run(["codesign", "--display", "--verbose=4", "--arch", architecture,
+                                 str(executable)], check=True, capture_output=True, text=True)
+        flags = re.search(r"\bflags=0x([0-9a-fA-F]+)", result.stderr)
+        if not flags:
+            raise ValueError(f"Missing code signing flags for {architecture}")
+        # Match the legacy ad-hoc release: no Hardened Runtime or required library validation.
+        if int(flags[1], 16) & (0x10000 | 0x2000):
+            raise ValueError(f"Ad-hoc release must not enforce library Team IDs for {architecture}")
     subprocess.run(["codesign", "--verify", "--deep", "--strict", str(app)], check=True)
     images = list((bundle / "dmg").glob("*.dmg"))
     if len(images) != 1:
