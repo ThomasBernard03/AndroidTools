@@ -87,8 +87,15 @@ def sign():
     framework = app / "Contents/Frameworks/Sparkle.framework"
     if not framework.is_dir():
         raise ValueError("Sparkle.framework is missing from the bundle")
-    subprocess.run(["lipo", str(app / "Contents/MacOS" / info["CFBundleExecutable"]),
+    executable = app / "Contents/MacOS" / info["CFBundleExecutable"]
+    subprocess.run(["lipo", str(executable),
                     "-verify_arch", "arm64", "x86_64"], check=True)
+    for architecture in ("arm64", "x86_64"):
+        result = subprocess.run(["otool", "-arch", architecture, "-l", str(executable)],
+                                check=True, capture_output=True, text=True)
+        if not re.search(r"cmd LC_RPATH\s+cmdsize \d+\s+path @executable_path/\.\./Frameworks \(offset \d+\)",
+                         result.stdout):
+            raise ValueError(f"Missing bundled framework runtime path for {architecture}")
     subprocess.run(["codesign", "--verify", "--deep", "--strict", str(app)], check=True)
     images = list((bundle / "dmg").glob("*.dmg"))
     if len(images) != 1:
