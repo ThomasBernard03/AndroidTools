@@ -1,0 +1,22 @@
+[package]
+name = "android-tools"
+version = "0.1.0"
+description = "Desktop tools for Android devices"
+edition = "2024"
+rust-version = "1.90"
+
+[lib]
+name = "android_tools_lib"
+crate-type = ["staticlib", "cdylib", "rlib"]
+
+[features]
+custom-protocol = ["tauri/custom-protocol"]
+
+[build-dependencies]
+tauri-build = { version = "2", features = [] }
+
+[dependencies]
+tauri = { version = "2", features = [] }
+
+[lints.clippy]
+unwrap_used = "warn"

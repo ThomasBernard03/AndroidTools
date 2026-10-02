@@ -1,213 +1,127 @@
-<div align="center">
+# Android Tools
 
-# 🔧 Android Tools
+A new desktop foundation built with **Tauri 2 + Rust + Vue 3 + TypeScript +
+Tailwind CSS 4**. This branch rebuilds the project incrementally. Only the welcome
+screen is implemented so far. The first feature will list devices using simulated
+data, followed by real USB integration. No phone or Android SDK is required for
+this milestone.
 
-### A powerful desktop application for managing Android devices
+## Prerequisites
 
-[![Version](https://img.shields.io/badge/version-2026.05.3-blue.svg)](https://github.com/ThomasBernard03/AndroidTools/releases)
-[![Flutter](https://img.shields.io/badge/Flutter-3.44.0-02569B?logo=flutter)](https://flutter.dev)
-[![License](https://img.shields.io/badge/license-MIT-green.svg)](LICENSE)
-[![Platform](https://img.shields.io/badge/platform-macOS%20%7C%20-lightgrey.svg)](https://github.com/ThomasBernard03/AndroidTools)
+- Node.js **24 LTS**, version 24.15 or later within the 24.x series, and npm.
+  Run `nvm use` if you use nvm.
+- Rust through [rustup](https://rustup.rs/). `rust-toolchain.toml` pins the version
+  and components used locally and in CI.
+- On macOS: Xcode or the Command Line Tools (`xcode-select --install`).
+- On Windows/Linux: install the [Tauri prerequisites](https://v2.tauri.app/start/prerequisites/).
+  Native CI for this first milestone targets macOS.
 
-[Features](#features) • [Installation](#installation) • [Usage](#usage) • [Building](#building) • [Contributing](#contributing)
-
-![Android Tools](documentation/file_explorer.png)
-
-</div>
-
----
-
-## 📱 Overview
-
-**Android Tools** is a comprehensive desktop application designed to simplify Android device management. Whether you're a developer, power user, or enthusiast, Android Tools provides an intuitive interface for exploring device files, monitoring logs, and installing applications.
-
-Built with Flutter, it offers a modern, responsive UI that works seamlessly across different platforms.
-
-## ✨ Features
-
-### 🗂️ **File Explorer**
-- Browse your Android device's file system with an intuitive, modern interface
-- Navigate through folders with breadcrumb navigation
-- Preview images, text files, and view detailed file metadata
-- Drag and drop files between your computer and device
-- Upload and download files with progress indicators
-- Support for all common file formats
-- File operations: copy, delete, rename, and more
-
-<div align="center">
-  <img src="documentation/file_explorer.png" alt="File Explorer" width="800">
-</div>
-
-### 📦 **APK Inspector & Installer**
-- Install APK files with a single click or drag and drop
-- View detailed APK information (package name, version, permissions)
-- Batch installation support for multiple apps
-- Track installation history
-- Inspect installed applications
-
-<div align="center">
-  <img src="documentation/apk_inspector.png" alt="APK Inspector" width="800">
-</div>
-
-### 📊 **Device Information**
-- View detailed device specifications
-- Check Android version and build information
-- Monitor device status in real-time
-
-<div align="center">
-  <img src="documentation/device_information.png" alt="Device Information" width="800">
-</div>
-
-### 📝 **Logcat Viewer**
-- Real-time log monitoring with live updates
-- Advanced filtering by tag, priority level, and custom search
-- Color-coded log levels (Verbose, Debug, Info, Warning, Error)
-- Clean, readable log presentation with timestamps
-- Clear logs and export functionality
-
-<div align="center">
-  <img src="documentation/logcat.png" alt="Logcat Viewer" width="800">
-</div>
-
-## 🚀 Installation
-
-### macOS
-
-1. Download the latest release from the [Releases page](https://github.com/ThomasBernard03/AndroidTools/releases)
-2. Unzip the downloaded file
-3. Double-click `android_tools.app`
-
-   ![macOS Installation Step 1](documentation/macos_install_screenshot_1.png)
-
-4. If you see "Android Tools cannot be opened":
-   - Go to **System Preferences** → **Privacy & Security**
-
-   ![macOS Security Warning](documentation/macos_install_screenshot_2.png)
-
-   - Scroll down and click **Open Anyway** next to the Android Tools warning
-
-   ![macOS Open Anyway](documentation/macos_install_screenshot_3.png)
-
-5. The app will launch successfully
-
-### Windows & Linux
-Coming soon! Star this repository to get notified when they're available.
-
-## 📋 Prerequisites
-
-- **USB Debugging** enabled on your Android device
-- **macOS 10.14+** (for macOS users)
-
-## 🎯 Usage
-
-1. **Connect your Android device** via USB
-2. **Enable USB Debugging** on your device (Settings → Developer Options → USB Debugging)
-3. **Launch Android Tools**
-4. **Accept the USB debugging prompt** on your device
-5. Your device will appear in the app, ready to use!
-
-### Quick Actions
-- 🗂️ **File Explorer** - Browse and manage device files with drag-and-drop support
-- 📦 **APK Inspector** - Install apps and view detailed APK information
-- 📝 **Logcat** - Monitor real-time device logs with advanced filtering
-- ℹ️ **Device Information** - View comprehensive device specifications and status
-
-## 🛠️ Building from Source
-
-
-### Setup
+## Install and run
 
 ```bash
-# Clone the repository
-git clone https://github.com/ThomasBernard03/AndroidTools.git
-cd AndroidTools
-
-# Install dependencies
-fvm flutter pub get
-
-# Generate code
-fvm dart run build_runner build -d
+npm ci
+npm run tauri dev
 ```
 
-### Running the App
+Tauri starts Vite, compiles Rust and opens a native window. The first launch takes
+longer because Cargo must compile the dependencies.
+
+To work on the interface in a browser:
 
 ```bash
-# Run with Sentry (optional, for error tracking)
-fvm flutter run --dart-define=SENTRY_DSN=your_sentry_dsn
+npm run dev
 ```
 
-### Building for macOS
+Open <http://127.0.0.1:1420>. The welcome screen works in both environments.
+Future native features will be available in the browser through explicit simulated
+services, introduced with the first feature.
+
+## Quality checks
 
 ```bash
-# Build the app
-fvm flutter build macos \
-  --dart-define=SENTRY_DSN=your_sentry_dsn \
-  --obfuscate \
-  --split-debug-info=build/debug-info
+npm run check
+npm run check:rust
 ```
+
+`check` runs formatting checks, ESLint, TypeScript validation, the Vite build and
+Vitest tests. `check:rust` runs rustfmt checks, Clippy and Cargo tests. On a fresh
+checkout, build the frontend before running Rust checks: Tauri embeds files from
+`dist/` in some build configurations.
 
 ```bash
-zip -r android_tools.zip android_tools.app
+npm run test:watch
+npm run format
+cargo fmt --manifest-path src-tauri/Cargo.toml
 ```
 
-## 🗺️ Roadmap
+The frontend test verifies that the welcome screen mounts without a Tauri runtime
+or phone. The Rust test runner is ready but has no business tests yet: the backend
+only starts Tauri. Behavior tests will be introduced alongside each feature.
 
-- [ ] Real-time device connection/disconnection detection
-- [ ] Live SQL database viewer
-- [ ] Stack similar logcat lines (VSCode-style)
-- [ ] Windows and Linux support
-- [ ] Screen mirroring
-
-## 🤝 Contributing
-
-Contributions are welcome! Please feel free to submit a Pull Request.
-
-1. Fork the project
-2. Create your feature branch (`git checkout -b feature/AmazingFeature`)
-3. Commit your changes (`git commit -m 'Add some AmazingFeature'`)
-4. Push to the branch (`git push origin feature/AmazingFeature`)
-5. Open a Pull Request
-
-## 📝 Development Notes
-
-### Code Generation
-The project uses build_runner for code generation. Run this after modifying models or database schemas:
+## Build the desktop binary
 
 ```bash
-fvm flutter clean && fvm flutter pub get && fvm dart run build_runner build -d
+npm run tauri build -- --no-bundle
 ```
 
-### Sentry Integration
-For error tracking, set your Sentry DSN:
+The binary is written to `src-tauri/target/release/`. Installer generation is
+disabled for this first milestone. Distribution packaging, signing, notarization and
+updates will be addressed in a dedicated milestone.
 
-```dart
---dart-define=SENTRY_DSN=your_sentry_dsn
+The application icon is reused from the Flutter application on `main`
+(`macos/Runner/Assets.xcassets/AppIcon.appiconset/AppIcon512x512@2x.png`).
+Its original 1024-pixel source is stored as `src-tauri/icons/app-icon.png`.
+Regenerate the runtime icon with:
+
+```bash
+npm run tauri icon -- src-tauri/icons/app-icon.png --output src-tauri/icons --png 32
 ```
 
-### Auto-Updater
-Configure auto-updates by setting the feed URL:
+## Project layout
 
-```dart
---dart-define=AUTO_UPDATER_FEED_URL=your_feed_url
+```text
+src/
+  main.ts                         Vue bootstrap
+  App.vue                         Interface composition
+  App.test.ts                     Bootstrap test without a native runtime
+  styles.css                      Tailwind and global styles
+  shared/presentation/widgets/    Shared components
+src-tauri/
+  src/lib.rs                      Tauri bootstrap
+  src/main.rs                     Binary entry point
+  tauri.conf.json                 Window, build and content security policy
+  capabilities/main.json          Native window permissions
+docs/
+  architecture.md                 Decisions and rules for future features
 ```
 
-## 📄 License
+Read the [architecture guide](docs/architecture.md) before adding the first feature.
+All project content, including the interface, documentation and comments, must be
+written in English, as specified in [AGENTS.md](AGENTS.md).
 
-This project is licensed under the MIT License - see the [LICENSE](LICENSE) file for details.
+`package-lock.json` and `src-tauri/Cargo.lock` are versioned for reproducible
+dependency installation. The existing `appcast/`, `appcast.xml` and `CHANGELOG.md`
+preserve Flutter release history and are not used by this foundation.
+The new CI checks the frontend on Linux and Rust plus the desktop build on macOS;
+it does not publish releases.
 
-## 🙏 Acknowledgments
+## Tooling choices
 
-- Built with [Flutter](https://flutter.dev)
-- ADB integration via [adb_dart](https://pub.dev/packages/adb_dart)
-- AAPT integration via [aapt_dart](https://pub.dev/packages/aapt_dart)
-- Auto-updates powered by [auto_updater](https://pub.dev/packages/auto_updater)
+- **Node.js 24 LTS** runs the frontend development tools. Node.js 26 is currently
+  in its Current phase; this project uses the latest LTS line for its development
+  baseline. Node.js is not embedded in the shipped desktop application.
+- **Cargo** is Rust's package manager and build tool. It resolves dependencies,
+  compiles the application and runs Rust tests.
+- **rustfmt** formats Rust source code; `cargo fmt --check` verifies formatting.
+- **Clippy** is Rust's linter. It detects common mistakes and suggests more idiomatic
+  code. CI treats its warnings as failures.
 
----
+Dependency versions were reviewed on October 2, 2026. Vite 8 and Vitest 5 are used.
+TypeScript remains on 6.0.x because the current `typescript-eslint` release supports
+TypeScript versions below 6.1; TypeScript 7 is newer but is not supported by that
+linter yet. Revisit this constraint when updating the toolchain.
 
-<div align="center">
-
-**Made with ❤️ for the Android developer community**
-
-[Report Bug](https://github.com/ThomasBernard03/AndroidTools/issues) • [Request Feature](https://github.com/ThomasBernard03/AndroidTools/issues)
-
-</div>
+The CI commands are portable, but native Tauri compilation depends on the host
+platform. The macOS job validates the macOS runtime and binary using Apple's SDK;
+a Linux build would instead validate WebKitGTK and the Linux binary. Frontend
+checks run on Linux because they do not need a native window or macOS APIs.

@@ -1,100 +1,54 @@
-# CLAUDE.md
+# Repository guidance
 
-This file provides guidance to Claude Code (claude.ai/code) when working with code in this repository.
+## Stack and scope
+
+This branch rebuilds Android Tools with Tauri 2, Rust, Vue 3, TypeScript and
+Tailwind CSS 4. Read README.md and docs/architecture.md before adding features.
+Implement one understandable, documented and tested feature at a time.
 
 ## Commands
 
 ```bash
-# Run the app
-fvm flutter run
-
-# Run with optional integrations
-fvm flutter run \
-  --dart-define=SENTRY_DSN=your_dsn \
-  --dart-define=AUTO_UPDATER_FEED_URL=your_feed_url
-
-# Code generation (required after modifying Drift tables or @MappableClass models)
-fvm dart run build_runner build -d
-
-# Clean rebuild
-fvm flutter clean && fvm flutter pub get && fvm dart run build_runner build -d
-
-# Tests
-fvm flutter test
-fvm flutter test test/path/to/specific_test.dart
-
-# Lint / format
-fvm flutter analyze
-fvm dart format .
-
-# Build macOS release
-fvm flutter build macos \
-  --dart-define=SENTRY_DSN=your_dsn \
-  --obfuscate \
-  --split-debug-info=build/debug-info
+npm ci
+npm run tauri dev
+npm run dev
+npm run check
+npm run check:rust
+npm run format
+cargo fmt --manifest-path src-tauri/Cargo.toml
+npm run tauri build -- --no-bundle
 ```
 
-## Environment Variables (dart-define)
-
-| Key | Purpose |
-|-----|---------|
-| `SENTRY_DSN` | Sentry crash reporting DSN |
-| `AUTO_UPDATER_FEED_URL` | Sparkle/auto-updater feed URL |
-| `GIT_REPOSITORY_URL` | Link to the repository (shown in UI) |
-| `ISSUE_URL` | Link to bug tracker (shown in UI) |
-
-All four are optional at runtime; missing values produce warnings in the log.
+Build the frontend before Rust checks on a fresh checkout. Use the pinned Rust
+toolchain and Node 24 LTS. Commit both dependency lockfiles when they change.
 
 ## Architecture
 
-### Dependency Injection
+- Organize features by responsibility, following docs/architecture.md.
+- Keep business logic independent of Tauri, Vue and external hardware.
+- Inject external dependencies through Rust traits and TypeScript interfaces.
+- Keep Tauri commands thin; do not call invoke directly from UI components.
+- Build deterministic fakes and meaningful behavior tests with each feature.
+- The normal test suite must run without a phone, Android SDK or native window.
+- Keep explicit demo scenarios separate from real device data and errors.
+- Avoid speculative abstractions and empty layer scaffolding.
 
-`getIt` (GetIt instance) is a package-level global defined in `lib/main.dart`. Every feature registers its own dependencies in a `*Module.configureDependencies()` static method called from `main()`. Modules must be registered before `await getIt.allReady()`.
+## Style and documentation
 
-### Feature Structure
+- Use English for all project content: user interface text, accessibility labels,
+  error messages, documentation, project guides, code identifiers and test names.
+- Write all comments in English, including code, tests, configuration files and
+  scripts. API documentation and docstrings must also be written in English.
+- Use one Vue component per file; shared widgets live in
+  src/shared/presentation/widgets, feature widgets in their presentation layer.
+- Use TypeScript strict mode and structured Rust errors.
+- Document public Rust APIs, non-obvious decisions and feature limitations.
+- Do not edit generated files in src-tauri/gen or dependency lockfiles manually.
+- Preserve historical release assets unless their removal is explicitly requested.
 
-Each feature under `lib/features/` follows clean architecture:
+## Verification
 
-```
-feature/
-├── core/          # Module registration + feature-specific extensions
-├── data/          # Repository implementations, data sources
-├── domain/        # Entities, repository interfaces, use cases
-└── presentation/  # BLoC (events/states), screens, widgets
-```
-
-Shared cross-feature code lives in `lib/shared/` with the same layer breakdown.
-
-### BLoC Pattern
-
-All state management uses `flutter_bloc`. BLoCs are provided via `BlocProvider` in the widget tree. The root-level `SettingsBloc` (theme mode) is provided in `MyApp` — it is the only BLoC not registered through a module.
-
-### ADB / AAPT Paths
-
-For release builds, `adb` and `aapt` binaries are bundled inside the app bundle (macOS: `Contents/Resources/`, Windows: next to the exe). `lib/shared/core/constants.dart` resolves the path at runtime based on `Platform.resolvedExecutable`. During development, ensure `adb` is in your PATH or the bundled binary is present.
-
-### Generated Files
-
-Never edit files ending in `.g.dart` or `.mapper.dart`. Regenerate with `build_runner` after:
-- Modifying a `@DriftDatabase` table or DAO
-- Adding/changing a `@MappableClass` annotated model
-
-### Database
-
-`AppDatabase` (Drift/SQLite) is a lazily-registered singleton in `SharedModule`. Tables: `install_history`, `app_settings`.
-
-### Widget Files
-
-**One widget per file.** Each `StatelessWidget` or `StatefulWidget` class must live in its own file under the `widgets/` subfolder of the relevant presentation layer. Private helper classes (non-widget) used exclusively within a widget may remain in the same file, but every public widget must have its own dedicated file.
-
-## Coding Standards
-
-### Comments
-
-**All comments must be written in English.** This includes:
-- Inline comments (`//`)
-- Block comments (`/* */`)
-- Documentation comments (`///`)
-- TODO/FIXME annotations
-
-This ensures consistency and maintainability across the codebase.
+Run npm run check and npm run check:rust for changes spanning both stacks.
+Use focused behavior tests for features, including failures and simulated
+dependencies. Document hardware-only verification separately. The initial CI
+checks the frontend on Linux and Rust plus a desktop build on macOS.
