@@ -23,7 +23,7 @@ env:
 
 jobs:
   prepare-release:
-    if: github.ref == 'refs/heads/main'
+    if: github.ref == 'refs/heads/main' || github.ref == 'refs/heads/feature/rust'
     runs-on: ubuntu-latest
     outputs:
       version: ${{ steps.version.outputs.version }}
@@ -31,6 +31,10 @@ jobs:
       needed: ${{ steps.version.outputs.needed }}
     steps:
       - uses: actions/checkout@v4
+      - name: Read the published appcast from main
+        run: |
+          git fetch origin main
+          git show origin/main:appcast.xml > appcast.xml
       - name: Validate release version and Sparkle build number
         id: version
         run: python3 scripts/release.py prepare
@@ -98,6 +102,12 @@ jobs:
         with:
           ref: main
           fetch-depth: 0
+      - name: Use the release script from the tested commit
+        env:
+          RELEASE_COMMIT: ${{ github.sha }}
+        run: |
+          mkdir -p scripts
+          git show "$RELEASE_COMMIT:scripts/release.py" > scripts/release.py
       - uses: actions/download-artifact@v4
         with:
           name: release-metadata
