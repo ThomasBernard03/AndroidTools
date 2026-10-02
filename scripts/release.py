@@ -87,8 +87,8 @@ def sign():
     framework = app / "Contents/Frameworks/Sparkle.framework"
     if not framework.is_dir():
         raise ValueError("Sparkle.framework is missing from the bundle")
-    subprocess.run(["lipo", "-verify_arch", "arm64", "x86_64",
-                    str(app / "Contents/MacOS" / info["CFBundleExecutable"])], check=True)
+    subprocess.run(["lipo", str(app / "Contents/MacOS" / info["CFBundleExecutable"]),
+                    "-verify_arch", "arm64", "x86_64"], check=True)
     subprocess.run(["codesign", "--verify", "--deep", "--strict", str(app)], check=True)
     images = list((bundle / "dmg").glob("*.dmg"))
     if len(images) != 1:
