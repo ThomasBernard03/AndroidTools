@@ -66,6 +66,8 @@ jobs:
           npm test
           npm run format:check
       - name: Check Rust with release updater enabled
+        env:
+          DYLD_FRAMEWORK_PATH: ${{ env.SPARKLE_FRAMEWORK_PATH }}
         run: |
           cargo fmt --manifest-path src-tauri/Cargo.toml --check
           cargo test --locked --manifest-path src-tauri/Cargo.toml --features macos-updater
