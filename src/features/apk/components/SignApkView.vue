@@ -1,6 +1,7 @@
 <script setup lang="ts">
 import { reactive, watch } from 'vue'
 import ErrorNotice from '../../../components/ErrorNotice.vue'
+import PasswordInput from '../../../components/PasswordInput.vue'
 import ApkToolPath from './ApkToolPath.vue'
 import { chooseToolOutput, signApk } from '../api'
 import { useApkOperation } from '../useApkOperation'
@@ -66,24 +67,11 @@ async function submit() {
         ><input v-model="form.alias" class="form-input w-full" required
       /></label>
       <div class="grid gap-5 sm:grid-cols-2">
-        <label class="space-y-2"
-          ><span class="block text-secondary">Mot de passe du keystore</span
-          ><input
-            v-model="form.storePassword"
-            type="password"
-            autocomplete="off"
-            class="form-input w-full"
-            required
-        /></label>
-        <label class="space-y-2"
-          ><span class="block text-secondary">Mot de passe de la clé (facultatif)</span
-          ><input
-            v-model="form.keyPassword"
-            type="password"
-            autocomplete="off"
-            class="form-input w-full"
-          /><span class="block text-xs text-muted">Vide : utilise celui du keystore.</span></label
-        >
+        <PasswordInput v-model="form.storePassword" label="Mot de passe du keystore" required />
+        <div class="space-y-2">
+          <PasswordInput v-model="form.keyPassword" label="Mot de passe de la clé (facultatif)" />
+          <p class="text-xs text-muted">Vide : utilise celui du keystore.</p>
+        </div>
       </div>
     </fieldset>
     <p class="text-xs text-muted">

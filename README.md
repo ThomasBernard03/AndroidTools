@@ -72,6 +72,25 @@ Les keystores JKS et PKCS#12 sont acceptés (16 Mio maximum). Pour PKCS#12, la c
 
 Les opérations s’exécutent hors du thread d’interface. Le fichier source est conservé et aucun fichier existant n’est écrasé. Les fichiers temporaires sont nettoyés automatiquement ; les sorties ont des permissions `0600` sur Unix. Le mot de passe généré ou saisi lors de la création du keystore est enregistré dans son fichier compagnon ; les champs de mot de passe sont vidés après chaque opération. Aucun outil externe n’est exécuté pour générer ou signer.
 
+## Réglages et rapports de crash
+
+La rubrique **Réglages**, en bas de la barre latérale, permet de :
+
+- ouvrir `android-tools.log` avec l’application associée aux fichiers de log ; le journal est créé dans le dossier de logs Tauri, avec rotation à 5 Mo et une archive conservée ;
+- ouvrir le formulaire de création d’issue GitHub ou le dépôt open source dans le navigateur ;
+- rechercher les mises à jour : Sparkle dans un bundle macOS compilé avec `macos-updater`, sinon comparaison de la version courante avec la dernière release stable GitHub et lien vers ses téléchargements ;
+- activer ou désactiver les rapports de crash Sentry pour Vue et Rust. Le choix est enregistré dans `settings.json` dans le dossier de données Tauri et s’applique aux nouveaux événements sans redémarrage. Les rapports déjà envoyés ne sont pas supprimés.
+
+Comme dans l’ancienne application Flutter, configurez `SENTRY_DSN` au moment de compiler :
+
+```bash
+SENTRY_DSN="https://<public-key>@<host>.ingest.sentry.io/<project-id>" npm run tauri build
+```
+
+La même valeur est utilisée par le backend Rust et le frontend Vue. Sans DSN, aucun rapport n’est envoyé. Le reporting est activé par défaut lorsqu’un DSN est fourni. Les erreurs Vue, les exceptions JavaScript non interceptées et les paniques Rust sont collectées ; les erreurs métier affichées dans l’interface ne sont pas automatiquement envoyées. Les captures d’écran, replays, props Vue, traces de performance et breadcrumbs ne sont pas collectés. Pour un Sentry auto-hébergé, ajoutez son origine à `app.security.csp.connect-src` dans `src-tauri/tauri.conf.json`.
+
+Les mots de passe du formulaire de signature disposent chacun d’un bouton **Afficher / Masquer**.
+
 ## Démarrage sur macOS
 
 ### Prérequis

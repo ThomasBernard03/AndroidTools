@@ -12,8 +12,11 @@ import ErrorNotice from './components/ErrorNotice.vue'
 import { useDevices } from './features/devices/useDevices'
 import FileExplorer from './features/files/components/FileExplorer.vue'
 import LogcatView from './features/logcat/components/LogcatView.vue'
+import SettingsView from './features/settings/SettingsView.vue'
 
-const view = ref<'devices' | 'apk' | 'files' | 'logcat' | 'keystore' | 'sign'>('devices')
+const view = ref<'devices' | 'apk' | 'files' | 'logcat' | 'keystore' | 'sign' | 'settings'>(
+  'devices',
+)
 const apkSection = computed(() => ['apk', 'keystore', 'sign'].includes(view.value))
 const toolsOpened = ref(false)
 const apkTools = [
@@ -137,7 +140,17 @@ const {
         </button>
       </nav>
 
-      <footer class="mt-auto px-2 pt-6 text-xs text-muted">Version {{ appVersion }}</footer>
+      <footer class="mt-auto space-y-3 px-2 pt-6 text-xs text-muted">
+        <button
+          type="button"
+          :aria-current="view === 'settings' ? 'page' : undefined"
+          class="button w-full"
+          @click="view = 'settings'"
+        >
+          Réglages
+        </button>
+        <p>Version {{ appVersion }}</p>
+      </footer>
     </aside>
 
     <main
@@ -153,23 +166,27 @@ const {
             :name="apkSection ? 'package' : view === 'files' ? 'folder' : 'phone'"
             class="text-muted"
           />
-          <span class="text-secondary">{{ apkSection ? 'APK' : 'Appareils' }}</span>
+          <span class="text-secondary">{{
+            view === 'settings' ? 'Application' : apkSection ? 'APK' : 'Appareils'
+          }}</span>
           <UiIcon name="chevron" :size="12" class="text-muted" />
           <span class="truncate">{{
-            view === 'keystore'
-              ? 'Génération de keystore'
-              : view === 'sign'
-                ? 'Signature d’APK'
-                : view === 'apk'
-                  ? 'Analyse APK'
-                  : view === 'files'
-                    ? 'Explorateur de fichiers'
-                    : view === 'logcat'
-                      ? 'Logcat'
-                      : (info?.model ?? selectedDevice?.name ?? 'Vue d’ensemble')
+            view === 'settings'
+              ? 'Réglages'
+              : view === 'keystore'
+                ? 'Génération de keystore'
+                : view === 'sign'
+                  ? 'Signature d’APK'
+                  : view === 'apk'
+                    ? 'Analyse APK'
+                    : view === 'files'
+                      ? 'Explorateur de fichiers'
+                      : view === 'logcat'
+                        ? 'Logcat'
+                        : (info?.model ?? selectedDevice?.name ?? 'Vue d’ensemble')
           }}</span>
         </div>
-        <span class="status-badge shrink-0"
+        <span v-if="view !== 'settings'" class="status-badge shrink-0"
           ><UiIcon :name="apkSection ? 'shield' : 'cable'" :size="12" />{{
             apkSection ? 'Traitement local' : 'USB direct'
           }}</span
@@ -177,6 +194,7 @@ const {
       </header>
 
       <ApkView v-show="view === 'apk'" @open="view = 'apk'" />
+      <SettingsView v-if="view === 'settings'" />
       <ApkToolsView
         v-if="toolsOpened"
         v-show="view === 'keystore' || view === 'sign'"

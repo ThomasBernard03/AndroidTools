@@ -1,4 +1,5 @@
 fn main() {
+    println!("cargo:rerun-if-env-changed=SENTRY_DSN");
     tauri_build::try_build(tauri_build::Attributes::new().app_manifest(
         tauri_build::AppManifest::new().commands(&[
             "list_devices",
@@ -17,6 +18,11 @@ fn main() {
             "upload_entry",
             "create_directory",
             "delete_entry",
+            "get_settings",
+            "set_crash_reporting",
+            "open_app_log",
+            "open_project_link",
+            "check_app_updates",
         ]),
     ))
     .expect("Unable to build Tauri application metadata");

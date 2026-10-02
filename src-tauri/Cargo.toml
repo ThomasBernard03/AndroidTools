@@ -31,6 +31,13 @@ zip = { version = "4", default-features = false, features = ["deflate"] }
 roxmltree = "0.21"
 rusqlite = { version = "0.38", features = ["bundled"] }
 tauri-plugin-dialog = "2"
+tauri-plugin-log = "2"
+tauri-plugin-opener = "2"
+log = "0.4"
+# Reuse the ring provider already enabled by adb_client instead of adding a second provider.
+sentry = { version = "0.48", default-features = false, features = ["reqwest", "rustls-no-provider", "panic", "contexts"] }
+reqwest = { version = "0.13", default-features = false, features = ["json", "rustls-no-provider"] }
+semver = "1"
 adb_client = { version = "=3.2.3", default-features = false, features = ["usb"] }
 rsa = "0.9"
 rusb = { version = "0.9", features = ["vendored"] }
