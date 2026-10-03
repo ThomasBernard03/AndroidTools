@@ -3,11 +3,52 @@
 @theme {
   --font-sans:
     system-ui, -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+  --color-primary: #7cffb2;
+  --color-primary-hover: #a3ffc9;
+  --color-primary-muted: #173a29;
+  --color-on-primary: #10271b;
+  --color-canvas: #0d1110;
+  --color-sidebar: #111715;
+  --color-surface: #171e1b;
+  --color-surface-raised: #202a25;
+  --color-stroke: #2b3831;
+  --color-foreground: #edf5f0;
+  --color-muted: #a0b2a7;
+  --color-warning: #f2cb82;
+  --color-danger: #ffa4a4;
+}
+
+:root {
+  color-scheme: dark;
 }
 
 body {
   margin: 0;
   min-width: 320px;
-  background: var(--color-slate-50);
-  color: var(--color-slate-900);
+  background: var(--color-canvas);
+  color: var(--color-foreground);
+  -webkit-font-smoothing: antialiased;
+}
+
+::selection {
+  background: var(--color-primary);
+  color: var(--color-on-primary);
+}
+
+button:not(:disabled),
+select:not(:disabled) {
+  cursor: pointer;
+}
+
+:focus-visible {
+  outline: 2px solid var(--color-primary);
+  outline-offset: 4px;
+}
+
+.workspace-background {
+  background: radial-gradient(
+    ellipse at 85% 0%,
+    rgb(124 255 178 / 5%),
+    transparent 55%
+  );
 }

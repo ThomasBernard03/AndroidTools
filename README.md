@@ -1,10 +1,10 @@
 # Android Tools
 
 A new desktop foundation built with **Tauri 2 + Rust + Vue 3 + TypeScript +
-Tailwind CSS 4**. This branch rebuilds the project incrementally. Only the welcome
-screen is implemented so far. The first feature will list devices using simulated
-data, followed by real USB integration. No phone or Android SDK is required for
-this milestone.
+Tailwind CSS 4**. This branch rebuilds the project incrementally. It lists Android
+USB devices and reads Android information over an authenticated ADB connection. No Android SDK
+or external `adb` executable is required. Tests and explicit demo scenarios run
+without a phone.
 
 ## Prerequisites
 
@@ -32,9 +32,57 @@ To work on the interface in a browser:
 npm run dev
 ```
 
-Open <http://127.0.0.1:1420>. The welcome screen works in both environments.
-Future native features will be available in the browser through explicit simulated
-services, introduced with the first feature.
+Open <http://127.0.0.1:1420/?demo=devices> for the explicit device demo.
+Use `?demo=empty` or `?demo=error` for the other deterministic scenarios.
+Demo mode is visibly labeled and only enabled in development builds. Opening the
+browser without a demo scenario displays a native-runtime-required error; real
+USB failures never fall back to fake data.
+
+## Select a connected device
+
+1. Enable developer options and **USB debugging** on the phone.
+2. Connect it with a USB data cable and launch `npm run tauri dev`.
+3. The first detected device is selected automatically. Use the **Device** dropdown
+   to choose another device.
+4. Click **Refresh** after connecting or disconnecting a phone.
+5. When selecting a device, unlock the phone and accept **Allow USB debugging**.
+   The application waits up to 30 seconds for authorization; use **Retry ADB
+   connection** if needed.
+
+Discovery runs at startup and on manual refresh. Each option shows the USB product
+name, serial when available and a connection identifier, so identical models remain
+distinguishable. The first device in discovery order is selected by default, starting
+its ADB connection. Refresh preserves the current selection while it remains present;
+otherwise it selects the first available device. Selection is cleared when discovery
+fails or no devices remain. Connection changes are detected on manual refresh.
+
+The **Device overview** displays the selected device's USB manufacturer, product,
+serial number, vendor/product IDs and connection ID. Missing strings are shown as
+**Unavailable**; descriptor IDs remain visible even when USB metadata access fails.
+These values refresh with the device list and are not Android system properties.
+
+A persistent bottom status bar shows the selected device and its serial number
+(or connection ID), the USB transport and the ADB connection state. Selecting a
+device starts a direct ADB-over-USB session. **Android information** displays the
+manufacturer, model, Android version, API level, security patch, build, CPU
+architecture and battery level/status when available. Use **Refresh Android info**
+to read a new snapshot. Connection state reflects the last request, not a live
+hotplug monitor.
+
+This feature detects physical USB interfaces exposing ADB, not emulators, Wi-Fi
+devices, MTP-only connections or fastboot devices. USB presence does not establish
+ADB authorization. The separate ADB connection performs authentication and reads
+Android properties. Missing USB metadata does not hide a detected ADB device;
+it appears with a fallback name and a warning.
+
+ADB requires a readable, unique USB serial number to match the selected device
+across the discovery and transport libraries. The app stores its own host key in
+its application data directory. If another ADB client holds the USB interface,
+close it and stop its ADB server before retrying; Android Tools does not stop it
+automatically. See [ADB information](docs/features/adb.md) for details and hardware checks.
+
+See [device discovery](docs/features/devices.md) for architecture, limitations and
+hardware verification instructions.
 
 ## Quality checks
 
@@ -54,9 +102,10 @@ npm run format
 cargo fmt --manifest-path src-tauri/Cargo.toml
 ```
 
-The frontend test verifies that the welcome screen mounts without a Tauri runtime
-or phone. The Rust test runner is ready but has no business tests yet: the backend
-only starts Tauri. Behavior tests will be introduced alongside each feature.
+Frontend tests cover selection, refresh, disappearance, errors and retry, stale
+requests, demo scenarios and IPC validation. Rust tests cover discovery filtering,
+ordering, missing metadata normalization, error propagation and serialization.
+All automated tests run without a phone, Android SDK or native window.
 
 ## Build the desktop binary
 
@@ -83,19 +132,21 @@ npm run tauri icon -- src-tauri/icons/app-icon.png --output src-tauri/icons --pn
 src/
   main.ts                         Vue bootstrap
   App.vue                         Interface composition
-  App.test.ts                     Bootstrap test without a native runtime
+  App.test.ts                     Composition test without a native runtime
   styles.css                      Tailwind and global styles
-  shared/presentation/widgets/    Shared components
+  features/devices/               Contracts, adapters, selection UI and tests
 src-tauri/
   src/lib.rs                      Tauri bootstrap
   src/main.rs                     Binary entry point
+  src/features/devices/           Discovery contract, use case, USB adapter and IPC
   tauri.conf.json                 Window, build and content security policy
   capabilities/main.json          Native window permissions
 docs/
   architecture.md                 Decisions and rules for future features
+  features/devices.md             Device discovery guide and hardware checks
 ```
 
-Read the [architecture guide](docs/architecture.md) before adding the first feature.
+Read the [architecture guide](docs/architecture.md) before adding a feature.
 All project content, including the interface, documentation and comments, must be
 written in English, as specified in [AGENTS.md](AGENTS.md).
 
