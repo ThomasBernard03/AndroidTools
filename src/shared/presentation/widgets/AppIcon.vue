@@ -1,7 +1,24 @@
 <script setup lang="ts">
-defineProps<{ name: 'phone' | 'refresh' | 'chevron' | 'overview' | 'usb' }>();
+defineProps<{
+  name:
+    | 'phone'
+    | 'refresh'
+    | 'chevron'
+    | 'overview'
+    | 'usb'
+    | 'folder'
+    | 'terminal'
+    | 'package'
+    | 'build'
+    | 'shield';
+}>();
 
 const paths = {
+  folder: 'M3 7V5h6l2 2h10v13H3V7Z',
+  terminal: 'M3 4h18v16H3V4Zm4 4 4 4-4 4m6 0h4',
+  package: 'm12 3 9 5v9l-9 5-9-5V8l9-5Zm-9 5 9 5 9-5m-9 5v9M7.5 5.5l9 5',
+  build: 'M4 4h10v16H4V4Zm3 4h4m-4 4h4m6 0v8m-4-4h8',
+  shield: 'm12 3 8 3v6c0 5-8 9-8 9s-8-4-8-9V6l8-3Zm-4 9 3 3 5-6',
   phone:
     'M8 3h8a2 2 0 0 1 2 2v14a2 2 0 0 1-2 2H8a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2Zm2 3h4m-3 12h2',
   refresh:

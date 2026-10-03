@@ -5,6 +5,71 @@ import { createDemoDeviceService } from './features/devices/infrastructure/demoD
 import { createDemoAdbService } from './features/adb/infrastructure/demoAdbService';
 
 describe('Application composition', () => {
+  it('opens each planned tool and preserves the device connection when returning to the overview', async () => {
+    const wrapper = mount(App, {
+      props: {
+        deviceService: createDemoDeviceService('devices'),
+        adbService: createDemoAdbService(),
+        demo: true,
+      },
+    });
+    try {
+      await flushPromises();
+      await wrapper.get('aside select').setValue('usb:1:4:04e8:6860');
+      await flushPromises();
+      const connectionStatus = wrapper
+        .get('[aria-label="Device connection status"]')
+        .text();
+      const navigation = wrapper.get('nav[aria-label="Workspace"]');
+      for (const label of [
+        'File explorer',
+        'Logcat',
+        'APK analysis',
+        'APK generation',
+        'APK signing',
+      ]) {
+        const button = navigation
+          .findAll('button')
+          .find((entry) => entry.text() === label)!;
+        await button.trigger('click');
+        expect(navigation.findAll('[aria-current="page"]')).toHaveLength(1);
+        expect(button.attributes('aria-current')).toBe('page');
+        expect(wrapper.get('main h2').text()).toBe(label);
+        expect(wrapper.get('main').text()).toContain('Coming soon');
+        expect(wrapper.get('main header').text()).toContain(label);
+        expect(
+          wrapper.get<HTMLSelectElement>('aside select').element.value,
+        ).toBe('usb:1:4:04e8:6860');
+      }
+      await navigation.findAll('button')[0]!.trigger('click');
+      expect(wrapper.get('main h2').text()).toBe('Android device');
+      expect(wrapper.get('main dl').text()).toContain('usb:1:4:04e8:6860');
+      expect(
+        wrapper.get('[aria-label="Device connection status"]').text(),
+      ).toBe(connectionStatus);
+      expect(wrapper.get('main').text()).not.toContain('Coming soon');
+    } finally {
+      wrapper.unmount();
+    }
+  });
+
+  it('keeps planned tools accessible without a connected device', async () => {
+    const wrapper = mount(App, {
+      props: { deviceService: createDemoDeviceService('empty') },
+    });
+    try {
+      await flushPromises();
+      const navigation = wrapper.get('nav[aria-label="Workspace"]');
+      for (const button of navigation.findAll('button').slice(1)) {
+        await button.trigger('click');
+        expect(wrapper.get('main h2').text()).toBe(button.text());
+        expect(wrapper.get('main').text()).toContain('Coming soon');
+      }
+    } finally {
+      wrapper.unmount();
+    }
+  });
+
   it('automatically connects ADB for the first device and shows authorization failures without stale Android data', async () => {
     const wrapper = mount(App, {
       props: {

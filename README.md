@@ -40,6 +40,13 @@ USB failures never fall back to fake data.
 
 ## Select a connected device
 
+The compact sidebar groups **Device overview**, **File explorer** and **Logcat**
+under Workspace, and **APK analysis**, **APK generation** and **APK signing** under
+APK. The five new tool destinations currently display explicit **Coming soon**
+screens; file operations, log streaming and APK processing are not implemented.
+Navigation remains available without a device and preserves the selected device
+and ADB state when returning to the overview.
+
 1. Enable developer options and **USB debugging** on the phone.
 2. Connect it with a USB data cable and launch `npm run tauri dev`.
 3. The first detected device is selected automatically. Use the **Device** dropdown
