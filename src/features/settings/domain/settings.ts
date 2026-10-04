@@ -2,7 +2,7 @@ export interface AppSettings {
   crashReportingEnabled: boolean;
 }
 
-export type ProjectLink = 'repository' | 'issue';
+export type ProjectLink = 'repository' | 'issue' | 'changelog';
 
 export interface SettingsService {
   load(): Promise<AppSettings>;

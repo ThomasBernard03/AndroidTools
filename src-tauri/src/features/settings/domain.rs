@@ -35,6 +35,7 @@ impl SettingsError {
 pub enum ProjectLink {
     Repository,
     Issue,
+    Changelog,
 }
 
 impl ProjectLink {
@@ -42,6 +43,7 @@ impl ProjectLink {
         match self {
             Self::Repository => "https://github.com/ThomasBernard03/AndroidTools",
             Self::Issue => "https://github.com/ThomasBernard03/AndroidTools/issues/new/choose",
+            Self::Changelog => "https://github.com/ThomasBernard03/AndroidTools/releases",
         }
     }
 }

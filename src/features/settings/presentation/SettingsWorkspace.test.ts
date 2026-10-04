@@ -67,7 +67,7 @@ describe('Application settings', () => {
     ).toBeUndefined();
     wrapper.unmount();
   });
-  it('recovers from a load failure and handles both GitHub actions and failures', async () => {
+  it('recovers from a load failure and handles GitHub actions and failures', async () => {
     const service = createDemoSettingsService();
     vi.spyOn(service, 'load').mockRejectedValueOnce(
       new SettingsError('storage_failed', 'Could not load settings.'),
@@ -91,7 +91,9 @@ describe('Application settings', () => {
     );
     await button('View on GitHub').trigger('click');
     await flushPromises();
-    expect(open.mock.calls).toEqual([['issue'], ['repository']]);
+    await button('View changelog').trigger('click');
+    await flushPromises();
+    expect(open.mock.calls).toEqual([['issue'], ['repository'], ['changelog']]);
     expect(button('Open logs folder').attributes('disabled')).toBeUndefined();
     expect(button('Check for updates').attributes('disabled')).toBeDefined();
     wrapper.unmount();

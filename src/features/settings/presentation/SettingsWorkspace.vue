@@ -246,7 +246,17 @@ onMounted(load);
         class="flex items-center justify-between gap-4 border-b border-stroke p-5"
       >
         <p class="text-sm font-medium">Current version</p>
-        <p class="text-sm text-muted">{{ appVersion }}</p>
+        <div class="flex items-center gap-4">
+          <p class="text-sm text-muted">{{ appVersion }}</p>
+          <button
+            type="button"
+            :disabled="!service || opening"
+            class="rounded-lg border border-stroke px-3 py-2 text-xs hover:border-primary disabled:opacity-40"
+            @click="open('changelog')"
+          >
+            View changelog
+          </button>
+        </div>
       </div>
       <div class="flex flex-wrap items-center justify-between gap-4 p-5">
         <div>
