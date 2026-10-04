@@ -22,6 +22,21 @@
   color-scheme: dark;
 }
 
+@layer components {
+  .field-icon-button {
+    @apply flex size-8 shrink-0 items-center justify-center rounded-md text-muted transition-colors hover:bg-primary/10 hover:text-primary focus-visible:outline-offset-0 motion-reduce:transition-none disabled:cursor-default disabled:opacity-40;
+  }
+  .keystore-input {
+    @apply w-full rounded-lg border border-stroke bg-canvas px-3 py-2.5 text-sm;
+  }
+  .keystore-button {
+    @apply rounded-lg border border-stroke bg-surface-raised px-3 py-2 text-xs text-foreground hover:border-primary/50 disabled:cursor-default disabled:opacity-40;
+  }
+  .keystore-card {
+    @apply rounded-xl border border-stroke bg-surface p-5;
+  }
+}
+
 body {
   margin: 0;
   min-width: 320px;

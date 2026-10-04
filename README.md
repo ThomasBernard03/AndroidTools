@@ -41,9 +41,10 @@ USB failures never fall back to fake data.
 ## Select a connected device
 
 The compact sidebar groups **Device overview**, **File explorer** and **Logcat**
-under Workspace, and **APK analysis**, **APK generation** and **APK signing** under
-APK. The five new tool destinations currently display explicit **Coming soon**
-screens; file operations, log streaming and APK processing are not implemented.
+under Workspace, and **APK analysis**, **Generate keystore** and **APK signing** under
+APK. APK analysis inspects local packages and Generate keystore creates signing keys
+locally. APK signing signs local packages using an existing keystore. File explorer
+and Logcat display explicit **Coming soon** screens.
 Navigation remains available without a device and preserves the selected device
 and ADB state when returning to the overview.
 
@@ -91,11 +92,68 @@ automatically. See [ADB information](docs/features/adb.md) for details and hardw
 See [device discovery](docs/features/devices.md) for architecture, limitations and
 hardware verification instructions.
 
+## Analyze an APK
+
+Open **APK → APK analysis**, then drag and drop one `.apk` or click **Choose APK**.
+The compact report shows the application icon when supported, APK size, application
+version, debuggable status, minimum/maximum SDK and signing certificate details.
+No phone, Android SDK or upload is required. Results survive navigation.
+
+APK v2/v3/v3.1 signatures and signed content digests are cryptographically checked;
+v1-only APKs explicitly report **Not verified**. Raster, vector and adaptive icons
+are previewed locally when their drawable features are supported. APKs up to 1 GiB
+are supported, with additional metadata limits. See [APK analysis](docs/features/apk.md)
+for report details, limitations and desktop verification.
+
+## Generate a keystore
+
+Open **APK → Generate keystore** without connecting a phone. Choose a destination,
+JKS or PKCS12 format, passwords, an alias and a certificate identity. The defaults
+are JKS, alias `upload`, RSA 2048 and 30 years of validity. The format uses a themed,
+keyboard-accessible dropdown. Icons inside each password field show, hide or copy
+its value. **Generate** creates a secure 24-character password and
+fills its confirmation. JKS supports a separate key password; PKCS12 uses the
+keystore password for both protections. Leaving the optional key password empty
+also reuses the keystore password, which remains required.
+
+Creation is native: no Java, Android SDK or external `keytool` is required. Existing
+files are never replaced. The result includes SHA-1/SHA-256 certificate fingerprints
+and **Show in folder**. Back up the file and passwords for future signing operations.
+The screen retains its state while navigating within the application.
+
+In development, `/?demo=empty` or `/?demo=devices` simulates successful creation;
+`/?demo=error` simulates a write failure. These explicitly labeled scenarios create
+no file or key. See [keystore generation](docs/features/keystore.md) for constraints,
+architecture and desktop verification.
+
+## Sign an APK
+
+Open **APK → APK signing**, enter or choose the APK and keystore paths, then enter
+the key alias, keystore password and optional separate key password. JKS and
+single-key PKCS12 RSA keystores are supported, including those generated in the app.
+
+Click **Sign APK**. After local signing succeeds, the native save dialog proposes
+`name-signed.apk`. Choose a new filename to save; existing files are never replaced.
+Cancelling saves nothing. The result includes **Show in folder**.
+
+Signing uses APK Signature Scheme v2 for **Android 7.0 and later**, without Java or
+an Android SDK. See [APK signing](docs/features/signing.md) for limits, demo scenarios
+and independent desktop verification.
+
+## Application settings
+
+Open **Settings** at the bottom of the sidebar to open the GitHub project, create
+an issue and save your Sentry crash reporting preference. The preference survives
+restarts, but Sentry is not configured yet and no reports are sent. Log folder and
+Sparkle update actions are marked as coming soon. See [Settings](docs/features/settings.md).
+
 ## Quality checks
 
 ```bash
 npm run check
 npm run check:rust
+npx playwright install chromium
+npm run test:e2e
 ```
 
 `check` runs formatting checks, ESLint, TypeScript validation, the Vite build and
@@ -110,9 +168,11 @@ cargo fmt --manifest-path src-tauri/Cargo.toml
 ```
 
 Frontend tests cover selection, refresh, disappearance, errors and retry, stale
-requests, demo scenarios and IPC validation. Rust tests cover discovery filtering,
-ordering, missing metadata normalization, error propagation and serialization.
-All automated tests run without a phone, Android SDK or native window.
+requests, demo scenarios, keystore form interactions and IPC validation. Rust tests
+also reopen generated keystores, verify private keys and certificates, reject wrong
+passwords and protect existing files. Playwright runs the simulated keystore journey
+in Chromium. The normal suite requires no phone, Android SDK, Java or native window;
+an optional ignored test checks Java `keytool` interoperability.
 
 ## Build the desktop binary
 

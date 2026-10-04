@@ -7,9 +7,16 @@ defineEmits<{ navigate: [page: WorkspacePage] }>();
 </script>
 
 <template>
-  <nav aria-label="Workspace" class="space-y-6 px-3 py-7">
-    <div v-for="group in ['Workspace', 'APK']" :key="group">
+  <nav aria-label="Workspace" class="flex flex-1 flex-col gap-6 px-3 pt-7">
+    <div
+      v-for="group in ['Workspace', 'APK', 'Application']"
+      :key="group"
+      :class="
+        group === 'Application' ? 'mt-auto border-t border-stroke pt-3' : ''
+      "
+    >
       <p
+        v-if="group !== 'Application'"
         class="mb-2 px-2.5 text-[10px] font-semibold tracking-[0.16em] text-muted uppercase"
       >
         {{ group }}

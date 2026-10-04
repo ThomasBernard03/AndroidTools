@@ -1,5 +1,13 @@
 <script setup lang="ts">
 import DevicePicker from './features/devices/presentation/DevicePicker.vue';
+import SettingsWorkspace from './features/settings/presentation/SettingsWorkspace.vue';
+import type { SettingsService } from './features/settings/domain/settings';
+import ApkWorkspace from './features/apk/presentation/ApkWorkspace.vue';
+import type { ApkService } from './features/apk/domain/apk';
+import KeystoreWorkspace from './features/keystore/presentation/KeystoreWorkspace.vue';
+import SigningWorkspace from './features/signing/presentation/SigningWorkspace.vue';
+import type { SigningService } from './features/signing/domain/signing';
+import type { KeystoreService } from './features/keystore/domain/keystore';
 import type { DeviceService } from './features/devices/domain/devices';
 import type { DeviceSummary } from './features/devices/domain/devices';
 import { shallowRef } from 'vue';
@@ -20,6 +28,10 @@ const currentPage = shallowRef<WorkspacePage>(workspacePages[0]);
 const props = defineProps<{
   deviceService: DeviceService;
   adbService?: AdbService;
+  keystoreService?: KeystoreService;
+  apkService?: ApkService;
+  signingService?: SigningService;
+  settingsService?: SettingsService;
   demo?: boolean;
 }>();
 const selectedDevice = shallowRef<DeviceSummary | null>(null);
@@ -64,12 +76,7 @@ const { state: adbState, refresh: refreshAdb } = useAdb(
           />
         </div>
 
-        <WorkspaceNavigation
-          :current="currentPage.id"
-          @navigate="currentPage = $event"
-        />
-
-        <footer class="mt-auto px-5 pt-4">
+        <footer v-if="demo" class="px-5 pt-4">
           <p
             v-if="demo"
             role="note"
@@ -78,6 +85,10 @@ const { state: adbState, refresh: refreshAdb } = useAdb(
             Demo mode — simulated devices. No USB connection is used.
           </p>
         </footer>
+        <WorkspaceNavigation
+          :current="currentPage.id"
+          @navigate="currentPage = $event"
+        />
       </aside>
 
       <main
@@ -110,7 +121,42 @@ const { state: adbState, refresh: refreshAdb } = useAdb(
           :adb-state="adbService ? adbState : undefined"
           @refresh-adb="refreshAdb"
         />
-        <ComingSoonWorkspace v-else :page="currentPage" />
+        <KeepAlive>
+          <ApkWorkspace
+            v-if="currentPage.id === 'apk-analysis'"
+            :service="apkService"
+            :demo="demo"
+          />
+        </KeepAlive>
+        <KeepAlive>
+          <KeystoreWorkspace
+            v-if="currentPage.id === 'generate-keystore'"
+            :service="keystoreService"
+            :demo="demo"
+          />
+        </KeepAlive>
+        <KeepAlive>
+          <SigningWorkspace
+            v-if="currentPage.id === 'apk-signing'"
+            :service="signingService"
+            :demo="demo"
+          />
+        </KeepAlive>
+        <ComingSoonWorkspace
+          v-if="
+            currentPage.id !== 'overview' &&
+            currentPage.id !== 'apk-analysis' &&
+            currentPage.id !== 'generate-keystore' &&
+            currentPage.id !== 'apk-signing' &&
+            currentPage.id !== 'settings'
+          "
+          :page="currentPage"
+        />
+        <SettingsWorkspace
+          v-if="currentPage.id === 'settings'"
+          :service="settingsService"
+          :demo="demo"
+        />
       </main>
     </div>
     <DeviceStatusBar

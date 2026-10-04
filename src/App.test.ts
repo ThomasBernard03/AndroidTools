@@ -5,6 +5,21 @@ import { createDemoDeviceService } from './features/devices/infrastructure/demoD
 import { createDemoAdbService } from './features/adb/infrastructure/demoAdbService';
 
 describe('Application composition', () => {
+  it('places Settings last in navigation and opens it without a device', async () => {
+    const wrapper = mount(App, {
+      props: { deviceService: createDemoDeviceService('empty') },
+    });
+    await flushPromises();
+    const buttons = wrapper
+      .get('nav[aria-label="Workspace"]')
+      .findAll('button');
+    const settings = buttons.at(-1)!;
+    expect(settings.text()).toBe('Settings');
+    await settings.trigger('click');
+    expect(settings.attributes('aria-current')).toBe('page');
+    expect(wrapper.get('main h2').text()).toBe('Settings');
+    wrapper.unmount();
+  });
   it('opens each planned tool and preserves the device connection when returning to the overview', async () => {
     const wrapper = mount(App, {
       props: {
@@ -25,7 +40,7 @@ describe('Application composition', () => {
         'File explorer',
         'Logcat',
         'APK analysis',
-        'APK generation',
+        'Generate keystore',
         'APK signing',
       ]) {
         const button = navigation
@@ -35,7 +50,9 @@ describe('Application composition', () => {
         expect(navigation.findAll('[aria-current="page"]')).toHaveLength(1);
         expect(button.attributes('aria-current')).toBe('page');
         expect(wrapper.get('main h2').text()).toBe(label);
-        expect(wrapper.get('main').text()).toContain('Coming soon');
+        expect(wrapper.get('main').text().includes('Coming soon')).toBe(
+          !['Generate keystore', 'APK analysis', 'APK signing'].includes(label),
+        );
         expect(wrapper.get('main header').text()).toContain(label);
         expect(
           wrapper.get<HTMLSelectElement>('aside select').element.value,
@@ -63,7 +80,14 @@ describe('Application composition', () => {
       for (const button of navigation.findAll('button').slice(1)) {
         await button.trigger('click');
         expect(wrapper.get('main h2').text()).toBe(button.text());
-        expect(wrapper.get('main').text()).toContain('Coming soon');
+        expect(wrapper.get('main').text().includes('Coming soon')).toBe(
+          ![
+            'Generate keystore',
+            'APK analysis',
+            'APK signing',
+            'Settings',
+          ].includes(button.text()),
+        );
       }
     } finally {
       wrapper.unmount();

@@ -28,11 +28,12 @@ export const workspacePages = [
     description: 'Inspect APK metadata, permissions and signatures.',
   },
   {
-    id: 'apk-generation',
-    label: 'APK generation',
+    id: 'generate-keystore',
+    label: 'Generate keystore',
     group: 'APK',
     icon: 'build',
-    description: 'Generate APK packages from your Android projects.',
+    description:
+      'Create a keystore and signing key for your Android applications.',
   },
   {
     id: 'apk-signing',
@@ -40,6 +41,13 @@ export const workspacePages = [
     group: 'APK',
     icon: 'shield',
     description: 'Sign APK packages with your signing key.',
+  },
+  {
+    id: 'settings',
+    label: 'Settings',
+    group: 'Application',
+    icon: 'settings',
+    description: 'Application preferences, support and updates.',
   },
 ] as const;
 

@@ -3,5 +3,5 @@
   "identifier": "main",
   "description": "Main window; native permissions will be added with the features that need them.",
   "windows": ["main"],
-  "permissions": []
+  "permissions": ["core:event:allow-listen", "core:event:allow-unlisten"]
 }

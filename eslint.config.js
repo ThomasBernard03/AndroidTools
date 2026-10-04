@@ -9,6 +9,8 @@ export default ts.config(
     ignores: [
       'dist/**',
       'coverage/**',
+      'playwright-report/**',
+      'test-results/**',
       'src-tauri/target/**',
       'src-tauri/gen/**',
     ],

@@ -27,6 +27,39 @@ changes and discards stale results. See [ADB information](features/adb.md).
 
 ## 2. Organizing future features
 
+APK analysis lives in `features/apk` on both stacks. Rust validates input through an
+`ApkInspector` trait; the native adapter snapshots the file, reads binary manifests,
+resources and certificates with `apk-info`, inventories ZIP entries and hashes the
+snapshot. Commands run on blocking workers. Vue injects an `ApkService` with validated
+IPC and native drop event registration; its cached workspace discards stale results
+and cleans up listeners on navigation. See [APK analysis](features/apk.md).
+The analysis adapter separately checks modern APK signer signatures and content
+digests, returning an explicit verification status. Android drawable XML is resolved
+through an injectable resource reader and rendered to PNG with `resvg`; raw APK XML
+is never inserted into the webview DOM.
+
+Keystore generation lives in `features/keystore` on both stacks. Rust validates
+requests through a use case with injectable encoder and file-publication traits;
+native adapters generate RSA/certificates with vendored OpenSSL, encode JKS with
+`jks`, and atomically publish a new file without replacement. Tauri commands run
+blocking work off the UI thread and provide scoped dialog/clipboard/reveal actions.
+The frontend injects a `KeystoreService` and validates IPC results. Explicit demos
+and Chromium journeys exercise the form without native dialogs or real keys.
+See [keystore generation](features/keystore.md) for limitations and verification.
+
+APK signing lives in `features/signing`. Its use case injects an `ApkSigner`, an
+owned `SignedArtifact` and a destination picker, enforcing sign-before-dialog
+ordering and cleanup on cancellation. Native adapters read JKS/PKCS12, rebuild
+aligned ZIP entries, sign APK v2 and publish atomically without replacement.
+The frontend injects a validated `SigningService`; credentials are not persisted.
+See [APK signing](features/signing.md) for supported formats and verification.
+
+Application settings live in `features/settings`. Vue injects a validated
+`SettingsService`; native commands atomically persist preferences off the UI thread
+and open fixed GitHub destinations through the existing opener plugin. Sentry
+consent is persisted, but SDK integration, logging and Sparkle are deferred.
+See [Settings](features/settings.md).
+
 Each feature will live under `src/features/<feature>/` on the frontend and
 `src-tauri/src/features/<feature>/` in Rust. Introduce layers when they have a
 concrete responsibility:
@@ -81,8 +114,10 @@ rather than duplicate implementation details.
   canvas and surfaces, mint primary accent `#7CFFB2`, muted text, warning and error
   colors. Use tokens rather than feature-specific palettes. The desktop shell has
   a left device sidebar and a main workspace; below 768 px they stack vertically.
-- Keep native select keyboard behavior, visible focus indicators and reduced-motion
-  support. The document uses a dark color scheme for native form controls.
+- Preserve standard keyboard behavior, visible focus indicators and reduced-motion
+  support. The keystore format uses a themed, accessible select-only combobox;
+  the device picker retains its native select. The document uses a dark color
+  scheme for native form controls.
 - English for all UI text, accessibility labels, documentation and comments.
 - No native plugin or permission without a feature that requires it.
 - Run blocking operations outside the UI thread when they are introduced.

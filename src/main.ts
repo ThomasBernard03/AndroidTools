@@ -1,4 +1,12 @@
 import { createApp } from 'vue';
+import { createTauriSettingsService } from './features/settings/infrastructure/tauriSettingsService';
+import { createDemoSettingsService } from './features/settings/infrastructure/demoSettingsService';
+import { createTauriSigningService } from './features/signing/infrastructure/tauriSigningService';
+import { createDemoSigningService } from './features/signing/infrastructure/demoSigningService';
+import { createTauriApkService } from './features/apk/infrastructure/tauriApkService';
+import { createDemoApkService } from './features/apk/infrastructure/demoApkService';
+import { createTauriKeystoreService } from './features/keystore/infrastructure/tauriKeystoreService';
+import { createDemoKeystoreService } from './features/keystore/infrastructure/demoKeystoreService';
 import App from './App.vue';
 import './styles.css';
 import { isTauri } from '@tauri-apps/api/core';
@@ -34,4 +42,30 @@ const adbService = demo
   : isTauri()
     ? createTauriAdbService()
     : undefined;
-createApp(App, { deviceService, adbService, demo }).mount('#app');
+const keystoreService = demo
+  ? createDemoKeystoreService(scenario === 'error')
+  : isTauri()
+    ? createTauriKeystoreService()
+    : undefined;
+const apkService = demo
+  ? createDemoApkService(scenario === 'error')
+  : isTauri()
+    ? createTauriApkService()
+    : undefined;
+createApp(App, {
+  settingsService: demo
+    ? createDemoSettingsService(scenario === 'error')
+    : isTauri()
+      ? createTauriSettingsService()
+      : undefined,
+  signingService: demo
+    ? createDemoSigningService(scenario === 'error')
+    : isTauri()
+      ? createTauriSigningService()
+      : undefined,
+  deviceService,
+  adbService,
+  keystoreService,
+  apkService,
+  demo,
+}).mount('#app');

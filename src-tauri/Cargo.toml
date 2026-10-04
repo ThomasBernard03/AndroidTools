@@ -3,7 +3,7 @@ name = "android-tools"
 version = "0.1.0"
 description = "Desktop tools for Android devices"
 edition = "2024"
-rust-version = "1.90"
+rust-version = "1.93"
 
 [lib]
 name = "android_tools_lib"
@@ -22,9 +22,22 @@ serde = { version = "1", features = ["derive"] }
 rsadb = { version = "0.1.1", default-features = false, features = ["usb"] }
 tokio = { version = "1", features = ["sync", "time", "rt"] }
 tempfile = "3"
-
-[dev-dependencies]
+openssl = { version = "0.10.81", features = ["vendored"] }
+jks = { version = "0.3.3", default-features = false, features = ["rand"] }
+tauri-plugin-dialog = "2.8.1"
+tauri-plugin-clipboard-manager = "2.4.1"
+tauri-plugin-opener = "2.7.0"
+zeroize = "1.9.0"
+chrono = { version = "0.4.45", default-features = false, features = ["clock"] }
+apk-info = "1.0.13"
+apksig = { version = "0.4.0", default-features = false, features = ["signing"] }
+rsa = "0.9.10"
+zip = { version = "4.6.1", default-features = false, features = ["deflate"] }
 serde_json = "1"
+resvg = { version = "0.48.1", default-features = false, features = ["raster-images"] }
+roxmltree = "0.21.1"
+imagesize = { version = "0.15.0", default-features = false, features = ["png", "jpeg", "webp"] }
+svgtypes = "0.16.1"
 
 [lints.clippy]
 unwrap_used = "warn"
