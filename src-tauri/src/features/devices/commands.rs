@@ -11,10 +11,13 @@ pub async fn list_devices(
     service: State<'_, DeviceService>,
 ) -> Result<Vec<DeviceSummary>, DeviceError> {
     let service = service.inner().clone();
-    tauri::async_runtime::spawn_blocking(move || service.list())
-        .await
-        .map_err(|_| DeviceError {
-            code: DeviceErrorCode::Internal,
-            message: "Device discovery could not finish. Please retry.".into(),
-        })?
+    crate::logging::observe("list_devices", async move {
+        tauri::async_runtime::spawn_blocking(move || service.list())
+            .await
+            .map_err(|_| DeviceError {
+                code: DeviceErrorCode::Internal,
+                message: "Device discovery could not finish. Please retry.".into(),
+            })?
+    })
+    .await
 }

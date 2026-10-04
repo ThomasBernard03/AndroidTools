@@ -68,6 +68,22 @@ async function open(link: ProjectLink) {
     opening.value = false;
   }
 }
+async function openLogs() {
+  if (!props.service || opening.value) return;
+  opening.value = true;
+  error.value = '';
+  notice.value = '';
+  try {
+    await props.service.openLogsFolder();
+    notice.value = props.demo
+      ? 'Demo: opening the logs folder was simulated.'
+      : 'Opened the logs folder.';
+  } catch (value) {
+    showError(value);
+  } finally {
+    opening.value = false;
+  }
+}
 onMounted(load);
 </script>
 
@@ -80,7 +96,7 @@ onMounted(load);
       </p>
     </div>
     <p v-if="demo" class="text-sm text-warning">
-      Demo settings are kept in memory. GitHub actions are simulated.
+      Demo settings are kept in memory. Folder and GitHub actions are simulated.
     </p>
     <p v-if="!service" role="alert" class="text-sm text-warning">
       Settings require the desktop application.
@@ -120,9 +136,9 @@ onMounted(load);
             id="crash-description"
             class="mt-1 text-sm leading-relaxed text-muted"
           >
-            Allow crash reports to help improve Android Tools. Sentry is not
-            configured yet; no reports are sent. Your preference is saved for
-            its future integration.
+            Allow error reports to help improve Android Tools when Sentry is
+            configured for this build. Changes apply immediately. Screenshots
+            and session recordings are not collected.
           </p>
         </div>
         <button
@@ -169,13 +185,14 @@ onMounted(load);
           <div>
             <p class="text-sm font-medium">Application logs</p>
             <p class="mt-1 text-sm text-muted">
-              Local application logging is coming soon.
+              Local diagnostic logs rotate at 5 MiB, keeping up to 5 archives.
             </p>
           </div>
           <button
             type="button"
-            disabled
-            class="rounded-lg border border-stroke px-3 py-2 text-xs text-muted opacity-50"
+            :disabled="!service || opening"
+            class="rounded-lg border border-stroke px-3 py-2 text-xs hover:border-primary disabled:opacity-40"
+            @click="openLogs"
           >
             Open logs folder
           </button>

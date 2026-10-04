@@ -19,11 +19,14 @@ fn native_error() -> KeystoreError {
 pub async fn generate_keystore(
     request: GenerateRequest,
 ) -> Result<GeneratedKeystore, KeystoreError> {
-    tauri::async_runtime::spawn_blocking(move || {
-        application::generate(&request, &NativeEncoder, &NativeFiles)
+    crate::logging::observe("generate_keystore", async move {
+        tauri::async_runtime::spawn_blocking(move || {
+            application::generate(&request, &NativeEncoder, &NativeFiles)
+        })
+        .await
+        .map_err(|_| native_error())?
     })
     .await
-    .map_err(|_| native_error())?
 }
 
 #[tauri::command]

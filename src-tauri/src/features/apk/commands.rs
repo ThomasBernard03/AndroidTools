@@ -14,11 +14,14 @@ fn failed() -> ApkError {
 /// Run archive, resource, certificate and hashing work off the UI thread.
 #[tauri::command]
 pub async fn analyze_apk(path: String) -> Result<ApkReport, ApkError> {
-    tauri::async_runtime::spawn_blocking(move || {
-        domain::analyze(std::path::Path::new(&path), &NativeApkInspector)
+    crate::logging::observe("analyze_apk", async move {
+        tauri::async_runtime::spawn_blocking(move || {
+            domain::analyze(std::path::Path::new(&path), &NativeApkInspector)
+        })
+        .await
+        .map_err(|_| failed())?
     })
     .await
-    .map_err(|_| failed())?
 }
 
 #[tauri::command]

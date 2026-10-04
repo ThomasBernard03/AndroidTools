@@ -19,5 +19,8 @@ export function createDemoSettingsService(fail = false): SettingsService {
     async openProjectLink() {
       check();
     },
+    async openLogsFolder() {
+      check();
+    },
   };
 }

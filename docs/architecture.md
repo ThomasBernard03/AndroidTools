@@ -56,8 +56,14 @@ See [APK signing](features/signing.md) for supported formats and verification.
 
 Application settings live in `features/settings`. Vue injects a validated
 `SettingsService`; native commands atomically persist preferences off the UI thread
-and open fixed GitHub destinations through the existing opener plugin. Sentry
-consent is persisted, but SDK integration, logging and Sparkle are deferred.
+and open fixed GitHub destinations through the existing opener plugin. The native
+Sentry client owns the transport and an atomic consent gate shared by Rust panics
+and Vue error events forwarded over IPC. Successful settings writes update this
+gate immediately. Local diagnostics use `log` and `flexi_logger` with asynchronous
+file writes, size-based rotation and bounded retention. Native command boundaries
+record operation outcomes; a narrow frontend adapter forwards fixed error events.
+Settings opens the same native log directory. See [Local logs](features/logging.md).
+Sparkle is deferred.
 See [Settings](features/settings.md).
 
 Each feature will live under `src/features/<feature>/` on the frontend and

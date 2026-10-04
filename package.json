@@ -22,6 +22,7 @@
     "check:rust": "cargo fmt --manifest-path src-tauri/Cargo.toml --check && cargo clippy --manifest-path src-tauri/Cargo.toml --all-targets --locked -- -D warnings && cargo test --manifest-path src-tauri/Cargo.toml --locked"
   },
   "dependencies": {
+    "@sentry/vue": "^11.4.0",
     "@tauri-apps/api": "^2.8.0",
     "vue": "^3.5.21"
   },

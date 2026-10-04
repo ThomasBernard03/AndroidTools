@@ -1,4 +1,6 @@
 import { createApp } from 'vue';
+import { initializeLocalLogging } from './shared/infrastructure/localLogging';
+import { initializeCrashReporting } from './shared/infrastructure/crashReporting';
 import { createTauriSettingsService } from './features/settings/infrastructure/tauriSettingsService';
 import { createDemoSettingsService } from './features/settings/infrastructure/demoSettingsService';
 import { createTauriSigningService } from './features/signing/infrastructure/tauriSigningService';
@@ -52,7 +54,7 @@ const apkService = demo
   : isTauri()
     ? createTauriApkService()
     : undefined;
-createApp(App, {
+const app = createApp(App, {
   settingsService: demo
     ? createDemoSettingsService(scenario === 'error')
     : isTauri()
@@ -68,4 +70,9 @@ createApp(App, {
   keystoreService,
   apkService,
   demo,
-}).mount('#app');
+});
+if (isTauri() && !demo) {
+  initializeCrashReporting(app);
+  initializeLocalLogging(app);
+}
+app.mount('#app');

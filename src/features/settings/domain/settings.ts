@@ -8,6 +8,7 @@ export interface SettingsService {
   load(): Promise<AppSettings>;
   setCrashReporting(enabled: boolean): Promise<AppSettings>;
   openProjectLink(link: ProjectLink): Promise<void>;
+  openLogsFolder(): Promise<void>;
 }
 
 export class SettingsError extends Error {

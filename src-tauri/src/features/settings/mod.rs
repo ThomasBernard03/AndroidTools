@@ -1,3 +1,3 @@
 pub(crate) mod commands;
-mod domain;
-mod infrastructure;
+pub(crate) mod domain;
+pub(crate) mod infrastructure;

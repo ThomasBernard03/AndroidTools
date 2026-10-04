@@ -11,7 +11,6 @@ pub fn load(directory: &Path) -> Result<AppSettings, SettingsError> {
 }
 
 /// Atomically replace preferences so an interrupted write cannot truncate them.
-/// This stores consent only; no Sentry SDK is initialized by this feature.
 pub fn set_crash_reporting(directory: &Path, enabled: bool) -> Result<AppSettings, SettingsError> {
     let mut settings = load(directory)?;
     settings.crash_reporting_enabled = enabled;

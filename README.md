@@ -143,9 +143,12 @@ and independent desktop verification.
 ## Application settings
 
 Open **Settings** at the bottom of the sidebar to open the GitHub project, create
-an issue and save your Sentry crash reporting preference. The preference survives
-restarts, but Sentry is not configured yet and no reports are sent. Log folder and
-Sparkle update actions are marked as coming soon. See [Settings](docs/features/settings.md).
+an issue and control Sentry error reporting. The preference survives restarts and
+applies immediately to Vue errors and Rust panics. Supply `SENTRY_DSN` when building
+the desktop application to enable delivery; reporting defaults to off.
+**Open logs folder** opens local diagnostic files, rotated at 5 MiB with 5 archives
+retained. Local logs work independently of Sentry. Sparkle updates are coming soon.
+See [Settings](docs/features/settings.md) and [Local logs](docs/features/logging.md).
 
 ## Quality checks
 

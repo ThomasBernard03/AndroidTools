@@ -14,24 +14,27 @@ pub async fn sign_apk(
     app: tauri::AppHandle,
     request: SignRequest,
 ) -> Result<Option<String>, SigningError> {
-    tauri::async_runtime::spawn_blocking(move || {
-        application::sign_and_save(&request, &NativeSigner, |name| {
-            app.dialog()
-                .file()
-                .set_title("Save signed APK")
-                .add_filter("Android package", &["apk"])
-                .set_file_name(name)
-                .blocking_save_file()
-                .map(|p| {
-                    p.into_path()
-                        .map(|p| p.to_string_lossy().into_owned())
-                        .map_err(|_| native_error())
-                })
-                .transpose()
+    crate::logging::observe("sign_apk", async move {
+        tauri::async_runtime::spawn_blocking(move || {
+            application::sign_and_save(&request, &NativeSigner, |name| {
+                app.dialog()
+                    .file()
+                    .set_title("Save signed APK")
+                    .add_filter("Android package", &["apk"])
+                    .set_file_name(name)
+                    .blocking_save_file()
+                    .map(|p| {
+                        p.into_path()
+                            .map(|p| p.to_string_lossy().into_owned())
+                            .map_err(|_| native_error())
+                    })
+                    .transpose()
+            })
         })
+        .await
+        .map_err(|_| native_error())?
     })
     .await
-    .map_err(|_| native_error())?
 }
 
 #[tauri::command]

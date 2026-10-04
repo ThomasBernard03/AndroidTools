@@ -58,5 +58,8 @@ export function createTauriSettingsService(
     async openProjectLink(link) {
       await request('open_project_link', { link });
     },
+    async openLogsFolder() {
+      await request('open_logs_folder');
+    },
   };
 }

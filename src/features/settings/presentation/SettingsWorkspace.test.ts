@@ -92,8 +92,47 @@ describe('Application settings', () => {
     await button('View on GitHub').trigger('click');
     await flushPromises();
     expect(open.mock.calls).toEqual([['issue'], ['repository']]);
-    expect(button('Open logs folder').attributes('disabled')).toBeDefined();
+    expect(button('Open logs folder').attributes('disabled')).toBeUndefined();
     expect(button('Check for updates').attributes('disabled')).toBeDefined();
+    wrapper.unmount();
+  });
+  it('opens the logs folder, blocks duplicate requests and allows retry after failure', async () => {
+    const service = createDemoSettingsService();
+    let reject!: (error: unknown) => void;
+    const open = vi.spyOn(service, 'openLogsFolder').mockImplementationOnce(
+      () =>
+        new Promise((_, fail) => {
+          reject = fail;
+        }),
+    );
+    const wrapper = mount(SettingsWorkspace, {
+      props: { service, demo: true },
+    });
+    await flushPromises();
+    const button = wrapper
+      .findAll('button')
+      .find((entry) => entry.text() === 'Open logs folder')!;
+    await button.trigger('click');
+    expect(button.attributes('disabled')).toBeDefined();
+    await button.trigger('click');
+    expect(open).toHaveBeenCalledTimes(1);
+    reject(new SettingsError('open_failed', 'Could not open logs.'));
+    await flushPromises();
+    expect(wrapper.get('[role="alert"]').text()).toContain(
+      'Could not open logs.',
+    );
+    await button.trigger('click');
+    await flushPromises();
+    expect(wrapper.get('[role="status"]').text()).toContain('simulated');
+    expect(open).toHaveBeenCalledTimes(2);
+    wrapper.unmount();
+  });
+  it('requires the native service to open logs', () => {
+    const wrapper = mount(SettingsWorkspace);
+    const button = wrapper
+      .findAll('button')
+      .find((entry) => entry.text() === 'Open logs folder')!;
+    expect(button.attributes('disabled')).toBeDefined();
     wrapper.unmount();
   });
 });

@@ -9,12 +9,26 @@ describe('Settings IPC', () => {
     await service.setCrashReporting(false);
     await service.openProjectLink('issue');
     await service.openProjectLink('repository');
+    await service.openLogsFolder();
     expect(call.mock.calls).toEqual([
       ['load_settings', undefined],
       ['set_crash_reporting', { enabled: false }],
       ['open_project_link', { link: 'issue' }],
       ['open_project_link', { link: 'repository' }],
+      ['open_logs_folder', undefined],
     ]);
+  });
+  it('propagates log folder failures for display and retry', async () => {
+    const service = createTauriSettingsService(
+      vi.fn().mockRejectedValue({
+        code: 'open_failed',
+        message: 'Could not open logs.',
+      }),
+    );
+    await expect(service.openLogsFolder()).rejects.toMatchObject({
+      code: 'open_failed',
+      message: 'Could not open logs.',
+    });
   });
   it.each([null, {}, { crashReportingEnabled: 'true' }, false])(
     'rejects malformed preferences: %j',
