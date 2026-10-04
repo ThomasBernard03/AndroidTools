@@ -1,5 +1,6 @@
 <script setup lang="ts">
 import { onMounted, ref } from 'vue';
+import { version as appVersion } from '../../../../src-tauri/tauri.conf.json';
 import {
   SettingsError,
   type AppSettings,
@@ -241,6 +242,12 @@ onMounted(load);
       >
         Updates
       </h3>
+      <div
+        class="flex items-center justify-between gap-4 border-b border-stroke p-5"
+      >
+        <p class="text-sm font-medium">Current version</p>
+        <p class="text-sm text-muted">{{ appVersion }}</p>
+      </div>
       <div class="flex flex-wrap items-center justify-between gap-4 p-5">
         <div>
           <p class="text-sm font-medium">Sparkle updates</p>
