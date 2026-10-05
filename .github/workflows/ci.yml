@@ -1,0 +1,54 @@
+name: Quality
+
+on:
+  push:
+  pull_request:
+
+permissions:
+  contents: read
+
+jobs:
+  frontend:
+    name: Frontend
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version-file: .nvmrc
+          cache: npm
+      - run: npm ci
+      - run: npm run check
+      - run: npx playwright install --with-deps chromium
+      - run: npm run test:e2e
+
+  desktop:
+    name: Rust / macOS
+    # Tauri links against the host platform's native webview and SDK.
+    runs-on: macos-latest
+    env:
+      SPARKLE_FRAMEWORK_PATH: ${{ github.workspace }}/src-tauri
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version-file: .nvmrc
+          cache: npm
+      - run: rustup show
+      - run: rustup target add aarch64-apple-darwin x86_64-apple-darwin
+      - uses: Swatinem/rust-cache@v2
+        with:
+          workspaces: src-tauri
+      - run: npm ci
+      - run: npm run build
+      - run: npm run check:rust
+      - run: bash scripts/setup-sparkle.sh
+      - name: Verify Sparkle signing compatibility with a temporary test key
+        run: SPARKLE_SIGN_TOOL="$PWD/src-tauri/sparkle-tools/sign_update" npm run test:release
+      - name: Check release updater
+        run: |
+          cargo clippy --manifest-path src-tauri/Cargo.toml --features macos-updater --all-targets --locked -- -D warnings
+          cargo test --manifest-path src-tauri/Cargo.toml --features macos-updater --locked \
+            --config "target.$(rustc -vV | sed -n 's/^host: //p').runner=['env', 'DYLD_FRAMEWORK_PATH=$SPARKLE_FRAMEWORK_PATH']"
+      - run: npm run tauri build -- --target universal-apple-darwin --features macos-updater --config src-tauri/tauri.release.conf.json -- --locked
+      - run: bash scripts/verify-macos-bundle.sh

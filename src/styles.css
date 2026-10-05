@@ -1,0 +1,69 @@
+@import 'tailwindcss';
+
+@theme {
+  --font-sans:
+    system-ui, -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+  --color-primary: #7cffb2;
+  --color-primary-hover: #a3ffc9;
+  --color-primary-muted: #173a29;
+  --color-on-primary: #10271b;
+  --color-canvas: #0d1110;
+  --color-sidebar: #111715;
+  --color-surface: #171e1b;
+  --color-surface-raised: #202a25;
+  --color-stroke: #2b3831;
+  --color-foreground: #edf5f0;
+  --color-muted: #a0b2a7;
+  --color-warning: #f2cb82;
+  --color-danger: #ffa4a4;
+}
+
+:root {
+  color-scheme: dark;
+}
+
+@layer components {
+  .field-icon-button {
+    @apply flex size-8 shrink-0 items-center justify-center rounded-md text-muted transition-colors hover:bg-primary/10 hover:text-primary focus-visible:outline-offset-0 motion-reduce:transition-none disabled:cursor-default disabled:opacity-40;
+  }
+  .keystore-input {
+    @apply w-full rounded-lg border border-stroke bg-canvas px-3 py-2.5 text-sm;
+  }
+  .keystore-button {
+    @apply rounded-lg border border-stroke bg-surface-raised px-3 py-2 text-xs text-foreground hover:border-primary/50 disabled:cursor-default disabled:opacity-40;
+  }
+  .keystore-card {
+    @apply rounded-xl border border-stroke bg-surface p-5;
+  }
+}
+
+body {
+  margin: 0;
+  min-width: 320px;
+  background: var(--color-canvas);
+  color: var(--color-foreground);
+  -webkit-font-smoothing: antialiased;
+}
+
+::selection {
+  background: var(--color-primary);
+  color: var(--color-on-primary);
+}
+
+button:not(:disabled),
+select:not(:disabled) {
+  cursor: pointer;
+}
+
+:focus-visible {
+  outline: 2px solid var(--color-primary);
+  outline-offset: 4px;
+}
+
+.workspace-background {
+  background: radial-gradient(
+    ellipse at 85% 0%,
+    rgb(124 255 178 / 5%),
+    transparent 55%
+  );
+}

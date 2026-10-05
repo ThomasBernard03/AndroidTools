@@ -2,155 +2,140 @@ name: Build & Release
 
 on:
   push:
-    branches:
-      - main
+    branches: [main]
+    paths-ignore: [appcast.xml]
+  workflow_dispatch:
 
 permissions:
   contents: write
 
+concurrency:
+  group: release-macos
+  cancel-in-progress: false
+
+defaults:
+  run:
+    shell: bash
+
 env:
-  GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+  GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
 
 jobs:
   prepare-release:
+    if: github.ref == 'refs/heads/main'
     runs-on: ubuntu-latest
     outputs:
       version: ${{ steps.version.outputs.version }}
-      build: ${{ steps.version.outputs.build }}
-      tag: ${{ steps.version.outputs.tag }}
-
+      needed: ${{ steps.version.outputs.needed }}
+      published: ${{ steps.release.outputs.published }}
     steps:
-      - name: Checkout repository
-        uses: actions/checkout@v4
-
-      - name: Read version from pubspec.yaml
-        id: version
-        run: |
-          FULL_VERSION=$(grep '^version:' pubspec.yaml | sed 's/version: //')
-          VERSION=$(echo "$FULL_VERSION" | cut -d'+' -f1)
-          BUILD=$(echo "$FULL_VERSION" | cut -d'+' -f2)
-
-          echo "version=$VERSION" >> $GITHUB_OUTPUT
-          echo "build=$BUILD" >> $GITHUB_OUTPUT
-          echo "tag=$VERSION" >> $GITHUB_OUTPUT
-
-      - name: Create GitHub Release
-        uses: softprops/action-gh-release@v1
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
         with:
-          tag_name: ${{ steps.version.outputs.tag }}
-          name: ${{ steps.version.outputs.version }}
-          draft: true
-          generate_release_notes: true
+          node-version-file: .nvmrc
+          cache: npm
+      - run: npm ci
+      - name: Check release metadata behavior
+        run: npm run test:release
+      - name: Read the current public appcast
+        run: |
+          git fetch origin main
+          git show origin/main:appcast.xml > appcast.xml
+      - name: Validate version and increasing Sparkle build number
+        id: version
+        run: node scripts/release.mjs prepare
+      - name: Create draft release for the source commit
+        id: release
+        if: steps.version.outputs.needed == 'true'
+        env:
+          VERSION: ${{ steps.version.outputs.version }}
+          RELEASE_COMMIT: ${{ github.sha }}
+        run: |
+          gh release list --limit 1000 --json tagName,isDraft > "$RUNNER_TEMP/releases.json"
+          EXISTING=$(jq --arg tag "$VERSION" '.[] | select(.tagName == $tag)' "$RUNNER_TEMP/releases.json")
+          if [ -n "$EXISTING" ]; then
+            if [ "$(jq -r '.isDraft' <<< "$EXISTING")" = true ]; then
+              test "$(gh release view "$VERSION" --json targetCommitish --jq .targetCommitish)" = "$RELEASE_COMMIT"
+            else
+              git fetch origin "refs/tags/$VERSION:refs/tags/$VERSION"
+              test "$(git rev-parse "$VERSION^{commit}")" = "$RELEASE_COMMIT"
+            fi
+            echo "published=$(jq -r '.isDraft | not' <<< "$EXISTING")" >> "$GITHUB_OUTPUT"
+          else
+            gh release create "$VERSION" --target "$RELEASE_COMMIT" --title "$VERSION" --draft --generate-notes
+            echo 'published=false' >> "$GITHUB_OUTPUT"
+          fi
 
   build-macos:
     needs: prepare-release
+    if: needs.prepare-release.outputs.needed == 'true'
     runs-on: macos-latest
-
+    env:
+      VERSION: ${{ needs.prepare-release.outputs.version }}
+      SPARKLE_FRAMEWORK_PATH: ${{ github.workspace }}/src-tauri
+      DYLD_FRAMEWORK_PATH: ${{ github.workspace }}/src-tauri
     steps:
-      - name: Checkout repository
-        uses: actions/checkout@v4
+      - uses: actions/checkout@v4
         with:
           fetch-depth: 0
-
-      - name: Set up Flutter
-        uses: subosito/flutter-action@v2
+      - uses: actions/setup-node@v4
         with:
-          flutter-version: "3.44.0"
-          channel: "stable"
-
-      - name: Build macOS app
+          node-version-file: .nvmrc
+          cache: npm
+      - run: npm ci
+      - name: Install pinned Sparkle framework and signing tools
+        run: bash scripts/setup-sparkle.sh
+      - name: Install pinned Rust toolchain and both macOS targets
+        if: needs.prepare-release.outputs.published != 'true'
         run: |
-          flutter clean
-          flutter pub get
-          dart run build_runner build -d
-          flutter build macos --release \
-            --dart-define=SENTRY_DSN=${{ secrets.SENTRY_DSN }} \
-            --dart-define=GIT_REPOSITORY_URL=${{ vars.REPOSITORY_URL }} \
-            --dart-define=AUTO_UPDATER_FEED_URL=${{ vars.APP_CAST_FILE_PATH }} \
-            --dart-define=ISSUE_URL=${{ vars.ISSUE_URL }} \
-            --obfuscate \
-            --split-debug-info=build/debug-info
-
-      - name: Sign macOS app with ad-hoc signature
+          rustup show
+          rustup target add aarch64-apple-darwin x86_64-apple-darwin
+      - uses: Swatinem/rust-cache@v2
+        if: needs.prepare-release.outputs.published != 'true'
+        with:
+          workspaces: src-tauri
+      - name: Check frontend and Rust, including the release updater
+        if: needs.prepare-release.outputs.published != 'true'
         run: |
-          codesign --force --deep --sign - \
-            --entitlements macos/Runner/Release.entitlements \
-            "build/macos/Build/Products/Release/Android Tools.app"
-
-          echo "✅ Application signed successfully"
-          codesign -d --entitlements - "build/macos/Build/Products/Release/Android Tools.app" 2>&1 | head -10
-
-      - name: Upload debug symbols to Sentry
+          npm run check
+          SPARKLE_SIGN_TOOL="$PWD/src-tauri/sparkle-tools/sign_update" npm run test:release
+          npm run check:rust
+          cargo clippy --manifest-path src-tauri/Cargo.toml --features macos-updater --all-targets --locked -- -D warnings
+          cargo test --manifest-path src-tauri/Cargo.toml --features macos-updater --locked \
+            --config "target.$(rustc -vV | sed -n 's/^host: //p').runner=['env', 'DYLD_FRAMEWORK_PATH=$SPARKLE_FRAMEWORK_PATH']"
+      - name: Build universal macOS application with ad-hoc signing
+        if: needs.prepare-release.outputs.published != 'true'
+        env:
+          SENTRY_DSN: ${{ secrets.SENTRY_DSN }}
+        run: npm run tauri build -- --target universal-apple-darwin --features macos-updater --config src-tauri/tauri.release.conf.json -- --locked
+      - name: Verify the installable application
+        if: needs.prepare-release.outputs.published != 'true'
+        run: bash scripts/verify-macos-bundle.sh
+      - name: Upload native debug symbols to Sentry
+        if: needs.prepare-release.outputs.published != 'true'
         env:
           SENTRY_AUTH_TOKEN: ${{ secrets.SENTRY_AUTH_TOKEN }}
           SENTRY_ORG: ${{ secrets.SENTRY_ORG }}
           SENTRY_PROJECT: ${{ secrets.SENTRY_PROJECT }}
         run: |
-          # Check if Sentry credentials are available
           if [ -z "$SENTRY_AUTH_TOKEN" ] || [ -z "$SENTRY_ORG" ] || [ -z "$SENTRY_PROJECT" ]; then
-            echo "⚠️ Sentry credentials not configured, skipping debug symbols upload"
+            echo 'Sentry credentials not configured; skipping symbol upload.'
             exit 0
           fi
-
-          # Install Sentry CLI
-          curl -sL https://sentry.io/get-cli/ | bash
-
-          VERSION="${{ needs.prepare-release.outputs.version }}"
-
-          # Create a new release in Sentry
-          echo "📦 Creating Sentry release $VERSION..."
-          sentry-cli releases new "$VERSION" \
-            --org "$SENTRY_ORG" \
-            --project "$SENTRY_PROJECT"
-
-          # Associate commits with the release
-          echo "🔗 Associating commits with release..."
-          sentry-cli releases set-commits "$VERSION" \
-            --org "$SENTRY_ORG" \
-            --auto \
-            --ignore-missing
-
-          # Upload Flutter debug symbols
-          echo "📤 Uploading debug symbols..."
-
-          # Check if debug info directory exists and has files
-          if [ -d "build/debug-info" ] && [ "$(ls -A build/debug-info)" ]; then
-            echo "Found debug symbols in build/debug-info"
-            ls -lh build/debug-info
-
-            # Flutter generates Breakpad symbol files (.symbols)
-            sentry-cli debug-files upload \
-              --org "$SENTRY_ORG" \
-              --project "$SENTRY_PROJECT" \
-              --type breakpad \
-              build/debug-info
-          else
-            echo "⚠️ No debug symbols found in build/debug-info"
-          fi
-
-          # Also upload macOS dSYM files if they exist
-          DSYM_PATH="build/macos/Build/Products/Release/Android Tools.app.dSYM"
-          if [ -d "$DSYM_PATH" ]; then
-            echo "Found macOS dSYM files"
-            sentry-cli debug-files upload \
-              --org "$SENTRY_ORG" \
-              --project "$SENTRY_PROJECT" \
-              "$DSYM_PATH"
-          fi
-
-          # Finalize the release
-          echo "✅ Finalizing Sentry release..."
-          sentry-cli releases finalize "$VERSION" \
-            --org "$SENTRY_ORG" \
-            --project "$SENTRY_PROJECT"
-
-      - name: Create DMG installer
+          brew install sentry-cli
+          RELEASE="android-tools@$(node -p "require('./src-tauri/tauri.conf.json').version")"
+          sentry-cli releases new "$RELEASE"
+          sentry-cli releases set-commits "$RELEASE" --auto --ignore-missing
+          for TARGET in aarch64-apple-darwin x86_64-apple-darwin; do
+            SYMBOLS="src-tauri/target/$TARGET/release/android-tools.dSYM"
+            test -d "$SYMBOLS"
+            sentry-cli debug-files upload --include-sources "$SYMBOLS"
+          done
+          sentry-cli releases finalize "$RELEASE"
+      - name: Create the historical DMG layout
+        if: needs.prepare-release.outputs.published != 'true'
         run: |
-          VERSION="${{ needs.prepare-release.outputs.version }}"
-          DMG_NAME="AndroidTools-$VERSION-macos.dmg"
-
           brew install create-dmg
-
           create-dmg \
             --volname "Android Tools" \
             --window-pos 200 120 \
@@ -160,90 +145,70 @@ jobs:
             --icon "Android Tools.app" 176 192 \
             --hide-extension "Android Tools.app" \
             --app-drop-link 432 192 \
-            "$DMG_NAME" \
-            "build/macos/Build/Products/Release/Android Tools.app"
-
-      - name: Install Sparkle tools
-        run: |
-          curl -L -o sparkle.tar.xz https://github.com/sparkle-project/Sparkle/releases/download/2.6.4/Sparkle-2.6.4.tar.xz
-          mkdir -p sparkle_dist
-          tar -xf sparkle.tar.xz -C sparkle_dist
-          chmod +x ./sparkle_dist/bin/sign_update
-
-      - name: Generate Sparkle Signature for DMG
-        id: sparkle
+            "AndroidTools-$VERSION-macos.dmg" \
+            "src-tauri/target/universal-apple-darwin/release/bundle/macos/Android Tools.app"
+      - name: Recover an already published download after an appcast push failure
+        if: needs.prepare-release.outputs.published == 'true'
+        run: gh release download "$VERSION" --pattern "AndroidTools-$VERSION-macos.dmg"
+      - name: Sign the DMG with the existing Sparkle key
         env:
-          SPARKLE_PRIVATE_KEY_CONTENT: ${{ secrets.SPARKLE_PRIVATE_KEY }}
+          SPARKLE_PRIVATE_KEY: ${{ secrets.SPARKLE_PRIVATE_KEY }}
         run: |
-          DMG_PATH="AndroidTools-${{ needs.prepare-release.outputs.version }}-macos.dmg"
-          SIGN_TOOL="./sparkle_dist/bin/sign_update"
-
-          echo "--- Preparing key ---"
-          echo "$SPARKLE_PRIVATE_KEY_CONTENT" > sparkle_key.priv
-
-          echo "--- try to sign dmg ---"
-          RAW_OUTPUT=$($SIGN_TOOL --ed-key-file sparkle_key.priv "$DMG_PATH")
-
-          SIGNATURE=$(echo "$RAW_OUTPUT" | sed -n 's/.*sparkle:edSignature="\([^"]*\)".*/\1/p')
-          rm sparkle_key.priv
-
-          if [ -z "$SIGNATURE" ]; then
-            echo "❌ ERROR: Can't parse signature from result"
-            echo "Sortie brute : $RAW_OUTPUT"
-            exit 1
-          fi
-
-          echo "✅ Generated signature: $SIGNATURE"
-          echo "signature=$SIGNATURE" >> $GITHUB_OUTPUT
-
-      - name: Generate appcast
-        run: |
-          set -e
-
-          DMG=AndroidTools-${{ needs.prepare-release.outputs.version }}-macos.dmg
-
-          export VERSION=${{ needs.prepare-release.outputs.version }}
-          export BUILD=${{ needs.prepare-release.outputs.build }}
-          export SIGNATURE=${{ steps.sparkle.outputs.signature }}
-          export FILE_SIZE=$(stat -f%z "$DMG")
-          export PUB_DATE=$(date -R)
-          export DOWNLOAD_URL=https://github.com/ThomasBernard03/AndroidTools/releases/download/$VERSION/AndroidTools-$VERSION-macos.dmg
-          export RELEASE_NOTES_URL=https://github.com/ThomasBernard03/AndroidTools/blob/main/CHANGELOG.md
-
-          NEW_ITEM=$(envsubst < appcast/items/macos.item.xml.tpl)
-
-          if [ -f appcast.xml ]; then
-            EXISTING_ITEMS=$(sed -n '/<item>/,/<\/item>/p' appcast.xml)
-            export ITEMS="$NEW_ITEM
-          $EXISTING_ITEMS"
-          else
-            export ITEMS="$NEW_ITEM"
-          fi
-
-          envsubst < appcast/appcast.xml.tpl > appcast.xml
-
-      - name: Commit appcast
-        run: |
-          git config user.name github-actions
-          git config user.email github-actions@github.com
-          git add appcast.xml
-          git diff --quiet --cached || git commit -m "chore(appcast): macOS ${{ needs.prepare-release.outputs.version }}"
-          git push
-
-      - name: Upload macOS artifacts to release
-        uses: softprops/action-gh-release@v1
+          test -n "$SPARKLE_PRIVATE_KEY"
+          KEY_FILE=$(mktemp "$RUNNER_TEMP/sparkle-key.XXXXXX")
+          trap 'rm -f "$KEY_FILE"' EXIT
+          chmod 600 "$KEY_FILE"
+          printf '%s' "$SPARKLE_PRIVATE_KEY" > "$KEY_FILE"
+          DMG="AndroidTools-$VERSION-macos.dmg"
+          export SIGNATURE_OUTPUT
+          SIGNATURE_OUTPUT=$(src-tauri/sparkle-tools/sign_update --ed-key-file "$KEY_FILE" "$DMG")
+          export FILE_SIZE
+          FILE_SIZE=$(stat -f%z "$DMG")
+          node scripts/release.mjs metadata
+      - name: Upload DMG to the draft release
+        if: needs.prepare-release.outputs.published != 'true'
+        run: gh release upload "$VERSION" "AndroidTools-$VERSION-macos.dmg" --clobber
+      - uses: actions/upload-artifact@v4
         with:
-          tag_name: ${{ needs.prepare-release.outputs.tag }}
-          files: |
-            AndroidTools-${{ needs.prepare-release.outputs.version }}-macos.dmg
+          name: release-metadata
+          path: release-metadata.json
+          if-no-files-found: error
+          retention-days: 30
 
   finalize-release:
     needs: [prepare-release, build-macos]
     runs-on: ubuntu-latest
-
+    env:
+      VERSION: ${{ needs.prepare-release.outputs.version }}
     steps:
-      - name: Publish Release
-        uses: softprops/action-gh-release@v1
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
         with:
-          tag_name: ${{ needs.prepare-release.outputs.tag }}
-          draft: false
+          node-version-file: .nvmrc
+          cache: npm
+      - run: npm ci
+      - uses: actions/download-artifact@v4
+        with:
+          name: release-metadata
+      - name: Checkout the latest feed without changing the tested release sources
+        uses: actions/checkout@v4
+        with:
+          ref: main
+          path: publication
+      - name: Generate appcast while retaining published history
+        run: |
+          cp publication/appcast.xml appcast.xml
+          node scripts/release.mjs feed
+          cp appcast.xml publication/appcast.xml
+      - name: Publish download before advertising the update
+        run: |
+          gh release view "$VERSION" --json assets --jq '.assets[].name' | grep -Fx "AndroidTools-$VERSION-macos.dmg"
+          gh release edit "$VERSION" --draft=false --latest
+      - name: Commit appcast at its existing public URL
+        working-directory: publication
+        run: |
+          git add appcast.xml
+          if ! git diff --cached --quiet; then
+            git -c user.name=github-actions -c user.email=github-actions@github.com commit -m "chore(appcast): macOS $VERSION"
+            git push origin HEAD:main
+          fi

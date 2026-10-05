@@ -1,42 +1,30 @@
+# Operating system and editor files
 .DS_Store
-devtools_options.yaml
-.dart_tool/
-.kotlin/
-.mason/
-mason-lock.json
-build/
-.flutter-plugins
-.flutter-plugins-dependencies
-
-# Android
-.cxx
-
-# Ignore generated files
-*.g.dart
-*.freezed.dart
-*.mapper.dart
-*.init.dart
-*.gr.dart
-*.config.dart
-
-# Test coverage
-coverage/
-
-# FVM Version Cache
-.fvm/
-
-# Ignore IDE
 .idea/
 .vscode/
 
-# Android build
-keystore.jks
-keystore.properties
-*.aab
-*.apk
+# Frontend dependencies and build output
+node_modules/
+dist/
+*.tsbuildinfo
 
-# Windows MSIX certificates
-CERTIFICATE.pfx
-CERTIFICATE.cer
-Install.ps1
-AndroidTools-Windows-Package/
+# Rust build output and generated Tauri schemas
+src-tauri/target/
+src-tauri/gen/
+src-tauri/Sparkle.framework/
+src-tauri/sparkle-tools/
+release-metadata.json
+AndroidTools-*-macos.dmg
+
+# Test reports
+coverage/
+playwright-report/
+test-results/
+
+# Local environment configuration
+.env
+.env.*
+!.env.example
+
+# Local logs
+*.log
