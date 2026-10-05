@@ -1,4 +1,6 @@
 <script setup lang="ts">
+import FileWorkspace from './features/files/presentation/FileWorkspace.vue';
+import type { FileService } from './features/files/domain/files';
 import DevicePicker from './features/devices/presentation/DevicePicker.vue';
 import SettingsWorkspace from './features/settings/presentation/SettingsWorkspace.vue';
 import type { SettingsService } from './features/settings/domain/settings';
@@ -35,6 +37,7 @@ const props = defineProps<{
   apkService?: ApkService;
   signingService?: SigningService;
   settingsService?: SettingsService;
+  fileService?: FileService;
   demo?: boolean;
 }>();
 const selectedDevice = shallowRef<DeviceSummary | null>(null);
@@ -152,9 +155,18 @@ const { state: adbState, refresh: refreshAdb } = useAdb(
             :demo="demo"
           />
         </KeepAlive>
+        <KeepAlive>
+          <FileWorkspace
+            v-if="currentPage.id === 'files'"
+            :device-id="selectedDevice?.id ?? null"
+            :service="fileService"
+            :demo="demo"
+          />
+        </KeepAlive>
         <ComingSoonWorkspace
           v-if="
             currentPage.id !== 'overview' &&
+            currentPage.id !== 'files' &&
             currentPage.id !== 'apk-analysis' &&
             currentPage.id !== 'generate-keystore' &&
             currentPage.id !== 'keystore-explorer' &&

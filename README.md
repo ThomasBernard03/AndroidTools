@@ -44,7 +44,7 @@ The compact sidebar groups **Device overview**, **File explorer** and **Logcat**
 under Device, and **APK analysis**, **Generate keystore**, **APK signing** and
 **Keystore explorer** under **APK & Keystore**. APK analysis inspects local packages and Generate keystore creates signing keys
 locally. APK signing signs local packages using an existing keystore. File explorer
-and Logcat display explicit **Coming soon** screens.
+browses and manages Android files. Logcat displays an explicit **Coming soon** screen.
 Navigation remains available without a device and preserves the selected device
 and ADB state when returning to the overview.
 
@@ -91,6 +91,19 @@ automatically. See [ADB information](docs/features/adb.md) for details and hardw
 
 See [device discovery](docs/features/devices.md) for architecture, limitations and
 hardware verification instructions.
+
+## Explore Android files
+
+Open **Device → File explorer** to browse **Shared storage**, **Application data**
+and **Android root**. Upload or download files and complete folders, rename entries,
+create folders and delete entries with confirmation. Existing destinations are not
+replaced. Private application data requires a debuggable app allowing `run-as` for
+the primary Android user; Android permissions still apply at the root.
+
+Transfers stream over the shared ADB session. Interrupted operations report possible
+partial changes. The interface includes breadcrumbs, search and metadata; previews
+are deferred. See [File explorer](docs/features/files.md) for transfer semantics,
+limits, explicit demos and hardware verification.
 
 ## Analyze an APK
 

@@ -17,6 +17,39 @@ pub struct AdbService {
 }
 
 impl AdbService {
+    /// Holds the selected connection for a complete operation, including recursive transfers.
+    /// Failed operations release the session so a retry cannot reuse a broken transport.
+    pub async fn with_session<T, E, F>(&self, id: &str, operation: F) -> Result<T, E>
+    where
+        E: From<AdbError>,
+        F: for<'a> FnOnce(
+            &'a dyn AdbSession,
+        ) -> std::pin::Pin<
+            Box<dyn std::future::Future<Output = Result<T, E>> + Send + 'a>,
+        >,
+    {
+        let mut active = self.active.lock().await;
+        if active.as_ref().is_none_or(|session| session.id != id) {
+            *active = None;
+            *active = Some(ActiveSession {
+                id: id.into(),
+                session: self.connector.connect(id).await?,
+            });
+        }
+        let result = operation(
+            active
+                .as_ref()
+                .expect("session established")
+                .session
+                .as_ref(),
+        )
+        .await;
+        if result.is_err() {
+            *active = None;
+        }
+        result
+    }
+
     pub fn new(connector: impl AdbConnector + 'static) -> Self {
         Self {
             connector: Arc::new(connector),
@@ -26,20 +59,8 @@ impl AdbService {
 
     /// Connects if needed and reads a fresh snapshot. Operations are serialized.
     pub async fn read(&self, id: &str) -> Result<AndroidInfo, AdbError> {
-        let mut active = self.active.lock().await;
-        if active.as_ref().is_none_or(|session| session.id != id) {
-            *active = None;
-            *active = Some(ActiveSession {
-                id: id.into(),
-                session: self.connector.connect(id).await?,
-            });
-        }
-        let session = &active.as_ref().expect("session established").session;
-        let result = read_information(session.as_ref()).await;
-        if result.is_err() {
-            *active = None;
-        }
-        result
+        self.with_session(id, |session| Box::pin(read_information(session)))
+            .await
     }
 
     /// Releases the USB interface when no device is selected or the view closes.

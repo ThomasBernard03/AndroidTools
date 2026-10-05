@@ -27,6 +27,14 @@ changes and discards stale results. See [ADB information](features/adb.md).
 
 ## 2. Organizing future features
 
+File exploration lives in `features/files`. Listing and mutation use cases use the
+injected `AdbSession`; bounded recursive transfers combine streamed ADB operations
+with local temporary files. `AdbService::with_session` serializes whole operations
+on the shared connection. The native adapter requires shell v2 exit status and keeps
+binary data outside IPC. Thin commands handle native pickers. Vue injects a validated
+`FileService`; its cached workspace discards stale device/path results and reports
+partial operations explicitly. See [File explorer](features/files.md).
+
 APK analysis lives in `features/apk` on both stacks. Rust validates input through an
 `ApkInspector` trait; the native adapter snapshots the file, reads binary manifests,
 resources and certificates with `apk-info`, inventories ZIP entries and hashes the

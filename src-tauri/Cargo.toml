@@ -29,7 +29,7 @@ tauri = { version = "2", features = [] }
 rusb = { version = "0.9", features = ["vendored"] }
 serde = { version = "1", features = ["derive"] }
 rsadb = { version = "0.1.1", default-features = false, features = ["usb"] }
-tokio = { version = "1", features = ["sync", "time", "rt"] }
+tokio = { version = "1", features = ["sync", "time", "rt", "fs", "io-util"] }
 tempfile = "3"
 openssl = { version = "0.10.81", features = ["vendored"] }
 jks = { version = "0.3.3", default-features = false, features = ["rand"] }
