@@ -47,6 +47,13 @@ The frontend injects a `KeystoreService` and validates IPC results. Explicit dem
 and Chromium journeys exercise the form without native dialogs or real keys.
 See [keystore generation](features/keystore.md) for limitations and verification.
 
+Read-only keystore exploration shares `features/keystore`. A separate
+`KeystoreInspector` trait isolates the use case from filesystem and cryptographic
+parsers. Its native adapter snapshots bounded JKS/PKCS12 files and returns public
+certificate metadata and explicit key-check statuses. The frontend injects a
+`KeystoreExplorerService`, validates IPC and invalidates reports when credentials
+change. See [Keystore explorer](features/keystore-explorer.md).
+
 APK signing lives in `features/signing`. Its use case injects an `ApkSigner`, an
 owned `SignedArtifact` and a destination picker, enforcing sign-before-dialog
 ordering and cleanup on cancellation. Native adapters read JKS/PKCS12, rebuild

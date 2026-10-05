@@ -5,6 +5,8 @@ import type { SettingsService } from './features/settings/domain/settings';
 import ApkWorkspace from './features/apk/presentation/ApkWorkspace.vue';
 import type { ApkService } from './features/apk/domain/apk';
 import KeystoreWorkspace from './features/keystore/presentation/KeystoreWorkspace.vue';
+import KeystoreExplorerWorkspace from './features/keystore/presentation/KeystoreExplorerWorkspace.vue';
+import type { KeystoreExplorerService } from './features/keystore/domain/explorer';
 import SigningWorkspace from './features/signing/presentation/SigningWorkspace.vue';
 import type { SigningService } from './features/signing/domain/signing';
 import type { KeystoreService } from './features/keystore/domain/keystore';
@@ -29,6 +31,7 @@ const props = defineProps<{
   deviceService: DeviceService;
   adbService?: AdbService;
   keystoreService?: KeystoreService;
+  keystoreExplorerService?: KeystoreExplorerService;
   apkService?: ApkService;
   signingService?: SigningService;
   settingsService?: SettingsService;
@@ -142,11 +145,19 @@ const { state: adbState, refresh: refreshAdb } = useAdb(
             :demo="demo"
           />
         </KeepAlive>
+        <KeepAlive>
+          <KeystoreExplorerWorkspace
+            v-if="currentPage.id === 'keystore-explorer'"
+            :service="keystoreExplorerService"
+            :demo="demo"
+          />
+        </KeepAlive>
         <ComingSoonWorkspace
           v-if="
             currentPage.id !== 'overview' &&
             currentPage.id !== 'apk-analysis' &&
             currentPage.id !== 'generate-keystore' &&
+            currentPage.id !== 'keystore-explorer' &&
             currentPage.id !== 'apk-signing' &&
             currentPage.id !== 'settings'
           "

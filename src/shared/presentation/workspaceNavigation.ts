@@ -2,35 +2,35 @@ export const workspacePages = [
   {
     id: 'overview',
     label: 'Device overview',
-    group: 'Workspace',
+    group: 'Device',
     icon: 'overview',
     description: '',
   },
   {
     id: 'files',
     label: 'File explorer',
-    group: 'Workspace',
+    group: 'Device',
     icon: 'folder',
     description: 'Browse files and folders on your Android device.',
   },
   {
     id: 'logcat',
     label: 'Logcat',
-    group: 'Workspace',
+    group: 'Device',
     icon: 'terminal',
     description: 'Read and filter Android device logs.',
   },
   {
     id: 'apk-analysis',
     label: 'APK analysis',
-    group: 'APK',
+    group: 'APK & Keystore',
     icon: 'package',
     description: 'Inspect APK metadata, permissions and signatures.',
   },
   {
     id: 'generate-keystore',
     label: 'Generate keystore',
-    group: 'APK',
+    group: 'APK & Keystore',
     icon: 'build',
     description:
       'Create a keystore and signing key for your Android applications.',
@@ -38,9 +38,17 @@ export const workspacePages = [
   {
     id: 'apk-signing',
     label: 'APK signing',
-    group: 'APK',
+    group: 'APK & Keystore',
     icon: 'shield',
     description: 'Sign APK packages with your signing key.',
+  },
+  {
+    id: 'keystore-explorer',
+    label: 'Keystore explorer',
+    group: 'APK & Keystore',
+    icon: 'folder',
+    description:
+      'Explore keystore aliases, certificates and signing credentials.',
   },
   {
     id: 'settings',

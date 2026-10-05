@@ -46,6 +46,7 @@ pub fn run() {
             features::adb::commands::read_android_info,
             features::adb::commands::disconnect_adb,
             features::keystore::commands::generate_keystore,
+            features::keystore::explorer_commands::explore_keystore,
             features::keystore::commands::choose_keystore_path,
             features::keystore::commands::copy_keystore_text,
             features::keystore::commands::reveal_keystore

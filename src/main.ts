@@ -1,4 +1,6 @@
 import { createApp } from 'vue';
+import { createTauriKeystoreExplorerService } from './features/keystore/infrastructure/tauriKeystoreExplorerService';
+import { createDemoKeystoreExplorerService } from './features/keystore/infrastructure/demoKeystoreExplorerService';
 import { initializeLocalLogging } from './shared/infrastructure/localLogging';
 import { initializeCrashReporting } from './shared/infrastructure/crashReporting';
 import { createTauriSettingsService } from './features/settings/infrastructure/tauriSettingsService';
@@ -55,6 +57,11 @@ const apkService = demo
     ? createTauriApkService()
     : undefined;
 const app = createApp(App, {
+  keystoreExplorerService: demo
+    ? createDemoKeystoreExplorerService(scenario === 'error')
+    : isTauri()
+      ? createTauriKeystoreExplorerService()
+      : undefined,
   settingsService: demo
     ? createDemoSettingsService(scenario === 'error')
     : isTauri()

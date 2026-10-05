@@ -41,8 +41,8 @@ USB failures never fall back to fake data.
 ## Select a connected device
 
 The compact sidebar groups **Device overview**, **File explorer** and **Logcat**
-under Workspace, and **APK analysis**, **Generate keystore** and **APK signing** under
-APK. APK analysis inspects local packages and Generate keystore creates signing keys
+under Workspace, and **APK analysis**, **Generate keystore**, **APK signing** and
+**Keystore explorer** under **APK & Keystore**. APK analysis inspects local packages and Generate keystore creates signing keys
 locally. APK signing signs local packages using an existing keystore. File explorer
 and Logcat display explicit **Coming soon** screens.
 Navigation remains available without a device and preserves the selected device
@@ -94,7 +94,7 @@ hardware verification instructions.
 
 ## Analyze an APK
 
-Open **APK → APK analysis**, then drag and drop one `.apk` or click **Choose APK**.
+Open **APK & Keystore → APK analysis**, then drag and drop one `.apk` or click **Choose APK**.
 The compact report shows the application icon when supported, APK size, application
 version, debuggable status, minimum/maximum SDK and signing certificate details.
 No phone, Android SDK or upload is required. Results survive navigation.
@@ -107,7 +107,7 @@ for report details, limitations and desktop verification.
 
 ## Generate a keystore
 
-Open **APK → Generate keystore** without connecting a phone. Choose a destination,
+Open **APK & Keystore → Generate keystore** without connecting a phone. Choose a destination,
 JKS or PKCS12 format, passwords, an alias and a certificate identity. The defaults
 are JKS, alias `upload`, RSA 2048 and 30 years of validity. The format uses a themed,
 keyboard-accessible dropdown. Icons inside each password field show, hide or copy
@@ -128,7 +128,7 @@ architecture and desktop verification.
 
 ## Sign an APK
 
-Open **APK → APK signing**, enter or choose the APK and keystore paths, then enter
+Open **APK & Keystore → APK signing**, enter or choose the APK and keystore paths, then enter
 the key alias, keystore password and optional separate key password. JKS and
 single-key PKCS12 RSA keystores are supported, including those generated in the app.
 
@@ -139,6 +139,21 @@ Cancelling saves nothing. The result includes **Show in folder**.
 Signing uses APK Signature Scheme v2 for **Android 7.0 and later**, without Java or
 an Android SDK. See [APK signing](docs/features/signing.md) for limits, demo scenarios
 and independent desktop verification.
+
+## Explore a keystore
+
+Open **APK & Keystore → Keystore explorer**, choose a JKS or PKCS12 file and enter
+its store password. The read-only report shows aliases, entry types, certificate
+subjects and issuers, serial numbers, validity dates and SHA-1/SHA-256 fingerprints.
+For JKS, select an alias and use **Verify key** to check its separate password and
+confirm that the unlocked key matches its certificate. An empty key password uses
+the store password. Editing store credentials clears the previous report.
+
+No phone, Java or Android SDK is required. Files up to 16 MiB are supported.
+PKCS12 exposes the first signing identity and additional certificates, with an
+explicit multi-key inventory limitation. Incorrect passwords and damaged files can
+produce the same integrity failure. See [Keystore explorer](docs/features/keystore-explorer.md)
+for verification semantics, demos and manual checks.
 
 ## Application settings
 

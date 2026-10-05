@@ -9,7 +9,7 @@ defineEmits<{ navigate: [page: WorkspacePage] }>();
 <template>
   <nav aria-label="Workspace" class="flex flex-1 flex-col gap-6 px-3 pt-7">
     <div
-      v-for="group in ['Workspace', 'APK', 'Application']"
+      v-for="group in ['Device', 'APK & Keystore', 'Application']"
       :key="group"
       :class="
         group === 'Application' ? 'mt-auto border-t border-stroke pt-3' : ''

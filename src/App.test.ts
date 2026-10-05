@@ -42,6 +42,7 @@ describe('Application composition', () => {
         'APK analysis',
         'Generate keystore',
         'APK signing',
+        'Keystore explorer',
       ]) {
         const button = navigation
           .findAll('button')
@@ -51,7 +52,12 @@ describe('Application composition', () => {
         expect(button.attributes('aria-current')).toBe('page');
         expect(wrapper.get('main h2').text()).toBe(label);
         expect(wrapper.get('main').text().includes('Coming soon')).toBe(
-          !['Generate keystore', 'APK analysis', 'APK signing'].includes(label),
+          ![
+            'Generate keystore',
+            'APK analysis',
+            'APK signing',
+            'Keystore explorer',
+          ].includes(label),
         );
         expect(wrapper.get('main header').text()).toContain(label);
         expect(
@@ -86,6 +92,7 @@ describe('Application composition', () => {
             'APK analysis',
             'APK signing',
             'Settings',
+            'Keystore explorer',
           ].includes(button.text()),
         );
       }
