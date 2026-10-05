@@ -176,6 +176,36 @@ impl AdbConnector for UsbAdbConnector {
 struct NativeSession(Device<Session>);
 
 impl AdbSession for NativeSession {
+    fn file_shell<'a>(
+        &'a self,
+        command: &'a str,
+        destination: Option<tokio::fs::File>,
+    ) -> AdbFuture<'a, super::domain::FileShellOutput> {
+        Box::pin(async move {
+            tokio::time::timeout(
+                Duration::from_secs(1800),
+                file_shell(&self.0, command, destination),
+            )
+            .await
+            .map_err(|_| timeout_error())?
+        })
+    }
+
+    fn push<'a>(&'a self, local: &'a std::path::Path, remote: &'a str) -> AdbFuture<'a, ()> {
+        Box::pin(async move {
+            tokio::time::timeout(Duration::from_secs(1800), async {
+                let file = tokio::fs::File::open(local).await?;
+                let mut sync = self.0.sync().await?;
+                // Staging data remains readable only by the shell UID, even for public sources.
+                sync.push(remote, 0o100600, 0, file).await?;
+                sync.quit().await
+            })
+            .await
+            .map_err(|_| timeout_error())?
+            .map_err(map_error)
+        })
+    }
+
     fn shell<'a>(&'a self, command: &'a str) -> AdbFuture<'a, String> {
         Box::pin(async move {
             if !self.0.connection().is_alive() {
@@ -203,6 +233,89 @@ impl AdbSession for NativeSession {
             Ok(output.stdout_text())
         })
     }
+}
+
+async fn file_shell(
+    device: &Device<Session>,
+    command: &str,
+    mut destination: Option<tokio::fs::File>,
+) -> Result<super::domain::FileShellOutput, AdbError> {
+    use rsadb::channel::{Channel, ChannelReader, Connection};
+    use rsadb::services::shell_v2::{self, FrameId};
+    use tokio::io::AsyncWriteExt;
+    if !device.has_feature("shell_v2").await.map_err(map_error)? {
+        return Err(AdbError::new(
+            AdbErrorCode::Unsupported,
+            "File operations require Android shell v2 (Android 7 or later).",
+        ));
+    }
+    let mut channel = device
+        .connection()
+        .open(&format!("shell,v2,raw:{command}"))
+        .await
+        .map_err(map_error)?;
+    channel
+        .send(shell_v2::encode(FrameId::CloseStdin, &[]).map_err(map_error)?)
+        .await
+        .map_err(map_error)?;
+    let mut reader = ChannelReader::new(channel);
+    let mut parser = shell_v2::Parser::default();
+    let mut stdout = Vec::new();
+    let mut stderr = Vec::new();
+    let mut exit = None;
+    while let Some(chunk) = tokio::time::timeout(Duration::from_secs(30), reader.next_chunk())
+        .await
+        .map_err(|_| timeout_error())?
+        .map_err(map_error)?
+    {
+        for frame in parser.push(&chunk).map_err(map_error)? {
+            match frame.id {
+                FrameId::Stdout => {
+                    if let Some(file) = destination.as_mut() {
+                        file.write_all(&frame.data).await.map_err(|_| AdbError::new(AdbErrorCode::ReadFailed, "Cannot write the download. Check local permissions and free space."))?;
+                    } else {
+                        if stdout.len() + frame.data.len() > 16 * 1024 * 1024 {
+                            return Err(AdbError::new(
+                                AdbErrorCode::ReadFailed,
+                                "The directory listing exceeds the 16 MiB limit.",
+                            ));
+                        }
+                        stdout.extend_from_slice(&frame.data);
+                    }
+                }
+                FrameId::Stderr => stderr.extend_from_slice(
+                    &frame.data[..frame.data.len().min(8192usize.saturating_sub(stderr.len()))],
+                ),
+                FrameId::Exit if frame.data.len() == 1 => exit = Some(frame.data[0]),
+                _ => {
+                    return Err(AdbError::new(
+                        AdbErrorCode::ReadFailed,
+                        "Invalid file command response.",
+                    ));
+                }
+            }
+        }
+    }
+    reader.channel().close().await.map_err(map_error)?;
+    if parser.pending() != 0 || exit.is_none() {
+        return Err(AdbError::new(
+            AdbErrorCode::Disconnected,
+            "The file command ended without a complete result. Its changes may have been partially applied.",
+        ));
+    }
+    if let Some(file) = destination.as_mut() {
+        file.flush().await.map_err(|_| {
+            AdbError::new(
+                AdbErrorCode::ReadFailed,
+                "Cannot flush the download to disk.",
+            )
+        })?;
+    }
+    Ok(super::domain::FileShellOutput {
+        stdout,
+        stderr: String::from_utf8_lossy(&stderr).into_owned(),
+        exit_code: exit.expect("checked exit"),
+    })
 }
 
 #[cfg(test)]

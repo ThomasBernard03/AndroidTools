@@ -36,6 +36,9 @@ pub fn run() {
             Ok(())
         })
         .invoke_handler(tauri::generate_handler![
+            features::files::commands::list_files,
+            features::files::commands::mutate_file,
+            features::files::commands::transfer_file,
             logging::log_frontend_event,
             features::settings::commands::open_logs_folder,
             reporting::capture_frontend_error,
