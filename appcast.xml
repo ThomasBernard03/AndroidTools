@@ -5,13 +5,22 @@
     <description>Most recent updates to AndroidTools</description>
     <language>en</language>
     <item>
+      <title>Version 2026.10.3</title>
+      <sparkle:version>39</sparkle:version>
+      <sparkle:shortVersionString>2026.10.3</sparkle:shortVersionString>
+      <sparkle:minimumSystemVersion>10.13</sparkle:minimumSystemVersion>
+      <sparkle:releaseNotesLink>https://github.com/ThomasBernard03/AndroidTools/blob/main/CHANGELOG.md</sparkle:releaseNotesLink>
+      <pubDate>Mon, 05 Oct 2026 15:57:36 GMT</pubDate>
+      <enclosure url="https://github.com/ThomasBernard03/AndroidTools/releases/download/2026.10.3/AndroidTools-2026.10.3-macos.dmg" sparkle:edSignature="5oKdOLtbhGSDn89GP1S17mU/29bwJCLfiiq0catv8+tVfCCCK07Dwl4DqgYbnPShR+5cQTZ52MJ42J1V5gJpBg==" sparkle:os="macos" length="24098614" type="application/octet-stream"/>
+    </item>
+    <item>
       <title>Version 2026.10.2</title>
       <sparkle:version>38</sparkle:version>
       <sparkle:shortVersionString>2026.10.2</sparkle:shortVersionString>
       <sparkle:minimumSystemVersion>10.13</sparkle:minimumSystemVersion>
       <sparkle:releaseNotesLink>https://github.com/ThomasBernard03/AndroidTools/releases/tag/2026.10.2</sparkle:releaseNotesLink>
       <pubDate>Fri, 02 Oct 2026 18:59:25 +0000</pubDate>
-      <enclosure url="https://github.com/ThomasBernard03/AndroidTools/releases/download/2026.10.2/AndroidTools-2026.10.2-macos.dmg" sparkle:edSignature="y7TFLO0RZasbS89IF0oEzI5awvL+mQdGUbqnUd4x46LkojoaGitNh/WwZu85PKs+lGGtb9ol01g4kb0fV7RmAg==" sparkle:os="macos" length="19344752" type="application/octet-stream" />
+      <enclosure url="https://github.com/ThomasBernard03/AndroidTools/releases/download/2026.10.2/AndroidTools-2026.10.2-macos.dmg" sparkle:edSignature="y7TFLO0RZasbS89IF0oEzI5awvL+mQdGUbqnUd4x46LkojoaGitNh/WwZu85PKs+lGGtb9ol01g4kb0fV7RmAg==" sparkle:os="macos" length="19344752" type="application/octet-stream"/>
     </item>
     <item>
       <title>Version 2026.10.1</title>
@@ -20,7 +29,7 @@
       <sparkle:minimumSystemVersion>10.13</sparkle:minimumSystemVersion>
       <sparkle:releaseNotesLink>https://github.com/ThomasBernard03/AndroidTools/releases/tag/2026.10.1</sparkle:releaseNotesLink>
       <pubDate>Fri, 02 Oct 2026 18:17:02 +0000</pubDate>
-      <enclosure url="https://github.com/ThomasBernard03/AndroidTools/releases/download/2026.10.1/AndroidTools-2026.10.1-macos.dmg" sparkle:edSignature="uLR+mFOXDsHT7QlKfRSNKGYt2FQXZmnO6hW2sjrd9o/VDXY42uKXG3CsROUVHLIq2lyf5UAjQBiDok/ppI1jCA==" sparkle:os="macos" length="19344744" type="application/octet-stream" />
+      <enclosure url="https://github.com/ThomasBernard03/AndroidTools/releases/download/2026.10.1/AndroidTools-2026.10.1-macos.dmg" sparkle:edSignature="uLR+mFOXDsHT7QlKfRSNKGYt2FQXZmnO6hW2sjrd9o/VDXY42uKXG3CsROUVHLIq2lyf5UAjQBiDok/ppI1jCA==" sparkle:os="macos" length="19344744" type="application/octet-stream"/>
     </item>
     <item>
       <title>Version 2026.06.2</title>
@@ -29,7 +38,7 @@
       <sparkle:minimumSystemVersion>10.13</sparkle:minimumSystemVersion>
       <sparkle:releaseNotesLink>https://github.com/ThomasBernard03/AndroidTools/releases/tag/2026.06.2</sparkle:releaseNotesLink>
       <pubDate>Fri, 02 Oct 2026 17:51:23 +0000</pubDate>
-      <enclosure url="https://github.com/ThomasBernard03/AndroidTools/releases/download/2026.06.2/AndroidTools-2026.06.2-macos.dmg" sparkle:edSignature="dtx0jrITfv44aWUyVAni+cxlXhPW9+O190YMZL3Wl08sp43XG+IYTrimzGHB9niKDhbWVsRCRbXozKqLi1/UCg==" sparkle:os="macos" length="19344521" type="application/octet-stream" />
+      <enclosure url="https://github.com/ThomasBernard03/AndroidTools/releases/download/2026.06.2/AndroidTools-2026.06.2-macos.dmg" sparkle:edSignature="dtx0jrITfv44aWUyVAni+cxlXhPW9+O190YMZL3Wl08sp43XG+IYTrimzGHB9niKDhbWVsRCRbXozKqLi1/UCg==" sparkle:os="macos" length="19344521" type="application/octet-stream"/>
     </item>
     <item>
       <title>Version 2026.06.1</title>
@@ -37,7 +46,7 @@
       <sparkle:shortVersionString>2026.06.1</sparkle:shortVersionString>
       <sparkle:releaseNotesLink>https://github.com/ThomasBernard03/AndroidTools/blob/main/CHANGELOG.md</sparkle:releaseNotesLink>
       <pubDate>Tue, 02 Jun 2026 16:21:12 +0000</pubDate>
-      <enclosure url="https://github.com/ThomasBernard03/AndroidTools/releases/download/2026.06.1/AndroidTools-2026.06.1-macos.dmg" sparkle:edSignature="iO5zkMsj3cAhdJE2jrUaL5VytllWGbjKCN/5UdvrSKz80VhVYWKK9wx6YVIn65TKVh4FXMMilYWTMR+h4KW8BQ==" sparkle:os="macos" length="37269642" type="application/octet-stream" />
+      <enclosure url="https://github.com/ThomasBernard03/AndroidTools/releases/download/2026.06.1/AndroidTools-2026.06.1-macos.dmg" sparkle:edSignature="iO5zkMsj3cAhdJE2jrUaL5VytllWGbjKCN/5UdvrSKz80VhVYWKK9wx6YVIn65TKVh4FXMMilYWTMR+h4KW8BQ==" sparkle:os="macos" length="37269642" type="application/octet-stream"/>
     </item>
     <item>
       <title>Version 2026.05.3</title>
@@ -45,7 +54,7 @@
       <sparkle:shortVersionString>2026.05.3</sparkle:shortVersionString>
       <sparkle:releaseNotesLink>https://github.com/ThomasBernard03/AndroidTools/blob/main/CHANGELOG.md</sparkle:releaseNotesLink>
       <pubDate>Sat, 09 May 2026 12:49:41 +0000</pubDate>
-      <enclosure url="https://github.com/ThomasBernard03/AndroidTools/releases/download/2026.05.3/AndroidTools-2026.05.3-macos.dmg" sparkle:edSignature="Nbr94yMNnsCB7hfD63Hcnj+BgvcHkVwqIHXQC7v70LOxOmtI42J59ySO23t1Oyv9ZtOLuwLkUBZe8CMnCb4/Bg==" sparkle:os="macos" length="37610866" type="application/octet-stream" />
+      <enclosure url="https://github.com/ThomasBernard03/AndroidTools/releases/download/2026.05.3/AndroidTools-2026.05.3-macos.dmg" sparkle:edSignature="Nbr94yMNnsCB7hfD63Hcnj+BgvcHkVwqIHXQC7v70LOxOmtI42J59ySO23t1Oyv9ZtOLuwLkUBZe8CMnCb4/Bg==" sparkle:os="macos" length="37610866" type="application/octet-stream"/>
     </item>
     <item>
       <title>Version 2026.05.2</title>
@@ -53,7 +62,7 @@
       <sparkle:shortVersionString>2026.05.2</sparkle:shortVersionString>
       <sparkle:releaseNotesLink>https://github.com/ThomasBernard03/AndroidTools/releases/tag/2026.05.2</sparkle:releaseNotesLink>
       <pubDate>Wed, 06 May 2026 19:31:55 +0000</pubDate>
-      <enclosure url="https://github.com/ThomasBernard03/AndroidTools/releases/download/2026.05.2/AndroidTools-2026.05.2-macos.dmg" sparkle:edSignature="cP5ETtYP0FCrq5nMbIpcoHmxp8PHLsN8AKJeIesekgQvFia0ny9HC8LcxBN+fBDVnmPjbYMQB8+GdDFTKxLpCQ==" sparkle:os="macos" length="37615196" type="application/octet-stream" />
+      <enclosure url="https://github.com/ThomasBernard03/AndroidTools/releases/download/2026.05.2/AndroidTools-2026.05.2-macos.dmg" sparkle:edSignature="cP5ETtYP0FCrq5nMbIpcoHmxp8PHLsN8AKJeIesekgQvFia0ny9HC8LcxBN+fBDVnmPjbYMQB8+GdDFTKxLpCQ==" sparkle:os="macos" length="37615196" type="application/octet-stream"/>
     </item>
     <item>
       <title>Version 2026.05.1</title>
@@ -61,7 +70,7 @@
       <sparkle:shortVersionString>2026.05.1</sparkle:shortVersionString>
       <sparkle:releaseNotesLink>https://github.com/ThomasBernard03/AndroidTools/releases/tag/2026.05.1</sparkle:releaseNotesLink>
       <pubDate>Sat, 02 May 2026 09:27:07 +0000</pubDate>
-      <enclosure url="https://github.com/ThomasBernard03/AndroidTools/releases/download/2026.05.1/AndroidTools-2026.05.1-macos.dmg" sparkle:edSignature="8ohJcU8GyXljz2yc0EplzfZ8sjZ/Amom6zvMWayplUeFWJ3qX9vkd/E4N0Aoa6J423OecxnE9h1KmA8i+gOUCg==" sparkle:os="macos" length="37613331" type="application/octet-stream" />
+      <enclosure url="https://github.com/ThomasBernard03/AndroidTools/releases/download/2026.05.1/AndroidTools-2026.05.1-macos.dmg" sparkle:edSignature="8ohJcU8GyXljz2yc0EplzfZ8sjZ/Amom6zvMWayplUeFWJ3qX9vkd/E4N0Aoa6J423OecxnE9h1KmA8i+gOUCg==" sparkle:os="macos" length="37613331" type="application/octet-stream"/>
     </item>
     <item>
       <title>Version 2026.05.1</title>
@@ -69,7 +78,7 @@
       <sparkle:shortVersionString>2026.05.1</sparkle:shortVersionString>
       <sparkle:releaseNotesLink>https://github.com/ThomasBernard03/AndroidTools/releases/tag/2026.05.1</sparkle:releaseNotesLink>
       <pubDate>Sat, 02 May 2026 08:46:00 +0000</pubDate>
-      <enclosure url="https://github.com/ThomasBernard03/AndroidTools/releases/download/2026.05.1/AndroidTools-2026.05.1-macos.dmg" sparkle:edSignature="xBSMKekDEKvhTvRwLE3KNSzWIPBi8ryCw2n5WlUipFesDqKrUVSC34cuOMB3pmlLHa9NXGx/v/CqZilVgzAWBA==" sparkle:os="macos" length="37613350" type="application/octet-stream" />
+      <enclosure url="https://github.com/ThomasBernard03/AndroidTools/releases/download/2026.05.1/AndroidTools-2026.05.1-macos.dmg" sparkle:edSignature="xBSMKekDEKvhTvRwLE3KNSzWIPBi8ryCw2n5WlUipFesDqKrUVSC34cuOMB3pmlLHa9NXGx/v/CqZilVgzAWBA==" sparkle:os="macos" length="37613350" type="application/octet-stream"/>
     </item>
     <item>
       <title>Version 2026.05.1</title>
@@ -77,7 +86,7 @@
       <sparkle:shortVersionString>2026.05.1</sparkle:shortVersionString>
       <sparkle:releaseNotesLink>https://github.com/ThomasBernard03/AndroidTools/releases/tag/2026.05.1</sparkle:releaseNotesLink>
       <pubDate>Sat, 02 May 2026 08:33:04 +0000</pubDate>
-      <enclosure url="https://github.com/ThomasBernard03/AndroidTools/releases/download/2026.05.1/AndroidTools-2026.05.1-macos.dmg" sparkle:edSignature="OzfzGACFRVGEZAuQaIiz9JnJL4IphKxGXq90QsZ0MSgrzhKsR5nbuQOnDPJhvmSupKLShhmsfDM6r05L9QhoBA==" sparkle:os="macos" length="37613435" type="application/octet-stream" />
+      <enclosure url="https://github.com/ThomasBernard03/AndroidTools/releases/download/2026.05.1/AndroidTools-2026.05.1-macos.dmg" sparkle:edSignature="OzfzGACFRVGEZAuQaIiz9JnJL4IphKxGXq90QsZ0MSgrzhKsR5nbuQOnDPJhvmSupKLShhmsfDM6r05L9QhoBA==" sparkle:os="macos" length="37613435" type="application/octet-stream"/>
     </item>
     <item>
       <title>Version 2026.04.2</title>
@@ -85,7 +94,7 @@
       <sparkle:shortVersionString>2026.04.2</sparkle:shortVersionString>
       <sparkle:releaseNotesLink>https://github.com/ThomasBernard03/AndroidTools/releases/tag/2026.04.2</sparkle:releaseNotesLink>
       <pubDate>Wed, 29 Apr 2026 19:10:30 +0000</pubDate>
-      <enclosure url="https://github.com/ThomasBernard03/AndroidTools/releases/download/2026.04.2/AndroidTools-2026.04.2-macos.dmg" sparkle:edSignature="Ru6QY7uSejN5rtozHitdsz63UgRuRrLep51HmVAMETrKbI8ilrVuRYkPiIbQawhZtIGFGq2DqfW4icKjvyDVAQ==" sparkle:os="macos" length="37608064" type="application/octet-stream" />
+      <enclosure url="https://github.com/ThomasBernard03/AndroidTools/releases/download/2026.04.2/AndroidTools-2026.04.2-macos.dmg" sparkle:edSignature="Ru6QY7uSejN5rtozHitdsz63UgRuRrLep51HmVAMETrKbI8ilrVuRYkPiIbQawhZtIGFGq2DqfW4icKjvyDVAQ==" sparkle:os="macos" length="37608064" type="application/octet-stream"/>
     </item>
     <item>
       <title>Version 2026.04.1</title>
@@ -93,7 +102,7 @@
       <sparkle:shortVersionString>2026.04.1</sparkle:shortVersionString>
       <sparkle:releaseNotesLink>https://github.com/ThomasBernard03/AndroidTools/releases/tag/2026.04.1</sparkle:releaseNotesLink>
       <pubDate>Sat, 25 Apr 2026 12:22:44 +0000</pubDate>
-      <enclosure url="https://github.com/ThomasBernard03/AndroidTools/releases/download/2026.04.1/AndroidTools-2026.04.1-macos.dmg" sparkle:edSignature="UJmdX2ktDB5mUE+81u23isBlxRN438E7vuNH+3tzib5IfS3GdzTQMVAxPUQ5HutLkvdIlfGTTsMEipqV+sY2CA==" sparkle:os="macos" length="37813843" type="application/octet-stream" />
+      <enclosure url="https://github.com/ThomasBernard03/AndroidTools/releases/download/2026.04.1/AndroidTools-2026.04.1-macos.dmg" sparkle:edSignature="UJmdX2ktDB5mUE+81u23isBlxRN438E7vuNH+3tzib5IfS3GdzTQMVAxPUQ5HutLkvdIlfGTTsMEipqV+sY2CA==" sparkle:os="macos" length="37813843" type="application/octet-stream"/>
     </item>
     <item>
       <title>Version 2026.02.3</title>
@@ -101,7 +110,7 @@
       <sparkle:shortVersionString>2026.02.3</sparkle:shortVersionString>
       <sparkle:releaseNotesLink>https://github.com/ThomasBernard03/AndroidTools/releases/tag/2026.02.3</sparkle:releaseNotesLink>
       <pubDate>Tue, 10 Feb 2026 21:21:57 +0000</pubDate>
-      <enclosure url="https://github.com/ThomasBernard03/AndroidTools/releases/download/2026.02.3/AndroidTools-2026.02.3-macos.dmg" sparkle:edSignature="DWQunGa9Jil/mw81PhH8eRGTdTZB58HiveImEzMDI4qptmBo9gRwceXRg3lDlBrckQhqfVRq0vjraMQz2EV6Dw==" sparkle:os="macos" length="47260745" type="application/octet-stream" />
+      <enclosure url="https://github.com/ThomasBernard03/AndroidTools/releases/download/2026.02.3/AndroidTools-2026.02.3-macos.dmg" sparkle:edSignature="DWQunGa9Jil/mw81PhH8eRGTdTZB58HiveImEzMDI4qptmBo9gRwceXRg3lDlBrckQhqfVRq0vjraMQz2EV6Dw==" sparkle:os="macos" length="47260745" type="application/octet-stream"/>
     </item>
     <item>
       <title>Version 2026.02.3</title>
@@ -109,7 +118,7 @@
       <sparkle:shortVersionString>2026.02.3</sparkle:shortVersionString>
       <sparkle:releaseNotesLink>https://github.com/ThomasBernard03/AndroidTools/releases/tag/2026.02.3</sparkle:releaseNotesLink>
       <pubDate>Tue, 10 Feb 2026 21:03:20 +0000</pubDate>
-      <enclosure url="https://github.com/ThomasBernard03/AndroidTools/releases/download/2026.02.3/AndroidTools-2026.02.3-macos.dmg" sparkle:edSignature="pTizpL1nZeq50hotUDAJiEF8FVQO3IC936AREGPXiwLeRVO6rgHseQ4LfxiCb1AbRsuVAkiCQT8yKAjugjIPDw==" sparkle:os="macos" length="46477108" type="application/octet-stream" />
+      <enclosure url="https://github.com/ThomasBernard03/AndroidTools/releases/download/2026.02.3/AndroidTools-2026.02.3-macos.dmg" sparkle:edSignature="pTizpL1nZeq50hotUDAJiEF8FVQO3IC936AREGPXiwLeRVO6rgHseQ4LfxiCb1AbRsuVAkiCQT8yKAjugjIPDw==" sparkle:os="macos" length="46477108" type="application/octet-stream"/>
     </item>
     <item>
       <title>Version 2026.02.2</title>
@@ -117,7 +126,7 @@
       <sparkle:shortVersionString>2026.02.2</sparkle:shortVersionString>
       <sparkle:releaseNotesLink>https://github.com/ThomasBernard03/AndroidTools/releases/tag/2026.02.2</sparkle:releaseNotesLink>
       <pubDate>Tue, 10 Feb 2026 19:47:29 +0000</pubDate>
-      <enclosure url="https://github.com/ThomasBernard03/AndroidTools/releases/download/2026.02.2/AndroidTools-2026.02.2-macos.zip" sparkle:edSignature="oK88t11uXcyGWwR9tDiQvoeY4HtEjqpQ3fjTWK1t6rvsLXnzGmiBcOc9w9qNtoAoLe4OF9KlWQHM1BiJKbRNDg==" sparkle:os="macos" length="104133787" type="application/octet-stream" />
+      <enclosure url="https://github.com/ThomasBernard03/AndroidTools/releases/download/2026.02.2/AndroidTools-2026.02.2-macos.zip" sparkle:edSignature="oK88t11uXcyGWwR9tDiQvoeY4HtEjqpQ3fjTWK1t6rvsLXnzGmiBcOc9w9qNtoAoLe4OF9KlWQHM1BiJKbRNDg==" sparkle:os="macos" length="104133787" type="application/octet-stream"/>
     </item>
     <item>
       <title>Version 2026.02.2</title>
@@ -125,7 +134,7 @@
       <sparkle:shortVersionString>2026.02.2</sparkle:shortVersionString>
       <sparkle:releaseNotesLink>https://github.com/ThomasBernard03/AndroidTools/releases/tag/2026.02.2</sparkle:releaseNotesLink>
       <pubDate>Tue, 10 Feb 2026 18:39:58 +0000</pubDate>
-      <enclosure url="https://github.com/ThomasBernard03/AndroidTools/releases/download/2026.02.2/AndroidTools-2026.02.2-macos.zip" sparkle:edSignature="rHlA3kZWHHMrQhKC3qA3RrrbZc3kw7zw8yCkgcRGvGLtlzQuKBOu+Vd3o3b/jXvl0FhU3tPhi34PKErgIKZkBw==" sparkle:os="macos" length="104133799" type="application/octet-stream" />
+      <enclosure url="https://github.com/ThomasBernard03/AndroidTools/releases/download/2026.02.2/AndroidTools-2026.02.2-macos.zip" sparkle:edSignature="rHlA3kZWHHMrQhKC3qA3RrrbZc3kw7zw8yCkgcRGvGLtlzQuKBOu+Vd3o3b/jXvl0FhU3tPhi34PKErgIKZkBw==" sparkle:os="macos" length="104133799" type="application/octet-stream"/>
     </item>
     <item>
       <title>Version 2026.02.2</title>
@@ -133,7 +142,7 @@
       <sparkle:shortVersionString>2026.02.2</sparkle:shortVersionString>
       <sparkle:releaseNotesLink>https://github.com/ThomasBernard03/AndroidTools/releases/tag/2026.02.2</sparkle:releaseNotesLink>
       <pubDate>Sun, 08 Feb 2026 20:20:14 +0000</pubDate>
-      <enclosure url="https://github.com/ThomasBernard03/AndroidTools/releases/download/2026.02.2/AndroidTools-2026.02.2.zip" sparkle:edSignature="FUylA6yEAiK9ujEZyHHe8HAoftJP/x+iyo8M8ozHeZXzinTlDzlUaMUW5EJ86lr5782r/9DMdv+g3UBLXMf6DQ==" sparkle:os="macos" length="104127004" type="application/octet-stream" />
+      <enclosure url="https://github.com/ThomasBernard03/AndroidTools/releases/download/2026.02.2/AndroidTools-2026.02.2.zip" sparkle:edSignature="FUylA6yEAiK9ujEZyHHe8HAoftJP/x+iyo8M8ozHeZXzinTlDzlUaMUW5EJ86lr5782r/9DMdv+g3UBLXMf6DQ==" sparkle:os="macos" length="104127004" type="application/octet-stream"/>
     </item>
     <item>
       <title>Version 2026.02.1</title>
@@ -141,7 +150,7 @@
       <sparkle:shortVersionString>2026.02.1</sparkle:shortVersionString>
       <sparkle:releaseNotesLink>https://github.com/ThomasBernard03/AndroidTools/releases/tag/2026.02.1</sparkle:releaseNotesLink>
       <pubDate>Tue, 03 Feb 2026 19:32:15 +0000</pubDate>
-      <enclosure url="https://github.com/ThomasBernard03/AndroidTools/releases/download/2026.02.1/AndroidTools-2026.02.1.zip" sparkle:edSignature="pCbnV412DMgjqBYTH79LIHO/45dK7jN4rtbJQiGhph4oXiTNjN5OfD1W88Vu53r5+HxuF0LolLnDIFYv1QVPDA==" sparkle:os="macos" length="103995444" type="application/octet-stream" />
+      <enclosure url="https://github.com/ThomasBernard03/AndroidTools/releases/download/2026.02.1/AndroidTools-2026.02.1.zip" sparkle:edSignature="pCbnV412DMgjqBYTH79LIHO/45dK7jN4rtbJQiGhph4oXiTNjN5OfD1W88Vu53r5+HxuF0LolLnDIFYv1QVPDA==" sparkle:os="macos" length="103995444" type="application/octet-stream"/>
     </item>
     <item>
       <title>Version 2026.01.1</title>
@@ -149,7 +158,7 @@
       <sparkle:shortVersionString>2026.01.1</sparkle:shortVersionString>
       <sparkle:releaseNotesLink>https://github.com/ThomasBernard03/AndroidTools/releases/tag/2026.01.1</sparkle:releaseNotesLink>
       <pubDate>Wed, 28 Jan 2026 21:20:59 +0000</pubDate>
-      <enclosure url="https://github.com/ThomasBernard03/AndroidTools/releases/download/2026.01.1/AndroidTools-2026.01.1.zip" sparkle:edSignature="ERs+Ri9U1p1WfF0QM0K5SPF61Dr8uRW2ynNmsou07gDYXsOWh6w0SDAw3gmgwgJEGfscPalEZEMpRnG8504sAg==" sparkle:os="macos" length="92555048" type="application/octet-stream" />
+      <enclosure url="https://github.com/ThomasBernard03/AndroidTools/releases/download/2026.01.1/AndroidTools-2026.01.1.zip" sparkle:edSignature="ERs+Ri9U1p1WfF0QM0K5SPF61Dr8uRW2ynNmsou07gDYXsOWh6w0SDAw3gmgwgJEGfscPalEZEMpRnG8504sAg==" sparkle:os="macos" length="92555048" type="application/octet-stream"/>
     </item>
     <item>
       <title>Version 2.3.1</title>
@@ -157,7 +166,7 @@
       <sparkle:shortVersionString>2.3.1</sparkle:shortVersionString>
       <sparkle:releaseNotesLink>https://github.com/ThomasBernard03/AndroidTools/releases/tag/2.3.1</sparkle:releaseNotesLink>
       <pubDate>Mon, 26 Jan 2026 21:02:53 +0000</pubDate>
-      <enclosure url="https://github.com/ThomasBernard03/AndroidTools/releases/download/2.3.1/AndroidTools-2.3.1.zip" sparkle:edSignature="a3ozDYGqTvshBkIyv3WxrlkBVVF2SjsZorwUcuK+Qv/nqAaFkkMB21WvrgfhPo6mSA+U8ebzQn6M2Eq5httWBg==" sparkle:os="macos" length="88399017" type="application/octet-stream" />
+      <enclosure url="https://github.com/ThomasBernard03/AndroidTools/releases/download/2.3.1/AndroidTools-2.3.1.zip" sparkle:edSignature="a3ozDYGqTvshBkIyv3WxrlkBVVF2SjsZorwUcuK+Qv/nqAaFkkMB21WvrgfhPo6mSA+U8ebzQn6M2Eq5httWBg==" sparkle:os="macos" length="88399017" type="application/octet-stream"/>
     </item>
     <item>
       <title>Version 2.3.0</title>
@@ -165,7 +174,7 @@
       <sparkle:shortVersionString>2.3.0</sparkle:shortVersionString>
       <sparkle:releaseNotesLink>https://github.com/ThomasBernard03/AndroidTools/releases/tag/2.3.0</sparkle:releaseNotesLink>
       <pubDate>Fri, 23 Jan 2026 17:13:51 +0000</pubDate>
-      <enclosure url="https://github.com/ThomasBernard03/AndroidTools/releases/download/2.3.0/AndroidTools-2.3.0.zip" sparkle:edSignature="DfBM2SN6EywtWqjfiJCEVVfN4PV4YgaNFxge1K0kOF8GEla7mhvdIDYRL3vYO7hPqfInCDh3O1t3mTyEMGLJDw==" sparkle:os="macos" length="84186569" type="application/octet-stream" />
+      <enclosure url="https://github.com/ThomasBernard03/AndroidTools/releases/download/2.3.0/AndroidTools-2.3.0.zip" sparkle:edSignature="DfBM2SN6EywtWqjfiJCEVVfN4PV4YgaNFxge1K0kOF8GEla7mhvdIDYRL3vYO7hPqfInCDh3O1t3mTyEMGLJDw==" sparkle:os="macos" length="84186569" type="application/octet-stream"/>
     </item>
     <item>
       <title>Version 2.2.0</title>
@@ -173,7 +182,7 @@
       <sparkle:shortVersionString>2.2.0</sparkle:shortVersionString>
       <sparkle:releaseNotesLink>https://github.com/ThomasBernard03/AndroidTools/releases/tag/2.2.0</sparkle:releaseNotesLink>
       <pubDate>Mon, 19 Jan 2026 20:40:55 +0000</pubDate>
-      <enclosure url="https://github.com/ThomasBernard03/AndroidTools/releases/download/2.2.0/AndroidTools-2.2.0.zip" sparkle:edSignature="DLkthDB8W+GwgDw7rqG4ZiIsPXGV/6byDQMGspwun0BMgNcNsramPYc2z6HNWwqk+2fa28YecRTgilZvFPqPDw==" sparkle:os="macos" length="82937927" type="application/octet-stream" />
+      <enclosure url="https://github.com/ThomasBernard03/AndroidTools/releases/download/2.2.0/AndroidTools-2.2.0.zip" sparkle:edSignature="DLkthDB8W+GwgDw7rqG4ZiIsPXGV/6byDQMGspwun0BMgNcNsramPYc2z6HNWwqk+2fa28YecRTgilZvFPqPDw==" sparkle:os="macos" length="82937927" type="application/octet-stream"/>
     </item>
     <item>
       <title>Version 2.1.12</title>
@@ -181,7 +190,7 @@
       <sparkle:shortVersionString>2.1.12</sparkle:shortVersionString>
       <sparkle:releaseNotesLink>https://github.com/ThomasBernard03/AndroidTools/releases/tag/2.1.12</sparkle:releaseNotesLink>
       <pubDate>Sat, 17 Jan 2026 15:24:50 +0000</pubDate>
-      <enclosure url="https://github.com/ThomasBernard03/AndroidTools/releases/download/2.1.12/AndroidTools-2.1.12.zip" sparkle:edSignature="SOgGY7dXsyBvQN3bAvEKIXXu/GSjsCXIJ+bzIFJLNgBaq40PBU5qZg4tXMGUPzTkgMKqruvQLtEe+/Z5OoosDA==" sparkle:os="macos" length="84025462" type="application/octet-stream" />
+      <enclosure url="https://github.com/ThomasBernard03/AndroidTools/releases/download/2.1.12/AndroidTools-2.1.12.zip" sparkle:edSignature="SOgGY7dXsyBvQN3bAvEKIXXu/GSjsCXIJ+bzIFJLNgBaq40PBU5qZg4tXMGUPzTkgMKqruvQLtEe+/Z5OoosDA==" sparkle:os="macos" length="84025462" type="application/octet-stream"/>
     </item>
     <item>
       <title>Version 2.1.11</title>
@@ -189,7 +198,7 @@
       <sparkle:shortVersionString>2.1.11</sparkle:shortVersionString>
       <sparkle:releaseNotesLink>https://github.com/ThomasBernard03/AndroidTools/releases/tag/2.1.11</sparkle:releaseNotesLink>
       <pubDate>Sat, 17 Jan 2026 14:57:33 +0000</pubDate>
-      <enclosure url="https://github.com/ThomasBernard03/AndroidTools/releases/download/2.1.11/AndroidTools-2.1.11.zip" sparkle:edSignature="ykH3ojJ3w0nHu2B9dLCUqjbevAbiqUp/M1YpzKRC0C6pbodtrEcDsMmVFxQkzduWf4utnzHMb8wGC61WpVFfAA==" sparkle:os="macos" length="84083996" type="application/octet-stream" />
+      <enclosure url="https://github.com/ThomasBernard03/AndroidTools/releases/download/2.1.11/AndroidTools-2.1.11.zip" sparkle:edSignature="ykH3ojJ3w0nHu2B9dLCUqjbevAbiqUp/M1YpzKRC0C6pbodtrEcDsMmVFxQkzduWf4utnzHMb8wGC61WpVFfAA==" sparkle:os="macos" length="84083996" type="application/octet-stream"/>
     </item>
     <item>
       <title>Version 2.1.10</title>
@@ -197,7 +206,7 @@
       <sparkle:shortVersionString>2.1.10</sparkle:shortVersionString>
       <sparkle:releaseNotesLink>https://github.com/ThomasBernard03/AndroidTools/releases/tag/2.1.10</sparkle:releaseNotesLink>
       <pubDate>Sat, 17 Jan 2026 14:46:49 +0000</pubDate>
-      <enclosure url="https://github.com/ThomasBernard03/AndroidTools/releases/download/2.1.10/AndroidTools-2.1.10.zip" sparkle:edSignature="i0oo6wHqFy8khoGB2dFVL2oQL8stDevrrVmw2LTaeVzLmyS+AnG6apaWkDVjldZF2rN800by09fNOYDBbXZRBA==" sparkle:os="macos" length="84083997" type="application/octet-stream" />
+      <enclosure url="https://github.com/ThomasBernard03/AndroidTools/releases/download/2.1.10/AndroidTools-2.1.10.zip" sparkle:edSignature="i0oo6wHqFy8khoGB2dFVL2oQL8stDevrrVmw2LTaeVzLmyS+AnG6apaWkDVjldZF2rN800by09fNOYDBbXZRBA==" sparkle:os="macos" length="84083997" type="application/octet-stream"/>
     </item>
     <item>
       <title>Version 2.1.9</title>
@@ -205,7 +214,7 @@
       <sparkle:shortVersionString>2.1.9</sparkle:shortVersionString>
       <sparkle:releaseNotesLink>https://github.com/ThomasBernard03/AndroidTools/releases/tag/2.1.9</sparkle:releaseNotesLink>
       <pubDate>Sat, 17 Jan 2026 14:24:20 +0000</pubDate>
-      <enclosure url="https://github.com/ThomasBernard03/AndroidTools/releases/download/2.1.9/AndroidTools-2.1.9.zip" sparkle:edSignature="W9LuTkDMQP5MDu2FjGxGnfjQ1iPwiH5RwZj1LhG09ShVPosF24DBxCIp78ouWOhCiwfyZaR2Cphow8fiBYb0AA==" sparkle:os="macos" length="84083933" type="application/octet-stream" />
+      <enclosure url="https://github.com/ThomasBernard03/AndroidTools/releases/download/2.1.9/AndroidTools-2.1.9.zip" sparkle:edSignature="W9LuTkDMQP5MDu2FjGxGnfjQ1iPwiH5RwZj1LhG09ShVPosF24DBxCIp78ouWOhCiwfyZaR2Cphow8fiBYb0AA==" sparkle:os="macos" length="84083933" type="application/octet-stream"/>
     </item>
     <item>
       <title>Version 2.1.9</title>
@@ -213,7 +222,7 @@
       <sparkle:shortVersionString>2.1.9</sparkle:shortVersionString>
       <sparkle:releaseNotesLink>https://github.com/ThomasBernard03/AndroidTools/releases/tag/2.1.9</sparkle:releaseNotesLink>
       <pubDate>Sat, 17 Jan 2026 11:38:16 +0000</pubDate>
-      <enclosure url="https://github.com/ThomasBernard03/AndroidTools/releases/download/2.1.9/AndroidTools-2.1.9.zip" sparkle:edSignature="9m/FaJoHPL/IaFdxFTntoe6edDSHQG0iZ1xKLrScPfIreJSHogL4IBEHiwtYZyY9hTWx/FqwRu4t1NP6gcN1BQ==" sparkle:os="macos" length="87977402" type="application/octet-stream" />
+      <enclosure url="https://github.com/ThomasBernard03/AndroidTools/releases/download/2.1.9/AndroidTools-2.1.9.zip" sparkle:edSignature="9m/FaJoHPL/IaFdxFTntoe6edDSHQG0iZ1xKLrScPfIreJSHogL4IBEHiwtYZyY9hTWx/FqwRu4t1NP6gcN1BQ==" sparkle:os="macos" length="87977402" type="application/octet-stream"/>
     </item>
     <item>
       <title>Version 2.1.8</title>
@@ -221,7 +230,7 @@
       <sparkle:shortVersionString>2.1.8</sparkle:shortVersionString>
       <sparkle:releaseNotesLink>https://github.com/ThomasBernard03/AndroidTools/releases/tag/2.1.8</sparkle:releaseNotesLink>
       <pubDate>Sat, 17 Jan 2026 11:27:41 +0000</pubDate>
-      <enclosure url="https://github.com/ThomasBernard03/AndroidTools/releases/download/2.1.8/AndroidTools-2.1.8.zip" sparkle:edSignature="FuvOjFolyFeIvo+4g7E23wqMKGpJ4Fwv2BeWJkE6NO0N32VRRbnsBuSdlwVaTUOs1cKIYf3ko9qjvTqhiyoLDw==" sparkle:os="macos" length="87977384" type="application/octet-stream" />
+      <enclosure url="https://github.com/ThomasBernard03/AndroidTools/releases/download/2.1.8/AndroidTools-2.1.8.zip" sparkle:edSignature="FuvOjFolyFeIvo+4g7E23wqMKGpJ4Fwv2BeWJkE6NO0N32VRRbnsBuSdlwVaTUOs1cKIYf3ko9qjvTqhiyoLDw==" sparkle:os="macos" length="87977384" type="application/octet-stream"/>
     </item>
   </channel>
 </rss>
