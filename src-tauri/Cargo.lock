@@ -80,6 +80,7 @@ dependencies = [
  "tauri-plugin-clipboard-manager",
  "tauri-plugin-dialog",
  "tauri-plugin-opener",
+ "tauri-plugin-sparkle-updater",
  "tempfile",
  "tokio",
  "zeroize",
@@ -1197,6 +1198,12 @@ dependencies = [
  "redox_users",
  "windows-sys 0.61.2",
 ]
+
+[[package]]
+name = "dispatch"
+version = "0.2.0"
+source = "registry+https://github.com/rust-lang/crates.io-index"
+checksum = "bd0c93bb4b0c6d9b77f4435b0ae98c24d17f1c45b2ff844c6151a07256ca923b"
 
 [[package]]
 name = "dispatch2"
@@ -4879,6 +4886,22 @@ dependencies = [
 ]
 
 [[package]]
+name = "sparkle-updater"
+version = "0.1.0"
+source = "registry+https://github.com/rust-lang/crates.io-index"
+checksum = "f6d60731c5488e4f3230adcb49041f8f03a49fd546765c896290e07fa3baf949"
+dependencies = [
+ "block2",
+ "log",
+ "objc2",
+ "objc2-foundation",
+ "serde",
+ "serde_json",
+ "thiserror 2.0.21",
+ "url",
+]
+
+[[package]]
 name = "spin"
 version = "0.9.9"
 source = "registry+https://github.com/rust-lang/crates.io-index"
@@ -5317,6 +5340,22 @@ dependencies = [
  "url",
  "windows",
  "zbus",
+]
+
+[[package]]
+name = "tauri-plugin-sparkle-updater"
+version = "0.3.0"
+source = "registry+https://github.com/rust-lang/crates.io-index"
+checksum = "edf83d807572fb7f2865cf38e248481b6d44dd5de6d4e379c2333be06ee5a898"
+dependencies = [
+ "dispatch",
+ "log",
+ "objc2",
+ "serde",
+ "serde_json",
+ "sparkle-updater",
+ "tauri",
+ "tauri-plugin",
 ]
 
 [[package]]

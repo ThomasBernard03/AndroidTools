@@ -22,5 +22,8 @@ export function createDemoSettingsService(fail = false): SettingsService {
     async openLogsFolder() {
       check();
     },
+    async checkForUpdates() {
+      check();
+    },
   };
 }

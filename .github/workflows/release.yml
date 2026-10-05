@@ -1,0 +1,214 @@
+name: Build & Release
+
+on:
+  push:
+    branches: [main]
+    paths-ignore: [appcast.xml]
+  workflow_dispatch:
+
+permissions:
+  contents: write
+
+concurrency:
+  group: release-macos
+  cancel-in-progress: false
+
+defaults:
+  run:
+    shell: bash
+
+env:
+  GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+
+jobs:
+  prepare-release:
+    if: github.ref == 'refs/heads/main'
+    runs-on: ubuntu-latest
+    outputs:
+      version: ${{ steps.version.outputs.version }}
+      needed: ${{ steps.version.outputs.needed }}
+      published: ${{ steps.release.outputs.published }}
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version-file: .nvmrc
+          cache: npm
+      - run: npm ci
+      - name: Check release metadata behavior
+        run: npm run test:release
+      - name: Read the current public appcast
+        run: |
+          git fetch origin main
+          git show origin/main:appcast.xml > appcast.xml
+      - name: Validate version and increasing Sparkle build number
+        id: version
+        run: node scripts/release.mjs prepare
+      - name: Create draft release for the source commit
+        id: release
+        if: steps.version.outputs.needed == 'true'
+        env:
+          VERSION: ${{ steps.version.outputs.version }}
+          RELEASE_COMMIT: ${{ github.sha }}
+        run: |
+          gh release list --limit 1000 --json tagName,isDraft > "$RUNNER_TEMP/releases.json"
+          EXISTING=$(jq --arg tag "$VERSION" '.[] | select(.tagName == $tag)' "$RUNNER_TEMP/releases.json")
+          if [ -n "$EXISTING" ]; then
+            if [ "$(jq -r '.isDraft' <<< "$EXISTING")" = true ]; then
+              test "$(gh release view "$VERSION" --json targetCommitish --jq .targetCommitish)" = "$RELEASE_COMMIT"
+            else
+              git fetch origin "refs/tags/$VERSION:refs/tags/$VERSION"
+              test "$(git rev-parse "$VERSION^{commit}")" = "$RELEASE_COMMIT"
+            fi
+            echo "published=$(jq -r '.isDraft | not' <<< "$EXISTING")" >> "$GITHUB_OUTPUT"
+          else
+            gh release create "$VERSION" --target "$RELEASE_COMMIT" --title "$VERSION" --draft --generate-notes
+            echo 'published=false' >> "$GITHUB_OUTPUT"
+          fi
+
+  build-macos:
+    needs: prepare-release
+    if: needs.prepare-release.outputs.needed == 'true'
+    runs-on: macos-latest
+    env:
+      VERSION: ${{ needs.prepare-release.outputs.version }}
+      SPARKLE_FRAMEWORK_PATH: ${{ github.workspace }}/src-tauri
+      DYLD_FRAMEWORK_PATH: ${{ github.workspace }}/src-tauri
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+      - uses: actions/setup-node@v4
+        with:
+          node-version-file: .nvmrc
+          cache: npm
+      - run: npm ci
+      - name: Install pinned Sparkle framework and signing tools
+        run: bash scripts/setup-sparkle.sh
+      - name: Install pinned Rust toolchain and both macOS targets
+        if: needs.prepare-release.outputs.published != 'true'
+        run: |
+          rustup show
+          rustup target add aarch64-apple-darwin x86_64-apple-darwin
+      - uses: Swatinem/rust-cache@v2
+        if: needs.prepare-release.outputs.published != 'true'
+        with:
+          workspaces: src-tauri
+      - name: Check frontend and Rust, including the release updater
+        if: needs.prepare-release.outputs.published != 'true'
+        run: |
+          npm run check
+          SPARKLE_SIGN_TOOL="$PWD/src-tauri/sparkle-tools/sign_update" npm run test:release
+          npm run check:rust
+          cargo clippy --manifest-path src-tauri/Cargo.toml --features macos-updater --all-targets --locked -- -D warnings
+          cargo test --manifest-path src-tauri/Cargo.toml --features macos-updater --locked \
+            --config "target.$(rustc -vV | sed -n 's/^host: //p').runner=['env', 'DYLD_FRAMEWORK_PATH=$SPARKLE_FRAMEWORK_PATH']"
+      - name: Build universal macOS application with ad-hoc signing
+        if: needs.prepare-release.outputs.published != 'true'
+        env:
+          SENTRY_DSN: ${{ secrets.SENTRY_DSN }}
+        run: npm run tauri build -- --target universal-apple-darwin --features macos-updater --config src-tauri/tauri.release.conf.json -- --locked
+      - name: Verify the installable application
+        if: needs.prepare-release.outputs.published != 'true'
+        run: bash scripts/verify-macos-bundle.sh
+      - name: Upload native debug symbols to Sentry
+        if: needs.prepare-release.outputs.published != 'true'
+        env:
+          SENTRY_AUTH_TOKEN: ${{ secrets.SENTRY_AUTH_TOKEN }}
+          SENTRY_ORG: ${{ secrets.SENTRY_ORG }}
+          SENTRY_PROJECT: ${{ secrets.SENTRY_PROJECT }}
+        run: |
+          if [ -z "$SENTRY_AUTH_TOKEN" ] || [ -z "$SENTRY_ORG" ] || [ -z "$SENTRY_PROJECT" ]; then
+            echo 'Sentry credentials not configured; skipping symbol upload.'
+            exit 0
+          fi
+          brew install sentry-cli
+          RELEASE="android-tools@$(node -p "require('./src-tauri/tauri.conf.json').version")"
+          sentry-cli releases new "$RELEASE"
+          sentry-cli releases set-commits "$RELEASE" --auto --ignore-missing
+          for TARGET in aarch64-apple-darwin x86_64-apple-darwin; do
+            SYMBOLS="src-tauri/target/$TARGET/release/android-tools.dSYM"
+            test -d "$SYMBOLS"
+            sentry-cli debug-files upload --include-sources "$SYMBOLS"
+          done
+          sentry-cli releases finalize "$RELEASE"
+      - name: Create the historical DMG layout
+        if: needs.prepare-release.outputs.published != 'true'
+        run: |
+          brew install create-dmg
+          create-dmg \
+            --volname "Android Tools" \
+            --window-pos 200 120 \
+            --window-size 608 384 \
+            --background "assets/dmg_background.png" \
+            --icon-size 128 \
+            --icon "Android Tools.app" 176 192 \
+            --hide-extension "Android Tools.app" \
+            --app-drop-link 432 192 \
+            "AndroidTools-$VERSION-macos.dmg" \
+            "src-tauri/target/universal-apple-darwin/release/bundle/macos/Android Tools.app"
+      - name: Recover an already published download after an appcast push failure
+        if: needs.prepare-release.outputs.published == 'true'
+        run: gh release download "$VERSION" --pattern "AndroidTools-$VERSION-macos.dmg"
+      - name: Sign the DMG with the existing Sparkle key
+        env:
+          SPARKLE_PRIVATE_KEY: ${{ secrets.SPARKLE_PRIVATE_KEY }}
+        run: |
+          test -n "$SPARKLE_PRIVATE_KEY"
+          KEY_FILE=$(mktemp "$RUNNER_TEMP/sparkle-key.XXXXXX")
+          trap 'rm -f "$KEY_FILE"' EXIT
+          chmod 600 "$KEY_FILE"
+          printf '%s' "$SPARKLE_PRIVATE_KEY" > "$KEY_FILE"
+          DMG="AndroidTools-$VERSION-macos.dmg"
+          export SIGNATURE_OUTPUT
+          SIGNATURE_OUTPUT=$(src-tauri/sparkle-tools/sign_update --ed-key-file "$KEY_FILE" "$DMG")
+          export FILE_SIZE
+          FILE_SIZE=$(stat -f%z "$DMG")
+          node scripts/release.mjs metadata
+      - name: Upload DMG to the draft release
+        if: needs.prepare-release.outputs.published != 'true'
+        run: gh release upload "$VERSION" "AndroidTools-$VERSION-macos.dmg" --clobber
+      - uses: actions/upload-artifact@v4
+        with:
+          name: release-metadata
+          path: release-metadata.json
+          if-no-files-found: error
+          retention-days: 30
+
+  finalize-release:
+    needs: [prepare-release, build-macos]
+    runs-on: ubuntu-latest
+    env:
+      VERSION: ${{ needs.prepare-release.outputs.version }}
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version-file: .nvmrc
+          cache: npm
+      - run: npm ci
+      - uses: actions/download-artifact@v4
+        with:
+          name: release-metadata
+      - name: Checkout the latest feed without changing the tested release sources
+        uses: actions/checkout@v4
+        with:
+          ref: main
+          path: publication
+      - name: Generate appcast while retaining published history
+        run: |
+          cp publication/appcast.xml appcast.xml
+          node scripts/release.mjs feed
+          cp appcast.xml publication/appcast.xml
+      - name: Publish download before advertising the update
+        run: |
+          gh release view "$VERSION" --json assets --jq '.assets[].name' | grep -Fx "AndroidTools-$VERSION-macos.dmg"
+          gh release edit "$VERSION" --draft=false --latest
+      - name: Commit appcast at its existing public URL
+        working-directory: publication
+        run: |
+          git add appcast.xml
+          if ! git diff --cached --quiet; then
+            git -c user.name=github-actions -c user.email=github-actions@github.com commit -m "chore(appcast): macOS $VERSION"
+            git push origin HEAD:main
+          fi

@@ -1,0 +1,14 @@
+{
+  "$schema": "https://schema.tauri.app/config/2",
+  "bundle": {
+    "active": true,
+    "targets": ["app"],
+    "category": "DeveloperTool",
+    "macOS": {
+      "frameworks": ["Sparkle.framework"],
+      "signingIdentity": "-",
+      "hardenedRuntime": false,
+      "infoPlist": "Info.release.plist"
+    }
+  }
+}

@@ -11,6 +11,10 @@ dist/
 # Rust build output and generated Tauri schemas
 src-tauri/target/
 src-tauri/gen/
+src-tauri/Sparkle.framework/
+src-tauri/sparkle-tools/
+release-metadata.json
+AndroidTools-*-macos.dmg
 
 # Test reports
 coverage/

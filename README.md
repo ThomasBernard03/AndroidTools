@@ -14,7 +14,7 @@ without a phone.
   and components used locally and in CI.
 - On macOS: Xcode or the Command Line Tools (`xcode-select --install`).
 - On Windows/Linux: install the [Tauri prerequisites](https://v2.tauri.app/start/prerequisites/).
-  Native CI for this first milestone targets macOS.
+  Native CI and release packaging target macOS (Intel and Apple Silicon).
 
 ## Install and run
 
@@ -41,7 +41,7 @@ USB failures never fall back to fake data.
 ## Select a connected device
 
 The compact sidebar groups **Device overview**, **File explorer** and **Logcat**
-under Workspace, and **APK analysis**, **Generate keystore**, **APK signing** and
+under Device, and **APK analysis**, **Generate keystore**, **APK signing** and
 **Keystore explorer** under **APK & Keystore**. APK analysis inspects local packages and Generate keystore creates signing keys
 locally. APK signing signs local packages using an existing keystore. File explorer
 and Logcat display explicit **Coming soon** screens.
@@ -162,7 +162,8 @@ an issue and control Sentry error reporting. The preference survives restarts an
 applies immediately to Vue errors and Rust panics. Supply `SENTRY_DSN` when building
 the desktop application to enable delivery; reporting defaults to off.
 **Open logs folder** opens local diagnostic files, rotated at 5 MiB with 5 archives
-retained. Local logs work independently of Sentry. Sparkle updates are coming soon.
+retained. Local logs work independently of Sentry. Installed macOS releases use
+Sparkle for automatic checks and **Check for updates**.
 See [Settings](docs/features/settings.md) and [Local logs](docs/features/logging.md).
 
 ## Quality checks
@@ -198,9 +199,11 @@ an optional ignored test checks Java `keytool` interoperability.
 npm run tauri build -- --no-bundle
 ```
 
-The binary is written to `src-tauri/target/release/`. Installer generation is
-disabled for this first milestone. Distribution packaging, signing, notarization and
-updates will be addressed in a dedicated milestone.
+The binary is written to `src-tauri/target/release/`. Normal development does not
+require Sparkle or generate installers. Pushes to `main` build and publish a
+universal, ad-hoc-signed macOS DMG, upload native symbols to Sentry when configured,
+and update the existing Sparkle appcast. See [Build and release](docs/releases.md)
+for versioning, secrets, local bundle checks and retry behavior.
 
 The application icon is reused from the Flutter application on `main`
 (`macos/Runner/Assets.xcassets/AppIcon.appiconset/AppIcon512x512@2x.png`).
@@ -237,9 +240,9 @@ written in English, as specified in [AGENTS.md](AGENTS.md).
 
 `package-lock.json` and `src-tauri/Cargo.lock` are versioned for reproducible
 dependency installation. The existing `appcast/`, `appcast.xml` and `CHANGELOG.md`
-preserve Flutter release history and are not used by this foundation.
-The new CI checks the frontend on Linux and Rust plus the desktop build on macOS;
-it does not publish releases.
+preserve Flutter release history and continue to support macOS distribution.
+Quality CI checks the frontend on Linux and Rust plus the universal release bundle
+on macOS. The separate release workflow publishes only from `main`.
 
 ## Tooling choices
 

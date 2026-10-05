@@ -61,5 +61,8 @@ export function createTauriSettingsService(
     async openLogsFolder() {
       await request('open_logs_folder');
     },
+    async checkForUpdates() {
+      await request('check_app_updates');
+    },
   };
 }

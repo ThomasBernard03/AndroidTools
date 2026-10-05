@@ -12,6 +12,9 @@ pub struct AppSettings {
 pub enum ErrorCode {
     StorageFailed,
     OpenFailed,
+    UpdaterUnavailable,
+    #[cfg(all(target_os = "macos", feature = "macos-updater"))]
+    UpdateFailed,
 }
 
 #[derive(Debug, Serialize)]

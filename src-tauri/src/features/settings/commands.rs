@@ -5,6 +5,27 @@ use super::{
 use tauri::Manager;
 use tauri_plugin_opener::OpenerExt;
 
+/// Hands update discovery and installation to Sparkle's native UI.
+/// Development binaries and other platforms never simulate a successful check.
+#[tauri::command]
+pub fn check_app_updates(app: tauri::AppHandle) -> Result<(), SettingsError> {
+    #[cfg(all(target_os = "macos", feature = "macos-updater"))]
+    {
+        use tauri_plugin_sparkle_updater::SparkleUpdaterExt;
+        if let Some(updater) = app.sparkle_updater() {
+            return updater.check_for_updates().map_err(|_| SettingsError {
+                code: ErrorCode::UpdateFailed,
+                message: "The update check could not be started. Please retry.",
+            });
+        }
+    }
+    let _ = app;
+    Err(SettingsError {
+        code: ErrorCode::UpdaterUnavailable,
+        message: "Updates require an installed macOS release of Android Tools.",
+    })
+}
+
 /// Opens only the application's own log directory, never a webview-supplied path.
 #[tauri::command]
 pub async fn open_logs_folder(app: tauri::AppHandle) -> Result<(), SettingsError> {

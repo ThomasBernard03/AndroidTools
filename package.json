@@ -14,11 +14,12 @@
     "typecheck": "vue-tsc --noEmit",
     "test": "vitest run",
     "test:watch": "vitest",
+    "test:release": "node --test scripts/release.test.mjs",
     "test:e2e": "playwright test",
     "lint": "eslint . --max-warnings 0",
     "format": "prettier --write .",
     "format:check": "prettier --check .",
-    "check": "npm run format:check && npm run lint && npm run build && npm test",
+    "check": "npm run format:check && npm run lint && npm run build && npm test && npm run test:release",
     "check:rust": "cargo fmt --manifest-path src-tauri/Cargo.toml --check && cargo clippy --manifest-path src-tauri/Cargo.toml --all-targets --locked -- -D warnings && cargo test --manifest-path src-tauri/Cargo.toml --locked"
   },
   "dependencies": {
@@ -33,6 +34,7 @@
     "@tauri-apps/cli": "^2.8.4",
     "@vitejs/plugin-vue": "^6.0.1",
     "@vue/test-utils": "^2.4.6",
+    "@xmldom/xmldom": "^0.9.12",
     "eslint": "^10.0.0",
     "eslint-config-prettier": "^10.1.8",
     "eslint-plugin-vue": "^10.4.0",

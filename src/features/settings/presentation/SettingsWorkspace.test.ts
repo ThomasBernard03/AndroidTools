@@ -95,7 +95,7 @@ describe('Application settings', () => {
     await flushPromises();
     expect(open.mock.calls).toEqual([['issue'], ['repository'], ['changelog']]);
     expect(button('Open logs folder').attributes('disabled')).toBeUndefined();
-    expect(button('Check for updates').attributes('disabled')).toBeDefined();
+    expect(button('Check for updates').attributes('disabled')).toBeUndefined();
     wrapper.unmount();
   });
   it('opens the logs folder, blocks duplicate requests and allows retry after failure', async () => {
@@ -135,6 +135,42 @@ describe('Application settings', () => {
       .findAll('button')
       .find((entry) => entry.text() === 'Open logs folder')!;
     expect(button.attributes('disabled')).toBeDefined();
+    wrapper.unmount();
+  });
+  it('blocks duplicate update checks, reports unavailable builds and permits retry', async () => {
+    const service = createDemoSettingsService();
+    let reject!: (error: unknown) => void;
+    const check = vi.spyOn(service, 'checkForUpdates').mockImplementationOnce(
+      () =>
+        new Promise((_, fail) => {
+          reject = fail;
+        }),
+    );
+    const wrapper = mount(SettingsWorkspace, {
+      props: { service, demo: true },
+    });
+    await flushPromises();
+    const button = wrapper
+      .findAll('button')
+      .find((entry) => entry.text() === 'Check for updates')!;
+    await button.trigger('click');
+    expect(button.attributes('disabled')).toBeDefined();
+    await button.trigger('click');
+    expect(check).toHaveBeenCalledTimes(1);
+    reject(
+      new SettingsError(
+        'updater_unavailable',
+        'Updates require an installed macOS release.',
+      ),
+    );
+    await flushPromises();
+    expect(wrapper.get('[role="alert"]').text()).toContain(
+      'installed macOS release',
+    );
+    await button.trigger('click');
+    await flushPromises();
+    expect(wrapper.get('[role="status"]').text()).toContain('simulated');
+    expect(check).toHaveBeenCalledTimes(2);
     wrapper.unmount();
   });
 });

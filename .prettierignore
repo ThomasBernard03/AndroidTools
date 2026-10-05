@@ -3,6 +3,8 @@ dist/
 coverage/
 src-tauri/target/
 src-tauri/gen/
+src-tauri/Sparkle.framework/
+src-tauri/sparkle-tools/
 package-lock.json
 src-tauri/Cargo.lock
 appcast/

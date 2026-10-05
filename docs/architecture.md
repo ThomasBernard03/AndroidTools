@@ -70,7 +70,10 @@ gate immediately. Local diagnostics use `log` and `flexi_logger` with asynchrono
 file writes, size-based rotation and bounded retention. Native command boundaries
 record operation outcomes; a narrow frontend adapter forwards fixed error events.
 Settings opens the same native log directory. See [Local logs](features/logging.md).
-Sparkle is deferred.
+Release builds register the optional Sparkle plugin. A settings command delegates
+manual checks to its native UI; ordinary development builds report unavailability.
+The historical bundle identity, public key and feed are retained. See
+[Build and release](releases.md).
 See [Settings](features/settings.md).
 
 Each feature will live under `src/features/<feature>/` on the frontend and
@@ -136,8 +139,8 @@ rather than duplicate implementation details.
 - Run blocking operations outside the UI thread when they are introduced.
 - Structured business errors translated into understandable UI messages.
 - Formatting, lint, builds and tests run in CI without a phone.
-- Distribution packaging is deferred to a dedicated milestone; the desktop binary
-  build is verified from this foundation onward.
+- macOS distribution uses a universal Tauri bundle, ad-hoc signing and the existing
+  Sparkle feed. Quality CI verifies the release bundle; only `main` publishes.
 
 ## 5. Feature definition of done
 

@@ -13,6 +13,8 @@ export default ts.config(
       'test-results/**',
       'src-tauri/target/**',
       'src-tauri/gen/**',
+      'src-tauri/Sparkle.framework/**',
+      'src-tauri/sparkle-tools/**',
     ],
   },
   js.configs.recommended,
@@ -26,4 +28,8 @@ export default ts.config(
     },
   },
   prettier,
+  {
+    files: ['scripts/*.mjs'],
+    languageOptions: { globals: globals.node },
+  },
 );

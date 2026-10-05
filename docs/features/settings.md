@@ -10,8 +10,10 @@ sidebar. It works without a device and preserves the selected device/ADB session
 - **Open logs folder** opens the local rotating-log directory in the native file
   manager. Logs rotate at 5 MiB with 5 archives retained. Errors can be retried;
   no arbitrary path is accepted over IPC. See [Local logs](logging.md).
-- **Check for updates** is disabled and marked as coming soon. Sparkle is not yet
-  integrated; no update request is made.
+- **Check for updates** opens Sparkle's native UI in installed macOS releases.
+  Sparkle also checks automatically, verifies downloads and handles installation.
+  Other platforms and unbundled development builds report unavailability rather
+  than pretending the application is up to date. See [Build and release](../releases.md).
 - **Sentry crash reporting** saves a preference, initially off, in `settings.json`
   inside Tauri's application configuration directory. Writes atomically replace
   the file on a blocking worker. Failed writes retain the previous UI state;
@@ -51,9 +53,9 @@ Component props, automatic breadcrumbs, sessions and performance tracing are als
 disabled. Error messages and stack traces can still contain application data.
 Expected errors already handled and shown by feature services are not automatically
 reported. Native signals/segfaults, errors before native setup, offline persistence
-and Flutter preference migration are not supported. Release source-map/native-symbol
-upload remains part of future distribution tooling; the historical Flutter release
-workflow does not upload symbols for this branch.
+and Flutter preference migration are not supported. The release workflow uploads
+native dSYM symbols when Sentry credentials are configured. JavaScript source-map
+upload is not yet provided.
 
 ## Architecture and verification
 
@@ -63,7 +65,7 @@ runtime-independent file adapter. `src-tauri/src/reporting.rs` owns native repor
 and the runtime gate; `src/shared/infrastructure/crashReporting.ts` owns the Vue
 adapter and injectable event sender. No new plugin permission is needed.
 
-Development demos keep preferences in memory and simulate GitHub and folder actions. The
+Development demos keep preferences in memory and simulate GitHub, folder and update actions. The
 `error` scenario reports deterministic failures. Unit tests cover persistence,
 corruption, write failures, IPC validation, navigation, pending operations, retry
 and both link actions. Run `npm run check` and `npm run check:rust`.
@@ -79,8 +81,9 @@ Desktop checks (no phone required):
    the opposite value.
 3. Open both GitHub actions and verify the default browser reaches the expected
    repository and new issue pages.
-4. Open the logs folder and verify it contains the active application log. Confirm
-   the update action remains visibly unavailable.
+4. Open the logs folder and verify it contains the active application log. In an
+   installed release, check that **Check for updates** opens Sparkle's dialog;
+   in an ordinary development build, confirm the explicit unavailable error.
 5. In a desktop development build with a test DSN, enable reporting and trigger
    an unhandled error in the webview inspector (for example,
    `setTimeout(() => { throw new Error('Sentry desktop verification'); }, 0)`).

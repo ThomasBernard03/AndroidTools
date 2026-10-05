@@ -10,12 +10,14 @@ describe('Settings IPC', () => {
     await service.openProjectLink('issue');
     await service.openProjectLink('repository');
     await service.openLogsFolder();
+    await service.checkForUpdates();
     expect(call.mock.calls).toEqual([
       ['load_settings', undefined],
       ['set_crash_reporting', { enabled: false }],
       ['open_project_link', { link: 'issue' }],
       ['open_project_link', { link: 'repository' }],
       ['open_logs_folder', undefined],
+      ['check_app_updates', undefined],
     ]);
   });
   it('propagates log folder failures for display and retry', async () => {
@@ -28,6 +30,18 @@ describe('Settings IPC', () => {
     await expect(service.openLogsFolder()).rejects.toMatchObject({
       code: 'open_failed',
       message: 'Could not open logs.',
+    });
+  });
+  it('preserves unavailable updater errors instead of claiming no updates exist', async () => {
+    const service = createTauriSettingsService(async () => {
+      throw {
+        code: 'updater_unavailable',
+        message: 'Install a macOS release.',
+      };
+    });
+    await expect(service.checkForUpdates()).rejects.toMatchObject({
+      code: 'updater_unavailable',
+      message: 'Install a macOS release.',
     });
   });
   it.each([null, {}, { crashReportingEnabled: 'true' }, false])(

@@ -14,7 +14,11 @@ use tauri::Manager;
 ///
 /// Panics if the native runtime cannot be initialized or fails while running.
 pub fn run() {
-    tauri::Builder::default()
+    let builder = tauri::Builder::default();
+    #[cfg(all(target_os = "macos", feature = "macos-updater"))]
+    let builder = builder.plugin(tauri_plugin_sparkle_updater::init());
+
+    builder
         .plugin(tauri_plugin_dialog::init())
         .plugin(tauri_plugin_clipboard_manager::init())
         .plugin(tauri_plugin_opener::init())
@@ -38,6 +42,7 @@ pub fn run() {
             features::settings::commands::load_settings,
             features::settings::commands::set_crash_reporting,
             features::settings::commands::open_project_link,
+            features::settings::commands::check_app_updates,
             features::signing::commands::sign_apk,
             features::signing::commands::choose_signing_keystore,
             features::apk::commands::analyze_apk,

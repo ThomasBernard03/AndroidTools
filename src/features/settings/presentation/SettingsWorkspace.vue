@@ -85,6 +85,22 @@ async function openLogs() {
     opening.value = false;
   }
 }
+async function checkUpdates() {
+  if (!props.service || opening.value) return;
+  opening.value = true;
+  error.value = '';
+  notice.value = '';
+  try {
+    await props.service.checkForUpdates();
+    notice.value = props.demo
+      ? 'Demo: checking for updates was simulated.'
+      : 'The update check was handed to Sparkle. Follow its native dialog.';
+  } catch (value) {
+    showError(value);
+  } finally {
+    opening.value = false;
+  }
+}
 onMounted(load);
 </script>
 
@@ -97,7 +113,8 @@ onMounted(load);
       </p>
     </div>
     <p v-if="demo" class="text-sm text-warning">
-      Demo settings are kept in memory. Folder and GitHub actions are simulated.
+      Demo settings are kept in memory. Folder, GitHub and update actions are
+      simulated.
     </p>
     <p v-if="!service" role="alert" class="text-sm text-warning">
       Settings require the desktop application.
@@ -262,13 +279,15 @@ onMounted(load);
         <div>
           <p class="text-sm font-medium">Sparkle updates</p>
           <p class="mt-1 text-sm text-muted">
-            Automatic update checks are coming soon.
+            Installed macOS releases check automatically and verify signed
+            updates.
           </p>
         </div>
         <button
           type="button"
-          disabled
-          class="rounded-lg border border-stroke px-3 py-2 text-xs text-muted opacity-50"
+          :disabled="!service || opening"
+          class="rounded-lg border border-stroke px-3 py-2 text-xs hover:border-primary disabled:opacity-40"
+          @click="checkUpdates"
         >
           Check for updates
         </button>
