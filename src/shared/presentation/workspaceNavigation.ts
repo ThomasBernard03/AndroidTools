@@ -46,7 +46,7 @@ export const workspacePages = [
     id: 'keystore-explorer',
     label: 'Keystore explorer',
     group: 'APK & Keystore',
-    icon: 'folder',
+    icon: 'search',
     description:
       'Explore keystore aliases, certificates and signing credentials.',
   },

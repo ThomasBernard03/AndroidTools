@@ -7,6 +7,7 @@ defineProps<{
     | 'overview'
     | 'usb'
     | 'folder'
+    | 'search'
     | 'download'
     | 'rename'
     | 'trash'
@@ -38,6 +39,7 @@ const paths = {
     'm12 3 2.5 6.5L21 12l-6.5 2.5L12 21l-2.5-6.5L3 12l6.5-2.5L12 3Zm7-1v4m-2-2h4M4 18v4m-2-2h4',
   check: 'm5 12 4 4L19 6',
   folder: 'M3 7V5h6l2 2h10v13H3V7Z',
+  search: 'M17 10a7 7 0 1 1-14 0 7 7 0 0 1 14 0Zm-2 5 6 6',
   terminal: 'M3 4h18v16H3V4Zm4 4 4 4-4 4m6 0h4',
   package: 'm12 3 9 5v9l-9 5-9-5V8l9-5Zm-9 5 9 5 9-5m-9 5v9M7.5 5.5l9 5',
   build: 'M4 4h10v16H4V4Zm3 4h4m-4 4h4m6 0v8m-4-4h8',

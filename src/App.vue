@@ -102,23 +102,12 @@ const { state: adbState, refresh: refreshAdb } = useAdb(
         tabindex="-1"
         class="workspace-background min-w-0 md:overflow-y-auto"
       >
-        <header
-          class="flex min-h-20 flex-wrap items-center justify-between gap-3 border-b border-stroke px-6 py-5 lg:px-10"
-        >
+        <header class="border-b border-stroke px-4 py-2.5">
           <p class="text-sm">
             <span class="text-muted">{{ currentPage.group }}</span
-            ><span class="mx-3 text-stroke" aria-hidden="true">/</span
+            ><span class="mx-2 text-stroke" aria-hidden="true">/</span
             >{{ currentPage.label }}
           </p>
-          <span
-            class="inline-flex items-center gap-2 rounded-full border border-stroke bg-surface px-3 py-1.5 text-xs text-muted"
-          >
-            <span
-              :class="selectedDevice ? 'bg-primary' : 'bg-muted'"
-              class="size-1.5 rounded-full"
-            />
-            {{ selectedDevice ? 'Device selected' : 'No device selected' }}
-          </span>
         </header>
         <DeviceWorkspace
           v-if="currentPage.id === 'overview'"
