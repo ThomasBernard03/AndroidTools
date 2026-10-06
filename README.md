@@ -220,12 +220,17 @@ for versioning, secrets, local bundle checks and retry behavior.
 
 The application icon is reused from the Flutter application on `main`
 (`macos/Runner/Assets.xcassets/AppIcon.appiconset/AppIcon512x512@2x.png`).
-Its original 1024-pixel source is stored as `src-tauri/icons/app-icon.png`.
-Regenerate the runtime icon with:
+Its 1024-pixel source is stored as `src-tauri/icons/app-icon.png`. Keep about
+100 px of transparent padding around the artwork (content about 824 px centered)
+so the macOS Dock does not render it oversized; do not use an edge-to-edge
+squircle. Regenerate the runtime icons with:
 
 ```bash
-npm run tauri icon -- src-tauri/icons/app-icon.png --output src-tauri/icons --png 32
+npm run tauri icon -- src-tauri/icons/app-icon.png --output src-tauri/icons
 ```
+
+Keep only `32x32.png` and `icon.icns` from the generated output and remove the
+other platform files.
 
 ## Project layout
 
