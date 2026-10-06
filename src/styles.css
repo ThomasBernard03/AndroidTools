@@ -43,6 +43,20 @@ body {
   background: var(--color-canvas);
   color: var(--color-foreground);
   -webkit-font-smoothing: antialiased;
+  -webkit-user-select: none;
+  user-select: none;
+}
+
+input,
+textarea,
+[contenteditable='true'],
+.select-text {
+  -webkit-user-select: text;
+  user-select: text;
+}
+
+:focus:not(:focus-visible) {
+  outline: none;
 }
 
 ::selection {

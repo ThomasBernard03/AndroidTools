@@ -12,6 +12,13 @@ It is inspired by the explorer on `feature/rust`, adapted to the feature archite
   can enumerate the protected filesystem. These are virtual navigation entries.
 - **Android root** opens `/`, with normal Android shell permissions.
 - Breadcrumbs, a parent button, refresh and a current-folder search support navigation.
+- Double-click anywhere on a directory row to open it, or click its name. Action
+  buttons keep their own behavior. Focus a row and press Enter to open a directory.
+- Right-click a row (or press Shift+F10 on it) for its available actions: Open for
+  directories, and Download, Rename and Delete for supported editable entries.
+  Delete still requires confirmation. Use arrow keys, Home/End and Enter in the
+  menu; Escape dismisses it and restores row focus. Clicking outside, scrolling,
+  navigation and device changes also dismiss it.
 - The listing includes hidden files, size, modification time and octal permissions.
   Directory entries sort before files. Symlinks and special files are identified.
 - Upload one file or an entire folder using the native picker. Download an entry

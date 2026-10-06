@@ -16,6 +16,113 @@ function deferred<T>() {
 }
 
 describe('File explorer', () => {
+  it('opens folders by double-clicking metadata or empty action space, but not files', async () => {
+    const service = createDemoFileService();
+    const list = vi.fn(service.list);
+    const wrapper = mount(FileWorkspace, {
+      props: { deviceId: 'a', service: { ...service, list } },
+    });
+    await flushPromises();
+    const folder = wrapper
+      .findAll('tbody tr')
+      .find((row) => row.find('button').text() === 'Download')!;
+    await folder.get('td:nth-child(2)').trigger('dblclick');
+    await flushPromises();
+    expect(list).toHaveBeenLastCalledWith('a', '/sdcard/Download');
+    await button(wrapper, 'Up').trigger('click');
+    await flushPromises();
+    const file = wrapper.get('tr[aria-label="notes.txt"]');
+    const count = list.mock.calls.length;
+    await file.get('td:nth-child(2)').trigger('dblclick');
+    expect(list).toHaveBeenCalledTimes(count);
+    await wrapper
+      .get('tr[aria-label="Download"] td:last-child')
+      .trigger('dblclick');
+    await flushPromises();
+    expect(list).toHaveBeenLastCalledWith('a', '/sdcard/Download');
+    wrapper.unmount();
+  });
+  it('offers contextual transfers, rename and confirmed deletion with keyboard dismissal', async () => {
+    const service = createDemoFileService();
+    const transfer = vi.fn(service.transfer);
+    const wrapper = mount(FileWorkspace, {
+      attachTo: document.body,
+      props: { deviceId: 'a', service: { ...service, transfer } },
+    });
+    await flushPromises();
+    const menu = () => document.querySelector<HTMLElement>('[role="menu"]')!;
+    const choose = async (label: string) => {
+      Array.from(menu().querySelectorAll('button'))
+        .find((item) => item.textContent?.trim() === label)!
+        .click();
+      await flushPromises();
+    };
+    await wrapper
+      .get('tr[aria-label="notes.txt"]')
+      .trigger('contextmenu', { clientX: 50, clientY: 60 });
+    expect(menu().textContent).not.toContain('Open');
+    await choose('Download');
+    expect(transfer).toHaveBeenCalledWith(
+      'a',
+      '/sdcard/notes.txt',
+      false,
+      false,
+    );
+    expect(menu()).toBeNull();
+    await wrapper.get('tr[aria-label="notes.txt"]').trigger('contextmenu');
+    await choose('Rename');
+    await wrapper.get('form input').setValue('renamed.txt');
+    await wrapper.get('form').trigger('submit');
+    await flushPromises();
+    await wrapper
+      .get('tr[aria-label="renamed.txt"]')
+      .trigger('keydown', { key: 'F10', shiftKey: true });
+    menu().dispatchEvent(
+      new KeyboardEvent('keydown', { key: 'ArrowDown', bubbles: true }),
+    );
+    expect(document.activeElement?.textContent?.trim()).toBe('Rename');
+    menu().dispatchEvent(
+      new KeyboardEvent('keydown', { key: 'Escape', bubbles: true }),
+    );
+    await flushPromises();
+    expect(menu()).toBeNull();
+    expect(document.activeElement?.getAttribute('aria-label')).toBe(
+      'renamed.txt',
+    );
+    await wrapper.get('tr[aria-label="renamed.txt"]').trigger('contextmenu');
+    await choose('Delete');
+    expect(wrapper.text()).toContain('permanently?');
+    expect(wrapper.find('tr[aria-label="renamed.txt"]').exists()).toBe(true);
+    await wrapper.get('form').trigger('submit');
+    await flushPromises();
+    expect(wrapper.find('tr[aria-label="renamed.txt"]').exists()).toBe(false);
+    wrapper.unmount();
+  });
+  it('closes contextual actions outside the menu and on device changes, and respects protected entries', async () => {
+    const wrapper = mount(FileWorkspace, {
+      attachTo: document.body,
+      props: { deviceId: 'a', service: createDemoFileService() },
+    });
+    await flushPromises();
+    await wrapper.get('tr[aria-label="Download"]').trigger('contextmenu');
+    expect(document.querySelector('[role="menu"]')?.textContent).toContain(
+      'Open',
+    );
+    document.body.dispatchEvent(new Event('pointerdown', { bubbles: true }));
+    await flushPromises();
+    expect(document.querySelector('[role="menu"]')).toBeNull();
+    await wrapper.get('tr[aria-label="notes.txt"]').trigger('contextmenu');
+    await wrapper.setProps({ deviceId: 'b' });
+    expect(document.querySelector('[role="menu"]')).toBeNull();
+    await flushPromises();
+    await button(wrapper, 'Application data').trigger('click');
+    await flushPromises();
+    await wrapper.get('tbody tr').trigger('contextmenu');
+    const actions = document.querySelector('[role="menu"]')!;
+    expect(actions.textContent?.trim()).toBe('Open');
+    wrapper.unmount();
+    expect(document.querySelector('[role="menu"]')).toBeNull();
+  });
   it('navigates all locations and reports private access failures with retry', async () => {
     const wrapper = mount(FileWorkspace, {
       props: { deviceId: 'a', service: createDemoFileService() },
