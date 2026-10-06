@@ -7,6 +7,7 @@ import {
   onBeforeUnmount,
   ref,
   shallowRef,
+  watch,
 } from 'vue';
 import AppIcon from '../../../shared/presentation/widgets/AppIcon.vue';
 import {
@@ -19,6 +20,8 @@ import {
 const props = defineProps<{
   service?: ApkService | undefined;
   demo?: boolean | undefined;
+  deviceId?: string | null;
+  adbConnected?: boolean;
 }>();
 const report = shallowRef<ApkReport | null>(null);
 const busy = ref(false);
@@ -27,6 +30,43 @@ const dragging = ref(false);
 const error = ref('');
 const dropError = ref('');
 const iconFailed = ref(false);
+const installing = ref(false);
+const installError = ref('');
+const installed = ref(false);
+const canInstall = computed(() =>
+  Boolean(props.deviceId && props.adbConnected && report.value),
+);
+let installationRequest = 0;
+watch(
+  [() => props.deviceId, () => props.adbConnected, report],
+  () => {
+    installationRequest++;
+    installError.value = '';
+    installed.value = false;
+  },
+  { flush: 'sync' },
+);
+async function install() {
+  if (!canInstall.value || !props.service || !report.value || installing.value)
+    return;
+  const id = ++installationRequest;
+  const apk = report.value;
+  installing.value = true;
+  installError.value = '';
+  installed.value = false;
+  try {
+    await props.service.install(props.deviceId!, apk.path, apk.sha256);
+    if (!disposed && id === installationRequest) installed.value = true;
+  } catch (e) {
+    if (!disposed && id === installationRequest)
+      installError.value =
+        e instanceof ApkError
+          ? e.message
+          : 'APK installation could not finish. Please retry.';
+  } finally {
+    installing.value = false;
+  }
+}
 let active = false;
 let disposed = false;
 let listening = false;
@@ -188,7 +228,8 @@ onBeforeUnmount(() => {
       </p>
     </div>
     <p v-if="demo" role="note" class="text-sm text-warning">
-      Demo mode — simulated APK analysis. No local file is read.
+      Demo mode — simulated APK analysis and installation. No local file is read
+      or installed.
     </p>
     <div
       class="rounded-xl border border-dashed text-center"
@@ -217,6 +258,38 @@ onBeforeUnmount(() => {
         {{ choosing ? 'Opening APK…' : 'Choose APK' }}
       </button>
     </div>
+    <div class="flex flex-wrap items-center gap-3">
+      <button
+        type="button"
+        class="rounded-lg bg-primary px-5 py-2.5 text-sm font-semibold text-on-primary disabled:opacity-50"
+        :disabled="!canInstall || installing || !service"
+        aria-describedby="apk-install-help"
+        @click="install"
+      >
+        {{ installing ? 'Installing APK…' : 'Install APK' }}
+      </button>
+      <p id="apk-install-help" class="text-sm text-muted">
+        <template v-if="!deviceId"
+          >Select a device to install the APK.</template
+        >
+        <template v-else-if="!adbConnected"
+          >Connect the selected device through ADB to install the APK.</template
+        >
+        <template v-else-if="!report"
+          >Analyze an APK before installing it.</template
+        >
+        <template v-else
+          >Install on the selected device. Existing applications are
+          updated.</template
+        >
+      </p>
+    </div>
+    <p v-if="installed" role="status" class="text-sm text-primary">
+      APK installed successfully on the selected device.
+    </p>
+    <p v-if="installError" role="alert" class="text-sm text-danger">
+      {{ installError }}
+    </p>
     <p v-if="!service" role="alert" class="text-sm text-warning">
       APK analysis requires the desktop application.
     </p>

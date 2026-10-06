@@ -3,6 +3,33 @@ import { createTauriApkService, parseReport } from './tauriApkService';
 import { demoReport } from './demoApkService';
 
 describe('APK IPC boundary', () => {
+  it('installs on the requested device and validates the response', async () => {
+    const service = createTauriApkService(async (command, args) => {
+      expect(command).toBe('install_apk');
+      expect(args).toEqual({
+        connectionId: 'phone',
+        path: '/app.apk',
+        sha256: 'AB'.repeat(32),
+      });
+      return null;
+    });
+    await service.install('phone', '/app.apk', 'AB'.repeat(32));
+    await expect(
+      createTauriApkService(async () => true).install(
+        'phone',
+        '/app.apk',
+        'AB'.repeat(32),
+      ),
+    ).rejects.toThrow('invalid response');
+    await expect(
+      createTauriApkService(async () => {
+        throw { code: 'disconnected', message: 'Device disconnected' };
+      }).install('phone', '/app.apk', 'AB'.repeat(32)),
+    ).rejects.toMatchObject({
+      code: 'disconnected',
+      message: 'Device disconnected',
+    });
+  });
   it('accepts reports and dialog cancellation', async () => {
     expect(parseReport(demoReport()).files).toHaveLength(2);
     expect(

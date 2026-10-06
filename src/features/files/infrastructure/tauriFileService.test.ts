@@ -9,6 +9,36 @@ const entry = {
   permissions: '0644',
 };
 describe('File IPC', () => {
+  it('validates preview content and never marks read failures as partial writes', async () => {
+    const call = vi
+      .fn()
+      .mockResolvedValue({ kind: 'text', content: '{"enabled":true}' });
+    const service = createTauriFileService(call);
+    expect(await service.preview('phone', '/sdcard/config.json')).toEqual({
+      kind: 'text',
+      content: '{"enabled":true}',
+    });
+    expect(call).toHaveBeenCalledWith('preview_file', {
+      deviceId: 'phone',
+      path: '/sdcard/config.json',
+    });
+    for (const value of [
+      null,
+      { kind: 'html', content: '<b>hi</b>' },
+      { kind: 'image', content: 'https://example.com/image.png' },
+      { kind: 'image', content: 'data:image/svg+xml;base64,AAAA' },
+      { kind: 'text', content: 'a'.repeat(1024 ** 2 + 1) },
+    ]) {
+      call.mockResolvedValueOnce(value);
+      await expect(
+        service.preview('phone', '/sdcard/file'),
+      ).rejects.toMatchObject({ code: 'invalid_response', partial: false });
+    }
+    call.mockRejectedValueOnce(new Error('Disconnected'));
+    await expect(
+      service.preview('phone', '/sdcard/file'),
+    ).rejects.toMatchObject({ partial: false });
+  });
   it('preserves filenames and sends the selected device on each operation', async () => {
     const call = vi
       .fn()

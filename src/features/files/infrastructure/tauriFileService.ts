@@ -55,11 +55,29 @@ export function createTauriFileService(call: Invoke = invoke): FileService {
       throw new FileError(
         'native_failed',
         'The desktop file operation failed. Refresh the device and retry.',
-        command !== 'list_files',
+        command === 'mutate_file' || command === 'transfer_file',
       );
     }
   }
   return {
+    async preview(deviceId, path) {
+      const value = await request('preview_file', { deviceId, path });
+      if (!record(value) || typeof value.content !== 'string') return invalid();
+      if (
+        value.kind === 'text' &&
+        new TextEncoder().encode(value.content).length <= 1024 ** 2
+      )
+        return { kind: 'text', content: value.content };
+      if (
+        value.kind === 'image' &&
+        value.content.length <= 12 * 1024 ** 2 &&
+        /^data:image\/(png|jpeg|webp);base64,[A-Za-z0-9+/]+={0,2}$/u.test(
+          value.content,
+        )
+      )
+        return { kind: 'image', content: value.content };
+      return invalid();
+    },
     async list(deviceId, path): Promise<FileListing> {
       const value = await request('list_files', { deviceId, path });
       if (

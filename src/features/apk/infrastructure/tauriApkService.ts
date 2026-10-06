@@ -109,5 +109,13 @@ export function createTauriApkService(call: Invoke = invoke): ApkService {
           handler({ type: payload.type });
       });
     },
+    async install(connectionId, path, sha256) {
+      const result = await request('install_apk', {
+        connectionId,
+        path,
+        sha256,
+      });
+      if (result !== null) invalid();
+    },
   };
 }

@@ -67,6 +67,77 @@ fn output(bytes: &[u8]) -> FileShellOutput {
     }
 }
 
+#[tokio::test]
+async fn previews_literal_utf8_and_images_with_bounded_private_reads() {
+    use super::preview::{FilePreview, read};
+    let png = openssl::base64::decode_block("iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAQAAAC1HAwCAAAAC0lEQVR42mP8/x8AAwMCAO+aN1sAAAAASUVORK5CYII=").expect("PNG");
+    let session = FakeSession::new(vec![output(b"<xml>hello</xml>"), output(&png), output(b"")]);
+    let result = read(&session, "/data/data/com.example/files/a' $(id).xml")
+        .await
+        .expect("text");
+    assert_eq!(
+        serde_json::to_value(result).expect("wire"),
+        serde_json::json!({"kind":"text", "content":"<xml>hello</xml>"})
+    );
+    assert!(
+        matches!(read(&session, "/sdcard/picture.PNG").await.expect("image"), FilePreview::Image { content } if content.starts_with("data:image/png;base64,"))
+    );
+    assert!(
+        matches!(read(&session, "/sdcard/empty").await.expect("empty"), FilePreview::Text { content } if content.is_empty())
+    );
+    let commands = session.commands.lock().expect("commands");
+    assert!(commands[0].starts_with("run-as 'com.example'"));
+    assert!(commands[0].contains("head -c 1048577"));
+    assert!(commands[0].contains("[ ! -L"));
+    assert!(commands[1].contains("head -c 8388609"));
+}
+
+#[tokio::test]
+async fn preview_rejects_binary_oversized_invalid_images_and_remote_failures() {
+    use super::preview::read;
+    for (path, bytes, code) in [
+        ("/sdcard/data", vec![0, 1], "unsupported_preview"),
+        ("/sdcard/data", vec![255], "unsupported_preview"),
+        (
+            "/sdcard/text",
+            vec![b'a'; 1024 * 1024 + 1],
+            "preview_too_large",
+        ),
+        (
+            "/sdcard/image.png",
+            vec![0; 8 * 1024 * 1024 + 1],
+            "preview_too_large",
+        ),
+        (
+            "/sdcard/image.png",
+            b"not an image".to_vec(),
+            "unsupported_preview",
+        ),
+    ] {
+        let session = FakeSession::new(vec![output(&bytes)]);
+        let error = read(&session, path).await.expect_err("rejected preview");
+        assert_eq!(error.code, code);
+        assert!(!error.partial);
+    }
+    for (exit_code, code) in [
+        (45, "unsupported_entry"),
+        (46, "not_found"),
+        (43, "permission_denied"),
+    ] {
+        let session = FakeSession::new(vec![FileShellOutput {
+            exit_code,
+            ..output(b"")
+        }]);
+        assert_eq!(
+            read(&session, "/sdcard/file")
+                .await
+                .expect_err("remote failure")
+                .code,
+            code
+        );
+    }
+}
+
 #[cfg(unix)]
 #[test]
 fn upload_command_preserves_binary_data_and_shell_metacharacters_without_clobbering() {

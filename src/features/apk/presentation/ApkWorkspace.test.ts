@@ -30,6 +30,88 @@ function fake() {
   };
 }
 describe('APK workspace', () => {
+  it('always shows installation and explains why it is disabled until an APK and authorized device are available', async () => {
+    const f = fake();
+    f.service.install = vi.fn().mockResolvedValue(undefined);
+    const wrapper = mount(ApkWorkspace, { props: { service: f.service } });
+    const button = () =>
+      wrapper.findAll('button').find((b) => b.text() === 'Install APK');
+    expect(button()!.attributes('disabled')).toBeDefined();
+    expect(wrapper.get('#apk-install-help').text()).toContain(
+      'Select a device',
+    );
+    await button()!.trigger('click');
+    expect(f.service.install).not.toHaveBeenCalled();
+    await wrapper.setProps({ deviceId: 'phone', adbConnected: true });
+    expect(button()!.attributes('disabled')).toBeDefined();
+    expect(wrapper.get('#apk-install-help').text()).toContain('Analyze an APK');
+    await wrapper.setProps({ deviceId: null, adbConnected: false });
+    await wrapper.get('button').trigger('click');
+    await flushPromises();
+    expect(button()!.attributes('disabled')).toBeDefined();
+    await wrapper.setProps({ deviceId: 'phone', adbConnected: false });
+    expect(button()!.attributes('disabled')).toBeDefined();
+    expect(wrapper.get('#apk-install-help').text()).toContain('through ADB');
+    await wrapper.setProps({ adbConnected: true });
+    expect(button()!.attributes('disabled')).toBeUndefined();
+    await button()!.trigger('click');
+    await flushPromises();
+    expect(f.service.install).toHaveBeenCalledWith(
+      'phone',
+      '/demo/sample.apk',
+      'AB'.repeat(32),
+    );
+    expect(wrapper.get('[role="status"]').text()).toContain(
+      'installed successfully',
+    );
+    await wrapper.setProps({ deviceId: null });
+    expect(button()!.attributes('disabled')).toBeDefined();
+    expect(wrapper.get('#apk-install-help').text()).toContain(
+      'Select a device',
+    );
+    expect(wrapper.text()).not.toContain('installed successfully');
+    wrapper.unmount();
+  });
+  it('prevents duplicate installs, reports failure and ignores stale installation results', async () => {
+    const f = fake();
+    let resolve!: () => void;
+    f.service.install = vi.fn(
+      () =>
+        new Promise<void>((r) => {
+          resolve = r;
+        }),
+    );
+    const wrapper = mount(ApkWorkspace, {
+      props: { service: f.service, deviceId: 'phone', adbConnected: true },
+    });
+    await wrapper.get('button').trigger('click');
+    await flushPromises();
+    const button = () =>
+      wrapper.findAll('button').find((b) => b.text().includes('Install'))!;
+    await button().trigger('click');
+    expect(button().attributes('disabled')).toBeDefined();
+    await button().trigger('click');
+    expect(f.service.install).toHaveBeenCalledOnce();
+    await wrapper.setProps({ deviceId: 'other-phone' });
+    resolve();
+    await flushPromises();
+    expect(wrapper.text()).not.toContain('installed successfully');
+    f.service.install = vi
+      .fn()
+      .mockRejectedValue(
+        new ApkError('install_failed', 'INSTALL_FAILED_UPDATE_INCOMPATIBLE'),
+      );
+    await button().trigger('click');
+    await flushPromises();
+    expect(wrapper.get('[role="alert"]').text()).toContain(
+      'INSTALL_FAILED_UPDATE_INCOMPATIBLE',
+    );
+    f.service.install = vi.fn().mockResolvedValue(undefined);
+    await button().trigger('click');
+    await flushPromises();
+    expect(wrapper.text()).toContain('installed successfully');
+    wrapper.unmount();
+  });
   it('shows a compact app and signature summary; cancellation preserves the report', async () => {
     const f = fake();
     const wrapper = mount(ApkWorkspace, { props: { service: f.service } });

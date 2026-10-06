@@ -86,5 +86,9 @@ export function createDemoApkService(fail = false): ApkService {
     async listenDrop() {
       return () => {};
     },
+    async install() {
+      if (fail)
+        throw new ApkError('install_failed', 'Simulated installation failure.');
+    },
   };
 }

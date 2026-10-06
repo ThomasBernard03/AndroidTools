@@ -1,6 +1,7 @@
 <script setup lang="ts">
 import { computed, onDeactivated, ref, watch } from 'vue';
 import FileContextMenu from './FileContextMenu.vue';
+import FilePreviewPanel from './FilePreviewPanel.vue';
 import AppIcon from '../../../shared/presentation/widgets/AppIcon.vue';
 import {
   childPath,
@@ -28,6 +29,12 @@ const {
   navigate,
   mutate,
   transfer,
+  preview,
+  previewName,
+  previewLoading,
+  previewError,
+  openPreview,
+  closePreview,
 } = useFiles(
   computed(() => props.deviceId),
   props.service,
@@ -63,6 +70,7 @@ function openContext(event: MouseEvent | KeyboardEvent, entry: FileEntry) {
   };
 }
 function openEntry(entry: FileEntry) {
+  if (!busy.value && entry.kind === 'file') void openPreview(entry);
   if (!busy.value && entry.kind === 'directory')
     void navigate(childPath(path.value, entry.name));
 }
@@ -284,6 +292,14 @@ function modified(value: number | null) {
             : `${demo ? 'Simulated: ' : ''}${message}`
         }}
       </p>
+      <FilePreviewPanel
+        v-if="previewName"
+        :name="previewName"
+        :preview="preview"
+        :loading="previewLoading"
+        :error="previewError"
+        @close="closePreview"
+      />
       <div
         class="overflow-hidden rounded-xl border border-stroke"
         :aria-busy="busy"
@@ -363,18 +379,21 @@ function modified(value: number | null) {
               >
                 <td class="p-3">
                   <button
-                    v-if="entry.kind === 'directory'"
+                    v-if="entry.kind === 'directory' || entry.kind === 'file'"
                     class="flex items-center gap-2 text-left text-primary"
                     :disabled="operating"
-                    @click="navigate(childPath(path, entry.name))"
+                    @click="openEntry(entry)"
                   >
-                    <AppIcon name="folder" class="size-4 shrink-0" /><span
-                      class="break-all whitespace-pre-wrap"
-                      >{{ entry.name }}</span
-                    ></button
+                    <AppIcon
+                      v-if="entry.kind === 'directory'"
+                      name="folder"
+                      class="size-4 shrink-0"
+                    /><span class="break-all whitespace-pre-wrap">{{
+                      entry.name
+                    }}</span></button
                   ><span v-else class="break-all whitespace-pre-wrap"
                     >{{ entry.name
-                    }}<span v-if="entry.kind !== 'file'" class="ml-2 text-muted"
+                    }}<span class="ml-2 text-muted"
                       >({{ entry.kind }})</span
                     ></span
                   >

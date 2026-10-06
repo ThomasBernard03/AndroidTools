@@ -101,8 +101,8 @@ replaced. Private application data requires a debuggable app allowing `run-as` f
 the primary Android user; Android permissions still apply at the root.
 
 Transfers stream over the shared ADB session. Interrupted operations report possible
-partial changes. The interface includes breadcrumbs, search and metadata; previews
-are deferred. See [File explorer](docs/features/files.md) for transfer semantics,
+partial changes. The interface includes breadcrumbs, search, metadata and read-only
+previews for UTF-8 text and PNG, JPEG or WebP images. See [File explorer](docs/features/files.md) for transfer semantics,
 limits, explicit demos and hardware verification.
 
 ## Analyze an APK
@@ -111,6 +111,10 @@ Open **APK & Keystore → APK analysis**, then drag and drop one `.apk` or click
 The compact report shows the application icon when supported, APK size, application
 version, debuggable status, minimum/maximum SDK and signing certificate details.
 No phone, Android SDK or upload is required. Results survive navigation.
+
+With a selected device connected through ADB, **Install APK** installs the analyzed
+package on that device and reports success or Android's rejection reason. Existing
+applications are updated when Android permits it.
 
 APK v2/v3/v3.1 signatures and signed content digests are cryptographically checked;
 v1-only APKs explicitly report **Not verified**. Raster, vector and adaptive icons
@@ -220,12 +224,17 @@ for versioning, secrets, local bundle checks and retry behavior.
 
 The application icon is reused from the Flutter application on `main`
 (`macos/Runner/Assets.xcassets/AppIcon.appiconset/AppIcon512x512@2x.png`).
-Its original 1024-pixel source is stored as `src-tauri/icons/app-icon.png`.
-Regenerate the runtime icon with:
+Its 1024-pixel source is stored as `src-tauri/icons/app-icon.png`. Keep about
+100 px of transparent padding around the artwork (content about 824 px centered)
+so the macOS Dock does not render it oversized; do not use an edge-to-edge
+squircle. Regenerate the runtime icons with:
 
 ```bash
-npm run tauri icon -- src-tauri/icons/app-icon.png --output src-tauri/icons --png 32
+npm run tauri icon -- src-tauri/icons/app-icon.png --output src-tauri/icons
 ```
+
+Keep only `32x32.png` and `icon.icns` from the generated output and remove the
+other platform files.
 
 ## Project layout
 

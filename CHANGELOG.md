@@ -4,6 +4,18 @@ All notable changes to Android Tools will be documented in this file.
 
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 
+## [2026.10.5] - 2026-10-06
+
+### New Features
+- Add read-only file previews above the file listing for UTF-8 text (1 MiB limit) and PNG, JPEG or WebP images (8 MiB and 32 megapixel limits), with explicit states for loading, empty, oversized, unsupported and invalid content
+- Open previews by clicking a file name, double-clicking its row, pressing Enter or choosing Preview from the context menu; Close preview or Escape dismisses them, while navigation, refresh, mutations and device changes clear stale results
+- Add Install APK to the APK workspace to install the analyzed package on the selected authenticated device, with SHA-256 re-verification, staged upload under `/data/local/tmp`, `pm install -r` updates and attempted cleanup, plus explicit success and Android rejection errors
+
+### Improvements
+- Update the application icon with centered artwork and regenerated macOS icons
+- Simplify the sidebar by removing the redundant application header
+- Make file rows open previews on click, matching folder navigation behavior
+
 ## [2026.10.4] - 2026-10-06
 
 ### New Features

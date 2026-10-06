@@ -15,7 +15,6 @@ import type { KeystoreService } from './features/keystore/domain/keystore';
 import type { DeviceService } from './features/devices/domain/devices';
 import type { DeviceSummary } from './features/devices/domain/devices';
 import { shallowRef } from 'vue';
-import AppIcon from './shared/presentation/widgets/AppIcon.vue';
 import DeviceWorkspace from './features/devices/presentation/DeviceWorkspace.vue';
 import DeviceStatusBar from './features/devices/presentation/DeviceStatusBar.vue';
 import type { AdbService } from './features/adb/domain/adb';
@@ -61,20 +60,6 @@ const { state: adbState, refresh: refreshAdb } = useAdb(
         aria-label="Device sidebar"
         class="flex flex-col border-b border-stroke bg-sidebar py-4 md:overflow-y-auto md:border-r md:border-b-0"
       >
-        <header class="mb-6 flex items-center gap-2.5 px-5">
-          <div
-            class="flex size-8 items-center justify-center rounded-lg border border-primary/20 bg-primary/10 text-primary"
-          >
-            <AppIcon name="terminal" class="size-4" />
-          </div>
-          <h1 class="text-[13px] font-semibold tracking-tight">
-            Android Tools
-          </h1>
-          <span
-            class="ml-auto rounded border border-stroke px-1.5 py-0.5 text-[10px] text-muted"
-            >USB</span
-          >
-        </header>
         <div class="px-3">
           <DevicePicker
             :service="deviceService"
@@ -121,6 +106,8 @@ const { state: adbState, refresh: refreshAdb } = useAdb(
             v-if="currentPage.id === 'apk-analysis'"
             :service="apkService"
             :demo="demo"
+            :device-id="selectedDevice?.id ?? null"
+            :adb-connected="adbState.status === 'connected'"
           />
         </KeepAlive>
         <KeepAlive>

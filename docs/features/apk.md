@@ -128,3 +128,28 @@ Desktop-only checks (manual):
    APK reports **Not verified**, rather than Verified or Unsigned.
 
 Native OS dialogs and OS file drops cannot be verified by the Chromium demo suite.
+
+## Install the analyzed APK
+
+**Install APK** is always visible. It stays disabled with an explanatory message
+until an APK is analyzed and the selected device has an authenticated ADB connection.
+The action targets that selection, prevents duplicate submissions,
+and shows success or an installation error. Changing the selection or analyzing
+another file clears the previous installation result. Navigation preserves ongoing work.
+
+The backend snapshots the local file and checks its SHA-256 against the analysis
+before transferring any bytes. Changed files require a new analysis. Installation
+uses the shared serialized ADB session, a unique staging file under `/data/local/tmp`,
+and `pm install -r`. Cleanup is attempted after both success and failure. A disconnected
+device can retain its temporary staging file; an interrupted request may already have
+installed the app. Check the device before retrying if the outcome is uncertain.
+
+Android enforces signing compatibility, SDK requirements, storage and device policy.
+This supports single APKs, including updates, without automatic downgrade, runtime
+permission grants or split APK sets. Demo installation is simulated and changes no device.
+
+Hardware verification: analyze a signed APK, select an authorized phone, install it
+and confirm the app appears. Repeat with an update and an incompatible signing key;
+check that the latter exposes Android's rejection. Disconnect during a transfer and
+verify an error is shown. Change the file after analysis and verify installation asks
+for reanalysis. Check that the staging file is removed after completed operations.
