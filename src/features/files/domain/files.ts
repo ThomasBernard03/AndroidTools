@@ -11,7 +11,9 @@ export interface FileListing {
   entries: FileEntry[];
 }
 export type Mutation = 'rename' | 'delete' | 'create_directory';
+export type FilePreview = { kind: 'text' | 'image'; content: string };
 export interface FileService {
+  preview(deviceId: string, path: string): Promise<FilePreview>;
   list(deviceId: string, path: string): Promise<FileListing>;
   mutate(
     deviceId: string,

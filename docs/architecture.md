@@ -31,7 +31,8 @@ File exploration lives in `features/files`. Listing and mutation use cases use t
 injected `AdbSession`; bounded recursive transfers combine streamed ADB operations
 with local temporary files. `AdbService::with_session` serializes whole operations
 on the shared connection. The native adapter requires shell v2 exit status and keeps
-binary data outside IPC. Thin commands handle native pickers. Vue injects a validated
+transfer binary data outside IPC. Bounded read-only previews return literal UTF-8 text
+or raster image data URLs over IPC. Thin commands handle native pickers. Vue injects a validated
 `FileService`; its cached workspace discards stale device/path results and reports
 partial operations explicitly. See [File explorer](features/files.md).
 
@@ -45,6 +46,11 @@ The analysis adapter separately checks modern APK signer signatures and content
 digests, returning an explicit verification status. Android drawable XML is resolved
 through an injectable resource reader and rendered to PNG with `resvg`; raw APK XML
 is never inserted into the webview DOM.
+APK installation snapshots and matches the analyzed SHA-256 before using the shared
+ADB session to stage the package, run Android's package manager and attempt cleanup.
+The workspace keeps installation visible, explains why it is disabled until an APK
+and authenticated selected device are available, and discards results after the
+device or report changes.
 
 Keystore generation lives in `features/keystore` on both stacks. Rust validates
 requests through a use case with injectable encoder and file-publication traits;

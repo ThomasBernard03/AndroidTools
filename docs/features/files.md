@@ -25,7 +25,27 @@ It is inspired by the explorer on `feature/rust`, adapted to the feature archite
   into a chosen local folder, retaining its original name. Empty folders are supported.
 - Rename an entry within its current directory, create a folder, or permanently
   delete an entry. Folder deletion is recursive and requires confirmation.
-- Cancelling a native picker performs no transfer. There is no file preview yet.
+- Cancelling a native picker performs no transfer.
+
+## File previews
+
+Click a file name, double-click its row, press Enter on the row, or choose **Preview**
+from its context menu. A read-only panel above the listing shows loading, content or
+an explicit error. **Close preview** dismisses it; Escape also closes it when focus
+is inside the panel. Navigation, refresh, mutations and device changes clear previews
+and discard pending results from the previous selection.
+
+- UTF-8 text (including XML, JSON, logs, source files and extensionless text) is shown
+  literally and can be selected/copied. Markup is never executed or inserted as HTML.
+  Empty files have an explicit empty state. Text is limited to 1 MiB; binary data and
+  other encodings are unsupported. SVG is displayed as text.
+- PNG, JPEG and WebP images are selected by extension and checked for matching headers
+  and dimensions. Images are limited to 8 MiB and 32 megapixels. Browser decoding
+  failures are displayed explicitly. Other image formats are not supported yet.
+- Reads use the same ADB session and `run-as` permissions as browsing. Remote `head -c`
+  bounds content even if the file grows during the read; symlinks and special files
+  are rejected. Bounded text and image data URLs cross IPC without saving a local file.
+  Oversized files are rejected rather than silently truncated.
 
 Private directories use `run-as`, not root escalation. The application must be
 debuggable and allow `run-as` for the primary Android user. A listed package does
@@ -99,6 +119,8 @@ picker cancellation, partial effects and stale device/path requests.
 In development, `/?demo=devices` provides a mutable in-memory file tree per device,
 including an accessible debug package and a denied production package. Demo uploads,
 downloads, renames and deletions do not touch local or Android files.
+Open `notes.txt`, `Pictures/sample.png` or the debug package's `files/settings.json`
+to try deterministic previews. `Download/example.apk` demonstrates an unsupported file.
 
 Run `npm run check` and `npm run check:rust`. Automated tests cover malformed metadata,
 path/filename rules, quoting, package access, collisions, binary and recursive downloads,
@@ -118,3 +140,6 @@ staging cleanup after upload failure, UI confirmation, cancellation and device s
    read-only destinations. Verify partial-effect messages and retry behavior.
 6. Switch devices or workspaces during a picker/transfer. Ensure results from the
    original device do not appear under the new selection.
+7. Preview XML/JSON and PNG/JPEG/WebP in shared storage and debug app data. Check empty,
+   oversized, binary and damaged files, denied reads, and disconnection during a read.
+   Switch devices or folders while loading and verify stale content never appears.

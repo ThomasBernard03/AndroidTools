@@ -100,6 +100,14 @@ onBeforeUnmount(() => {
       >
         <AppIcon name="folder" class="size-4" /> Open
       </button>
+      <button
+        v-if="entry.kind === 'file'"
+        role="menuitem"
+        class="menu-action"
+        @click="emit('action', 'open')"
+      >
+        Preview
+      </button>
       <template v-if="actionable">
         <button
           role="menuitem"
@@ -124,7 +132,7 @@ onBeforeUnmount(() => {
         </button>
       </template>
       <p
-        v-else-if="entry.kind !== 'directory'"
+        v-else-if="entry.kind !== 'directory' && entry.kind !== 'file'"
         class="px-3 py-2 text-xs text-muted"
       >
         No available actions

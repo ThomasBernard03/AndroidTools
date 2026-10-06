@@ -11,6 +11,7 @@ import {
   FileError,
   fileError,
   type FileEntry,
+  type FilePreview,
   type FileService,
   type Mutation,
 } from '../domain/files';
@@ -23,10 +24,48 @@ export function useFiles(deviceId: Ref<string | null>, service?: FileService) {
   const error = shallowRef<FileError | null>(null);
   const operationError = shallowRef<FileError | null>(null);
   const message = ref('');
+  const preview = shallowRef<FilePreview | null>(null);
+  const previewName = ref('');
+  const previewLoading = ref(false);
+  const previewError = shallowRef<FileError | null>(null);
+  let previewGeneration = 0;
+  function closePreview() {
+    ++previewGeneration;
+    preview.value = null;
+    previewName.value = '';
+    previewLoading.value = false;
+    previewError.value = null;
+  }
+  async function openPreview(entry: FileEntry) {
+    if (
+      !service ||
+      !deviceId.value ||
+      loading.value ||
+      operating.value ||
+      entry.kind !== 'file'
+    )
+      return;
+    closePreview();
+    const ticket = previewGeneration;
+    previewName.value = entry.name;
+    previewLoading.value = true;
+    try {
+      const result = await service.preview(
+        deviceId.value,
+        childPath(path.value, entry.name),
+      );
+      if (ticket === previewGeneration) preview.value = result;
+    } catch (cause) {
+      if (ticket === previewGeneration) previewError.value = fileError(cause);
+    } finally {
+      if (ticket === previewGeneration) previewLoading.value = false;
+    }
+  }
   let generation = 0;
   let disposed = false;
   onScopeDispose(() => {
     disposed = true;
+    closePreview();
     ++generation;
   });
   const writable = computed(
@@ -37,6 +76,7 @@ export function useFiles(deviceId: Ref<string | null>, service?: FileService) {
   );
   async function navigate(next = path.value) {
     if (operating.value || disposed) return;
+    closePreview();
     const ticket = ++generation;
     const id = deviceId.value;
     path.value = next;
@@ -77,6 +117,7 @@ export function useFiles(deviceId: Ref<string | null>, service?: FileService) {
       return false;
     const id = deviceId.value;
     const current = path.value;
+    closePreview();
     const ticket = generation;
     operating.value = true;
     operationError.value = null;
@@ -137,6 +178,7 @@ export function useFiles(deviceId: Ref<string | null>, service?: FileService) {
   watch(
     deviceId,
     () => {
+      closePreview();
       ++generation;
       path.value = '/sdcard';
       entries.value = [];
@@ -149,6 +191,12 @@ export function useFiles(deviceId: Ref<string | null>, service?: FileService) {
     { immediate: true },
   );
   return {
+    preview,
+    previewName,
+    previewLoading,
+    previewError,
+    openPreview,
+    closePreview,
     path,
     entries,
     loading,

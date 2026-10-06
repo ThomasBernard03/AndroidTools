@@ -2,7 +2,7 @@ import { flushPromises, mount, type VueWrapper } from '@vue/test-utils';
 import { describe, expect, it, vi } from 'vitest';
 import FileWorkspace from './FileWorkspace.vue';
 import { createDemoFileService } from '../infrastructure/demoFileService';
-import { FileError, type FileListing } from '../domain/files';
+import { FileError, type FileListing, type FilePreview } from '../domain/files';
 
 function button(wrapper: VueWrapper, label: string) {
   return wrapper.findAll('button').find((b) => b.text() === label)!;
@@ -16,6 +16,68 @@ function deferred<T>() {
 }
 
 describe('File explorer', () => {
+  it('previews text as literal content and displays image decoding failures', async () => {
+    const service = createDemoFileService();
+    const preview = vi
+      .fn()
+      .mockResolvedValueOnce({
+        kind: 'text',
+        content: '<script>alert(1)</script>',
+      })
+      .mockImplementation(service.preview);
+    const wrapper = mount(FileWorkspace, {
+      props: { deviceId: 'a', service: { ...service, preview } },
+    });
+    await flushPromises();
+    await button(wrapper, 'notes.txt').trigger('click');
+    await flushPromises();
+    expect(wrapper.get('pre').text()).toBe('<script>alert(1)</script>');
+    expect(wrapper.find('script').exists()).toBe(false);
+    expect(preview).toHaveBeenCalledWith('a', '/sdcard/notes.txt');
+    await button(wrapper, 'Pictures').trigger('click');
+    await flushPromises();
+    expect(wrapper.find('pre').exists()).toBe(false);
+    await wrapper
+      .get('tr[aria-label="sample.png"]')
+      .trigger('keydown', { key: 'Enter' });
+    await flushPromises();
+    expect(wrapper.get('img').attributes('src')).toContain(
+      'data:image/png;base64,',
+    );
+    await wrapper.get('img').trigger('error');
+    expect(wrapper.get('[role="alert"]').text()).toContain(
+      'could not be decoded',
+    );
+    wrapper.unmount();
+  });
+  it('discards closed and stale previews and exposes read failures', async () => {
+    const old = deferred<FilePreview>();
+    const preview = vi
+      .fn()
+      .mockReturnValueOnce(old.promise)
+      .mockRejectedValue(
+        new FileError('unsupported_preview', 'Unsupported preview.'),
+      );
+    const wrapper = mount(FileWorkspace, {
+      props: {
+        deviceId: 'a',
+        service: { ...createDemoFileService(), preview },
+      },
+    });
+    await flushPromises();
+    await button(wrapper, 'notes.txt').trigger('click');
+    expect(wrapper.text()).toContain('Loading preview');
+    await button(wrapper, 'Close preview').trigger('click');
+    await wrapper.setProps({ deviceId: 'b' });
+    await flushPromises();
+    await button(wrapper, 'notes.txt').trigger('click');
+    await flushPromises();
+    old.resolve({ kind: 'text', content: 'Old device content' });
+    await flushPromises();
+    expect(wrapper.text()).not.toContain('Old device content');
+    expect(wrapper.get('[role="alert"]').text()).toBe('Unsupported preview.');
+    wrapper.unmount();
+  });
   it('opens folders by double-clicking metadata or empty action space, but not files', async () => {
     const service = createDemoFileService();
     const list = vi.fn(service.list);
@@ -80,7 +142,7 @@ describe('File explorer', () => {
     menu().dispatchEvent(
       new KeyboardEvent('keydown', { key: 'ArrowDown', bubbles: true }),
     );
-    expect(document.activeElement?.textContent?.trim()).toBe('Rename');
+    expect(document.activeElement?.textContent?.trim()).toBe('Download');
     menu().dispatchEvent(
       new KeyboardEvent('keydown', { key: 'Escape', bubbles: true }),
     );

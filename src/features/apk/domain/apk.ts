@@ -23,6 +23,7 @@ export type ApkDrop =
 export interface ApkService {
   choosePath(): Promise<string | null>;
   analyze(path: string): Promise<ApkReport>;
+  install(connectionId: string, path: string, sha256: string): Promise<void>;
   listenDrop(handler: (event: ApkDrop) => void): Promise<() => void>;
 }
 

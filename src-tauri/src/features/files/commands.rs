@@ -3,6 +3,19 @@ use crate::features::adb::application::AdbService;
 use tauri_plugin_dialog::DialogExt;
 
 #[tauri::command]
+pub async fn preview_file(
+    service: tauri::State<'_, AdbService>,
+    device_id: String,
+    path: String,
+) -> Result<super::preview::FilePreview, FileError> {
+    service
+        .with_session(&device_id, move |session| {
+            Box::pin(async move { super::preview::read(session, &path).await })
+        })
+        .await
+}
+
+#[tauri::command]
 pub async fn list_files(
     service: tauri::State<'_, AdbService>,
     device_id: String,

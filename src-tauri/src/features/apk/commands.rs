@@ -4,6 +4,33 @@ use super::{
 };
 use tauri_plugin_dialog::DialogExt;
 
+/// Installs the analyzed bytes using the shared, serialized ADB connection.
+#[tauri::command]
+pub async fn install_apk(
+    adb: tauri::State<'_, crate::features::adb::application::AdbService>,
+    connection_id: String,
+    path: String,
+    sha256: String,
+) -> Result<(), crate::features::adb::domain::AdbError> {
+    crate::logging::observe("install_apk", async move {
+        let snapshot = tauri::async_runtime::spawn_blocking(move || {
+            super::installation::snapshot(std::path::Path::new(&path), &sha256)
+        })
+        .await
+        .map_err(|_| {
+            crate::features::adb::domain::AdbError::new(
+                crate::features::adb::domain::AdbErrorCode::Internal,
+                "The APK could not be prepared for installation.",
+            )
+        })??;
+        adb.with_session(&connection_id, |session| {
+            Box::pin(async move { super::installation::install(session, snapshot.path()).await })
+        })
+        .await
+    })
+    .await
+}
+
 fn failed() -> ApkError {
     ApkError::new(
         "analysis_failed",

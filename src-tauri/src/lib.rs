@@ -37,6 +37,7 @@ pub fn run() {
         })
         .invoke_handler(tauri::generate_handler![
             features::files::commands::list_files,
+            features::files::commands::preview_file,
             features::files::commands::mutate_file,
             features::files::commands::transfer_file,
             logging::log_frontend_event,
@@ -49,6 +50,7 @@ pub fn run() {
             features::signing::commands::sign_apk,
             features::signing::commands::choose_signing_keystore,
             features::apk::commands::analyze_apk,
+            features::apk::commands::install_apk,
             features::apk::commands::choose_apk_path,
             features::devices::commands::list_devices,
             features::adb::commands::read_android_info,

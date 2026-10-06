@@ -31,7 +31,7 @@ export function createDemoFileService(fail = false): FileService {
           [folder('Download'), folder('Pictures'), file('notes.txt')],
         ],
         ['/sdcard/Download', [file('example.apk')]],
-        ['/sdcard/Pictures', []],
+        ['/sdcard/Pictures', [file('sample.png')]],
         ['/data', [folder('data')]],
         [
           '/data/data',
@@ -54,6 +54,31 @@ export function createDemoFileService(fail = false): FileService {
     return value;
   }
   return {
+    async preview(id, path) {
+      const index = path.lastIndexOf('/');
+      const selected = entries(id, path.slice(0, index) || '/').find(
+        (e) => e.name === path.slice(index + 1),
+      );
+      if (!selected)
+        throw new FileError('not_found', 'The entry no longer exists.');
+      if (selected.name.endsWith('.png'))
+        return {
+          kind: 'image',
+          content:
+            'data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAQAAAC1HAwCAAAAC0lEQVR42mP8/x8AAwMCAO+aN1sAAAAASUVORK5CYII=',
+        };
+      if (selected.name.endsWith('.apk'))
+        throw new FileError(
+          'unsupported_preview',
+          'Preview supports UTF-8 text and PNG, JPEG or WebP images.',
+        );
+      return {
+        kind: 'text',
+        content: selected.name.endsWith('.json')
+          ? '{\n  "theme": "dark",\n  "notifications": true\n}\n'
+          : 'Demo notes\n\nPreview files directly from your Android device.\n',
+      };
+    },
     async list(id, path) {
       return { path, entries: structuredClone(entries(id, path)) };
     },
