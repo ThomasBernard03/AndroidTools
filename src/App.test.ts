@@ -1,8 +1,16 @@
-import { flushPromises, mount } from '@vue/test-utils';
+import { flushPromises, mount, type VueWrapper } from '@vue/test-utils';
 import { describe, expect, it } from 'vitest';
 import App from './App.vue';
 import { createDemoDeviceService } from './features/devices/infrastructure/demoDeviceService';
 import { createDemoAdbService } from './features/adb/infrastructure/demoAdbService';
+
+async function chooseDevice(wrapper: VueWrapper, label: string) {
+  await wrapper.get('aside [role="combobox"]').trigger('click');
+  await wrapper
+    .findAll('aside [role="option"]')
+    .find((option) => option.text().includes(label))!
+    .trigger('click');
+}
 
 describe('Application composition', () => {
   it('places Settings last in navigation and opens it without a device', async () => {
@@ -30,7 +38,7 @@ describe('Application composition', () => {
     });
     try {
       await flushPromises();
-      await wrapper.get('aside select').setValue('usb:1:4:04e8:6860');
+      await chooseDevice(wrapper, 'usb:1:4:04e8:6860');
       await flushPromises();
       const connectionStatus = wrapper
         .get('[aria-label="Device connection status"]')
@@ -62,8 +70,8 @@ describe('Application composition', () => {
         );
         expect(wrapper.get('main header').text()).toContain(label);
         expect(
-          wrapper.get<HTMLSelectElement>('aside select').element.value,
-        ).toBe('usb:1:4:04e8:6860');
+          wrapper.get('[aria-label="Device connection status"]').text(),
+        ).toBe(connectionStatus);
       }
       await navigation.findAll('button')[0]!.trigger('click');
       expect(wrapper.get('main h2').text()).toBe('Android device');
@@ -113,9 +121,8 @@ describe('Application composition', () => {
     });
     try {
       await flushPromises();
-      expect(wrapper.get<HTMLSelectElement>('aside select').element.value).toBe(
-        'usb:1:2:18d1:4ee7',
-      );
+      expect(wrapper.get('aside [role="combobox"]').text()).toBe('Pixel 9');
+      expect(wrapper.get('main dl').text()).toContain('usb:1:2:18d1:4ee7');
       const status = () =>
         wrapper.get('[aria-label="Device connection status"]').text();
       const panel = () => wrapper.get('[aria-labelledby="android-info-title"]');
@@ -126,7 +133,7 @@ describe('Application composition', () => {
       await panel().get('button').trigger('click');
       await flushPromises();
       expect(status()).toContain('ADB: Connected');
-      await wrapper.get('aside select').setValue('usb:1:3:18d1:4ee7');
+      await chooseDevice(wrapper, 'usb:1:3:18d1:4ee7');
       await flushPromises();
       expect(status()).toContain('ADB: Authorization required');
       expect(panel().get('[role="alert"]').text()).toContain(
@@ -134,7 +141,7 @@ describe('Application composition', () => {
       );
       expect(panel().find('dl').exists()).toBe(false);
       expect(panel().get('button').text()).toBe('Retry ADB connection');
-      await wrapper.get('aside select').setValue('');
+      await chooseDevice(wrapper, 'Choose a device');
       await flushPromises();
       expect(
         wrapper.find('[aria-labelledby="android-info-title"]').exists(),
@@ -152,7 +159,8 @@ describe('Application composition', () => {
       await flushPromises();
       expect(wrapper.get('main h2').text()).toBe('Pixel 9');
       expect(wrapper.get('[role="note"]').text()).toContain('Demo mode');
-      expect(wrapper.findAll('option')).toHaveLength(4);
+      await wrapper.get('aside [role="combobox"]').trigger('click');
+      expect(wrapper.findAll('aside [role="option"]')).toHaveLength(4);
       expect(
         wrapper.get('[aria-label="Device connection status"]').text(),
       ).toContain('Demo — simulated connection');
@@ -175,14 +183,14 @@ describe('Application composition', () => {
           .text()
           .replace(/\s+/g, ' ');
       expect(status()).toContain('Pixel 9 — DEMO-A');
-      await wrapper.get('aside select').setValue('usb:1:3:18d1:4ee7');
+      await chooseDevice(wrapper, 'usb:1:3:18d1:4ee7');
       expect(status()).toContain('Pixel 9 — DEMO-B');
       expect(status()).toContain('USB');
       expect(status()).toContain('ADB: Not checked');
-      await wrapper.get('aside select').setValue('usb:1:4:04e8:6860');
+      await chooseDevice(wrapper, 'usb:1:4:04e8:6860');
       expect(status()).toContain('Android device — usb:1:4:04e8:6860');
       expect(status()).not.toContain('DEMO-B');
-      await wrapper.get('aside select').setValue('usb:1:3:18d1:4ee7');
+      await chooseDevice(wrapper, 'usb:1:3:18d1:4ee7');
       expect(wrapper.get('main h2').text()).toBe('Pixel 9');
       expect(wrapper.get('main dl').text()).toContain('DEMO-B');
       expect(wrapper.get('main dl').text()).not.toContain('DEMO-A');

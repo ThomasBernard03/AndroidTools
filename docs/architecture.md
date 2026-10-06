@@ -139,9 +139,12 @@ rather than duplicate implementation details.
   colors. Use tokens rather than feature-specific palettes. The desktop shell has
   a left device sidebar and a main workspace; below 768 px they stack vertically.
 - Preserve standard keyboard behavior, visible focus indicators and reduced-motion
-  support. The keystore format uses a themed, accessible select-only combobox;
-  the device picker retains its native select. The document uses a dark color
+  support. The keystore format and device picker share a themed, accessible
+  select-only combobox. The document uses a dark color
   scheme for native form controls.
+- Interface text is non-selectable for desktop-style interaction. Inputs, textareas,
+  editable content and explicit `.select-text` regions remain selectable. Pointer
+  focus has no outline; keyboard focus retains the shared `:focus-visible` indicator.
 - English for all UI text, accessibility labels, documentation and comments.
 - No native plugin or permission without a feature that requires it.
 - Run blocking operations outside the UI thread when they are introduced.

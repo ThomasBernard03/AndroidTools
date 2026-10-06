@@ -1,5 +1,6 @@
 <script setup lang="ts">
-import { computed, ref, watch } from 'vue';
+import { computed, onDeactivated, ref, watch } from 'vue';
+import FileContextMenu from './FileContextMenu.vue';
 import AppIcon from '../../../shared/presentation/widgets/AppIcon.vue';
 import {
   childPath,
@@ -37,6 +38,45 @@ const editing = ref<{ operation: Mutation; entry: FileEntry | null } | null>(
 );
 const name = ref('');
 const busy = computed(() => loading.value || operating.value);
+const context = ref<{ entry: FileEntry; x: number; y: number } | null>(null);
+watch([path, () => props.deviceId, busy, search], () => {
+  context.value = null;
+});
+onDeactivated(() => {
+  context.value = null;
+});
+function openContext(event: MouseEvent | KeyboardEvent, entry: FileEntry) {
+  if (busy.value) return;
+  const row = event.currentTarget as HTMLElement;
+  row.focus();
+  const bounds = row.getBoundingClientRect();
+  context.value = {
+    entry,
+    x:
+      event instanceof MouseEvent && event.clientX
+        ? event.clientX
+        : bounds.left + 16,
+    y:
+      event instanceof MouseEvent && event.clientY
+        ? event.clientY
+        : bounds.bottom,
+  };
+}
+function openEntry(entry: FileEntry) {
+  if (!busy.value && entry.kind === 'directory')
+    void navigate(childPath(path.value, entry.name));
+}
+function contextAction(action: 'open' | 'download' | 'rename' | 'delete') {
+  const entry = context.value?.entry;
+  context.value = null;
+  if (!entry || busy.value) return;
+  if (action === 'open') openEntry(entry);
+  else if (actionable(entry)) {
+    if (action === 'download')
+      void transfer(false, entry.kind === 'directory', entry);
+    else edit(action, entry);
+  }
+}
 const visible = computed(() =>
   entries.value.filter((e) =>
     e.name.toLowerCase().includes(search.value.toLowerCase()),
@@ -198,6 +238,7 @@ function modified(value: number | null) {
         <div class="flex gap-2">
           <button
             class="file-button"
+            :class="{ 'file-danger': editing.operation === 'delete' }"
             :disabled="
               busy ||
               (editing.operation !== 'delete' &&
@@ -256,6 +297,7 @@ function modified(value: number | null) {
             aria-label="Parent folder"
             @click="navigate(path.slice(0, path.lastIndexOf('/')) || '/')"
           >
+            <AppIcon name="arrow-up" class="size-4" />
             Up
           </button>
           <nav aria-label="Folder path" class="min-w-0 flex-1">
@@ -312,6 +354,12 @@ function modified(value: number | null) {
                 v-for="entry in visible"
                 :key="entry.name"
                 class="hover:bg-surface"
+                tabindex="0"
+                :aria-label="entry.name"
+                @contextmenu.prevent="openContext($event, entry)"
+                @keydown.shift.f10.prevent="openContext($event, entry)"
+                @keydown.enter.self.prevent="openEntry(entry)"
+                @dblclick="openEntry(entry)"
               >
                 <td class="p-3">
                   <button
@@ -346,25 +394,28 @@ function modified(value: number | null) {
                       class="file-button"
                       :disabled="busy"
                       :aria-label="`Download ${entry.name}`"
+                      @dblclick.stop
                       @click="
                         transfer(false, entry.kind === 'directory', entry)
                       "
                     >
-                      Download</button
+                      <AppIcon name="download" class="size-4" />Download</button
                     ><button
                       class="file-button"
                       :disabled="busy"
                       :aria-label="`Rename ${entry.name}`"
+                      @dblclick.stop
                       @click="edit('rename', entry)"
                     >
-                      Rename</button
+                      <AppIcon name="rename" class="size-4" />Rename</button
                     ><button
-                      class="file-button"
+                      class="file-button file-danger"
                       :disabled="busy"
                       :aria-label="`Delete ${entry.name}`"
+                      @dblclick.stop
                       @click="edit('delete', entry)"
                     >
-                      Delete
+                      <AppIcon name="trash" class="size-4" />Delete
                     </button>
                   </div>
                 </td>
@@ -380,6 +431,16 @@ function modified(value: number | null) {
         </p>
       </div>
     </template>
+    <FileContextMenu
+      v-if="context"
+      :key="context.entry.name + ':' + context.x + ':' + context.y"
+      :entry="context.entry"
+      :actionable="actionable(context.entry)"
+      :x="context.x"
+      :y="context.y"
+      @action="contextAction"
+      @close="context = null"
+    />
   </section>
 </template>
 
@@ -390,5 +451,8 @@ function modified(value: number | null) {
 }
 .file-button[aria-current='location'] {
   @apply border-primary/40 text-primary;
+}
+.file-button.file-danger {
+  @apply text-danger hover:border-danger/40 hover:text-danger;
 }
 </style>

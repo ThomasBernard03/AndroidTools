@@ -4,6 +4,22 @@ All notable changes to Android Tools will be documented in this file.
 
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 
+## [2026.10.4] - 2026-10-06
+
+### New Features
+- Add a file explorer context menu for opening folders, downloading, renaming and deleting entries, with keyboard navigation and Shift+F10 support
+
+### Improvements
+- Open folders by double-clicking anywhere on their row in the file explorer
+- Add icons to file explorer actions and highlight destructive actions
+- Redesign the device picker with a custom dropdown, keyboard navigation and separate device details
+- Simplify the workspace header with reduced spacing and remove the redundant device selection indicator
+- Update the Keystore explorer navigation icon
+- Prevent accidental text selection in the interface while preserving selection in text inputs and explicitly selectable content
+
+### Fixes
+- Fix the sidebar refresh icon
+
 ## [2026.06.1] - 2026-06-02
 
 ### Improvements
