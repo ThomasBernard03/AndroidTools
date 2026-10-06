@@ -16,6 +16,8 @@ const props = defineProps<{
   modelValue: T;
   options: readonly { value: T; label: string; description?: string }[];
   disabled?: boolean;
+  hideLabel?: boolean;
+  describedBy?: string;
 }>();
 const emit = defineEmits<{ 'update:modelValue': [value: T] }>();
 const root = ref<HTMLElement>();
@@ -130,15 +132,19 @@ onDeactivated(close);
 
 <template>
   <div ref="root" class="relative" @focusout="onFocusout">
-    <label :id="`${id}-label`" :for="id" class="mb-2 block text-sm">{{
-      label
-    }}</label>
+    <label
+      :id="`${id}-label`"
+      :for="id"
+      :class="hideLabel ? 'sr-only' : 'mb-2 block text-sm'"
+      >{{ label }}</label
+    >
     <button
       :id="id"
       ref="trigger"
       type="button"
       role="combobox"
       :aria-labelledby="`${id}-label`"
+      :aria-describedby="describedBy"
       aria-haspopup="listbox"
       :aria-expanded="open"
       :aria-controls="`${id}-listbox`"
@@ -151,7 +157,9 @@ onDeactivated(close);
       @click="open ? close() : show()"
       @keydown="onKeydown"
     >
-      <span>{{ selected?.label ?? 'Choose an option' }}</span>
+      <span class="min-w-0 truncate">{{
+        selected?.label ?? 'Choose an option'
+      }}</span>
       <AppIcon
         name="chevron"
         class="size-4 shrink-0 text-muted transition-transform motion-reduce:transition-none"
@@ -179,7 +187,7 @@ onDeactivated(close);
         @mousedown.prevent
         @click="choose(index)"
       >
-        <div class="min-w-0 flex-1">
+        <div class="min-w-0 flex-1 break-words">
           <span class="font-medium">{{ option.label }}</span>
           <p v-if="option.description" class="mt-0.5 text-xs text-muted">
             {{ option.description }}

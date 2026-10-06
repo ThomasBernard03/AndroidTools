@@ -1,8 +1,9 @@
 <script setup lang="ts">
-import { onMounted, watch } from 'vue';
+import { computed, onMounted, watch } from 'vue';
 import type { DeviceService, DeviceSummary } from '../domain/devices';
 import { useDevices } from './useDevices';
 import AppIcon from '../../../shared/presentation/widgets/AppIcon.vue';
+import SelectField from '../../../shared/presentation/widgets/SelectField.vue';
 
 const props = defineProps<{ service: DeviceService }>();
 const emit = defineEmits<{
@@ -17,9 +18,14 @@ watch(
   { immediate: true },
 );
 
-function onSelect(event: Event) {
-  select((event.target as HTMLSelectElement).value);
-}
+const options = computed(() => [
+  { value: '', label: 'Choose a device' },
+  ...devices.value.map((device) => ({
+    value: device.id,
+    label: device.name,
+    description: `${device.serial ?? 'Serial unavailable'} (${device.id})${device.warning ? ' — Limited metadata' : ''}`,
+  })),
+]);
 </script>
 
 <template>
@@ -46,28 +52,17 @@ function onSelect(event: Event) {
         {{ loading ? 'Scanning…' : 'Refresh' }}
       </button>
     </div>
-    <label for="device-select" class="sr-only">Device</label>
-    <div class="relative mt-4">
-      <select
-        id="device-select"
-        :value="selectedId"
-        :disabled="loading || devices.length === 0"
-        aria-describedby="device-status"
-        class="w-full min-w-0 appearance-none truncate rounded-lg border border-stroke bg-sidebar py-3 pr-9 pl-3 text-sm text-foreground transition-colors hover:border-primary/50 disabled:cursor-not-allowed disabled:text-muted motion-reduce:transition-none"
-        @change="onSelect"
-      >
-        <option value="">Choose a device</option>
-        <option v-for="device in devices" :key="device.id" :value="device.id">
-          {{ device.name }} — {{ device.serial ?? 'Serial unavailable' }} ({{
-            device.id
-          }}){{ device.warning ? ' — Limited metadata' : '' }}
-        </option>
-      </select>
-      <AppIcon
-        name="chevron"
-        class="pointer-events-none absolute top-1/2 right-3 size-4 -translate-y-1/2 text-primary"
-      />
-    </div>
+    <SelectField
+      id="device-select"
+      class="mt-4"
+      label="Device"
+      hide-label
+      described-by="device-status"
+      :model-value="selectedId"
+      :options="options"
+      :disabled="loading || devices.length === 0"
+      @update:model-value="select"
+    />
 
     <p
       id="device-status"
