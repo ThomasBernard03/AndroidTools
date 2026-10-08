@@ -47,6 +47,13 @@ arrows remain static when opened. On macOS, native close, minimize and fullscree
 controls sit inside the blue application title bar; drag the title bar to move the
 window. Operating-system file dialogs keep the host platform's appearance.
 
+The native window and initial HTML use the warm gray canvas (`#ece9d8`) before
+Vue and the stylesheet load. Keep these startup colors in `src-tauri/tauri.conf.json`
+and `index.html` aligned with `--color-canvas` in `src/styles.css`.
+To verify startup on macOS, fully quit and reopen the desktop app with the system
+in both light and dark appearance; the initial background should match the canvas
+without a black or white flash.
+
 Native title-bar verification on macOS: run `npm run tauri dev`, check that the
 traffic lights do not overlap the application title, drag using the title text,
 and exercise minimize, fullscreen/restore and close. Browser demos intentionally
