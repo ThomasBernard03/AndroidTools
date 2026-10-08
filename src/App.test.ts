@@ -122,7 +122,9 @@ describe('Application composition', () => {
     try {
       await flushPromises();
       expect(wrapper.get('aside [role="combobox"]').text()).toBe('Pixel 9');
-      expect(wrapper.get('main dl').text()).toContain('usb:1:2:18d1:4ee7');
+      expect(
+        wrapper.get('[aria-label="Device connection details"] dl').text(),
+      ).toContain('usb:1:2:18d1:4ee7');
       const status = () =>
         wrapper.get('[aria-label="Device connection status"]').text();
       const panel = () => wrapper.get('[aria-labelledby="android-info-title"]');

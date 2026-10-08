@@ -63,6 +63,12 @@ impl AdbService {
             .await
     }
 
+    /// Returns a bounded PNG data URL using the shared, serialized ADB connection.
+    pub async fn capture_screen(&self, id: &str) -> Result<String, AdbError> {
+        self.with_session(id, |session| Box::pin(super::screenshot::capture(session)))
+            .await
+    }
+
     /// Releases the USB interface when no device is selected or the view closes.
     pub async fn disconnect(&self) {
         *self.active.lock().await = None;

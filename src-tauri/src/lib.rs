@@ -54,6 +54,8 @@ pub fn run() {
             features::apk::commands::choose_apk_path,
             features::devices::commands::list_devices,
             features::adb::commands::read_android_info,
+            features::adb::commands::capture_device_screen,
+            features::adb::commands::save_device_screen,
             features::adb::commands::disconnect_adb,
             features::keystore::commands::generate_keystore,
             features::keystore::explorer_commands::explore_keystore,

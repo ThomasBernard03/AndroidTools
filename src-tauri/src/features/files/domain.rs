@@ -37,6 +37,7 @@ impl From<AdbError> for FileError {
             AdbErrorCode::Key => "adb_key",
             AdbErrorCode::Unsupported => "unsupported",
             AdbErrorCode::ReadFailed => "adb_failed",
+            AdbErrorCode::SaveFailed => "save_failed",
             AdbErrorCode::Internal => "internal",
         };
         Self::new(code, error.message)

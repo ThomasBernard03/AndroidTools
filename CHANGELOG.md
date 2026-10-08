@@ -4,6 +4,20 @@ All notable changes to Android Tools will be documented in this file.
 
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 
+## [2026.10.7] - 2026-10-08
+
+### New Features
+- Add a device screen preview that captures automatically when opening the overview or connecting through ADB, with manual refresh and retry on Android 7 or later
+- Save the displayed preview as a PNG through a native save dialog, with timestamped filenames and protection against overwriting existing files
+
+### Improvements
+- Redesign the device overview with Android and USB details alongside a responsive phone-framed screenshot that preserves portrait and landscape aspect ratios
+- Clear stale previews when switching devices, losing the ADB connection or leaving the overview
+
+### Fixes
+- Show the matching GitHub release page in Sparkle's update release notes
+- Match the startup background to the application theme to prevent a dark flash while loading
+
 ## [2026.10.6] - 2026-10-08
 
 ### Improvements

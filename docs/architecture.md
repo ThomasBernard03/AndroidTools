@@ -25,6 +25,11 @@ run on blocking workers. The service owns one session and serializes its use.
 The frontend injects a separate `AdbService`, validates IPC, serializes selection
 changes and discards stale results. See [ADB information](features/adb.md).
 
+Screen preview shares the ADB session through `capture_device_screen`. The use case
+executes binary-safe `screencap -p` with bounded output and timeout, returning a PNG
+data URL. Vue injects a separate `ScreenshotService`; the preview clears images on
+selection/connection changes and ignores obsolete responses and unmounted views.
+
 ## 2. Organizing future features
 
 File exploration lives in `features/files`. Listing and mutation use cases use the

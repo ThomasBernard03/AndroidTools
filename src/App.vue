@@ -18,6 +18,7 @@ import { shallowRef } from 'vue';
 import DeviceWorkspace from './features/devices/presentation/DeviceWorkspace.vue';
 import DeviceStatusBar from './features/devices/presentation/DeviceStatusBar.vue';
 import type { AdbService } from './features/adb/domain/adb';
+import type { ScreenshotService } from './features/adb/domain/screenshot';
 import { useAdb } from './features/adb/presentation/useAdb';
 import WorkspaceNavigation from './shared/presentation/widgets/WorkspaceNavigation.vue';
 import ComingSoonWorkspace from './shared/presentation/widgets/ComingSoonWorkspace.vue';
@@ -32,6 +33,7 @@ const currentPage = shallowRef<WorkspacePage>(workspacePages[0]);
 const props = defineProps<{
   deviceService: DeviceService;
   adbService?: AdbService;
+  screenshotService?: ScreenshotService;
   keystoreService?: KeystoreService;
   keystoreExplorerService?: KeystoreExplorerService;
   apkService?: ApkService;
@@ -113,6 +115,7 @@ const { state: adbState, refresh: refreshAdb } = useAdb(
           :device="selectedDevice"
           :demo="demo ?? false"
           :adb-state="adbService ? adbState : undefined"
+          :screenshot-service="screenshotService"
           @refresh-adb="refreshAdb"
         />
         <KeepAlive>

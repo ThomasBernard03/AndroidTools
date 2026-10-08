@@ -47,6 +47,13 @@ arrows remain static when opened. On macOS, native close, minimize and fullscree
 controls sit inside the blue application title bar; drag the title bar to move the
 window. Operating-system file dialogs keep the host platform's appearance.
 
+The native window and initial HTML use the warm gray canvas (`#ece9d8`) before
+Vue and the stylesheet load. Keep these startup colors in `src-tauri/tauri.conf.json`
+and `index.html` aligned with `--color-canvas` in `src/styles.css`.
+To verify startup on macOS, fully quit and reopen the desktop app with the system
+in both light and dark appearance; the initial background should match the canvas
+without a black or white flash.
+
 Native title-bar verification on macOS: run `npm run tauri dev`, check that the
 traffic lights do not overlap the application title, drag using the title text,
 and exercise minimize, fullscreen/restore and close. Browser demos intentionally
@@ -80,6 +87,16 @@ The **Device overview** displays the selected device's USB manufacturer, product
 serial number, vendor/product IDs and connection ID. Missing strings are shown as
 **Unavailable**; descriptor IDs remain visible even when USB metadata access fails.
 These values refresh with the device list and are not Android system properties.
+
+Android information and USB details appear on the left; a phone-shaped **Screen
+preview** appears on the right (below the details in narrow windows). The app
+captures the selected device's screen once ADB connects and whenever the overview
+is reopened. **Refresh preview** takes another still screenshot. Captures stay in
+memory until **Save preview** saves the displayed PNG through the native file dialog.
+Cancelling writes nothing; existing files are not replaced. Unsaved captures stay in
+memory and are cleared when selection or connection state changes. Protected
+Android content may appear black. See [Screen preview](docs/features/screen-preview.md)
+for limits and hardware verification.
 
 A persistent bottom status bar shows the selected device and its serial number
 (or connection ID), the USB transport and the ADB connection state. Selecting a
