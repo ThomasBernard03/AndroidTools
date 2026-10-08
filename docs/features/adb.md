@@ -47,7 +47,14 @@ App selection -> useAdb -> AdbService interface -> validated Tauri IPC
 `nusb` handles the ADB USB interface. The existing discovery adapter remains
 `rusb`/libusb. No Android SDK, external adb executable or local ADB server is needed.
 
-Before connecting, the adapter re-enumerates discovery devices and resolves the
+Before each new connection, the adapter sends `host:kill` to `127.0.0.1:5037`
+using the ADB smart socket protocol and waits for the shutdown connection to close.
+This runs on a blocking worker with two-second socket timeouts, without launching
+an external executable. An absent server is normal; a rejected request or timeout
+produces a USB access error. Logs record whether a server was stopped. Refreshing
+an existing session does not repeat this step.
+
+The adapter then re-enumerates discovery devices and resolves the
 requested connection ID. It requires a non-null serial unique among devices with
 the same vendor/product IDs. It then requires exactly one matching ADB transport
 device with those values. It never falls back to the first device, or to a model
@@ -74,9 +81,10 @@ queues a disconnect after any outstanding request.
 
 - USB ADB only; no wireless pairing, emulators, fastboot, root operations or device
   actions. RSA authorization is supported; TLS authentication is not.
-- Another process, such as an Android Studio ADB server, may hold the USB interface.
-  An interface-claim error asks the user to close other clients and stop their ADB
-  server before retrying. The app does not kill processes or stop servers itself.
+- The standard local ADB server is stopped automatically, interrupting its clients.
+  Another tool may restart it and reclaim USB; close that tool and retry in this
+  case. Servers on custom ports or remote hosts and other direct USB clients are
+  not stopped. The app does not continuously monitor or kill background processes.
 - Permissions and drivers still apply: Linux may need udev rules; Windows needs a
   compatible USB driver. Native behavior on those platforms needs hardware checks.
 - ADB requires a unique readable serial; discovery can still show devices without one.
@@ -104,7 +112,9 @@ npm run tauri build -- --no-bundle
 Tests cover IPC validation, exact selection matching, missing/duplicate serials,
 key reuse and permissions, authorization errors, session reuse/release, partial
 battery failures, property parsing, malformed battery scales, retry, stale results,
-view disposal and overview/status-bar integration.
+view disposal and overview/status-bar integration. Loopback fake-server tests cover
+the shutdown request, absent servers, rejected/truncated responses and a server
+that acknowledges shutdown but keeps its connection open.
 
 ## Hardware-only verification
 
@@ -122,7 +132,9 @@ These checks have not been performed during automated implementation:
    for the old phone and its USB interface is released when the request completes.
 6. Disconnect during a read and after a successful read. Refresh and confirm stale
    Android information is cleared, then reconnect and retry.
-7. Run another ADB server that holds the interface. Confirm a useful access error;
-   close/stop that server and retry successfully.
+7. Run another ADB server that holds the interface. Select a device and confirm
+   the server stops automatically, the log reports `stopped=true`, and USB connects.
+   Repeat with no server (`stopped=false`). If a tool automatically restarts the
+   server, close that tool and retry. Confirm shutdown interrupts other ADB clients.
 8. Refresh battery information and test a phone with missing vendor properties.
    Missing fields should remain unavailable while other information is shown.

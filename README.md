@@ -85,9 +85,10 @@ it appears with a fallback name and a warning.
 
 ADB requires a readable, unique USB serial number to match the selected device
 across the discovery and transport libraries. The app stores its own host key in
-its application data directory. If another ADB client holds the USB interface,
-close it and stop its ADB server before retrying; Android Tools does not stop it
-automatically. See [ADB information](docs/features/adb.md) for details and hardware checks.
+its application data directory. Before opening a new USB session, Android Tools
+automatically stops the standard local ADB server on port 5037 to release USB.
+If another tool restarts that server, close the tool and retry.
+See [ADB information](docs/features/adb.md) for details and hardware checks.
 
 See [device discovery](docs/features/devices.md) for architecture, limitations and
 hardware verification instructions.
