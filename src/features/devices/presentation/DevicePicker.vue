@@ -32,7 +32,7 @@ const options = computed(() => [
   <section
     aria-labelledby="devices-title"
     :aria-busy="loading"
-    class="rounded-xl border border-stroke bg-surface p-4"
+    class="xp-task-panel p-3"
   >
     <div class="flex items-center justify-between gap-4">
       <h2 id="devices-title" class="text-xs font-medium text-muted">

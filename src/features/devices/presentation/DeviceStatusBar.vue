@@ -14,7 +14,7 @@ defineProps<{
   <footer
     aria-label="Device connection status"
     role="status"
-    class="flex shrink-0 flex-wrap items-center gap-x-5 gap-y-2 border-t border-stroke bg-sidebar px-4 py-3 text-xs text-muted"
+    class="xp-statusbar flex shrink-0 flex-wrap items-center text-xs text-muted"
   >
     <div class="flex min-w-0 flex-1 items-center gap-2">
       <AppIcon name="phone" class="size-4 shrink-0" />

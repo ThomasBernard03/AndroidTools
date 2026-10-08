@@ -160,11 +160,7 @@ onDeactivated(close);
       <span class="min-w-0 truncate">{{
         selected?.label ?? 'Choose an option'
       }}</span>
-      <AppIcon
-        name="chevron"
-        class="size-4 shrink-0 text-muted transition-transform motion-reduce:transition-none"
-        :class="{ 'rotate-180': open }"
-      />
+      <AppIcon name="chevron" class="size-4 shrink-0 text-muted" />
     </button>
     <ul
       v-if="open"

@@ -40,6 +40,18 @@ USB failures never fall back to fake data.
 
 ## Select a connected device
 
+The interface uses a Windows XP Luna-inspired theme: a blue title bar, Explorer-style
+task panels, warm gray workspaces and beveled buttons. The shared theme covers all
+workspaces and retains keyboard focus indicators and reduced-motion support. Dropdown
+arrows remain static when opened. On macOS, native close, minimize and fullscreen
+controls sit inside the blue application title bar; drag the title bar to move the
+window. Operating-system file dialogs keep the host platform's appearance.
+
+Native title-bar verification on macOS: run `npm run tauri dev`, check that the
+traffic lights do not overlap the application title, drag using the title text,
+and exercise minimize, fullscreen/restore and close. Browser demos intentionally
+do not reserve space for native window controls.
+
 The compact sidebar groups **Device overview**, **File explorer** and **Logcat**
 under Device, and **APK analysis**, **Generate keystore**, **APK signing** and
 **Keystore explorer** under **APK & Keystore**. APK analysis inspects local packages and Generate keystore creates signing keys

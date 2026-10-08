@@ -21,6 +21,7 @@ import type { AdbService } from './features/adb/domain/adb';
 import { useAdb } from './features/adb/presentation/useAdb';
 import WorkspaceNavigation from './shared/presentation/widgets/WorkspaceNavigation.vue';
 import ComingSoonWorkspace from './shared/presentation/widgets/ComingSoonWorkspace.vue';
+import AppIcon from './shared/presentation/widgets/AppIcon.vue';
 import {
   workspacePages,
   type WorkspacePage,
@@ -38,6 +39,7 @@ const props = defineProps<{
   settingsService?: SettingsService;
   fileService?: FileService;
   demo?: boolean;
+  macosWindowControls?: boolean;
 }>();
 const selectedDevice = shallowRef<DeviceSummary | null>(null);
 const { state: adbState, refresh: refreshAdb } = useAdb(
@@ -47,7 +49,16 @@ const { state: adbState, refresh: refreshAdb } = useAdb(
 </script>
 
 <template>
-  <div class="flex h-dvh flex-col overflow-hidden">
+  <div class="xp-shell flex h-dvh flex-col overflow-hidden">
+    <header
+      class="xp-titlebar"
+      :class="{ 'xp-titlebar-macos': macosWindowControls }"
+      data-tauri-drag-region
+    >
+      <AppIcon name="phone" class="size-5 shrink-0" />
+      <h1>Android Tools</h1>
+      <span class="xp-titlebar-label">{{ currentPage.label }}</span>
+    </header>
     <div
       class="min-h-0 flex-1 overflow-y-auto md:grid md:grid-cols-[256px_minmax(0,1fr)]"
     >
@@ -58,7 +69,7 @@ const { state: adbState, refresh: refreshAdb } = useAdb(
       >
       <aside
         aria-label="Device sidebar"
-        class="flex flex-col border-b border-stroke bg-sidebar py-4 md:overflow-y-auto md:border-r md:border-b-0"
+        class="xp-sidebar flex flex-col border-b border-stroke bg-sidebar py-4 md:overflow-y-auto md:border-r md:border-b-0"
       >
         <div class="px-3">
           <DevicePicker
@@ -87,10 +98,14 @@ const { state: adbState, refresh: refreshAdb } = useAdb(
         tabindex="-1"
         class="workspace-background min-w-0 md:overflow-y-auto"
       >
-        <header class="border-b border-stroke px-4 py-2.5">
+        <header class="xp-locationbar border-b border-stroke px-4 py-2.5">
+          <AppIcon
+            :name="currentPage.icon"
+            class="size-5 shrink-0 text-primary"
+          />
           <p class="text-sm">
             <span class="text-muted">{{ currentPage.group }}</span
-            ><span class="mx-2 text-stroke" aria-hidden="true">/</span
+            ><span class="mx-2 text-muted" aria-hidden="true">›</span
             >{{ currentPage.label }}
           </p>
         </header>

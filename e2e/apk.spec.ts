@@ -6,7 +6,7 @@ test('inspects a simulated APK without a device and retains the report across na
   await page.goto('/?demo=empty');
   await page.getByRole('button', { name: 'APK analysis', exact: true }).click();
   await expect(
-    page.getByText('Demo mode — simulated APK analysis.'),
+    page.getByText('Demo mode — simulated APK analysis and installation.'),
   ).toBeVisible();
   await page.getByRole('button', { name: 'Choose APK', exact: true }).click();
   await expect(

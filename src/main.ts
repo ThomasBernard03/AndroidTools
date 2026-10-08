@@ -59,6 +59,8 @@ const apkService = demo
     ? createTauriApkService()
     : undefined;
 const app = createApp(App, {
+  macosWindowControls:
+    isTauri() && /Macintosh|Mac OS X/.test(navigator.userAgent),
   fileService: demo
     ? createDemoFileService(scenario === 'error')
     : isTauri()
