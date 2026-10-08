@@ -105,6 +105,11 @@ test('appcast retains history and advertises the signed artifact with its minimu
   );
   assert.ok(result.includes(`sparkle:edSignature="${metadata.signature}"`));
   assert.ok(result.includes('length="123456"'));
+  assert.ok(
+    result.includes(
+      '<sparkle:releaseNotesLink>https://github.com/ThomasBernard03/AndroidTools/releases/tag/2027.06.1</sparkle:releaseNotesLink>',
+    ),
+  );
   assert.equal(prepare(config, result).needed, false);
   assert.equal(updateFeed(config, result, metadata), result);
 });

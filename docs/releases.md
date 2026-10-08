@@ -19,7 +19,8 @@ XML using Node.js. No Python release script is required.
    Sparkle's independent, strictly increasing integer build number, formerly the
    `+35` suffix in Flutter's `pubspec.yaml`. The first release from this rewrite is
    `2026.10.3`, build `39`, following build `38` in the preserved appcast.
-3. Update `CHANGELOG.md`, which remains the appcast release-notes destination.
+3. Update `CHANGELOG.md`. Sparkle's release-notes link points to the matching
+   GitHub release page (`releases/tag/<version>`).
 4. Merge to `main`. Quality checks and the release pipeline run automatically.
 
 GitHub tags and download names retain the historical zero-padded month:
@@ -136,7 +137,8 @@ Manual distribution verification (not part of the hardware-free suite):
 - From a historical Flutter installation, check that Sparkle offers the new build,
   validates the download, replaces the app and relaunches the Tauri version.
 - In the installed Tauri release, use **Check for updates** and verify Sparkle's
-  up-to-date, network failure and subsequent signed-update dialogs.
+  up-to-date, network failure and subsequent signed-update dialogs. Check that the
+  linked GitHub release page renders correctly in the release-notes area.
 - With a test Sentry project and reporting enabled, verify that native events match
   the release and uploaded dSYM UUIDs. No secret-bearing publication is performed
   by local tests.

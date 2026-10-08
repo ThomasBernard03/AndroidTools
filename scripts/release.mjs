@@ -104,7 +104,7 @@ export function updateFeed(config, xml, metadata) {
     'sparkle:version': String(release.build),
     'sparkle:shortVersionString': release.version,
     'sparkle:minimumSystemVersion': release.minimumSystemVersion,
-    'sparkle:releaseNotesLink': `${repository}/blob/main/CHANGELOG.md`,
+    'sparkle:releaseNotesLink': `${repository}/releases/tag/${release.version}`,
     pubDate: metadata.pubDate,
   };
   for (const [name, value] of Object.entries(values)) {
