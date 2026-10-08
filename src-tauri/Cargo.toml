@@ -1,6 +1,6 @@
 [package]
 name = "android-tools"
-version = "2026.10.5"
+version = "2026.10.6"
 description = "Desktop tools for Android devices"
 edition = "2024"
 rust-version = "1.93"

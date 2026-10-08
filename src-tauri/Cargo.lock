@@ -56,7 +56,7 @@ dependencies = [
 
 [[package]]
 name = "android-tools"
-version = "2026.10.5"
+version = "2026.10.6"
 dependencies = [
  "apk-info",
  "apksig",

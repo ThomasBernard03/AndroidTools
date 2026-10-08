@@ -4,6 +4,12 @@ All notable changes to Android Tools will be documented in this file.
 
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 
+## [2026.10.6] - 2026-10-08
+
+### Improvements
+- Stop all adb servers on restart
+- New design system
+
 ## [2026.10.5] - 2026-10-06
 
 ### New Features

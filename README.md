@@ -40,6 +40,18 @@ USB failures never fall back to fake data.
 
 ## Select a connected device
 
+The interface uses a Windows XP Luna-inspired theme: a blue title bar, Explorer-style
+task panels, warm gray workspaces and beveled buttons. The shared theme covers all
+workspaces and retains keyboard focus indicators and reduced-motion support. Dropdown
+arrows remain static when opened. On macOS, native close, minimize and fullscreen
+controls sit inside the blue application title bar; drag the title bar to move the
+window. Operating-system file dialogs keep the host platform's appearance.
+
+Native title-bar verification on macOS: run `npm run tauri dev`, check that the
+traffic lights do not overlap the application title, drag using the title text,
+and exercise minimize, fullscreen/restore and close. Browser demos intentionally
+do not reserve space for native window controls.
+
 The compact sidebar groups **Device overview**, **File explorer** and **Logcat**
 under Device, and **APK analysis**, **Generate keystore**, **APK signing** and
 **Keystore explorer** under **APK & Keystore**. APK analysis inspects local packages and Generate keystore creates signing keys
@@ -85,9 +97,10 @@ it appears with a fallback name and a warning.
 
 ADB requires a readable, unique USB serial number to match the selected device
 across the discovery and transport libraries. The app stores its own host key in
-its application data directory. If another ADB client holds the USB interface,
-close it and stop its ADB server before retrying; Android Tools does not stop it
-automatically. See [ADB information](docs/features/adb.md) for details and hardware checks.
+its application data directory. Before opening a new USB session, Android Tools
+automatically stops the standard local ADB server on port 5037 to release USB.
+If another tool restarts that server, close the tool and retry.
+See [ADB information](docs/features/adb.md) for details and hardware checks.
 
 See [device discovery](docs/features/devices.md) for architecture, limitations and
 hardware verification instructions.

@@ -137,6 +137,7 @@ fn selected_device(devices: Vec<DeviceSummary>, id: &str) -> Result<DeviceSummar
 impl AdbConnector for UsbAdbConnector {
     fn connect<'a>(&'a self, connection_id: &'a str) -> AdbFuture<'a, Box<dyn AdbSession>> {
         Box::pin(async move {
+            super::server::stop_local_server().await?;
             let key = self
                 .key
                 .get_or_try_init(|| async {

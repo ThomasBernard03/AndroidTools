@@ -140,13 +140,19 @@ rather than duplicate implementation details.
 - Vue Composition API and strict TypeScript.
 - No global store or router until there is a concrete need.
 - Tailwind for styling; shared components for recurring patterns.
-- Dark application theme with semantic color tokens in `src/styles.css`: charcoal
-  canvas and surfaces, mint primary accent `#7CFFB2`, muted text, warning and error
-  colors. Use tokens rather than feature-specific palettes. The desktop shell has
+- Lucide (`@lucide/vue`) supplies interface icons through the shared `AppIcon.vue`
+  widget. Import individual icons there and map them to semantic names instead of
+  hand-writing SVG paths. Icons inherit the current text color and caller sizing
+  classes; decorative icons are hidden from assistive technology. Icon-only
+  controls must provide an accessible label.
+- Windows XP Luna-inspired application theme with semantic tokens in
+  `src/styles.css`: warm gray canvas, ivory surfaces, blue accents, beveled controls
+  and a blue gradient title bar. Shared task panels organize sidebar navigation.
+  Use tokens rather than feature-specific palettes. The desktop shell has
   a left device sidebar and a main workspace; below 768 px they stack vertically.
 - Preserve standard keyboard behavior, visible focus indicators and reduced-motion
   support. The keystore format and device picker share a themed, accessible
-  select-only combobox. The document uses a dark color
+  select-only combobox. The document uses a light color
   scheme for native form controls.
 - Interface text is non-selectable for desktop-style interaction. Inputs, textareas,
   editable content and explicit `.select-text` regions remain selectable. Pointer

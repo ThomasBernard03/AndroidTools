@@ -1,25 +1,29 @@
 @import 'tailwindcss';
 
 @theme {
-  --font-sans:
-    system-ui, -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
-  --color-primary: #7cffb2;
-  --color-primary-hover: #a3ffc9;
-  --color-primary-muted: #173a29;
-  --color-on-primary: #10271b;
-  --color-canvas: #0d1110;
-  --color-sidebar: #111715;
-  --color-surface: #171e1b;
-  --color-surface-raised: #202a25;
-  --color-stroke: #2b3831;
-  --color-foreground: #edf5f0;
-  --color-muted: #a0b2a7;
-  --color-warning: #f2cb82;
-  --color-danger: #ffa4a4;
+  --font-sans: Tahoma, 'Trebuchet MS', Verdana, sans-serif;
+  --color-primary: #174ea6;
+  --color-primary-hover: #103d85;
+  --color-primary-muted: #dce9fb;
+  --color-on-primary: #ffffff;
+  --color-canvas: #ece9d8;
+  --color-sidebar: #c4d5f5;
+  --color-surface: #fffef9;
+  --color-surface-raised: #f5f3e9;
+  --color-stroke: #aca899;
+  --color-foreground: #202020;
+  --color-muted: #535b68;
+  --color-warning: #805300;
+  --color-danger: #b3261e;
+  --radius-md: 3px;
+  --radius-lg: 3px;
+  --radius-xl: 4px;
+  --radius-2xl: 5px;
 }
 
 :root {
-  color-scheme: dark;
+  color-scheme: light;
+  font-family: var(--font-sans);
 }
 
 @layer components {
@@ -75,9 +79,246 @@ select:not(:disabled) {
 }
 
 .workspace-background {
-  background: radial-gradient(
-    ellipse at 85% 0%,
-    rgb(124 255 178 / 5%),
-    transparent 55%
+  background: var(--color-canvas);
+}
+
+/* macOS overlays its native traffic lights on the shared Luna title bar. */
+.xp-shell {
+  border: 3px solid #0855d5;
+  border-top: 0;
+}
+
+.xp-titlebar {
+  display: flex;
+  min-height: 38px;
+  flex-shrink: 0;
+  align-items: center;
+  gap: 9px;
+  padding: 6px 10px;
+  color: white;
+  background: linear-gradient(
+    #4c9aff 0%,
+    #0865e5 12%,
+    #0054d6 48%,
+    #0868f4 90%,
+    #003caa 100%
   );
+  box-shadow:
+    inset 1px 0 #83b5ff,
+    inset -1px 0 #003caa;
+  text-shadow: 1px 1px #003386;
+}
+
+.xp-titlebar h1 {
+  font-family: 'Trebuchet MS', var(--font-sans);
+  font-size: 16px;
+  font-weight: 700;
+}
+
+.xp-titlebar-macos {
+  padding-left: 86px;
+}
+
+/* Let the entire title (including its text and icon) act as a drag region. */
+.xp-titlebar > * {
+  pointer-events: none;
+}
+
+.xp-titlebar-label {
+  margin-left: auto;
+  font-size: 11px;
+  color: #e0edff;
+}
+
+.xp-sidebar {
+  background: linear-gradient(135deg, #7ba4e0, #b8ccef 65%, #d6e2f8);
+  border-color: #7394ca;
+}
+
+.xp-task-panel,
+.xp-navigation-group {
+  border: 1px solid white;
+  border-radius: 4px 4px 0 0;
+  background: #d6dff7;
+  box-shadow: 0 1px 2px #416ba540;
+}
+
+.xp-task-panel > div:first-child {
+  flex-wrap: wrap;
+  gap: 8px;
+}
+
+.xp-task-heading {
+  margin: 0;
+  padding: 8px 10px;
+  border-radius: 3px 3px 0 0;
+  background: linear-gradient(90deg, white, #c7d7f4);
+  color: #19468c;
+  font-size: 12px;
+  font-weight: 700;
+}
+
+.xp-navigation-items {
+  padding: 7px;
+}
+
+.xp-navigation-button {
+  color: #17468a;
+  border: 1px solid transparent;
+  border-radius: 2px;
+}
+
+.xp-navigation-button:hover {
+  background: #edf3ff;
+  border-color: #94b0dc;
+}
+
+.xp-navigation-button[aria-current='page'] {
+  color: white;
+  background: linear-gradient(#387feb, #1e60c5);
+  border-color: #174b9c;
+  box-shadow: inset 0 1px #ffffff50;
+}
+
+.xp-navigation-button svg {
+  color: #2265b7;
+  filter: drop-shadow(1px 1px 0 white);
+}
+
+.xp-navigation-button[aria-current='page'] svg {
+  color: white;
+  filter: none;
+}
+
+.xp-locationbar {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  background: linear-gradient(#faf9f4, #e9e6d6);
+  box-shadow: inset 0 1px white;
+}
+
+.xp-locationbar p {
+  flex: 1;
+  min-width: 0;
+  padding: 4px 8px;
+  border: 1px solid #7f9db9;
+  background: white;
+  font-size: 12px;
+}
+
+.xp-statusbar {
+  background: #ece9d8;
+  border-top: 1px solid white;
+  padding: 5px 7px;
+  gap: 6px;
+}
+
+.xp-statusbar > div,
+.xp-statusbar > span {
+  padding: 3px 8px;
+  box-shadow:
+    inset 1px 1px #b5b1a3,
+    inset -1px -1px white;
+}
+
+/* Beveled controls also cover feature-local actions using the shared tokens. */
+button:where(.border, .bg-primary, .keystore-button):not([role='switch']) {
+  border: 1px solid #003c74;
+  border-radius: 3px;
+  background: linear-gradient(white, #f3f1e9 50%, #e5e1d0);
+  color: var(--color-foreground);
+  box-shadow:
+    inset 1px 1px white,
+    inset -1px -1px #d5d0bd;
+}
+
+button:where(.bg-primary) {
+  box-shadow: inset 0 0 0 2px #a8c5ee;
+}
+
+button:where(.border, .bg-primary, .keystore-button):not(
+    [role='switch']
+  ):hover:enabled {
+  box-shadow: inset 0 0 0 2px #f5c65b;
+}
+
+button:where(.border, .bg-primary, .keystore-button):not(
+    [role='switch']
+  ):active:enabled {
+  background: #dedbcc;
+  box-shadow: inset 1px 1px 2px #969080;
+}
+
+input:where(:not([type='checkbox'], [type='radio'])),
+textarea,
+button[role='combobox'] {
+  background: white;
+  border-color: #7f9db9;
+  box-shadow: inset 1px 1px 2px #00000012;
+  border-radius: 0;
+}
+
+button[role='combobox'] > svg {
+  box-sizing: content-box;
+  padding: 3px;
+  border: 1px solid #91abd0;
+  border-radius: 2px;
+  color: #204d8c;
+  background: linear-gradient(#e5eeff, #b8ccef);
+}
+
+[role='listbox'],
+[role='menu'] {
+  background: white;
+  border: 1px solid #7f9db9;
+  border-radius: 0;
+  box-shadow: 3px 3px 0 #00000026;
+}
+
+[role='option'].text-primary {
+  color: white;
+  background: #316ac5;
+}
+
+[role='option'].text-primary :is(p, svg) {
+  color: white;
+}
+
+.workspace-background :is(section.border, .keystore-card) {
+  box-shadow:
+    inset 1px 1px white,
+    1px 1px 0 #d2cebe;
+}
+
+.workspace-background h2 {
+  color: #17468a;
+  font-family: 'Trebuchet MS', var(--font-sans);
+}
+
+.workspace-background h3 {
+  color: #17468a;
+}
+
+.workspace-background thead {
+  background: linear-gradient(white, #e8e5d8);
+}
+
+:focus-visible {
+  outline: 2px solid #174ea6;
+  outline-offset: 2px;
+}
+
+@media (max-width: 767px) {
+  .xp-titlebar-label {
+    display: none;
+  }
+}
+
+@media (forced-colors: active) {
+  .xp-navigation-button[aria-current='page'],
+  [role='option'].text-primary {
+    outline: 2px solid Highlight;
+    outline-offset: -2px;
+  }
 }
