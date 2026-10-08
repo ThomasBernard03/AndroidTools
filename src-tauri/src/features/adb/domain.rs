@@ -30,6 +30,7 @@ pub enum AdbErrorCode {
     Key,
     Unsupported,
     ReadFailed,
+    SaveFailed,
     Internal,
 }
 

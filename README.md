@@ -88,6 +88,16 @@ serial number, vendor/product IDs and connection ID. Missing strings are shown a
 **Unavailable**; descriptor IDs remain visible even when USB metadata access fails.
 These values refresh with the device list and are not Android system properties.
 
+Android information and USB details appear on the left; a phone-shaped **Screen
+preview** appears on the right (below the details in narrow windows). The app
+captures the selected device's screen once ADB connects and whenever the overview
+is reopened. **Refresh preview** takes another still screenshot. Captures stay in
+memory until **Save preview** saves the displayed PNG through the native file dialog.
+Cancelling writes nothing; existing files are not replaced. Unsaved captures stay in
+memory and are cleared when selection or connection state changes. Protected
+Android content may appear black. See [Screen preview](docs/features/screen-preview.md)
+for limits and hardware verification.
+
 A persistent bottom status bar shows the selected device and its serial number
 (or connection ID), the USB transport and the ADB connection state. Selecting a
 device starts a direct ADB-over-USB session. **Android information** displays the

@@ -1,4 +1,6 @@
 import { createApp } from 'vue';
+import { createTauriScreenshotService } from './features/adb/infrastructure/tauriScreenshotService';
+import { createDemoScreenshotService } from './features/adb/infrastructure/demoScreenshotService';
 import { createTauriFileService } from './features/files/infrastructure/tauriFileService';
 import { createDemoFileService } from './features/files/infrastructure/demoFileService';
 import { createTauriKeystoreExplorerService } from './features/keystore/infrastructure/tauriKeystoreExplorerService';
@@ -59,6 +61,11 @@ const apkService = demo
     ? createTauriApkService()
     : undefined;
 const app = createApp(App, {
+  screenshotService: demo
+    ? createDemoScreenshotService()
+    : isTauri()
+      ? createTauriScreenshotService()
+      : undefined,
   macosWindowControls:
     isTauri() && /Macintosh|Mac OS X/.test(navigator.userAgent),
   fileService: demo

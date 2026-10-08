@@ -278,7 +278,7 @@ async fn file_shell(
                         if stdout.len() + frame.data.len() > 16 * 1024 * 1024 {
                             return Err(AdbError::new(
                                 AdbErrorCode::ReadFailed,
-                                "The directory listing exceeds the 16 MiB limit.",
+                                "The ADB command output exceeds the 16 MiB limit.",
                             ));
                         }
                         stdout.extend_from_slice(&frame.data);
