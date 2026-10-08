@@ -55,7 +55,6 @@ const { state: adbState, refresh: refreshAdb } = useAdb(
       :class="{ 'xp-titlebar-macos': macosWindowControls }"
       data-tauri-drag-region
     >
-      <AppIcon name="phone" class="size-5 shrink-0" />
       <h1>Android Tools</h1>
       <span class="xp-titlebar-label">{{ currentPage.label }}</span>
     </header>
