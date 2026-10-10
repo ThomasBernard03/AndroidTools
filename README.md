@@ -127,7 +127,9 @@ hardware verification instructions.
 Open **Device → File explorer** to browse **Shared storage**, **Application data**
 and **Android root**. Upload or download files and complete folders, rename entries,
 create folders and delete entries with confirmation. Existing destinations are not
-replaced. Private application data requires a debuggable app allowing `run-as` for
+replaced. In the desktop app, drag files or folders from your computer into the
+explorer to upload them directly into the current Android folder. Multiple dropped
+items upload in order. Private application data requires a debuggable app allowing `run-as` for
 the primary Android user; Android permissions still apply at the root.
 
 Transfers stream over the shared ADB session. Interrupted operations report possible

@@ -97,6 +97,28 @@ pub async fn download(
     Ok(())
 }
 
+/// Uploads dropped sources in order, stopping at the first failure and retaining completed entries.
+pub async fn upload_many(
+    session: &dyn AdbSession,
+    remote: &str,
+    sources: Vec<PathBuf>,
+) -> Result<(), FileError> {
+    let remote = normalize(remote)?;
+    writable(&remote)?;
+    if sources.is_empty() || sources.len() > 100_000 || sources.iter().any(|p| !p.is_absolute()) {
+        return Err(FileError::new(
+            "local_path",
+            "Drop between 1 and 100,000 local files or folders using absolute paths.",
+        ));
+    }
+    for source in sources {
+        upload(session, &remote, source)
+            .await
+            .map_err(FileError::partial)?;
+    }
+    Ok(())
+}
+
 /// Streams via a private shell-owned staging file, allowing run-as to inherit stdin.
 /// A failed upload may leave a partial destination; staging cleanup is always attempted.
 pub async fn upload(

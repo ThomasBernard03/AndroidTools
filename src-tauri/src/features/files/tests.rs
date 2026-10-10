@@ -68,6 +68,43 @@ fn output(bytes: &[u8]) -> FileShellOutput {
 }
 
 #[tokio::test]
+async fn dropped_uploads_keep_completed_folders_and_stop_at_the_first_failure() {
+    let temp = tempfile::tempdir().expect("sources");
+    let first = temp.path().join("first");
+    let last = temp.path().join("last");
+    std::fs::create_dir(&first).expect("first folder");
+    std::fs::create_dir(&last).expect("last folder");
+    let session = FakeSession::new(vec![output(b"")]);
+    let error = transfers::upload_many(
+        &session,
+        "/sdcard",
+        vec![first, temp.path().join("missing"), last],
+    )
+    .await
+    .expect_err("missing source");
+    assert!(error.partial);
+    let commands = session.commands.lock().expect("commands");
+    assert_eq!(commands.len(), 1);
+    assert!(commands[0].contains("mkdir './first'"));
+}
+
+#[tokio::test]
+async fn dropped_uploads_reject_invalid_sources_and_virtual_destinations_before_writing() {
+    let session = FakeSession::new(vec![]);
+    for (remote, sources) in [
+        ("/sdcard", vec![]),
+        ("/sdcard", vec!["relative.txt".into()]),
+        ("/data/data", vec![std::env::temp_dir().join("file")]),
+    ] {
+        let error = transfers::upload_many(&session, remote, sources)
+            .await
+            .expect_err("invalid upload");
+        assert!(!error.partial);
+    }
+    assert!(session.commands.lock().expect("commands").is_empty());
+}
+
+#[tokio::test]
 async fn previews_literal_utf8_and_images_with_bounded_private_reads() {
     use super::preview::{FilePreview, read};
     let png = openssl::base64::decode_block("iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAQAAAC1HAwCAAAAC0lEQVR42mP8/x8AAwMCAO+aN1sAAAAASUVORK5CYII=").expect("PNG");

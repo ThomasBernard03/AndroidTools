@@ -1,5 +1,13 @@
 <script setup lang="ts">
-import { computed, onDeactivated, ref, watch } from 'vue';
+import {
+  computed,
+  onActivated,
+  onBeforeUnmount,
+  onDeactivated,
+  onMounted,
+  ref,
+  watch,
+} from 'vue';
 import FileContextMenu from './FileContextMenu.vue';
 import FilePreviewPanel from './FilePreviewPanel.vue';
 import AppIcon from '../../../shared/presentation/widgets/AppIcon.vue';
@@ -7,6 +15,7 @@ import {
   childPath,
   validName,
   type FileEntry,
+  type FileDrop,
   type FileService,
   type Mutation,
 } from '../domain/files';
@@ -29,6 +38,7 @@ const {
   navigate,
   mutate,
   transfer,
+  uploadPaths,
   preview,
   previewName,
   previewLoading,
@@ -45,6 +55,69 @@ const editing = ref<{ operation: Mutation; entry: FileEntry | null } | null>(
 );
 const name = ref('');
 const busy = computed(() => loading.value || operating.value);
+const dropZone = ref<HTMLElement>();
+const dragging = ref(false);
+const dropError = ref('');
+const canDrop = computed(
+  () =>
+    !!props.deviceId &&
+    !!props.service &&
+    !busy.value &&
+    writable.value &&
+    !error.value &&
+    !editing.value,
+);
+let active = false;
+let listenerGeneration = 0;
+let stopDrop: (() => void) | undefined;
+function drop(event: FileDrop) {
+  if (!active) return;
+  const bounds = dropZone.value?.getBoundingClientRect();
+  const inside =
+    event.type !== 'leave' &&
+    bounds &&
+    event.x >= bounds.left &&
+    event.x < bounds.right &&
+    event.y >= bounds.top &&
+    event.y < bounds.bottom;
+  dragging.value = !!inside && canDrop.value && event.type !== 'drop';
+  if (inside && canDrop.value && event.type === 'drop')
+    void uploadPaths(event.paths);
+}
+async function activateDrop() {
+  if (active) return;
+  active = true;
+  const ticket = ++listenerGeneration;
+  if (!props.service) return;
+  try {
+    const stop = await props.service.listenDrop((event) => {
+      if (ticket === listenerGeneration) drop(event);
+    });
+    if (ticket !== listenerGeneration) stop();
+    else {
+      stopDrop = stop;
+      dropError.value = '';
+    }
+  } catch {
+    if (ticket === listenerGeneration)
+      dropError.value =
+        'Drag and drop is unavailable. Use Upload file or Upload folder instead.';
+  }
+}
+function deactivateDrop() {
+  active = false;
+  ++listenerGeneration;
+  dragging.value = false;
+  stopDrop?.();
+  stopDrop = undefined;
+}
+watch([path, () => props.deviceId, canDrop], () => {
+  dragging.value = false;
+});
+onMounted(activateDrop);
+onActivated(activateDrop);
+onDeactivated(deactivateDrop);
+onBeforeUnmount(deactivateDrop);
 const context = ref<{ entry: FileEntry; x: number; y: number } | null>(null);
 watch([path, () => props.deviceId, busy, search], () => {
   context.value = null;
@@ -144,7 +217,9 @@ function modified(value: number | null) {
 
 <template>
   <section
+    ref="dropZone"
     class="mx-auto max-w-7xl space-y-5 px-6 py-8 lg:px-10"
+    :class="{ 'ring-2 ring-inset ring-primary bg-primary/5': dragging }"
     aria-labelledby="files-heading"
   >
     <div class="flex items-start justify-between gap-4">
@@ -220,6 +295,16 @@ function modified(value: number | null) {
           New folder
         </button>
       </div>
+      <p v-if="dropError" role="alert" class="text-sm text-error">
+        {{ dropError }}
+      </p>
+      <p v-else role="status" class="text-sm text-muted">
+        {{
+          dragging
+            ? `Drop to upload into ${path}`
+            : 'Drag files or folders from your computer into this explorer to upload them to the current folder.'
+        }}
+      </p>
       <form
         v-if="editing"
         class="space-y-3 rounded-lg border border-stroke bg-surface p-4"

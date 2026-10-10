@@ -40,6 +40,7 @@ pub fn run() {
             features::files::commands::preview_file,
             features::files::commands::mutate_file,
             features::files::commands::transfer_file,
+            features::files::commands::upload_files,
             logging::log_frontend_event,
             features::settings::commands::open_logs_folder,
             reporting::capture_frontend_error,

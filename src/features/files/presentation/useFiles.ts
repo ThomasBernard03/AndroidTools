@@ -110,6 +110,7 @@ export function useFiles(deviceId: Ref<string | null>, service?: FileService) {
     if (
       !deviceId.value ||
       !service ||
+      disposed ||
       operating.value ||
       loading.value ||
       error.value
@@ -175,6 +176,13 @@ export function useFiles(deviceId: Ref<string | null>, service?: FileService) {
       upload ? 'Upload completed.' : 'Download completed.',
     );
   }
+  function uploadPaths(sources: string[]) {
+    if (!writable.value || !sources.length) return;
+    return operate(async (id, current) => {
+      await service!.uploadPaths(id, current, sources);
+      return true;
+    }, 'Upload completed.');
+  }
   watch(
     deviceId,
     () => {
@@ -208,5 +216,6 @@ export function useFiles(deviceId: Ref<string | null>, service?: FileService) {
     navigate,
     mutate,
     transfer,
+    uploadPaths,
   };
 }
