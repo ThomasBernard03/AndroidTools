@@ -12,7 +12,13 @@ export interface FileListing {
 }
 export type Mutation = 'rename' | 'delete' | 'create_directory';
 export type FilePreview = { kind: 'text' | 'image'; content: string };
+export type FileDrop =
+  | { type: 'leave' }
+  | { type: 'enter' | 'over'; x: number; y: number }
+  | { type: 'drop'; x: number; y: number; paths: string[] };
 export interface FileService {
+  listenDrop(handler: (event: FileDrop) => void): Promise<() => void>;
+  uploadPaths(deviceId: string, path: string, sources: string[]): Promise<void>;
   preview(deviceId: string, path: string): Promise<FilePreview>;
   list(deviceId: string, path: string): Promise<FileListing>;
   mutate(

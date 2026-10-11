@@ -56,6 +56,24 @@ export function releaseVersion(config) {
   };
 }
 
+export function releaseNotes(changelog, version) {
+  const text = changelog.replace(/\r\n/g, '\n');
+  const headings = Array.from(text.matchAll(/^##[ \t]+(.+)$/gm));
+  const matches = headings.filter(
+    (heading) => /^\[([^\]]+)\](?:\s|$)/.exec(heading[1])?.[1] === version,
+  );
+  if (matches.length !== 1) {
+    throw new Error(`Expected exactly one CHANGELOG.md section for ${version}`);
+  }
+  const heading = matches[0];
+  const next = headings[headings.indexOf(heading) + 1];
+  const notes = text
+    .slice(heading.index + heading[0].length, next?.index ?? text.length)
+    .trim();
+  if (!notes) throw new Error(`Empty CHANGELOG.md section for ${version}`);
+  return `${notes}\n`;
+}
+
 export function prepare(config, xml) {
   const release = releaseVersion(config);
   const { channel } = parseFeed(xml);
@@ -150,6 +168,15 @@ if (
   }
   const xml = readFileSync('appcast.xml', 'utf8');
   switch (process.argv[2]) {
+    case 'notes': {
+      process.stdout.write(
+        releaseNotes(
+          readFileSync('CHANGELOG.md', 'utf8'),
+          releaseVersion(config).version,
+        ),
+      );
+      break;
+    }
     case 'prepare': {
       const result = prepare(config, xml);
       const output = Object.entries(result)
@@ -191,6 +218,6 @@ if (
       break;
     }
     default:
-      throw new Error('Expected prepare, metadata or feed');
+      throw new Error('Expected prepare, notes, metadata or feed');
   }
 }

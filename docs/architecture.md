@@ -32,6 +32,17 @@ selection/connection changes and ignores obsolete responses and unmounted views.
 
 ## 2. Organizing future features
 
+Logcat lives in `features/logcat` on both stacks. `AdbSession::stream_shell` opens an
+owned shell v2 channel under the existing session lock, then releases the lock while
+the channel streams. `LogcatService` owns a token-scoped background capture, decoding
+threadtime lines into anonymous temporary files. Disk indexes support paged random
+access by minimum level and optional consecutive-repeat grouping. Original lines
+are retained without eviction; only the current page crosses IPC. File operations and
+incremental search run on blocking workers with bounded work units. Vue injects a
+validated `LogcatService`, serializes restarts and discards stale responses. A virtual
+viewport uses a scaled scrollbar for histories exceeding browser layout limits.
+Navigation stops capture and deletes its history. See [Logcat](features/logcat.md).
+
 File exploration lives in `features/files`. Listing and mutation use cases use the
 injected `AdbSession`; bounded recursive transfers combine streamed ADB operations
 with local temporary files. `AdbService::with_session` serializes whole operations

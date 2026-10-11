@@ -63,7 +63,8 @@ The compact sidebar groups **Device overview**, **File explorer** and **Logcat**
 under Device, and **APK analysis**, **Generate keystore**, **APK signing** and
 **Keystore explorer** under **APK & Keystore**. APK analysis inspects local packages and Generate keystore creates signing keys
 locally. APK signing signs local packages using an existing keystore. File explorer
-browses and manages Android files. Logcat displays an explicit **Coming soon** screen.
+browses and manages Android files. Logcat streams live Android logs with priority,
+package and search controls.
 Navigation remains available without a device and preserves the selected device
 and ADB state when returning to the overview.
 
@@ -127,13 +128,42 @@ hardware verification instructions.
 Open **Device → File explorer** to browse **Shared storage**, **Application data**
 and **Android root**. Upload or download files and complete folders, rename entries,
 create folders and delete entries with confirmation. Existing destinations are not
-replaced. Private application data requires a debuggable app allowing `run-as` for
+replaced. In the desktop app, drag files or folders from your computer into the
+explorer to upload them directly into the current Android folder. Multiple dropped
+items upload in order. Private application data requires a debuggable app allowing `run-as` for
 the primary Android user; Android permissions still apply at the root.
 
 Transfers stream over the shared ADB session. Interrupted operations report possible
 partial changes. The interface includes breadcrumbs, search, metadata and read-only
 previews for UTF-8 text and PNG, JPEG or WebP images. See [File explorer](docs/features/files.md) for transfer semantics,
 limits, explicit demos and hardware verification.
+
+## Stream Logcat
+
+Open **Device → Logcat** after ADB connects. Logs stream automatically, starting
+with all entries still available in the phone's buffers. Choose a **Minimum level**
+(Verbose through Fatal), or choose an installed **Package name** and click **Apply
+package**. The shared, searchable dropdown opens on click and filters packages as
+you type. Select **All packages** to see all apps.
+
+**Refresh** restarts the stream and reloads package suggestions. **Clear device logs**
+clears the phone's default Logcat buffers for all packages and restarts capture.
+**Search logs** highlights text without filtering out surrounding lines; use
+**Previous**, **Next**, Enter or Shift+Enter to scroll between matching lines.
+Searching or scrolling disables **Follow live**; re-enable it to return to incoming
+logs. **Group repeats**, enabled by default, collapses consecutive identical messages
+into one row with an increasing counter, ignoring timestamps but preserving process,
+thread, level, tag and message. Turn it off to see every original line and timestamp.
+Capture stops when leaving the workspace.
+
+All captured session history is retained in temporary disk files, without a line-count
+or character-count eviction limit. Virtualized scrolling and paged reads keep memory
+and the rendered interface bounded. Search covers the entire selected history.
+**First line**, **Latest**, Home/End and the scrollbar navigate large captures. History
+is replaced on refresh or package changes and deleted on navigation or app exit.
+Package filtering uses the app's Android UID and requires a device supporting
+`logcat --uid` (normally Android 8+); apps sharing a UID share their logs. See
+[Logcat](docs/features/logcat.md) for architecture, demos and hardware verification.
 
 ## Analyze an APK
 

@@ -54,6 +54,21 @@ export function createDemoFileService(fail = false): FileService {
     return value;
   }
   return {
+    async listenDrop() {
+      return () => {};
+    },
+    async uploadPaths(id, path, sources) {
+      for (const source of sources) {
+        const name = source.split(/[/\\]/u).pop()!;
+        if (entries(id, path).some((entry) => entry.name === name))
+          throw new FileError(
+            'already_exists',
+            'The destination already exists.',
+            true,
+          );
+        entries(id, path).push(file(name));
+      }
+    },
     async preview(id, path) {
       const index = path.lastIndexOf('/');
       const selected = entries(id, path.slice(0, index) || '/').find(

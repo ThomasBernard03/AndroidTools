@@ -7,6 +7,7 @@ import { join } from 'node:path';
 import test from 'node:test';
 import {
   prepare,
+  releaseNotes,
   releaseVersion,
   updateFeed,
   verifyArchive,
@@ -24,6 +25,50 @@ const metadata = {
   length: 123456,
   pubDate: 'Mon, 05 Oct 2026 12:00:00 GMT',
 };
+
+test('release notes select the exact padded version and preserve Markdown', () => {
+  const notes =
+    '### Fixes\n- Preserve **formatting** and [links](https://example.com)';
+  const changelog = `# Changelog
+
+## [Unreleased]
+- Future changes
+
+## [2027.06.10] - 2027-06-10
+- Another version
+
+## [2027.06.1] - 2027-06-01
+
+${notes}
+
+## [2027.05.1] - 2027-05-01
+- Older changes
+`;
+  for (const text of [changelog, changelog.replace(/\n/g, '\r\n')]) {
+    assert.equal(
+      releaseNotes(text, releaseVersion(config).version),
+      `${notes}\n`,
+    );
+  }
+  assert.equal(releaseNotes(changelog, '2027.05.1'), '- Older changes\n');
+});
+
+test('release notes reject missing, empty and duplicate version sections', () => {
+  assert.throws(
+    () => releaseNotes('## [2027.06.10]\n- Other changes', '2027.06.1'),
+    /exactly one/,
+  );
+  assert.throws(
+    () =>
+      releaseNotes('## [2027.06.1]\n\n## [2027.05.1]\n- Older', '2027.06.1'),
+    /Empty/,
+  );
+  assert.throws(
+    () =>
+      releaseNotes('## [2027.06.1]\n- One\n## [2027.06.1]\n- Two', '2027.06.1'),
+    /exactly one/,
+  );
+});
 
 test('rejects a changed archive or a different Sparkle signing key', () => {
   const { privateKey, publicKey } = generateKeyPairSync('ed25519');

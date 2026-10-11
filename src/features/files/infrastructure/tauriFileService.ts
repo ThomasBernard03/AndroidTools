@@ -1,4 +1,5 @@
 import { invoke } from '@tauri-apps/api/core';
+import { getCurrentWebview } from '@tauri-apps/api/webview';
 import {
   FileError,
   validName,
@@ -55,11 +56,24 @@ export function createTauriFileService(call: Invoke = invoke): FileService {
       throw new FileError(
         'native_failed',
         'The desktop file operation failed. Refresh the device and retry.',
-        command === 'mutate_file' || command === 'transfer_file',
+        ['mutate_file', 'transfer_file', 'upload_files'].includes(command),
       );
     }
   }
   return {
+    async listenDrop(handler) {
+      return getCurrentWebview().onDragDropEvent(({ payload }) => {
+        if (payload.type === 'leave') handler({ type: 'leave' });
+        else {
+          const position = payload.position.toLogical(window.devicePixelRatio);
+          handler({ ...payload, x: position.x, y: position.y });
+        }
+      });
+    },
+    async uploadPaths(deviceId, path, sources) {
+      if ((await request('upload_files', { deviceId, path, sources })) !== null)
+        invalid(true);
+    },
     async preview(deviceId, path) {
       const value = await request('preview_file', { deviceId, path });
       if (!record(value) || typeof value.content !== 'string') return invalid();

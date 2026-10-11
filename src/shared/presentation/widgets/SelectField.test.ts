@@ -13,6 +13,29 @@ const props = {
 };
 
 describe('Custom select', () => {
+  it('opens a searchable dropdown, filters suggestions and completes the chosen value', async () => {
+    const wrapper = mount(SelectField, {
+      props: { ...props, searchable: true },
+    });
+    const input = wrapper.get<HTMLInputElement>('[role="combobox"]');
+    await input.trigger('click');
+    expect(wrapper.findAll('[role="option"]')).toHaveLength(2);
+    await input.setValue('pkcs');
+    expect(wrapper.findAll('[role="option"]')).toHaveLength(1);
+    expect(wrapper.get('[role="option"]').text()).toContain('PKCS12');
+    await input.trigger('keydown', { key: 'Enter' });
+    expect(wrapper.emitted('update:modelValue')).toEqual([['PKCS12']]);
+    await wrapper.setProps({ modelValue: 'PKCS12' });
+    expect(input.element.value).toBe('PKCS12');
+    await input.trigger('click');
+    await input.setValue('missing');
+    expect(wrapper.text()).toContain('No matching options');
+    await input.trigger('keydown', { key: 'Enter' });
+    expect(wrapper.emitted('update:modelValue')).toHaveLength(1);
+    await input.trigger('keydown', { key: 'Escape' });
+    expect(input.element.value).toBe('PKCS12');
+    wrapper.unmount();
+  });
   it('selects an option using the pointer and exposes its expanded and selected states', async () => {
     const wrapper = mount(SelectField, { props });
     const trigger = wrapper.get('[role="combobox"]');

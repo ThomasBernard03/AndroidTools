@@ -9,6 +9,27 @@ const entry = {
   permissions: '0644',
 };
 describe('File IPC', () => {
+  it('uploads explicit local paths without a picker and validates completion', async () => {
+    const call = vi.fn().mockResolvedValue(null);
+    const service = createTauriFileService(call);
+    await service.uploadPaths('phone', '/sdcard/Download', [
+      '/tmp/a.txt',
+      '/tmp/folder',
+    ]);
+    expect(call).toHaveBeenCalledWith('upload_files', {
+      deviceId: 'phone',
+      path: '/sdcard/Download',
+      sources: ['/tmp/a.txt', '/tmp/folder'],
+    });
+    call.mockResolvedValueOnce(true);
+    await expect(
+      service.uploadPaths('phone', '/sdcard', ['/tmp/a']),
+    ).rejects.toMatchObject({ code: 'invalid_response', partial: true });
+    call.mockRejectedValueOnce(new Error('IPC failed'));
+    await expect(
+      service.uploadPaths('phone', '/sdcard', ['/tmp/a']),
+    ).rejects.toMatchObject({ partial: true });
+  });
   it('validates preview content and never marks read failures as partial writes', async () => {
     const call = vi
       .fn()

@@ -1,8 +1,14 @@
 import { flushPromises, mount, type VueWrapper } from '@vue/test-utils';
 import { describe, expect, it, vi } from 'vitest';
+import { defineComponent, ref } from 'vue';
 import FileWorkspace from './FileWorkspace.vue';
 import { createDemoFileService } from '../infrastructure/demoFileService';
-import { FileError, type FileListing, type FilePreview } from '../domain/files';
+import {
+  FileError,
+  type FileDrop,
+  type FileListing,
+  type FilePreview,
+} from '../domain/files';
 
 function button(wrapper: VueWrapper, label: string) {
   return wrapper.findAll('button').find((b) => b.text() === label)!;
@@ -16,6 +22,146 @@ function deferred<T>() {
 }
 
 describe('File explorer', () => {
+  it('only listens while the cached explorer is visible and refreshes successful uploads', async () => {
+    const visible = ref(true);
+    const handlers: ((event: FileDrop) => void)[] = [];
+    const stops: ReturnType<typeof vi.fn>[] = [];
+    const service = {
+      ...createDemoFileService(),
+      listenDrop: async (handler: (event: FileDrop) => void) => {
+        handlers.push(handler);
+        const stop = vi.fn();
+        stops.push(stop);
+        return stop;
+      },
+    };
+    const wrapper = mount(
+      defineComponent({
+        components: { FileWorkspace },
+        setup: () => ({ visible, service }),
+        template:
+          '<KeepAlive><FileWorkspace v-if="visible" device-id="a" :service="service" /></KeepAlive>',
+      }),
+    );
+    await flushPromises();
+    const workspace = wrapper.getComponent(FileWorkspace);
+    vi.spyOn(workspace.element, 'getBoundingClientRect').mockReturnValue({
+      left: 0,
+      right: 500,
+      top: 0,
+      bottom: 500,
+    } as DOMRect);
+    expect(handlers).toHaveLength(1);
+    visible.value = false;
+    await flushPromises();
+    expect(stops[0]).toHaveBeenCalledOnce();
+    handlers[0]!({ type: 'drop', x: 20, y: 20, paths: ['/tmp/hidden.txt'] });
+    visible.value = true;
+    await flushPromises();
+    expect(handlers).toHaveLength(2);
+    handlers[0]!({ type: 'drop', x: 20, y: 20, paths: ['/tmp/stale.txt'] });
+    handlers[1]!({ type: 'drop', x: 20, y: 20, paths: ['/tmp/visible.txt'] });
+    await flushPromises();
+    expect(workspace.text()).toContain('visible.txt');
+    expect(workspace.text()).toContain('Upload completed.');
+    expect(workspace.text()).not.toContain('hidden.txt');
+    expect(workspace.text()).not.toContain('stale.txt');
+    wrapper.unmount();
+    expect(stops[1]).toHaveBeenCalledOnce();
+  });
+  it('uploads dropped paths to the open folder, ignores outside drops and locks concurrent uploads', async () => {
+    let drop!: (event: FileDrop) => void;
+    const stop = vi.fn();
+    const pending = deferred<void>();
+    const uploadPaths = vi.fn(() => pending.promise);
+    const wrapper = mount(FileWorkspace, {
+      props: {
+        deviceId: 'a',
+        service: {
+          ...createDemoFileService(),
+          uploadPaths,
+          listenDrop: async (handler) => {
+            drop = handler;
+            return stop;
+          },
+        },
+      },
+    });
+    vi.spyOn(wrapper.element, 'getBoundingClientRect').mockReturnValue({
+      left: 10,
+      right: 500,
+      top: 10,
+      bottom: 500,
+    } as DOMRect);
+    await flushPromises();
+    await button(wrapper, 'Pictures').trigger('click');
+    await flushPromises();
+    drop({ type: 'drop', x: 0, y: 0, paths: ['/tmp/outside.txt'] });
+    expect(uploadPaths).not.toHaveBeenCalled();
+    drop({ type: 'enter', x: 20, y: 20 });
+    await flushPromises();
+    expect(wrapper.text()).toContain('Drop to upload into /sdcard/Pictures');
+    drop({ type: 'drop', x: 20, y: 20, paths: ['/tmp/a.txt', '/tmp/photos'] });
+    drop({ type: 'drop', x: 20, y: 20, paths: ['/tmp/ignored.txt'] });
+    expect(uploadPaths).toHaveBeenCalledExactlyOnceWith(
+      'a',
+      '/sdcard/Pictures',
+      ['/tmp/a.txt', '/tmp/photos'],
+    );
+    await wrapper.setProps({ deviceId: 'b' });
+    pending.resolve();
+    await flushPromises();
+    expect(wrapper.text()).not.toContain('Upload completed.');
+    await button(wrapper, 'Application data').trigger('click');
+    await flushPromises();
+    drop({ type: 'drop', x: 20, y: 20, paths: ['/tmp/protected.txt'] });
+    expect(uploadPaths).toHaveBeenCalledTimes(1);
+    wrapper.unmount();
+    expect(stop).toHaveBeenCalledOnce();
+    drop({ type: 'drop', x: 20, y: 20, paths: ['/tmp/unmounted.txt'] });
+    expect(uploadPaths).toHaveBeenCalledTimes(1);
+  });
+  it('refreshes after a partial dropped upload and cleans up late listener registration', async () => {
+    let drop!: (event: FileDrop) => void;
+    const registration = deferred<() => void>();
+    const service = createDemoFileService();
+    const wrapper = mount(FileWorkspace, {
+      props: {
+        deviceId: 'a',
+        service: {
+          ...service,
+          listenDrop: (handler) => {
+            drop = handler;
+            return registration.promise;
+          },
+        },
+      },
+    });
+    vi.spyOn(wrapper.element, 'getBoundingClientRect').mockReturnValue({
+      left: 0,
+      right: 500,
+      top: 0,
+      bottom: 500,
+    } as DOMRect);
+    await flushPromises();
+    drop({
+      type: 'drop',
+      x: 20,
+      y: 20,
+      paths: ['/tmp/new.txt', '/tmp/notes.txt'],
+    });
+    await flushPromises();
+    expect(wrapper.text()).toContain('new.txt');
+    expect(wrapper.get('[role="alert"]').text()).toContain(
+      'Some changes may already have been applied',
+    );
+    expect(wrapper.text()).not.toContain('Upload completed.');
+    wrapper.unmount();
+    const stop = vi.fn();
+    registration.resolve(stop);
+    await flushPromises();
+    expect(stop).toHaveBeenCalledOnce();
+  });
   it('previews text as literal content and displays image decoding failures', async () => {
     const service = createDemoFileService();
     const preview = vi

@@ -2,6 +2,21 @@ use super::{application, domain::*, paths, transfers};
 use crate::features::adb::application::AdbService;
 use tauri_plugin_dialog::DialogExt;
 
+/// Upload dropped local sources under one lease of the selected device session.
+#[tauri::command]
+pub async fn upload_files(
+    service: tauri::State<'_, AdbService>,
+    device_id: String,
+    path: String,
+    sources: Vec<std::path::PathBuf>,
+) -> Result<(), FileError> {
+    service
+        .with_session(&device_id, move |session| {
+            Box::pin(async move { transfers::upload_many(session, &path, sources).await })
+        })
+        .await
+}
+
 #[tauri::command]
 pub async fn preview_file(
     service: tauri::State<'_, AdbService>,

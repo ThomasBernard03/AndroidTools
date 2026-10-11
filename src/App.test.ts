@@ -61,6 +61,7 @@ describe('Application composition', () => {
         expect(wrapper.get('main h2').text()).toBe(label);
         expect(wrapper.get('main').text().includes('Coming soon')).toBe(
           ![
+            'Logcat',
             'File explorer',
             'Generate keystore',
             'APK analysis',
@@ -97,6 +98,7 @@ describe('Application composition', () => {
         expect(wrapper.get('main h2').text()).toBe(button.text());
         expect(wrapper.get('main').text().includes('Coming soon')).toBe(
           ![
+            'Logcat',
             'File explorer',
             'Generate keystore',
             'APK analysis',

@@ -1,7 +1,7 @@
 {
   "$schema": "https://schema.tauri.app/config/2",
   "productName": "Android Tools",
-  "version": "2026.10.7",
+  "version": "2026.10.8",
   "identifier": "com.example.androidTools",
   "build": {
     "beforeDevCommand": "npm run dev",
@@ -33,7 +33,7 @@
     "active": false,
     "icon": ["icons/32x32.png", "icons/icon.icns"],
     "macOS": {
-      "bundleVersion": "43",
+      "bundleVersion": "44",
       "minimumSystemVersion": "10.13"
     }
   }

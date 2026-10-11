@@ -26,6 +26,14 @@ It is inspired by the explorer on `feature/rust`, adapted to the feature archite
 - Rename an entry within its current directory, create a folder, or permanently
   delete an entry. Folder deletion is recursive and requires confirmation.
 - Cancelling a native picker performs no transfer.
+- In the desktop app, drag one or more local files or folders into the explorer.
+  The highlighted workspace names the current Android destination. Dropping on a
+  folder row still uploads into the current folder; open the target folder first.
+  Drops outside the explorer, while loading/transferring/editing, after a listing
+  error, or in virtual package containers are ignored. Leaving the workspace
+  unregisters its native drop listener. If registration fails, use the upload buttons.
+  Drop coordinates account for display scaling. Browser demos do not receive native
+  filesystem drops.
 
 ## File previews
 
@@ -71,6 +79,9 @@ folders are retained on failure; an interrupted upload may leave an incomplete
 destination file. Failed downloads do not publish the incomplete file. The UI
 explicitly warns about partial effects and refreshes the listing. Recursive deletion
 can also be partial. Inspect the destination before retrying.
+Multiple dropped sources upload sequentially under one ADB session lease and stop
+at the first error. Earlier completed sources remain, and later sources are skipped.
+Each source uses the same recursive limits and no-replacement rules as picker uploads.
 
 File operations are serialized with Android-information requests on one ADB session.
 The UI locks file actions while an operation or picker is pending. Switching devices
@@ -143,3 +154,8 @@ staging cleanup after upload failure, UI confirmation, cancellation and device s
 7. Preview XML/JSON and PNG/JPEG/WebP in shared storage and debug app data. Check empty,
    oversized, binary and damaged files, denied reads, and disconnection during a read.
    Switch devices or folders while loading and verify stale content never appears.
+8. Drop several local files and a nested folder into an opened Android folder,
+   including on a scaled/Retina display. Verify highlighting, destination, contents
+   and automatic refresh. Drop outside the explorer and while it is busy; verify
+   no transfer starts. Navigate away and back and verify drops are handled once.
+   Repeat with an existing destination, a disconnected device and debug app data.

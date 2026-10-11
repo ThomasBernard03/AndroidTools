@@ -1,4 +1,6 @@
 import { createApp } from 'vue';
+import { createTauriLogcatService } from './features/logcat/infrastructure/tauriLogcatService';
+import { createDemoLogcatService } from './features/logcat/infrastructure/demoLogcatService';
 import { createTauriScreenshotService } from './features/adb/infrastructure/tauriScreenshotService';
 import { createDemoScreenshotService } from './features/adb/infrastructure/demoScreenshotService';
 import { createTauriFileService } from './features/files/infrastructure/tauriFileService';
@@ -28,6 +30,9 @@ import {
 } from './features/devices/domain/devices';
 
 const scenario = new URLSearchParams(window.location.search).get('demo');
+const logcatScenario = new URLSearchParams(window.location.search).get(
+  'logcat',
+);
 const demo =
   import.meta.env.DEV &&
   (scenario === 'devices' || scenario === 'empty' || scenario === 'error');
@@ -61,6 +66,15 @@ const apkService = demo
     ? createTauriApkService()
     : undefined;
 const app = createApp(App, {
+  logcatService: demo
+    ? createDemoLogcatService(
+        scenario === 'error',
+        logcatScenario === 'large' ? 20000 : 0,
+        logcatScenario === 'repeats' ? 3 : 1,
+      )
+    : isTauri()
+      ? createTauriLogcatService()
+      : undefined,
   screenshotService: demo
     ? createDemoScreenshotService()
     : isTauri()
