@@ -4,6 +4,17 @@ All notable changes to Android Tools will be documented in this file.
 
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 
+## [2026.10.8] - 2026-10-11
+
+### New Features
+- Add a Logcat workspace that replays available device logs and streams new messages, with minimum-level and package filters, consecutive repeat grouping, full-history search and live follow
+- Keep Logcat session history on temporary disk storage with a virtualized viewport for large captures, plus refresh and clear device logs actions
+- Upload files to the current device folder by dragging and dropping them into the file explorer
+
+### Improvements
+- Allow maximizing the application window by double-clicking the app bar
+- Populate GitHub release notes from the matching changelog section, with validation for missing, empty or duplicate entries
+
 ## [2026.10.7] - 2026-10-08
 
 ### New Features
