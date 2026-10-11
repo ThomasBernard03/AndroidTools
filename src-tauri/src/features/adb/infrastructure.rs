@@ -177,6 +177,40 @@ impl AdbConnector for UsbAdbConnector {
 struct NativeSession(Device<Session>);
 
 impl AdbSession for NativeSession {
+    fn stream_shell<'a>(
+        &'a self,
+        command: &'a str,
+    ) -> AdbFuture<'a, Box<dyn super::domain::AdbStream>> {
+        use rsadb::channel::{Channel, Connection};
+        use rsadb::services::shell_v2::{self, FrameId};
+        Box::pin(async move {
+            tokio::time::timeout(Duration::from_secs(10), async {
+                if !self.0.has_feature("shell_v2").await.map_err(map_error)? {
+                    return Err(AdbError::new(
+                        AdbErrorCode::Unsupported,
+                        "Logcat requires Android shell v2 (Android 7 or later).",
+                    ));
+                }
+                let mut channel = self
+                    .0
+                    .connection()
+                    .open(&format!("shell,v2,raw:{command}"))
+                    .await
+                    .map_err(map_error)?;
+                channel
+                    .send(shell_v2::encode(FrameId::CloseStdin, &[]).map_err(map_error)?)
+                    .await
+                    .map_err(map_error)?;
+                Ok(Box::new(NativeStream {
+                    channel,
+                    parser: shell_v2::Parser::default(),
+                    ended: false,
+                }) as Box<dyn super::domain::AdbStream>)
+            })
+            .await
+            .map_err(|_| timeout_error())?
+        })
+    }
     fn file_shell<'a>(
         &'a self,
         command: &'a str,
@@ -232,6 +266,55 @@ impl AdbSession for NativeSession {
                 ));
             }
             Ok(output.stdout_text())
+        })
+    }
+}
+
+struct NativeStream<C> {
+    channel: C,
+    parser: rsadb::services::shell_v2::Parser,
+    ended: bool,
+}
+
+impl<C: rsadb::channel::Channel> super::domain::AdbStream for NativeStream<C> {
+    fn next(&mut self) -> AdbFuture<'_, Vec<u8>> {
+        use rsadb::services::shell_v2::FrameId;
+        Box::pin(async move {
+            if self.ended {
+                return Err(AdbError::new(
+                    AdbErrorCode::Disconnected,
+                    "Logcat stopped. Refresh to reconnect.",
+                ));
+            }
+            let chunk = self
+                .channel
+                .recv()
+                .await
+                .map_err(map_error)?
+                .ok_or_else(|| {
+                    AdbError::new(
+                        AdbErrorCode::Disconnected,
+                        "The Logcat stream closed. Check the device and refresh.",
+                    )
+                })?;
+            let mut output = Vec::new();
+            for frame in self.parser.push(&chunk).map_err(map_error)? {
+                match frame.id {
+                    FrameId::Stdout => output.extend_from_slice(&frame.data),
+                    FrameId::Stderr if !frame.data.is_empty() => {
+                        return Err(AdbError::new(
+                            AdbErrorCode::ReadFailed,
+                            format!(
+                                "Logcat: {}",
+                                String::from_utf8_lossy(&frame.data[..frame.data.len().min(4096)])
+                            ),
+                        ));
+                    }
+                    FrameId::Exit => self.ended = true,
+                    _ => {}
+                }
+            }
+            Ok(output)
         })
     }
 }

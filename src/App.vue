@@ -1,5 +1,7 @@
 <script setup lang="ts">
 import FileWorkspace from './features/files/presentation/FileWorkspace.vue';
+import LogcatWorkspace from './features/logcat/presentation/LogcatWorkspace.vue';
+import type { LogcatService } from './features/logcat/domain/logcat';
 import type { FileService } from './features/files/domain/files';
 import DevicePicker from './features/devices/presentation/DevicePicker.vue';
 import SettingsWorkspace from './features/settings/presentation/SettingsWorkspace.vue';
@@ -40,6 +42,7 @@ const props = defineProps<{
   signingService?: SigningService;
   settingsService?: SettingsService;
   fileService?: FileService;
+  logcatService?: LogcatService;
   demo?: boolean;
   macosWindowControls?: boolean;
 }>();
@@ -160,6 +163,7 @@ const { state: adbState, refresh: refreshAdb } = useAdb(
           v-if="
             currentPage.id !== 'overview' &&
             currentPage.id !== 'files' &&
+            currentPage.id !== 'logcat' &&
             currentPage.id !== 'apk-analysis' &&
             currentPage.id !== 'generate-keystore' &&
             currentPage.id !== 'keystore-explorer' &&
@@ -167,6 +171,13 @@ const { state: adbState, refresh: refreshAdb } = useAdb(
             currentPage.id !== 'settings'
           "
           :page="currentPage"
+        />
+        <LogcatWorkspace
+          v-if="currentPage.id === 'logcat'"
+          :device-id="selectedDevice?.id ?? null"
+          :adb-connected="adbState.status === 'connected'"
+          :service="logcatService"
+          :demo="demo"
         />
         <SettingsWorkspace
           v-if="currentPage.id === 'settings'"

@@ -252,14 +252,21 @@ button:where(.border, .bg-primary, .keystore-button):not(
 
 input:where(:not([type='checkbox'], [type='radio'])),
 textarea,
-button[role='combobox'] {
+button[role='combobox'],
+.select-field-searchable {
   background: white;
   border-color: #7f9db9;
   box-shadow: inset 1px 1px 2px #00000012;
   border-radius: 0;
 }
 
-button[role='combobox'] > svg {
+.select-field-searchable input {
+  background: transparent;
+  box-shadow: none;
+}
+
+button[role='combobox'] > svg,
+.select-field-searchable > button > svg {
   box-sizing: content-box;
   padding: 3px;
   border: 1px solid #91abd0;

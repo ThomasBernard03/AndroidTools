@@ -53,6 +53,15 @@ impl AdbError {
 pub type AdbFuture<'a, T> = Pin<Box<dyn Future<Output = Result<T, AdbError>> + Send + 'a>>;
 
 pub trait AdbSession: Send + Sync {
+    /// Opens an owned live stdout stream without holding the shared session lock.
+    fn stream_shell<'a>(&'a self, _command: &'a str) -> AdbFuture<'a, Box<dyn AdbStream>> {
+        Box::pin(async {
+            Err(AdbError::new(
+                AdbErrorCode::Unsupported,
+                "Live shell streams are unavailable.",
+            ))
+        })
+    }
     /// Executes the read-only information commands chosen by the application service.
     fn shell<'a>(&'a self, command: &'a str) -> AdbFuture<'a, String>;
 
@@ -80,6 +89,12 @@ pub trait AdbSession: Send + Sync {
             ))
         })
     }
+}
+
+/// A cancellable live shell stream. Dropping it closes its remote ADB channel.
+pub trait AdbStream: Send {
+    /// Returns stdout bytes; quiet streams may wait indefinitely. Cancellation is safe.
+    fn next(&mut self) -> AdbFuture<'_, Vec<u8>>;
 }
 
 /// Binary-safe shell result. Nonzero remote exits are distinct from transport failures.

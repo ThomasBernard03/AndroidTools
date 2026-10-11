@@ -23,6 +23,7 @@ pub fn run() {
         .plugin(tauri_plugin_clipboard_manager::init())
         .plugin(tauri_plugin_opener::init())
         .manage(DeviceService::new(UsbDeviceRepository))
+        .manage(features::logcat::application::LogcatService::default())
         .setup(|app| {
             app.manage(logging::start(&app.path().app_log_dir()?)?);
             log::info!("Application started version={}", app.package_info().version);
@@ -36,6 +37,14 @@ pub fn run() {
             Ok(())
         })
         .invoke_handler(tauri::generate_handler![
+            features::logcat::commands::start_logcat,
+            features::logcat::commands::read_logcat,
+            features::logcat::commands::page_logcat,
+            features::logcat::commands::search_logcat,
+            features::logcat::commands::stop_logcat,
+            features::logcat::commands::pause_logcat,
+            features::logcat::commands::list_logcat_packages,
+            features::logcat::commands::clear_logcat,
             features::files::commands::list_files,
             features::files::commands::preview_file,
             features::files::commands::mutate_file,

@@ -18,10 +18,20 @@ const props = defineProps<{
   disabled?: boolean;
   hideLabel?: boolean;
   describedBy?: string;
+  searchable?: boolean;
 }>();
 const emit = defineEmits<{ 'update:modelValue': [value: T] }>();
 const root = ref<HTMLElement>();
 const trigger = ref<HTMLButtonElement>();
+const searchInput = ref<HTMLInputElement>();
+const filter = ref('');
+const displayedOptions = computed(() =>
+  props.searchable && filter.value
+    ? props.options.filter((option) =>
+        option.label.toLowerCase().includes(filter.value.toLowerCase()),
+      )
+    : props.options,
+);
 const open = ref(false);
 const active = ref(0);
 const selected = computed(() =>
@@ -33,17 +43,20 @@ let lastTypedAt = 0;
 function close() {
   open.value = false;
   search = '';
+  filter.value = '';
 }
 function show() {
-  if (props.disabled || !props.options.length) return;
+  if (open.value || props.disabled || !props.options.length) return;
   active.value = Math.max(
     0,
-    props.options.findIndex((option) => option.value === props.modelValue),
+    displayedOptions.value.findIndex(
+      (option) => option.value === props.modelValue,
+    ),
   );
   open.value = true;
 }
 function choose(index: number) {
-  const option = props.options[index];
+  const option = displayedOptions.value[index];
   if (props.disabled || !option) return;
   emit('update:modelValue', option.value);
   close();
@@ -51,6 +64,7 @@ function choose(index: number) {
 }
 function onKeydown(event: KeyboardEvent) {
   if (props.disabled) return;
+  if (props.searchable && [' ', 'Home', 'End'].includes(event.key)) return;
   if (event.key === 'Tab') {
     close();
     return;
@@ -70,19 +84,21 @@ function onKeydown(event: KeyboardEvent) {
     if (!open.value) {
       show();
       if (event.key === 'Home') active.value = 0;
-      if (event.key === 'End') active.value = props.options.length - 1;
+      if (event.key === 'End') active.value = displayedOptions.value.length - 1;
     } else if (event.key === 'Enter' || event.key === ' ') choose(active.value);
     else if (event.key === 'Home') active.value = 0;
-    else if (event.key === 'End') active.value = props.options.length - 1;
+    else if (event.key === 'End')
+      active.value = displayedOptions.value.length - 1;
     else
       active.value = Math.max(
         0,
         Math.min(
-          props.options.length - 1,
+          displayedOptions.value.length - 1,
           active.value + (event.key === 'ArrowDown' ? 1 : -1),
         ),
       );
   } else if (
+    !props.searchable &&
     event.key.length === 1 &&
     !event.ctrlKey &&
     !event.metaKey &&
@@ -99,6 +115,13 @@ function onKeydown(event: KeyboardEvent) {
     if (index >= 0) active.value = index;
   }
 }
+function onSearch(event: Event) {
+  show();
+  filter.value = (event.target as HTMLInputElement).value;
+}
+watch(filter, () => {
+  active.value = 0;
+});
 function onOutsidePointer(event: PointerEvent) {
   if (event.target instanceof Node && !root.value?.contains(event.target))
     close();
@@ -139,6 +162,7 @@ onDeactivated(close);
       >{{ label }}</label
     >
     <button
+      v-if="!searchable"
       :id="id"
       ref="trigger"
       type="button"
@@ -162,6 +186,49 @@ onDeactivated(close);
       }}</span>
       <AppIcon name="chevron" class="size-4 shrink-0 text-muted" />
     </button>
+    <div
+      v-else
+      class="select-field-searchable flex w-full items-center rounded-lg border bg-canvas text-sm transition-colors motion-reduce:transition-none"
+      :class="[
+        open ? 'border-primary/60' : 'border-stroke hover:border-primary/40',
+        { 'opacity-50': disabled },
+      ]"
+    >
+      <input
+        :id="id"
+        ref="searchInput"
+        role="combobox"
+        type="text"
+        :value="open ? filter : (selected?.label ?? '')"
+        :placeholder="selected?.label ?? 'Search options…'"
+        :aria-labelledby="`${id}-label`"
+        :aria-describedby="describedBy"
+        aria-autocomplete="list"
+        aria-haspopup="listbox"
+        :aria-expanded="open"
+        :aria-controls="`${id}-listbox`"
+        :aria-activedescendant="
+          open && displayedOptions.length ? `${id}-option-${active}` : undefined
+        "
+        :disabled="disabled"
+        autocomplete="off"
+        class="min-w-0 flex-1 border-0 bg-transparent px-3 py-2.5 text-sm"
+        @focus="show"
+        @click="show"
+        @input="onSearch"
+        @keydown="onKeydown"
+      />
+      <button
+        type="button"
+        :disabled="disabled"
+        :aria-label="`Show ${label.toLowerCase()} options`"
+        class="shrink-0 px-3 py-2.5"
+        @mousedown.prevent
+        @click="open ? close() : (searchInput?.focus(), show())"
+      >
+        <AppIcon name="chevron" class="size-4 text-muted" />
+      </button>
+    </div>
     <ul
       v-if="open"
       :id="`${id}-listbox`"
@@ -170,7 +237,7 @@ onDeactivated(close);
       class="absolute top-full z-30 mt-2 max-h-60 w-full overflow-y-auto rounded-xl border border-stroke bg-surface-raised p-1.5 shadow-xl shadow-black/30"
     >
       <li
-        v-for="(option, index) in options"
+        v-for="(option, index) in displayedOptions"
         :id="`${id}-option-${index}`"
         :key="option.value"
         role="option"
@@ -194,6 +261,13 @@ onDeactivated(close);
           name="check"
           class="size-4 shrink-0 text-primary"
         />
+      </li>
+      <li
+        v-if="!displayedOptions.length"
+        role="presentation"
+        class="px-3 py-2.5 text-sm text-muted"
+      >
+        No matching options
       </li>
     </ul>
   </div>
