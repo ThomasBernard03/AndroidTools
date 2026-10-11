@@ -1,7 +1,7 @@
 # macOS build and release
 
 `.github/workflows/release.yml` preserves the Flutter distribution contract:
-push to `main`, a draft GitHub release with generated notes, a universal macOS
+push to `main`, a draft GitHub release with notes from `CHANGELOG.md`, a universal macOS
 application, an ad-hoc signature, the historical DMG layout, Sentry native symbols,
 a Sparkle-signed download, and the existing public appcast. Development branches
 never publish. Manual dispatch is also restricted to `main`.
@@ -19,7 +19,11 @@ XML using Node.js. No Python release script is required.
    Sparkle's independent, strictly increasing integer build number, formerly the
    `+35` suffix in Flutter's `pubspec.yaml`. The first release from this rewrite is
    `2026.10.3`, build `39`, following build `38` in the preserved appcast.
-3. Update `CHANGELOG.md`. Sparkle's release-notes link points to the matching
+3. Update `CHANGELOG.md` with a `## [2026.06.1] - YYYY-MM-DD` section matching
+   the zero-padded release tag. Its body becomes the GitHub release description,
+   preserving Markdown headings and lists up to the next level-two heading.
+   Missing, empty or duplicate sections fail preparation before draft creation.
+   Sparkle's release-notes link points to the matching
    GitHub release page (`releases/tag/<version>`).
 4. Merge to `main`. Quality checks and the release pipeline run automatically.
 
@@ -79,7 +83,9 @@ https://raw.githubusercontent.com/ThomasBernard03/AndroidTools/refs/heads/main/a
    prevents clients from seeing an update whose file is still private.
 
 Only one release workflow runs at a time. A failed build leaves a draft. Rerun the
-same workflow to retry it. If publication succeeds but the appcast push fails,
+same workflow to retry it; the draft notes are refreshed from that commit's changelog.
+Already published release notes are retained during recovery.
+If publication succeeds but the appcast push fails,
 rerunning **all jobs of that run** downloads the already-published DMG and repairs
 the feed without rebuilding or replacing the public artifact. A release from a
 different commit cannot be overwritten. If `main` has moved during the final push,

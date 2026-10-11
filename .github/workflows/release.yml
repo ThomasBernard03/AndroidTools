@@ -51,18 +51,20 @@ jobs:
           VERSION: ${{ steps.version.outputs.version }}
           RELEASE_COMMIT: ${{ github.sha }}
         run: |
+          node scripts/release.mjs notes > "$RUNNER_TEMP/release-notes.md"
           gh release list --limit 1000 --json tagName,isDraft > "$RUNNER_TEMP/releases.json"
           EXISTING=$(jq --arg tag "$VERSION" '.[] | select(.tagName == $tag)' "$RUNNER_TEMP/releases.json")
           if [ -n "$EXISTING" ]; then
             if [ "$(jq -r '.isDraft' <<< "$EXISTING")" = true ]; then
               test "$(gh release view "$VERSION" --json targetCommitish --jq .targetCommitish)" = "$RELEASE_COMMIT"
+              gh release edit "$VERSION" --notes-file "$RUNNER_TEMP/release-notes.md"
             else
               git fetch origin "refs/tags/$VERSION:refs/tags/$VERSION"
               test "$(git rev-parse "$VERSION^{commit}")" = "$RELEASE_COMMIT"
             fi
             echo "published=$(jq -r '.isDraft | not' <<< "$EXISTING")" >> "$GITHUB_OUTPUT"
           else
-            gh release create "$VERSION" --target "$RELEASE_COMMIT" --title "$VERSION" --draft --generate-notes
+            gh release create "$VERSION" --target "$RELEASE_COMMIT" --title "$VERSION" --draft --notes-file "$RUNNER_TEMP/release-notes.md"
             echo 'published=false' >> "$GITHUB_OUTPUT"
           fi
 
