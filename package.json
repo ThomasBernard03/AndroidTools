@@ -1,6 +1,6 @@
 {
   "name": "android-tools",
-  "version": "2026.10.8",
+  "version": "2026.10.9",
   "private": true,
   "type": "module",
   "engines": {
@@ -14,7 +14,7 @@
     "typecheck": "vue-tsc --noEmit",
     "test": "vitest run",
     "test:watch": "vitest",
-    "test:release": "node --test scripts/release.test.mjs",
+    "test:release": "node --test scripts/release.test.mjs scripts/windows-release.test.mjs",
     "test:e2e": "playwright test",
     "lint": "eslint . --max-warnings 0",
     "format": "prettier --write .",

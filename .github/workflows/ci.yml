@@ -26,6 +26,55 @@ jobs:
       - run: npx playwright install --with-deps chromium
       - run: npm run test:e2e
 
+  windows:
+    name: Rust / Windows x64
+    runs-on: windows-latest
+    defaults:
+      run:
+        shell: pwsh
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version-file: .nvmrc
+          cache: npm
+      - name: Prepare native build tools
+        run: |
+          choco install strawberryperl --yes --no-progress
+          if ($LASTEXITCODE -ne 0) { exit $LASTEXITCODE }
+          'C:\Strawberry\perl\bin' >> $env:GITHUB_PATH
+          rustup show
+      - uses: Swatinem/rust-cache@v2
+        with:
+          workspaces: src-tauri
+      - run: npm ci
+      - run: npm run check
+      - run: npm run check:rust
+      - name: Check the Windows updater
+        run: |
+          cargo clippy --manifest-path src-tauri/Cargo.toml --features windows-updater --all-targets --locked -- -D warnings
+          if ($LASTEXITCODE -ne 0) { exit $LASTEXITCODE }
+          cargo test --manifest-path src-tauri/Cargo.toml --features windows-updater --locked
+      - name: Generate a temporary CI signing identity
+        run: |
+          node node_modules/@tauri-apps/cli/tauri.js signer generate --ci -w "$env:RUNNER_TEMP/updater.key"
+          if ($LASTEXITCODE -ne 0) { exit $LASTEXITCODE }
+          $key = (Get-Content "$env:RUNNER_TEMP/updater.key.pub" -Raw).Trim()
+          "TAURI_UPDATER_PUBLIC_KEY=$key" >> $env:GITHUB_ENV
+          "TAURI_SIGNING_PRIVATE_KEY=$env:RUNNER_TEMP/updater.key" >> $env:GITHUB_ENV
+      - name: Build and verify the signed NSIS installer
+        env:
+          TAURI_SIGNING_PRIVATE_KEY_PASSWORD: ''
+        run: |
+          node scripts/windows-release.mjs configure "$env:RUNNER_TEMP/windows-release.json"
+          if ($LASTEXITCODE -ne 0) { exit $LASTEXITCODE }
+          npm run tauri build -- --features windows-updater --config "$env:RUNNER_TEMP/windows-release.json" -- --locked
+          if ($LASTEXITCODE -ne 0) { exit $LASTEXITCODE }
+          node scripts/windows-release.mjs metadata
+      - name: Remove the temporary private key
+        if: always()
+        run: Remove-Item "$env:RUNNER_TEMP/updater.key" -ErrorAction SilentlyContinue
+
   desktop:
     name: Rust / macOS
     # Tauri links against the host platform's native webview and SDK.

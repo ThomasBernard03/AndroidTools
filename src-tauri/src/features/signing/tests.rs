@@ -12,9 +12,10 @@ use std::{
 use zip::{ZipArchive, ZipWriter, write::SimpleFileOptions};
 
 fn request() -> SignRequest {
+    let directory = std::env::temp_dir();
     SignRequest {
-        apk_path: "/input/my.app.APK".into(),
-        keystore_path: "/keys/upload.jks".into(),
+        apk_path: directory.join("my.app.APK").to_string_lossy().into_owned(),
+        keystore_path: directory.join("upload.jks").to_string_lossy().into_owned(),
         alias: "upload".into(),
         password: "password".into(),
         key_password: String::new(),
@@ -50,6 +51,10 @@ impl Drop for FakeArtifact {
 
 #[test]
 fn signs_before_dialog_and_cleans_up_after_save_or_cancel() {
+    let destination = std::env::temp_dir()
+        .join("my.app-signed.apk")
+        .to_string_lossy()
+        .into_owned();
     for cancel in [true, false] {
         let events = Rc::new(RefCell::new(vec![]));
         let signer = FakeSigner {
@@ -62,7 +67,7 @@ fn signs_before_dialog_and_cleans_up_after_save_or_cancel() {
             Ok(if cancel {
                 None
             } else {
-                Some("/output/my.app-signed.apk".into())
+                Some(destination.clone())
             })
         })
         .expect("workflow");
@@ -70,7 +75,7 @@ fn signs_before_dialog_and_cleans_up_after_save_or_cancel() {
         let expected = if cancel {
             vec!["sign", "dialog", "cleanup"]
         } else {
-            vec!["sign", "dialog", "/output/my.app-signed.apk", "cleanup"]
+            vec!["sign", "dialog", destination.as_str(), "cleanup"]
         };
         assert_eq!(*events.borrow(), expected);
     }
@@ -84,6 +89,7 @@ fn invalid_input_and_signing_failures_never_open_the_dialog() {
         fail: true,
     };
     assert!(sign_and_save(&request(), &signer, |_| panic!("No dialog on failure")).is_err());
+    assert_eq!(*events.borrow(), vec!["sign"]);
     events.borrow_mut().clear();
     let mut input = request();
     input.password.clear();

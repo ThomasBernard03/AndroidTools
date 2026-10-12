@@ -13,7 +13,11 @@ pub enum ErrorCode {
     StorageFailed,
     OpenFailed,
     UpdaterUnavailable,
-    #[cfg(all(target_os = "macos", feature = "macos-updater"))]
+    #[cfg(any(
+        test,
+        all(target_os = "macos", feature = "macos-updater"),
+        all(windows, feature = "windows-updater")
+    ))]
     UpdateFailed,
 }
 

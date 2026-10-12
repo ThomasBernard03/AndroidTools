@@ -94,7 +94,7 @@ async function checkUpdates() {
     await props.service.checkForUpdates();
     notice.value = props.demo
       ? 'Demo: checking for updates was simulated.'
-      : 'The update check was handed to Sparkle. Follow its native dialog.';
+      : 'Update check requested. Follow the native update dialogs.';
   } catch (value) {
     showError(value);
   } finally {
@@ -277,10 +277,10 @@ onMounted(load);
       </div>
       <div class="flex flex-wrap items-center justify-between gap-4 p-5">
         <div>
-          <p class="text-sm font-medium">Sparkle updates</p>
+          <p class="text-sm font-medium">Application updates</p>
           <p class="mt-1 text-sm text-muted">
-            Installed macOS releases check automatically and verify signed
-            updates.
+            Installed Windows and macOS releases check automatically and verify
+            signed updates.
           </p>
         </div>
         <button
