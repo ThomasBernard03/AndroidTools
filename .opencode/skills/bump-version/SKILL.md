@@ -39,12 +39,15 @@ Add the new release section immediately before the current newest release in `CH
 ## [YYYY.MM.PATCH] - YYYY-MM-DD
 
 ### New Features
+
 - ...
 
 ### Improvements
+
 - ...
 
 ### Fixes
+
 - ...
 ```
 
