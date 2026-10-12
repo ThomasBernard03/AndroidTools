@@ -49,10 +49,13 @@ App selection -> useAdb -> AdbService interface -> validated Tauri IPC
 
 Before each new connection, the adapter sends `host:kill` to `127.0.0.1:5037`
 using the ADB smart socket protocol and waits for the shutdown connection to close.
-This runs on a blocking worker with two-second socket timeouts, without launching
+This runs on a blocking worker with a five-second connection timeout and two-second
+read/write timeouts, without launching
 an external executable. An absent server is normal; a rejected request or timeout
 produces a USB access error. Logs record whether a server was stopped. Refreshing
 an existing session does not repeat this step.
+The connection timeout accommodates Windows taking just over two seconds to report
+a refused loopback connection when no server is listening.
 
 The adapter then re-enumerates discovery devices and resolves the
 requested connection ID. It requires a non-null serial unique among devices with

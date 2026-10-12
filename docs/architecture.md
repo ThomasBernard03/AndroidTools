@@ -100,8 +100,11 @@ gate immediately. Local diagnostics use `log` and `flexi_logger` with asynchrono
 file writes, size-based rotation and bounded retention. Native command boundaries
 record operation outcomes; a narrow frontend adapter forwards fixed error events.
 Settings opens the same native log directory. See [Local logs](features/logging.md).
-Release builds register the optional Sparkle plugin. A settings command delegates
-manual checks to its native UI; ordinary development builds report unavailability.
+Release builds register the optional Sparkle plugin on macOS and the Tauri updater
+on Windows. A settings command delegates manual checks to the platform adapter;
+ordinary development builds report unavailability. The Windows update use case
+injects discovery, confirmation and signed installation through Rust traits.
+A single native gate prevents startup and manual checks from overlapping.
 The historical bundle identity, public key and feed are retained. See
 [Build and release](releases.md).
 See [Settings](features/settings.md).
@@ -180,6 +183,9 @@ rather than duplicate implementation details.
 - Formatting, lint, builds and tests run in CI without a phone.
 - macOS distribution uses a universal Tauri bundle, ad-hoc signing and the existing
   Sparkle feed. Quality CI verifies the release bundle; only `main` publishes.
+- Windows x64 distribution uses a per-user NSIS installer and Tauri-signed updates.
+  CI builds with an ephemeral signing identity; publication uses a persistent key
+  and waits for both desktop platforms before publishing the shared release.
 
 ## 5. Feature definition of done
 

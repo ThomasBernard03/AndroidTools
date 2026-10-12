@@ -15,6 +15,9 @@ src-tauri/Sparkle.framework/
 src-tauri/sparkle-tools/
 release-metadata.json
 AndroidTools-*-macos.dmg
+AndroidTools-*-windows-x64-setup.exe
+AndroidTools-*-windows-x64-setup.exe.sig
+latest.json
 
 # Test reports
 coverage/

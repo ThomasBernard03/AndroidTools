@@ -12,7 +12,12 @@ sidebar. It works without a device and preserves the selected device/ADB session
   no arbitrary path is accepted over IPC. See [Local logs](logging.md).
 - **Check for updates** opens Sparkle's native UI in installed macOS releases.
   Sparkle also checks automatically, verifies downloads and handles installation.
-  Other platforms and unbundled development builds report unavailability rather
+  Windows releases use the Tauri updater at startup and for manual checks, with a
+  native confirmation before downloading and installing. Startup checks stay quiet
+  when current or offline; manual errors appear inline and can be retried. A manual
+  check with no newer release shows an up-to-date dialog. Checks cannot overlap.
+  The signed installer closes the app and handles installation/relaunch; complete
+  device operations before accepting. Other platforms and ordinary development builds report unavailability rather
   than pretending the application is up to date. See [Build and release](../releases.md).
 - **Sentry crash reporting** saves a preference, initially off, in `settings.json`
   inside Tauri's application configuration directory. Writes atomically replace
@@ -68,7 +73,10 @@ adapter and injectable event sender. No new plugin permission is needed.
 Development demos keep preferences in memory and simulate GitHub, folder and update actions. The
 `error` scenario reports deterministic failures. Unit tests cover persistence,
 corruption, write failures, IPC validation, navigation, pending operations, retry
-and both link actions. Run `npm run check` and `npm run check:rust`.
+and both link actions. Injected updater tests cover startup/manual behavior,
+cancellation and discovery/installation failures without contacting a feed or
+launching an installer. Run `npm run check` and `npm run check:rust`; on Windows
+also run Cargo checks with `--features windows-updater` as described in the release guide.
 Reporting tests use an in-memory Sentry transport and an injected IPC sender; no
 Sentry project or network connection is required. They cover opt-in/out on both
 stacks, restart, failed saves, corrupted settings, invalid payloads and Vue capture.
@@ -82,7 +90,7 @@ Desktop checks (no phone required):
 3. Open both GitHub actions and verify the default browser reaches the expected
    repository and new issue pages.
 4. Open the logs folder and verify it contains the active application log. In an
-   installed release, check that **Check for updates** opens Sparkle's dialog;
+   installed release, check that **Check for updates** opens the platform update dialog;
    in an ordinary development build, confirm the explicit unavailable error.
 5. In a desktop development build with a test DSN, enable reporting and trigger
    an unhandled error in the webview inspector (for example,

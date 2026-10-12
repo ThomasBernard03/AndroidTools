@@ -17,6 +17,8 @@ pub fn run() {
     let builder = tauri::Builder::default();
     #[cfg(all(target_os = "macos", feature = "macos-updater"))]
     let builder = builder.plugin(tauri_plugin_sparkle_updater::init());
+    #[cfg(all(windows, feature = "windows-updater"))]
+    let builder = builder.plugin(tauri_plugin_updater::Builder::new().build());
 
     builder
         .plugin(tauri_plugin_dialog::init())
@@ -34,6 +36,17 @@ pub fn run() {
             app.manage(AdbService::new(UsbAdbConnector::new(
                 app.path().app_data_dir()?.join("adb"),
             )));
+            #[cfg(all(windows, feature = "windows-updater"))]
+            {
+                let handle = app.handle().clone();
+                tauri::async_runtime::spawn(async move {
+                    let _ = logging::observe(
+                        "startup_update_check",
+                        features::settings::windows_updater::check(handle, false),
+                    )
+                    .await;
+                });
+            }
             Ok(())
         })
         .invoke_handler(tauri::generate_handler![

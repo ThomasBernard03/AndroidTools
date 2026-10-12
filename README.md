@@ -14,7 +14,14 @@ without a phone.
   and components used locally and in CI.
 - On macOS: Xcode or the Command Line Tools (`xcode-select --install`).
 - On Windows/Linux: install the [Tauri prerequisites](https://v2.tauri.app/start/prerequisites/).
-  Native CI and release packaging target macOS (Intel and Apple Silicon).
+  On Windows, use the MSVC Rust toolchain, Visual Studio Build Tools with
+  **Desktop development with C++**, the Windows SDK, WebView2 and Strawberry Perl
+  (`perl` must be on PATH for vendored OpenSSL). Native CI and release packaging
+  target Windows x64 and macOS (Intel and Apple Silicon).
+
+Git keeps text files in LF format through `.gitattributes`, including on Windows,
+so Prettier receives the same input on every platform. Existing checkouts can run
+`npm run format` after adopting the attributes.
 
 ## Install and run
 
@@ -239,8 +246,9 @@ an issue and control Sentry error reporting. The preference survives restarts an
 applies immediately to Vue errors and Rust panics. Supply `SENTRY_DSN` when building
 the desktop application to enable delivery; reporting defaults to off.
 **Open logs folder** opens local diagnostic files, rotated at 5 MiB with 5 archives
-retained. Local logs work independently of Sentry. Installed macOS releases use
-Sparkle for automatic checks and **Check for updates**.
+retained. Local logs work independently of Sentry. Installed releases use Sparkle
+on macOS and the Tauri updater on Windows for automatic checks and
+**Check for updates**. Windows asks before downloading and installing an update.
 See [Settings](docs/features/settings.md) and [Local logs](docs/features/logging.md).
 
 ## Quality checks
@@ -277,9 +285,11 @@ npm run tauri build -- --no-bundle
 ```
 
 The binary is written to `src-tauri/target/release/`. Normal development does not
-require Sparkle or generate installers. Pushes to `main` build and publish a
-universal, ad-hoc-signed macOS DMG, upload native symbols to Sentry when configured,
-and update the existing Sparkle appcast. See [Build and release](docs/releases.md)
+require an updater or generate installers. On Windows the executable is
+`src-tauri/target/release/android-tools.exe`. Pushes to `main` build and publish a
+universal, ad-hoc-signed macOS DMG and a Windows x64 NSIS installer, upload macOS
+native symbols to Sentry when configured, and publish the platform update feeds.
+See [Build and release](docs/releases.md)
 for versioning, secrets, local bundle checks and retry behavior.
 
 The application icon is reused from the Flutter application on `main`
@@ -293,7 +303,7 @@ squircle. Regenerate the runtime icons with:
 npm run tauri icon -- src-tauri/icons/app-icon.png --output src-tauri/icons
 ```
 
-Keep only `32x32.png` and `icon.icns` from the generated output and remove the
+Keep `32x32.png`, `icon.icns` and `icon.ico` from the generated output and remove the
 other platform files.
 
 ## Project layout
@@ -323,8 +333,9 @@ written in English, as specified in [AGENTS.md](AGENTS.md).
 `package-lock.json` and `src-tauri/Cargo.lock` are versioned for reproducible
 dependency installation. The existing `appcast/`, `appcast.xml` and `CHANGELOG.md`
 preserve Flutter release history and continue to support macOS distribution.
-Quality CI checks the frontend on Linux and Rust plus the universal release bundle
-on macOS. The separate release workflow publishes only from `main`.
+Quality CI checks the frontend on Linux, Rust plus the universal release bundle
+on macOS, and Rust plus a test-signed NSIS installer on Windows. The separate
+release workflow publishes only from `main`.
 
 ## Tooling choices
 

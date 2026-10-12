@@ -41,7 +41,9 @@ pub(super) async fn stop_local_server() -> Result<(), AdbError> {
 }
 
 fn stop_server(address: SocketAddr, timeout: Duration) -> io::Result<bool> {
-    let mut stream = match TcpStream::connect_timeout(&address, timeout) {
+    // Windows can take just over two seconds to report a refused loopback connection.
+    // Allow that refusal to arrive so an absent server does not prevent USB access.
+    let mut stream = match TcpStream::connect_timeout(&address, Duration::from_secs(5)) {
         Ok(stream) => stream,
         Err(error) if error.kind() == io::ErrorKind::ConnectionRefused => return Ok(false),
         Err(error) => return Err(error),

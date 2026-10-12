@@ -10,7 +10,7 @@ permissions:
   contents: write
 
 concurrency:
-  group: release-macos
+  group: release-desktop
   cancel-in-progress: false
 
 defaults:
@@ -67,6 +67,61 @@ jobs:
             gh release create "$VERSION" --target "$RELEASE_COMMIT" --title "$VERSION" --draft --notes-file "$RUNNER_TEMP/release-notes.md"
             echo 'published=false' >> "$GITHUB_OUTPUT"
           fi
+
+  build-windows:
+    needs: prepare-release
+    if: needs.prepare-release.outputs.needed == 'true'
+    runs-on: windows-latest
+    env:
+      VERSION: ${{ needs.prepare-release.outputs.version }}
+      TAURI_UPDATER_PUBLIC_KEY: ${{ vars.TAURI_UPDATER_PUBLIC_KEY }}
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version-file: .nvmrc
+          cache: npm
+      - run: npm ci
+      - name: Validate Windows update configuration
+        run: node scripts/windows-release.mjs configure "$RUNNER_TEMP/windows-release.json"
+      - name: Prepare native build tools
+        if: needs.prepare-release.outputs.published != 'true'
+        shell: pwsh
+        run: |
+          choco install strawberryperl --yes --no-progress
+          if ($LASTEXITCODE -ne 0) { exit $LASTEXITCODE }
+          'C:\Strawberry\perl\bin' >> $env:GITHUB_PATH
+          rustup show
+      - uses: Swatinem/rust-cache@v2
+        if: needs.prepare-release.outputs.published != 'true'
+        with:
+          workspaces: src-tauri
+      - name: Check frontend, Rust and the Windows updater
+        if: needs.prepare-release.outputs.published != 'true'
+        run: |
+          npm run check
+          npm run check:rust
+          cargo clippy --manifest-path src-tauri/Cargo.toml --features windows-updater --all-targets --locked -- -D warnings
+          cargo test --manifest-path src-tauri/Cargo.toml --features windows-updater --locked
+      - name: Build signed Windows x64 NSIS installer
+        if: needs.prepare-release.outputs.published != 'true'
+        env:
+          SENTRY_DSN: ${{ secrets.SENTRY_DSN }}
+          TAURI_SIGNING_PRIVATE_KEY: ${{ secrets.TAURI_SIGNING_PRIVATE_KEY }}
+          TAURI_SIGNING_PRIVATE_KEY_PASSWORD: ${{ secrets.TAURI_SIGNING_PRIVATE_KEY_PASSWORD }}
+        run: |
+          test -n "$TAURI_SIGNING_PRIVATE_KEY"
+          npm run tauri build -- --features windows-updater --config "$RUNNER_TEMP/windows-release.json" -- --locked
+          node scripts/windows-release.mjs metadata
+      - name: Upload Windows installer and updater feed to the draft
+        if: needs.prepare-release.outputs.published != 'true'
+        run: |
+          gh release upload "$VERSION" "AndroidTools-$VERSION-windows-x64-setup.exe" "AndroidTools-$VERSION-windows-x64-setup.exe.sig" latest.json --clobber
+      - name: Verify published Windows assets during recovery
+        if: needs.prepare-release.outputs.published == 'true'
+        run: |
+          gh release download "$VERSION" --pattern "AndroidTools-$VERSION-windows-x64-setup.exe" --pattern "AndroidTools-$VERSION-windows-x64-setup.exe.sig" --pattern latest.json
+          node scripts/windows-release.mjs verify-published
 
   build-macos:
     needs: prepare-release
@@ -178,7 +233,7 @@ jobs:
           retention-days: 30
 
   finalize-release:
-    needs: [prepare-release, build-macos]
+    needs: [prepare-release, build-macos, build-windows]
     runs-on: ubuntu-latest
     env:
       VERSION: ${{ needs.prepare-release.outputs.version }}
@@ -205,6 +260,9 @@ jobs:
       - name: Publish download before advertising the update
         run: |
           gh release view "$VERSION" --json assets --jq '.assets[].name' | grep -Fx "AndroidTools-$VERSION-macos.dmg"
+          gh release view "$VERSION" --json assets --jq '.assets[].name' | grep -Fx "AndroidTools-$VERSION-windows-x64-setup.exe"
+          gh release view "$VERSION" --json assets --jq '.assets[].name' | grep -Fx "AndroidTools-$VERSION-windows-x64-setup.exe.sig"
+          gh release view "$VERSION" --json assets --jq '.assets[].name' | grep -Fx latest.json
           gh release edit "$VERSION" --draft=false --latest
       - name: Commit appcast at its existing public URL
         working-directory: publication

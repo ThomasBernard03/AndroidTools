@@ -1,6 +1,6 @@
 [package]
 name = "android-tools"
-version = "2026.10.8"
+version = "2026.10.9"
 description = "Desktop tools for Android devices"
 edition = "2024"
 rust-version = "1.93"
@@ -12,9 +12,13 @@ crate-type = ["staticlib", "cdylib", "rlib"]
 [features]
 custom-protocol = ["tauri/custom-protocol"]
 macos-updater = ["dep:tauri-plugin-sparkle-updater"]
+windows-updater = ["dep:tauri-plugin-updater"]
 
 [target.'cfg(target_os = "macos")'.dependencies]
 tauri-plugin-sparkle-updater = { version = "=0.3.0", optional = true }
+
+[target.'cfg(windows)'.dependencies]
+tauri-plugin-updater = { version = "2", optional = true }
 
 [profile.release]
 debug = 2

@@ -4,6 +4,24 @@ All notable changes to Android Tools will be documented in this file.
 
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 
+## [2026.10.9] - 2026-10-12
+
+### New Features
+- Add Windows x64 desktop support and a per-user NSIS installer, with USB device detection and Android information retrieval verified on Windows
+- Add signed Windows updates through the Tauri updater, with startup checks, a manual check in Settings and confirmation before installation
+- Build and publish Windows installers, updater signatures and the update manifest alongside the macOS DMG in GitHub Actions
+
+### Improvements
+- Add Windows CI checks for the frontend, Rust backend and updater-enabled installer using a temporary signing identity
+- Verify Windows installer signatures before publication and preserve published artifacts when retrying a release
+- Standardize text file line endings across Windows, macOS and Linux
+- Document Windows build prerequisites, update signing keys and release configuration
+
+### Fixes
+- Include the Windows application icon required by native Tauri builds
+- Allow enough time for Windows to report an absent local ADB server, avoiding a false USB connection failure
+- Use platform-independent paths in APK signing workflow tests
+
 ## [2026.10.8] - 2026-10-11
 
 ### New Features

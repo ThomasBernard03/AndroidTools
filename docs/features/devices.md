@@ -78,8 +78,11 @@ enumerates the machine's USB devices or opens a native window.
   configuration descriptors are inaccessible, the ADB interface cannot be identified
   and that device is skipped. Missing string metadata alone does not hide a device.
 - Linux may require udev permissions. Windows needs a libusb-compatible driver for
-  metadata access. Native builds and hardware behavior on those OSes are not yet
-  verified by this milestone's macOS CI.
+  metadata access and a WinUSB-compatible ADB interface for the `nusb` transport.
+  Windows x64 compilation and a Galaxy A34 5G connection were verified locally on
+  October 12, 2026, with successful operation confirmed by the tester. This is not
+  coverage of all phone drivers. Linux native behavior still needs verification;
+  CI runs without USB hardware.
 
 ## Verification
 
