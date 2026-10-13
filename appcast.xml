@@ -5,6 +5,15 @@
     <description>Most recent updates to AndroidTools</description>
     <language>en</language>
     <item>
+      <title>Version 2026.10.9</title>
+      <sparkle:version>45</sparkle:version>
+      <sparkle:shortVersionString>2026.10.9</sparkle:shortVersionString>
+      <sparkle:minimumSystemVersion>10.13</sparkle:minimumSystemVersion>
+      <sparkle:releaseNotesLink>https://github.com/ThomasBernard03/AndroidTools/releases/tag/2026.10.9</sparkle:releaseNotesLink>
+      <pubDate>Tue, 13 Oct 2026 16:13:25 GMT</pubDate>
+      <enclosure url="https://github.com/ThomasBernard03/AndroidTools/releases/download/2026.10.9/AndroidTools-2026.10.9-macos.dmg" sparkle:edSignature="NAm+YJ8rSBTd+14013t/gEBEAdaK4ThMyDh7xHauqlx5VFZxd2/mNXcjpRuHtWtg9PeRdyJJ4L8FeLExMzbmAw==" sparkle:os="macos" length="24615079" type="application/octet-stream"/>
+    </item>
+    <item>
       <title>Version 2026.10.8</title>
       <sparkle:version>44</sparkle:version>
       <sparkle:shortVersionString>2026.10.8</sparkle:shortVersionString>
