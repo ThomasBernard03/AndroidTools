@@ -8,6 +8,7 @@ import {
   watch,
 } from 'vue';
 import type { LogPage } from '../domain/logcat';
+import { logcatFields } from './logcatFields';
 import {
   ROW_HEIGHT,
   MAX_SCROLL_HEIGHT,
@@ -59,7 +60,11 @@ const physicalTop = computed(() =>
 );
 const rendered = computed(() =>
   props.page.entries
-    .map((entry, index) => ({ entry, position: props.page.start + index }))
+    .map((entry, index) => ({
+      entry,
+      position: props.page.start + index,
+      fields: logcatFields(entry.text),
+    }))
     .filter(
       ({ position }) =>
         props.softWrap ||
@@ -287,7 +292,7 @@ function parts(text: string) {
         :style="softWrap ? { top: `${pageTop}px` } : undefined"
       >
         <div
-          v-for="{ entry, position } in rendered"
+          v-for="{ entry, position, fields } in rendered"
           :key="entry.id"
           class="logcat-line px-2 leading-5"
           :style="
@@ -297,22 +302,27 @@ function parts(text: string) {
           "
           :data-entry-id="entry.id"
           :data-position="position"
+          :data-level="entry.level"
           :class="{
-            'text-danger': entry.level === 'E' || entry.level === 'F',
-            'text-warning': entry.level === 'W',
-            'text-muted': entry.level === 'V' || entry.level === 'D',
             'logcat-current': match === position,
           }"
         >
+          <template v-for="(field, fieldIndex) in fields" :key="field.kind">
+            <template v-if="fieldIndex">{{ ' ' }}</template>
+            <span
+              :class="`logcat-${field.kind}`"
+              :title="field.kind === 'tag' ? field.text : undefined"
+              ><template v-for="(part, index) in parts(field.text)" :key="index"
+                ><mark v-if="part.match">{{ part.text }}</mark
+                ><template v-else>{{ part.text }}</template></template
+              ></span
+            >
+          </template>
           <span
             v-if="entry.repeatCount > 1"
-            class="mr-2 rounded border border-primary/30 bg-primary/10 px-1 text-primary"
+            class="ml-2 rounded border border-primary/30 bg-primary/10 px-1 text-primary"
             :aria-label="`${entry.repeatCount} identical consecutive entries`"
             >×{{ entry.repeatCount }}</span
-          >
-          <template v-for="(part, index) in parts(entry.text)" :key="index"
-            ><mark v-if="part.match">{{ part.text }}</mark
-            ><template v-else>{{ part.text }}</template></template
           >
         </div>
       </div>
@@ -328,10 +338,60 @@ function parts(text: string) {
   overflow-anchor: none;
 }
 .logcat-line {
+  --logcat-text: var(--color-logcat-verbose);
+  --logcat-badge: var(--color-logcat-verbose-badge);
+  --logcat-on-badge: var(--color-logcat-verbose);
+  color: var(--logcat-text);
   position: absolute;
   white-space: pre;
   min-width: 100%;
   height: 20px;
+}
+.logcat-line[data-level='D'] {
+  --logcat-text: var(--color-logcat-debug);
+  --logcat-badge: var(--color-logcat-debug-badge);
+}
+.logcat-line[data-level='I'] {
+  --logcat-text: var(--color-logcat-info);
+  --logcat-badge: var(--color-logcat-info-badge);
+  --logcat-on-badge: var(--color-logcat-info-on-badge);
+}
+.logcat-line[data-level='W'] {
+  --logcat-text: var(--color-logcat-warning);
+  --logcat-badge: var(--color-logcat-warning-badge);
+}
+.logcat-line[data-level='E'],
+.logcat-line[data-level='F'] {
+  --logcat-text: var(--color-logcat-error);
+  --logcat-badge: var(--color-logcat-error-badge);
+  --logcat-on-badge: var(--color-on-primary);
+}
+.logcat-timestamp,
+.logcat-process,
+.logcat-tag {
+  display: inline-block;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+  vertical-align: top;
+}
+.logcat-timestamp {
+  width: 140px;
+}
+.logcat-process {
+  width: 80px;
+}
+.logcat-tag {
+  width: 150px;
+}
+.logcat-level {
+  display: inline-block;
+  padding: 2px 8px;
+  line-height: 16px;
+  vertical-align: top;
+  text-align: center;
+  color: var(--logcat-on-badge);
+  background: var(--logcat-badge);
 }
 .logcat-wrapped {
   overflow-x: hidden;

@@ -15,6 +15,18 @@
   --color-muted: #535b68;
   --color-warning: #805300;
   --color-danger: #b3261e;
+  /* Light Logcat palette from backup/swift-ui, using standard RGB colors. */
+  --color-logcat-verbose: rgb(0, 0, 0);
+  --color-logcat-verbose-badge: rgb(214, 214, 214);
+  --color-logcat-debug: rgb(86, 157, 209);
+  --color-logcat-debug-badge: rgb(211, 230, 253);
+  --color-logcat-info: rgb(109, 166, 111);
+  --color-logcat-info-badge: rgb(235, 244, 231);
+  --color-logcat-info-on-badge: rgb(67, 76, 66);
+  --color-logcat-warning: rgb(118, 109, 50);
+  --color-logcat-warning-badge: rgb(243, 235, 197);
+  --color-logcat-error: rgb(189, 42, 31);
+  --color-logcat-error-badge: rgb(192, 98, 90);
   --radius-md: 3px;
   --radius-lg: 3px;
   --radius-xl: 4px;

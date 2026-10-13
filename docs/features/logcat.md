@@ -8,6 +8,11 @@
   is used. Logs already overwritten in Android's own ring buffers cannot be recovered.
 - **Minimum level** includes the chosen priority and higher levels. Changing it
   queries the disk history without restarting capture or discarding lower priorities.
+- Standard lines display **timestamp, PID-TID, tag, level, message**, in that order.
+  The level has a padded color badge; repeat counters follow the message.
+  Continuation lines and unknown formats remain literal. Colors reuse the light
+  SwiftUI palette in standard RGB: black for Verbose, blue for Debug, green for Info,
+  ochre for Warning and red for Error and Fatal.
 - **Package name** uses the same `SelectField` widget as other app dropdowns, with
   its optional searchable mode. Click to open the list, type a substring to narrow
   the installed packages, and select using the pointer or arrows and Enter. Selection
