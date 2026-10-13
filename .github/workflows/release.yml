@@ -75,6 +75,8 @@ jobs:
     env:
       VERSION: ${{ needs.prepare-release.outputs.version }}
       TAURI_UPDATER_PUBLIC_KEY: ${{ vars.TAURI_UPDATER_PUBLIC_KEY }}
+      # Git Bash can resolve its bundled Perl before Strawberry Perl in PATH.
+      OPENSSL_SRC_PERL: 'C:\Strawberry\perl\bin\perl.exe'
     steps:
       - uses: actions/checkout@v4
       - uses: actions/setup-node@v4
