@@ -14,7 +14,7 @@
     "typecheck": "vue-tsc --noEmit",
     "test": "vitest run",
     "test:watch": "vitest",
-    "test:release": "node --test scripts/release.test.mjs scripts/windows-release.test.mjs",
+    "test:release": "node --test scripts/release.test.mjs scripts/windows-release.test.mjs scripts/tauri-config.test.mjs",
     "test:e2e": "playwright test",
     "lint": "eslint . --max-warnings 0",
     "format": "prettier --write .",

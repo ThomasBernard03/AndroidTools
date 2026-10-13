@@ -9,6 +9,10 @@ import { createTauriKeystoreExplorerService } from './features/keystore/infrastr
 import { createDemoKeystoreExplorerService } from './features/keystore/infrastructure/demoKeystoreExplorerService';
 import { initializeLocalLogging } from './shared/infrastructure/localLogging';
 import { initializeCrashReporting } from './shared/infrastructure/crashReporting';
+import {
+  createStubWindowControls,
+  createTauriWindowControls,
+} from './shared/infrastructure/windowControls';
 import { createTauriSettingsService } from './features/settings/infrastructure/tauriSettingsService';
 import { createDemoSettingsService } from './features/settings/infrastructure/demoSettingsService';
 import { createTauriSigningService } from './features/signing/infrastructure/tauriSigningService';
@@ -83,6 +87,10 @@ const app = createApp(App, {
       : undefined,
   macosWindowControls:
     isTauri() && /Macintosh|Mac OS X/.test(navigator.userAgent),
+  windowsWindowControls: isTauri() && /Windows/.test(navigator.userAgent),
+  windowControls: isTauri()
+    ? createTauriWindowControls()
+    : createStubWindowControls(),
   fileService: demo
     ? createDemoFileService(scenario === 'error')
     : isTauri()

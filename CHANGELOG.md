@@ -4,6 +4,11 @@ All notable changes to Android Tools will be documented in this file.
 
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 
+## [Unreleased]
+
+### New Features
+- Show Windows minimize, maximize/restore and close controls inside the blue application title bar, matching the macOS traffic-light integration
+
 ## [2026.10.9] - 2026-10-12
 
 ### New Features

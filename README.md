@@ -51,7 +51,9 @@ The interface uses a Windows XP Luna-inspired theme: a blue title bar, Explorer-
 task panels, warm gray workspaces and beveled buttons. The shared theme covers all
 workspaces and retains keyboard focus indicators and reduced-motion support. Dropdown
 arrows remain static when opened. On macOS, native close, minimize and fullscreen
-controls sit inside the blue application title bar; drag the title bar to move the
+controls sit inside the blue application title bar; on Windows, custom minimize,
+maximize/restore and close buttons sit inside the same blue bar because the window
+has no native decorations. On both platforms, drag the title bar to move the
 window. Operating-system file dialogs keep the host platform's appearance.
 
 The native window and initial HTML use the warm gray canvas (`#ece9d8`) before
@@ -63,8 +65,11 @@ without a black or white flash.
 
 Native title-bar verification on macOS: run `npm run tauri dev`, check that the
 traffic lights do not overlap the application title, drag using the title text,
-and exercise minimize, fullscreen/restore and close. Browser demos intentionally
-do not reserve space for native window controls.
+and exercise minimize, fullscreen/restore and close. On Windows, run
+`npm run tauri dev`, check that minimize, maximize/restore and close buttons sit
+inside the blue application title bar, drag using the title text, double-click the
+title bar to toggle maximization, and exercise each button. Browser demos
+intentionally do not reserve space for native window controls.
 
 The compact sidebar groups **Device overview**, **File explorer** and **Logcat**
 under Device, and **APK analysis**, **Generate keystore**, **APK signing** and

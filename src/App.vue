@@ -25,6 +25,8 @@ import { useAdb } from './features/adb/presentation/useAdb';
 import WorkspaceNavigation from './shared/presentation/widgets/WorkspaceNavigation.vue';
 import ComingSoonWorkspace from './shared/presentation/widgets/ComingSoonWorkspace.vue';
 import AppIcon from './shared/presentation/widgets/AppIcon.vue';
+import WindowControls from './shared/presentation/widgets/WindowControls.vue';
+import type { WindowControlsService } from './shared/infrastructure/windowControls';
 import {
   workspacePages,
   type WorkspacePage,
@@ -45,6 +47,8 @@ const props = defineProps<{
   logcatService?: LogcatService;
   demo?: boolean;
   macosWindowControls?: boolean;
+  windowsWindowControls?: boolean;
+  windowControls?: WindowControlsService;
 }>();
 const selectedDevice = shallowRef<DeviceSummary | null>(null);
 const { state: adbState, refresh: refreshAdb } = useAdb(
@@ -57,11 +61,19 @@ const { state: adbState, refresh: refreshAdb } = useAdb(
   <div class="xp-shell flex h-dvh flex-col overflow-hidden">
     <header
       class="xp-titlebar"
-      :class="{ 'xp-titlebar-macos': macosWindowControls }"
-      data-tauri-drag-region
+      :class="{
+        'xp-titlebar-macos': macosWindowControls,
+        'xp-titlebar-windows': windowsWindowControls,
+      }"
     >
-      <h1>Android Tools</h1>
-      <span class="xp-titlebar-label">{{ currentPage.label }}</span>
+      <div class="xp-titlebar-drag" data-tauri-drag-region>
+        <h1>Android Tools</h1>
+        <span class="xp-titlebar-label">{{ currentPage.label }}</span>
+      </div>
+      <WindowControls
+        v-if="windowsWindowControls && windowControls"
+        :service="windowControls"
+      />
     </header>
     <div
       class="min-h-0 flex-1 overflow-y-auto md:grid md:grid-cols-[256px_minmax(0,1fr)]"

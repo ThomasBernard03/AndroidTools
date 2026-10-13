@@ -94,7 +94,8 @@ select:not(:disabled) {
   background: var(--color-canvas);
 }
 
-/* macOS overlays its native traffic lights on the shared Luna title bar. */
+/* Native window controls live on the shared Luna title bar: macOS overlays its
+   traffic lights, Windows renders custom caption buttons on a frameless window. */
 .xp-shell {
   border: 3px solid #0855d5;
   border-top: 0;
@@ -131,8 +132,20 @@ select:not(:disabled) {
   padding-left: 86px;
 }
 
-/* Let the entire title (including its text and icon) act as a drag region. */
-.xp-titlebar > * {
+.xp-titlebar-windows {
+  padding-right: 6px;
+}
+
+.xp-titlebar-drag {
+  display: flex;
+  min-width: 0;
+  flex: 1 1 auto;
+  align-items: center;
+  gap: 9px;
+}
+
+/* Let the title text act as a drag region; caption buttons stay interactive. */
+.xp-titlebar-drag > * {
   pointer-events: none;
 }
 
@@ -140,6 +153,46 @@ select:not(:disabled) {
   margin-left: auto;
   font-size: 11px;
   color: #e0edff;
+}
+
+.xp-window-controls {
+  display: flex;
+  flex-shrink: 0;
+  align-items: center;
+  gap: 2px;
+  margin-left: 8px;
+}
+
+.xp-window-button {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 42px;
+  height: 26px;
+  border: 1px solid #003c74;
+  border-radius: 3px;
+  background: linear-gradient(#7db3ff, #2f7fe8 50%, #1a5fc4);
+  color: white;
+  text-shadow: 1px 1px #003386;
+  box-shadow: inset 1px 1px #ffffff60;
+}
+
+.xp-window-button:hover {
+  background: linear-gradient(#a8ccff, #4b97f5 50%, #2f7fe8);
+}
+
+.xp-window-button:active {
+  background: #1a5fc4;
+  box-shadow: inset 1px 1px 2px #003386;
+}
+
+.xp-window-button-close:hover {
+  background: linear-gradient(#f39a7a, #d94f2a 50%, #b93a1a);
+}
+
+.xp-window-button-close:active {
+  background: #b93a1a;
+  box-shadow: inset 1px 1px 2px #7a2410;
 }
 
 .xp-sidebar {

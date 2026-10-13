@@ -10,6 +10,7 @@ import {
   FilePlus2,
   Folder,
   LayoutGrid,
+  Minus,
   Package,
   Pencil,
   RefreshCw,
@@ -18,9 +19,11 @@ import {
   ShieldCheck,
   Smartphone,
   Sparkles,
+  Square,
   SquareTerminal,
   Trash2,
   Usb,
+  X,
 } from '@lucide/vue';
 
 defineProps<{
@@ -49,6 +52,10 @@ const icons = {
   check: Check,
   settings: Settings,
   shield: ShieldCheck,
+  minimize: Minus,
+  maximize: Square,
+  restore: Copy,
+  close: X,
 };
 </script>
 

@@ -3,6 +3,7 @@ import { describe, expect, it } from 'vitest';
 import App from './App.vue';
 import { createDemoDeviceService } from './features/devices/infrastructure/demoDeviceService';
 import { createDemoAdbService } from './features/adb/infrastructure/demoAdbService';
+import { createStubWindowControls } from './shared/infrastructure/windowControls';
 
 async function chooseDevice(wrapper: VueWrapper, label: string) {
   await wrapper.get('aside [role="combobox"]').trigger('click');
@@ -83,6 +84,37 @@ describe('Application composition', () => {
       expect(wrapper.get('main').text()).not.toContain('Coming soon');
     } finally {
       wrapper.unmount();
+    }
+  });
+
+  it('shows window controls in the title bar on Windows', async () => {
+    const windows = mount(App, {
+      props: {
+        deviceService: createDemoDeviceService('empty'),
+        windowsWindowControls: true,
+        windowControls: createStubWindowControls(),
+      },
+    });
+    try {
+      await flushPromises();
+      const controls = windows.get('[aria-label="Window"]');
+      expect(controls.findAll('button')).toHaveLength(3);
+      expect(
+        controls
+          .findAll('button')
+          .map((button) => button.attributes('aria-label')),
+      ).toEqual(['Minimize', 'Maximize', 'Close']);
+    } finally {
+      windows.unmount();
+    }
+    const plain = mount(App, {
+      props: { deviceService: createDemoDeviceService('empty') },
+    });
+    try {
+      await flushPromises();
+      expect(plain.find('[aria-label="Window"]').exists()).toBe(false);
+    } finally {
+      plain.unmount();
     }
   });
 
