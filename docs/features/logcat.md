@@ -37,7 +37,12 @@
   of the row count; the next navigation includes newly captured logs.
 - **Follow live** follows the newest row. Scrolling or searching disables it.
   **First line**, **Latest**, Home/End, Page Up/Down, arrows and the scrollbar navigate
-  the complete history. Wheel steps remain line-based even for very large histories.
+  the complete history. Without wrapping, wheel steps remain line-based even for
+  very large histories.
+- **Soft wrap**, off by default, wraps long messages (including unbroken text) to
+  the viewport width. Wrapped rows expand without overlapping; wheel and Page Up/Down
+  scrolling can traverse messages taller than the viewport. Search and live following
+  still navigate logical entries. The option lasts until leaving the workspace.
 - Changing phones clears the view and package selection. Stream and storage errors
   stop capture but retain published history for inspection. Leaving the workspace
   disposes capture and temporary history; reopening starts a fresh capture.
@@ -65,6 +70,11 @@ prevent an old stop request from closing a newer stream.
 The virtual viewport renders visible rows plus overscan. Its physical scrollbar is
 capped at one million pixels and maps to logical row positions, avoiding browser
 layout-height limits. Searching and keyboard navigation address exact logical rows.
+With soft wrap, the current page (at most 200 entries) uses browser-measured heights
+and unloaded history uses estimated heights. Page replacement preserves the top
+entry and its pixel offset; resizing reflows the text. The scrollbar remains
+approximate for unloaded wrapped history. Live following aligns the bottom of the
+latest message; the position indicator shows the current logical entry in this mode.
 Native parsers still reject malformed/oversized individual output: 2 MiB chunks,
 64 KiB lines and search queries over 4,096 UTF-8 bytes. These bound individual work
 units, not the number of stored entries. History length is ultimately constrained by
@@ -83,6 +93,8 @@ user/profile and shell permissions. Only default Logcat buffers are read and cle
 - `/?demo=devices&logcat=large`: 20,000 initial synthetic rows plus live logs. The demo
   generates rows by index instead of allocating the full history.
 - `/?demo=devices&logcat=repeats`: three consecutive occurrences of each message.
+- `/?demo=devices&logcat=long`: mixed short messages and long unbroken payloads for
+  verifying wrapping and scrolling within a message taller than the viewport.
 
 All demos are development-only and visibly labeled. Package selection restarts the
 same fixture. Real USB or disk failures never switch to demo data.
@@ -98,7 +110,7 @@ bidirectional resumable search, UTF-8 framing, grouping across batches, preserva
 of original timestamps, write failures, stale IPC, navigation cleanup, clear failures,
 searchable dropdown completion, bounded rendering and a ten-million-row scrollbar.
 Chromium journeys exercise the large-history view, search scrolling, repeat counters
-and package selection.
+and package selection, plus wrapping, non-overlapping rows, resizing and live following.
 
 ## Hardware verification
 

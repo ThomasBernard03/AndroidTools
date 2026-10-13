@@ -10,6 +10,7 @@ import {
 import type { LogPage } from '../domain/logcat';
 import {
   ROW_HEIGHT,
+  MAX_SCROLL_HEIGHT,
   offsetToScroll,
   scrollGeometry,
   scrollToOffset,
@@ -22,6 +23,8 @@ const props = defineProps<{
   query: string;
   match: number | null;
   status: string;
+  softWrap?: boolean;
+  follow?: boolean;
 }>();
 const emit = defineEmits<{
   'update:offset': [value: number];
@@ -30,7 +33,27 @@ const emit = defineEmits<{
 }>();
 const viewport = ref<HTMLElement>();
 const height = ref(500);
-const geometry = computed(() => scrollGeometry(props.total, height.value));
+const width = ref(0);
+const wrappedPage = ref<HTMLElement>();
+const pageHeight = ref(0);
+// Unloaded rows use an estimate; the bounded page uses real browser layout.
+const estimatedHeight = computed(() =>
+  Math.min(ROW_HEIGHT, MAX_SCROLL_HEIGHT / Math.max(1, props.total)),
+);
+const pageTop = computed(() => props.page.start * estimatedHeight.value);
+const wrappedHeight = computed(() =>
+  Math.max(
+    height.value,
+    pageTop.value +
+      pageHeight.value +
+      Math.max(0, props.total - props.page.start - props.page.entries.length) *
+        estimatedHeight.value,
+  ),
+);
+let anchor: { position: number; inset: number } | undefined;
+const geometry = computed(() =>
+  scrollGeometry(props.total, props.softWrap ? ROW_HEIGHT : height.value),
+);
 const physicalTop = computed(() =>
   offsetToScroll(props.offset, props.total, height.value),
 );
@@ -39,8 +62,9 @@ const rendered = computed(() =>
     .map((entry, index) => ({ entry, position: props.page.start + index }))
     .filter(
       ({ position }) =>
-        position >= props.offset - 20 &&
-        position < props.offset + geometry.value.rows + 20,
+        props.softWrap ||
+        (position >= props.offset - 20 &&
+          position < props.offset + geometry.value.rows + 20),
     ),
 );
 let observer: ResizeObserver | undefined;
@@ -49,15 +73,61 @@ let expectedScroll: number | undefined;
 let wheelRemainder = 0;
 
 watch(geometry, (value) => emit('rows', value.rows), { immediate: true });
-watch([physicalTop, height], async () => {
+watch([physicalTop, height, () => props.softWrap], async () => {
   await nextTick();
-  if (disposed || !viewport.value) return;
+  if (disposed || !viewport.value || props.softWrap) return;
   expectedScroll = physicalTop.value;
   viewport.value.scrollTop = expectedScroll;
 });
+function wrappedLines() {
+  return Array.from(
+    wrappedPage.value?.querySelectorAll<HTMLElement>('.logcat-line') ?? [],
+  );
+}
+watch(
+  [
+    () => props.page,
+    () => props.offset,
+    () => props.softWrap,
+    () => props.follow,
+    height,
+    width,
+  ],
+  async () => {
+    await nextTick();
+    if (disposed || !props.softWrap || !viewport.value) return;
+    const lines = wrappedLines();
+    pageHeight.value = wrappedPage.value?.offsetHeight ?? 0;
+    await nextTick();
+    if (disposed || !viewport.value) return;
+    const line = lines[props.offset - props.page.start];
+    // Wait for the requested page instead of jumping through stale entries.
+    if (!line) return;
+    const inset = anchor?.position === props.offset ? anchor.inset : 0;
+    const top = props.follow
+      ? pageTop.value + pageHeight.value - height.value
+      : pageTop.value +
+        line.offsetTop +
+        Math.min(inset, Math.max(0, line.offsetHeight - 1));
+    expectedScroll = Math.max(
+      0,
+      Math.min(viewport.value.scrollHeight - viewport.value.clientHeight, top),
+    );
+    if (anchor?.inset === Infinity) {
+      anchor = {
+        position: props.offset,
+        inset: expectedScroll - pageTop.value - line.offsetTop,
+      };
+    }
+    viewport.value.scrollLeft = 0;
+    viewport.value.scrollTop = expectedScroll;
+  },
+  { flush: 'post' },
+);
 onMounted(() => {
   observer = new ResizeObserver(() => {
     height.value = viewport.value?.clientHeight || 500;
+    width.value = viewport.value?.clientWidth || 0;
   });
   if (viewport.value) {
     height.value = viewport.value.clientHeight || 500;
@@ -76,10 +146,41 @@ function goTo(offset: number) {
     Math.min(geometry.value.maxOffset, Math.max(0, offset)),
   );
 }
+function firstLine() {
+  anchor = undefined;
+  goTo(0);
+  expectedScroll = 0;
+  if (viewport.value) viewport.value.scrollTop = 0;
+}
+defineExpose({ firstLine });
 function onScroll() {
   const top = viewport.value?.scrollTop ?? 0;
   if (expectedScroll !== undefined && Math.abs(top - expectedScroll) < 2) {
     expectedScroll = undefined;
+    return;
+  }
+  if (props.softWrap) {
+    expectedScroll = undefined;
+    const localTop = top - pageTop.value;
+    const lines = wrappedLines();
+    const index = lines.findIndex(
+      (line) => line.offsetTop + line.offsetHeight > localTop,
+    );
+    let position: number;
+    let inset = 0;
+    if (localTop >= 0 && index !== -1) {
+      position = props.page.start + index;
+      inset = localTop - lines[index]!.offsetTop;
+    } else if (localTop < 0) {
+      position = Math.floor(top / estimatedHeight.value);
+    } else {
+      position =
+        props.page.start +
+        lines.length +
+        Math.floor((localTop - pageHeight.value) / estimatedHeight.value);
+    }
+    anchor = { position, inset };
+    goTo(position);
     return;
   }
   if (Math.abs(top - physicalTop.value) < 2) return;
@@ -87,6 +188,7 @@ function onScroll() {
   goTo(scrollToOffset(top, props.total, height.value));
 }
 function onWheel(event: WheelEvent) {
+  if (props.softWrap) return;
   if (
     event.ctrlKey ||
     event.shiftKey ||
@@ -106,6 +208,11 @@ function onWheel(event: WheelEvent) {
   if (lines) goTo(props.offset + lines);
 }
 function onKeydown(event: KeyboardEvent) {
+  if (props.softWrap && event.key !== 'Home' && event.key !== 'End') return;
+  anchor =
+    props.softWrap && event.key === 'End'
+      ? { position: geometry.value.maxOffset, inset: Infinity }
+      : undefined;
   const actions: Record<string, number> = {
     ArrowUp: props.offset - 1,
     ArrowDown: props.offset + 1,
@@ -118,6 +225,14 @@ function onKeydown(event: KeyboardEvent) {
   if (offset !== undefined) {
     event.preventDefault();
     goTo(offset);
+    if (props.softWrap && viewport.value) {
+      // Home/End must also move within a single message taller than the viewport.
+      expectedScroll =
+        event.key === 'Home'
+          ? 0
+          : viewport.value.scrollHeight - viewport.value.clientHeight;
+      viewport.value.scrollTop = expectedScroll;
+    }
   }
 }
 function parts(text: string) {
@@ -144,13 +259,19 @@ function parts(text: string) {
   <div
     ref="viewport"
     class="logcat-output select-text overflow-auto rounded border border-stroke bg-surface font-mono text-xs"
+    :class="{ 'logcat-wrapped': softWrap }"
     tabindex="0"
     aria-label="Logcat output"
     @scroll="onScroll"
     @wheel="onWheel"
     @keydown="onKeydown"
   >
-    <div class="relative" :style="{ height: `${geometry.scrollHeight}px` }">
+    <div
+      class="relative"
+      :style="{
+        height: `${softWrap ? wrappedHeight : geometry.scrollHeight}px`,
+      }"
+    >
       <p v-if="!total" class="p-4 font-sans text-sm text-muted">
         {{
           status === 'starting'
@@ -161,29 +282,39 @@ function parts(text: string) {
         }}
       </p>
       <div
-        v-for="{ entry, position } in rendered"
-        :key="entry.id"
-        class="logcat-line absolute whitespace-pre px-2 leading-5"
-        :style="{ top: `${physicalTop + (position - offset) * ROW_HEIGHT}px` }"
-        :data-entry-id="entry.id"
-        :data-position="position"
-        :class="{
-          'text-danger': entry.level === 'E' || entry.level === 'F',
-          'text-warning': entry.level === 'W',
-          'text-muted': entry.level === 'V' || entry.level === 'D',
-          'logcat-current': match === position,
-        }"
+        ref="wrappedPage"
+        :class="{ 'absolute w-full': softWrap }"
+        :style="softWrap ? { top: `${pageTop}px` } : undefined"
       >
-        <span
-          v-if="entry.repeatCount > 1"
-          class="mr-2 rounded border border-primary/30 bg-primary/10 px-1 text-primary"
-          :aria-label="`${entry.repeatCount} identical consecutive entries`"
-          >×{{ entry.repeatCount }}</span
+        <div
+          v-for="{ entry, position } in rendered"
+          :key="entry.id"
+          class="logcat-line px-2 leading-5"
+          :style="
+            softWrap
+              ? undefined
+              : { top: `${physicalTop + (position - offset) * ROW_HEIGHT}px` }
+          "
+          :data-entry-id="entry.id"
+          :data-position="position"
+          :class="{
+            'text-danger': entry.level === 'E' || entry.level === 'F',
+            'text-warning': entry.level === 'W',
+            'text-muted': entry.level === 'V' || entry.level === 'D',
+            'logcat-current': match === position,
+          }"
         >
-        <template v-for="(part, index) in parts(entry.text)" :key="index"
-          ><mark v-if="part.match">{{ part.text }}</mark
-          ><template v-else>{{ part.text }}</template></template
-        >
+          <span
+            v-if="entry.repeatCount > 1"
+            class="mr-2 rounded border border-primary/30 bg-primary/10 px-1 text-primary"
+            :aria-label="`${entry.repeatCount} identical consecutive entries`"
+            >×{{ entry.repeatCount }}</span
+          >
+          <template v-for="(part, index) in parts(entry.text)" :key="index"
+            ><mark v-if="part.match">{{ part.text }}</mark
+            ><template v-else>{{ part.text }}</template></template
+          >
+        </div>
       </div>
     </div>
   </div>
@@ -197,8 +328,21 @@ function parts(text: string) {
   overflow-anchor: none;
 }
 .logcat-line {
+  position: absolute;
+  white-space: pre;
   min-width: 100%;
   height: 20px;
+}
+.logcat-wrapped {
+  overflow-x: hidden;
+}
+.logcat-wrapped .logcat-line {
+  position: relative;
+  width: 100%;
+  height: auto;
+  min-height: 20px;
+  white-space: pre-wrap;
+  overflow-wrap: anywhere;
 }
 .logcat-current {
   @apply bg-primary/15;

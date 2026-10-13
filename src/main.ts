@@ -69,8 +69,9 @@ const app = createApp(App, {
   logcatService: demo
     ? createDemoLogcatService(
         scenario === 'error',
-        logcatScenario === 'large' ? 20000 : 0,
+        logcatScenario === 'large' ? 20000 : logcatScenario === 'long' ? 3 : 0,
         logcatScenario === 'repeats' ? 3 : 1,
+        logcatScenario === 'long',
       )
     : isTauri()
       ? createTauriLogcatService()

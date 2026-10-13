@@ -161,7 +161,8 @@ Searching or scrolling disables **Follow live**; re-enable it to return to incom
 logs. **Group repeats**, enabled by default, collapses consecutive identical messages
 into one row with an increasing counter, ignoring timestamps but preserving process,
 thread, level, tag and message. Turn it off to see every original line and timestamp.
-Capture stops when leaving the workspace.
+Enable **Soft wrap** to fit long messages to the viewport without horizontal
+scrolling. It is off by default. Capture stops when leaving the workspace.
 
 All captured session history is retained in temporary disk files, without a line-count
 or character-count eviction limit. Virtualized scrolling and paged reads keep memory

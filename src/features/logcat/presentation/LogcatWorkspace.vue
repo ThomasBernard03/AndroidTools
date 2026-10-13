@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import { computed } from 'vue';
+import { computed, ref } from 'vue';
 import { logLevels, type LogcatService } from '../domain/logcat';
 import { useLogcat } from './useLogcat';
 import SelectField from '../../../shared/presentation/widgets/SelectField.vue';
@@ -35,6 +35,8 @@ const {
 const ready = computed(() =>
   Boolean(props.deviceId && props.adbConnected && props.service),
 );
+const softWrap = ref(false);
+const logViewport = ref<InstanceType<typeof LogcatViewport>>();
 const packageOptions = computed(() => [
   { value: '', label: 'All packages' },
   ...packages.value.map((name) => ({ value: name, label: name })),
@@ -158,14 +160,20 @@ async function reload() {
         title="Group consecutive identical messages, ignoring their timestamps"
         ><input v-model="grouped" type="checkbox" /> Group repeats</label
       >
+      <label class="flex items-center gap-2 text-sm"
+        ><input v-model="softWrap" type="checkbox" /> Soft wrap</label
+      >
     </div>
     <LogcatViewport
+      ref="logViewport"
       v-model:offset="offset"
       :page="page"
       :total="total"
       :query="query"
       :match="match"
       :status="status"
+      :soft-wrap="softWrap"
+      :follow="follow"
       @rows="windowRows = $event"
       @browse="follow = false"
     />
@@ -173,17 +181,17 @@ async function reload() {
       <button
         class="logcat-button"
         :disabled="!total"
-        @click="
-          follow = false;
-          offset = 0;
-        "
+        @click="logViewport?.firstLine()"
       >
         First line
       </button>
       <button class="logcat-button" :disabled="!total" @click="follow = true">
         Latest
       </button>
-      <span
+      <span v-if="softWrap"
+        >Line {{ total ? offset + 1 : 0 }} of {{ total }}</span
+      >
+      <span v-else
         >Viewing lines {{ total ? offset + 1 : 0 }}–{{
           Math.min(total, offset + windowRows)
         }}

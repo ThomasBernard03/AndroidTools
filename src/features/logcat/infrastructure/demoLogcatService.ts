@@ -9,6 +9,7 @@ export function createDemoLogcatService(
   fail = false,
   initialLines = 0,
   repeatEach = 1,
+  longLines = false,
 ): LogcatService {
   let sequence = 0;
   const captures = new Map<
@@ -30,7 +31,7 @@ export function createDemoLogcatService(
       id,
       repeatCount: 1,
       level,
-      text: `10-10 12:00:${String(id % 60).padStart(2, '0')}.000  1234  1234 ${level} DemoApp: ${level === 'E' ? 'Simulated network error' : 'Simulated activity update'} #${source + 1}`,
+      text: `10-10 12:00:${String(id % 60).padStart(2, '0')}.000  1234  1234 ${level} DemoApp: ${level === 'E' ? 'Simulated network error' : 'Simulated activity update'} #${source + 1}${longLines && source % 2 === 0 ? ` payload=${'abcdef'.repeat(1000)}` : ''}`,
     };
   }
   const period = 15 * repeatEach;
